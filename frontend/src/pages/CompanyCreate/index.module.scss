@@ -1,0 +1,255 @@
+.wrapper {
+	// max-width: 1440px;
+	margin: 0px auto 0px auto;
+	padding: 11px 32px 0px 32px;
+	display: flex;
+	flex-direction: row;
+	color: white;
+}
+
+.leftMenu {
+	max-width: 180px;
+	margin-right: 32px;
+}
+
+.rightMenu {
+	// width: 100%;
+	max-width: 1440px;
+	display: flex;
+	margin: 0 auto;
+	flex-direction: column;
+}
+@media screen and (max-width: 1440px) {
+	.rightMenu {
+		margin-left: 180px;
+		width: 1440px;	
+	}
+	
+}
+// Header
+
+.down {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
+	font-size: 14px;
+	font-weight: 400;
+
+	.companiesMenu {
+		padding: 10px;
+		cursor: pointer;
+		margin-right: 4px;
+		border-radius: 10px;
+
+		.companiesText {
+			margin-right: 8px;
+		}
+
+		.companiesNum {
+			padding: 4px 8px;
+			border-radius: 12px;
+			background: #333;
+		}
+	}
+}
+.companiesMenuActive,
+.companiesMenu:hover {
+	background: #262626;
+}
+
+.stepsMenu {
+	margin-top: 124px;
+}
+
+.chips {
+	min-width: 528px;
+	width: 528px;
+
+	ul {
+		min-width: 528px;
+		width: 528px;
+	}
+	.p-inputtext {
+		min-width: 528px;
+		width: 528px;
+		.p-chips-input-token input {
+			min-width: 528px;
+			width: 528px;
+		}
+	}
+}
+
+.list {
+	&:not(:last-child) {
+		border-bottom: 1px solid #262626;
+	}
+}
+
+.inputText {
+	width: 100%;
+	min-width: 100%;
+}
+
+.content {
+	margin-top: 32px;
+	margin-bottom: 17px;
+}
+
+.contentCol {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.Line {
+	margin: 32px 0px;
+}
+
+.RowTitle {
+	align-items: center;
+	margin-bottom: 17px;
+}
+
+.headerNotiBlock {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	margin-bottom: 17px;
+}
+
+.headerNotiTitle {
+	height: 20px;
+}
+
+.navLabel {
+	color: #f2f2f2;
+	font-family: Inter;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: normal;
+
+	margin-left: 8px;
+	margin-bottom: 17px;
+}
+
+// Description Banners
+.DescBlock {
+	display: flex;
+	flex-direction: column;
+	width: 528px;
+
+	.textAreaDesc {
+		width: 100%;
+		min-height: 126px;
+		max-height: 200px;
+
+		padding: 10px 16px;
+		margin-bottom: 8px;
+
+		font-size: 14px;
+		font-weight: 400;
+
+		resize: vertical;
+
+		border-radius: 10px;
+		background: #262626;
+		outline: none;
+	}
+
+	.textAreaDesc::placeholder {
+		color: #808080;
+		font-family: Inter;
+		font-size: 14px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: 16px; /* 114.286% */
+
+		padding-top: 2px;
+	}
+
+	.ColAfterTextArea {
+		border-radius: 10px;
+		border: 1px solid #262626;
+
+		.Line {
+			margin: 10px 0px;
+		}
+	}
+
+	.BlockAfterTextArea {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: flex-start;
+
+		.TextBlockAfter {
+			width: 480px;
+
+			padding-top: 10px;
+			padding-left: 16px;
+
+			color: #f2f2f2;
+			font-family: Inter;
+			font-size: 14px;
+			font-style: normal;
+			font-weight: 400;
+			line-height: 16px; /* 114.286% */
+		}
+	}
+
+	.ButtonAfterExit {
+		margin-top: 10px;
+		margin-right: 8px;
+	}
+}
+
+// DropDown Settings
+
+.ListMoreSettings {
+	padding: 8px 0px !important;
+}
+
+.RowSettings {
+	justify-content: space-between;
+}
+
+.WhiteLabelSwitchBlock {
+	justify-content: space-between;
+}
+
+.WhiteLabelCheckbox {
+	width: 379px;
+}
+
+
+.DropImageRow, .DropVideoRow {
+	flex-wrap: wrap;
+}
+
+.DropVideoRow iframe {
+	width: 256px;
+	height: 144px;
+	flex-shrink: 0;
+
+	border-radius: 10px;
+	border: 1px solid #262626;
+	background: rgba(0, 0, 0, 0.40);
+
+	margin-right: 16px;
+	margin-bottom: 16px;
+}
+
+.AudioRow {
+	height: 48px;
+
+	border-radius: 10px;
+	background: #262626;
+	align-items: center;
+
+	padding: 0px 12px;
+	margin-right: 16px;
+	margin-bottom: 16px;
+}

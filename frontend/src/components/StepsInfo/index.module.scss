@@ -1,0 +1,26 @@
+.stepsInfo {
+	width: 246px;
+	border: 1px solid #262626;
+	border-radius: 10px;
+
+	.stepRow {
+		justify-content: space-between;
+		padding: 10px 16px;
+		align-items: center;
+
+		.stepDone {
+			margin-right: 12.5px;
+			width: 16px;
+		}
+
+		.stepTitle {
+			max-width: 150px;
+			font-size: 14px;
+			line-height: 16px;
+		}
+
+		&:not(:last-child) {
+			border-bottom: 1px solid #262626;
+		}
+	}
+}

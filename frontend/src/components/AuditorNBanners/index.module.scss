@@ -1,0 +1,79 @@
+.wrapper {
+	width: 560px;
+	height: 393px;
+
+	border-radius: 10px;
+	border: 1px solid #333;
+	background: #262626;
+	box-shadow: 0px 0px 50px 0px rgba(0, 0, 0, 0.1);
+
+	padding: 13px 16px;
+}
+
+.blueLink {
+	color: #4169e1;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 16px;
+	cursor: pointer;
+}
+
+.AuditorWrapper {
+	// border-right: 1px solid #333;
+	margin-right: 13px;
+}
+
+.BannerWrapper {
+	padding-left: 16px;
+}
+
+.AuditorHeader,
+.BannerHeader {
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 5px;
+}
+
+.Line_Aud_1,
+.Line,
+.Line_Aud_2 {
+	background: #333;
+	position: relative;
+	right: 6.5%;
+	margin-bottom: 8px;
+	margin-top: 8px;
+}
+
+.Line_Aud_1 {
+	margin-bottom: 144px;
+}
+
+.Line_Aud_2 {
+	margin-bottom: 97px;
+}
+
+.Line_Ban {
+	background: #333;
+	position: relative;
+	right: 6%;
+	margin-bottom: 8px;
+	margin-top: 8px;
+}
+
+.navLabel {
+	color: #f2f2f2;
+	font-family: Inter;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 16px; /* 114.286% */
+	letter-spacing: -0.087px;
+}
+
+.LineHeight {
+	background: #333;
+	position: relative;
+	bottom: 62.65%;
+	right: 12.7%;
+	rotate: 90deg;
+}

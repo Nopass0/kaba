@@ -1,0 +1,56 @@
+.wrapper {
+	width: 528px;
+}
+
+.blueLink {
+	color: #4169e1;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 16px;
+	cursor: pointer;
+}
+
+// Input's
+
+.Input {
+	width: 528px;
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+
+.Input,
+.countryInputWelcome {
+	color: #f2f2f2;
+	font-family: Inter;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 16px; /* 114.286% */
+
+	&::placeholder {
+		font-size: 14px;
+		font-weight: 400;
+	}
+}
+
+.InputForm {
+	width: 528px;
+	margin-bottom: 8px;
+}
+
+.tooltiprow {
+	align-items: center;
+}
+
+.SelectMarketing {
+	margin-bottom: 8px;
+}
+
+.SelectMoney {
+	width: 528px;
+	margin-bottom: 32px;
+}
+
+.blueLinkRow {
+	margin-bottom: 64px;
+}

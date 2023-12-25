@@ -1,0 +1,88 @@
+.header {
+	// max-width: 1440px;
+	margin: 0px auto 0px auto;
+	height: 56px;
+	padding: 0 32px;
+	display: flex;
+	align-items: center;
+}
+
+.logo {
+	display: flex;
+	flex-direction: row;
+
+}
+
+.logo img:first-child {
+	margin-right: 8px;
+}
+
+.header_company {
+	// max-width: 1440px;
+	margin: 0px auto 0px auto;
+	height: 56px;
+	padding: 0 32px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.container {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
+	.icons_header {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+
+		.svgDinDon {
+			cursor: pointer;
+		}
+	}
+
+	.touchBtn {
+		width: 72px;
+		height: 32px;
+		border-radius: 16px;
+		padding: 8px 9px;
+		margin-left: 16px;
+		margin-right: 8px;
+
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		cursor: pointer;
+	}
+
+	.icons_header::before {
+		content: '';
+		position: relative;
+		top: 0;
+		left: 50%;
+		display: block;
+		width: 72px;
+		height: 32px;
+		border-radius: 16px;
+		background-color: #57bd53;
+		opacity: 0.15;
+		z-index: -1;
+	}
+
+	.touchBtn span {
+		display: flex;
+		align-items: center;
+		font-size: 14px;
+		width: 35px;
+		height: 16px;
+		padding-bottom: 1px;
+		opacity: 1;
+		color: #57bd53;
+	}
+
+	.touchSVG {
+		opacity: 1;
+	}
+}
