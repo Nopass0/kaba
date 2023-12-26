@@ -36,7 +36,8 @@ let defaultState = {
 		nick: '@testuser',
 		isBlogger: false,
 	},
-	users: [
+	users: 
+	[
 		{
 			id: 1,
 			name: 'Ольга Петрова',
@@ -135,14 +136,14 @@ const reducer = (state = defaultState, action: any) => {
 
 const store = createStore(reducer)
 
-const getStartPage = () => {
-	//If users length == 0 and user == null show main page. If user == null and users length > 0 show choose account. If user != null show Company page
-	if (defaultState.users.length === 0 && defaultState.user === null)
-		return <MainPage />
-	else if (defaultState.users.length > 0 && defaultState.user === null)
-		return <ChooseAccount />
-	else return <Company />
-}
+// const getStartPage = () => {
+// 	//If users length == 0 and user == null show main page. If user == null and users length > 0 show choose account. If user != null show Company page
+// 	if (defaultState.users.length === 0 && defaultState.user === null)
+// 		return <MainPage />
+// 	else if (defaultState.users.length > 0 && defaultState.user === null)
+// 		return <ChooseAccount />
+// 	else return <Company />
+// }
 
 const check = async () => {
 	const response = await checkAPI()
@@ -150,73 +151,77 @@ const check = async () => {
 }
 check()
 
+function getWHeader(router_element: any) {
+	return <><Header/>{router_element}</>
+}
+
 const router = createBrowserRouter([
 	//just for test
 	{
 		path: '/login',
-		element: <MainPage />,
+		element: getWHeader(<MainPage />),
 	},
 	{
 		path: 'choose',
-		element: <ChooseAccount />,
+		element: getWHeader(<ChooseAccount />),
 	},
 	{
 		path: '/',
-		element: getStartPage(),
+		element: getWHeader(<Company />),
 	},
 	{
 		path: '/register',
-		element: <Register />,
+		element: getWHeader(<Register />),
 	},
 	{
 		path: '/test',
-		element: <Test />,
+		element: getWHeader(<Test />),
 	},
 	{
 		path: '/welcome',
-		element: <Welcome />,
+		element: getWHeader(<Welcome />),
 	},
 	{
 		path: '/create',
-		element: <CompanyCreate />,
+		element: getWHeader(<CompanyCreate />),
 	},
 	{
 		path: '/settings',
-		element: <Settings />,
+		element: getWHeader(<Settings />),
 	},
 	{
 		path: '/bloggers',
-		element: <Bloggers />,
+		element: getWHeader(<Bloggers />),
 	},
 	{
 		path: '/finance',
-		element: <Finance />,
+		element: getWHeader(<Finance />),
 	},
 	{
 		path: '/sites',
-		element: <Sites />,
+		element: getWHeader(<Sites />),
 	},
 	{
 		path: '/statistics',
-		element: <Statistic />,
+		element: getWHeader(<Statistic />),
 	},
 	{
 		path: '/media',
-		element: <Media />,
+		element: getWHeader(<Media />),
 	},
 	{
 		path: '/mybanners',
-		element: <MyBanners />,
+		element: getWHeader(<MyBanners />),
 	},
 	{
 		path: '/statisticBlogger',
-		element: <StatisticBlogger />,
+		element: getWHeader(<StatisticBlogger />),
 	},
 ])
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
 		<Provider store={store}>
-			<Header />
+			{/* <Header /> */}
 			<RouterProvider router={router} />
 		</Provider>
 	</React.StrictMode>,
