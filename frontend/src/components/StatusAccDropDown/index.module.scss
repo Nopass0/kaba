@@ -88,3 +88,10 @@
 	background: #333;
 	margin: 0;
 }
+
+.emptyDiv {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	z-index: 2;
+}

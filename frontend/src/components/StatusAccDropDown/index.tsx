@@ -98,7 +98,17 @@ const StatusAccDropDown: React.FC<IStatusAccDropDown> = ({
 					</Row>
 					<Label isMini={true} text={`${text_link}`} />
 				</Col>
-				{open ? <ExpandLess /> : <ExpandMore />}
+				{open ? (
+					<>
+						<div className={s.emptyDiv}></div>
+						<ExpandLess />
+					</>
+				) : (
+					<>
+						<div className={s.emptyDiv}></div>
+						<ExpandMore />
+					</>
+				)}
 			</ListItemButton>
 			<Collapse in={open} timeout="auto" unmountOnExit>
 				<Col width="276px" className={s.ListInside}>

@@ -100,8 +100,10 @@ import AcceptCode from './pages/AcceptCode'
 // 	CurrentURL: '',
 // }
 
+let isLocalStorage:boolean = localStorage.length === 1
+
 let defaultState = {
-	user: null,
+	user: (isLocalStorage && JSON.parse(localStorage.getItem('kaba_data')).user) ? JSON.parse(localStorage.getItem('kaba_data')).user : null,
 	users: [] as Array<IUser>,
 
 	//Dataset for test
@@ -111,11 +113,15 @@ let defaultState = {
 	verify_user: null,
 }
 
+console.log(defaultState, 'default');
+console.log(isLocalStorage, 'LocalStorage')
+
 //Save data or get data to defaultState(Redux) from localStorage if it exists
 // defaultState = JSON.parse(localStorage.getItem('kaba_data')!)
 // if (localStorage.getItem('kaba_data') !== null) {
 // } else {
 // }
+
 
 const reducer = (state = defaultState, action: any) => {
 	switch (action.type) {
@@ -125,9 +131,10 @@ const reducer = (state = defaultState, action: any) => {
 			localStorage.setItem(
 				'kaba_data',
 				JSON.stringify({...state, user: action.user}),
-			)
+			),
+			defaultState.user = action.user
 
-			console.log('setUser', action.user)
+			console.log('setUser', action.user, '\n', defaultState.user)
 
 			return {...state, user: action.user}
 

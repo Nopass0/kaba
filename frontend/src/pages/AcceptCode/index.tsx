@@ -18,7 +18,6 @@ const AcceptCode: React.FC = () => {
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
 	const userId = useSelector((state: any) => state.verify_user)
-
 	const user_ = useSelector((state: any) => state.user)
 
 	const [code, setCode] = React.useState<string>('')
@@ -37,7 +36,7 @@ const AcceptCode: React.FC = () => {
 			await dispatch({type: 'addUser', user: user})
 			console.log(user_)
 
-			navigate('/')
+			window.location.pathname = '/'
 		}
 	}
 
