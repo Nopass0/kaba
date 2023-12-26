@@ -155,7 +155,7 @@ const Header: React.FC = () => {
 				<>
 					<div style={maxWidth} className={`${s.header_company} ${s.table_header_company}`}>
 						<div className={s.container}>
-							<HeaderDownMenu/>
+							<HeaderDownMenu className='pt-2'/>
 						</div>
 						<div className={s.container}>
 							<div className={s.icons_header}>

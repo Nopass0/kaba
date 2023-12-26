@@ -5,7 +5,7 @@ import Label from '../Label'
 import NavLabel from '../NavLabel/index'
 import Button from '../Button/index'
 import BlueButton from '../BlueButton/index'
-import {Link, redirect} from 'react-router-dom'
+import {Link, redirect, useLocation} from 'react-router-dom'
 import AccountAvatar from '../AccountAvatar'
 import * as mui from '@mui/base'
 import WhiteLabel from '../WhiteLabel'
@@ -15,6 +15,9 @@ import PopUpWrapper from '../PopUpWrapper/index'
 import Deposite from '../popup/DepositePopUp/index'
 import './index.css'
 import StatisticDropDownPopUp from '../popup/StatisticDropDownPopUp/index'
+import logo from '../../assets/logo.svg'
+import miniBeta from '../../assets/icons/MiniBeta.svg'
+import ExtraDropDownPopUp from '../popup/ExtraDropDownPopUp/index';
 
 enum PagePopup {
 	Deposite,
@@ -27,12 +30,16 @@ const LeftCompanyMenu: React.FC = () => {
 	const currentUser = useSelector((state: any) => state.user)
 	const CurrentURL = useSelector((state: any) => state.CurrentURL)
 	const users = useSelector((state: any) => state.users)
+	const location = useLocation()
 	const statisticRef = useRef()
 	const statisticButtonRef = useRef()
+	const extraRef = useRef()
+	const extraButtonRef = useRef()
 	//Current shown popup
 	const [pagePopup, setPagePopup] = React.useState<PagePopup | null>(null)
 	const [statisticDropDown, setStatisticDropDown] =
 		React.useState<boolean>(false)
+	const [extraDropDown,setExtraDropDown] = React.useState<boolean>(false)
 	const createCompany = () => {
 		console.log('create company')
 
@@ -64,6 +71,14 @@ const LeftCompanyMenu: React.FC = () => {
 			) {
 				setStatisticDropDown(false)
 			}
+
+			if (
+				extraRef.current &&
+				!extraRef.current.contains(event.target) &&
+				!extraButtonRef.current.contains(event.target)
+			) {
+				setExtraDropDown(false)
+			}
 		}
 
 		document.addEventListener('click', handleClickOutside)
@@ -71,13 +86,23 @@ const LeftCompanyMenu: React.FC = () => {
 		return () => {
 			document.removeEventListener('click', handleClickOutside)
 		}
-	}, [statisticDropDown])
+	}, [statisticDropDown,extraDropDown])
 
 	return (
 		<>
 			<div className={s.backgroundWrapper}>
-				<div className={s.wrapper}>
+				<div className={`${s.wrapper} ${['/', '/media', '/mybanners', '/sites'].includes(location.pathname) ? 'top-4 h-screen' : 'h-[90%]'}`}>
 					<Col className={s.wrapperLeft} width="180px">
+						{['/', '/media', '/mybanners', '/sites'].includes(
+							location.pathname,
+						) ? (	
+							<div className={s.logo}>
+								<img src={logo} alt="Logo" />
+								<img src={miniBeta} alt="B" />
+							</div>
+						) : (
+							<></>
+						)}
 						<div className={s.userNameLeft}>
 							<span className={s.userNameText}>
 								<AccountAvatar
@@ -328,12 +353,11 @@ const LeftCompanyMenu: React.FC = () => {
 									</Link>
 								</>
 							)}
-							<div className={`${s.statics} ${s.companyPage}`}>
+							<div className={`${s.statics} ${s.companyPage}`} onClick={() => setExtraDropDown(!extraDropDown)} ref={extraButtonRef}>
 								<div className={s.companyPageLeft}>
 									<span className={s.companyPageText}>Дополнит.</span>
 								</div>
 								<svg
-									ref={statisticButtonRef}
 									onClick={() => setStatisticDropDown(!statisticDropDown)}
 									xmlns="http://www.w3.org/2000/svg"
 									width="16"
@@ -549,8 +573,8 @@ const LeftCompanyMenu: React.FC = () => {
 								</span>
 							</div>
 							{/* <div className={s.footerCopy}>
-						<span className={s.footerCopyText}>© 2023 OOO «ИТКАБА»</span>
-					</div> */}
+								<span className={s.footerCopyText}>© 2023 OOO «ИТКАБА»</span>
+							</div> */}
 						</div>
 					</Col>
 					{pagePopup === PagePopup.Deposite && (
@@ -561,6 +585,11 @@ const LeftCompanyMenu: React.FC = () => {
 					{statisticDropDown && (
 						<div ref={statisticRef} className={s.statisticDropDown}>
 							<StatisticDropDownPopUp />
+						</div>
+					)}
+					{extraDropDown && (
+						<div ref={extraRef} className={s.extraDropDown}>
+							<ExtraDropDownPopUp/>
 						</div>
 					)}
 				</div>

@@ -9,7 +9,7 @@
 .wrapper {
 	position: fixed;
 	max-width: 180px;
-	height: 90%;
+	// height: 90%;
 	
 	display: flex;
 	flex-direction: column;
@@ -19,6 +19,16 @@
 
 	.wrapperRight {
 		margin-bottom: 30px;
+	}
+
+	.logo {
+		display: flex;
+		flex-direction: row;
+		margin-bottom: 32px;
+	}
+
+	.logo img:first-child {
+		margin-right: 9px;
 	}
 
 	.userNameLeft {
@@ -155,4 +165,12 @@
 	top: 260px;
 	margin: auto;
 	left: 185px;
+}
+
+.extraDropDown {
+	position: absolute;
+	top: 400px;
+	margin: auto;
+	left: 185px;
+
 }
