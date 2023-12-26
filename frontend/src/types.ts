@@ -11,12 +11,19 @@ export interface TGenderNAge {
 	AgeTo: number
 }
 
+export interface Response {
+	data: {
+		[name: string | number | symbol]: any
+	}
+	status: string
+}
+
 export interface IUser {
 	id: number
 	name: string
 	avatar: string
 	token: string
-	permission: IPermission
+	permission?: IPermission
 	isBlogger: boolean
 }
 

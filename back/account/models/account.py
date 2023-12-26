@@ -10,6 +10,7 @@ class accountModel(models.Model):
     # Сделал фамилию необязательным полем тк в макете регестрации это поле отсудствует
     name_last = models.CharField('Фамилия', max_length=100, blank=True)
     phone_number = models.CharField('Номер телефона', max_length=20, blank=False)
+    isBlogger = models.BooleanField('Блогер', default=False)
 
     def __str__(self):
         return str(self.pk) + ', ' + self.login + ', ' + self.name_first + ', ' + self.name_last

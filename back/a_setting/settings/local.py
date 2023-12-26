@@ -3,7 +3,7 @@ from a_setting.settings.base import *
 from a_module.scripts.db_env import *
 
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["http://localhost:5001", "localhost", "127.0.0.1"]
 
 
 # отправка сессий только через https

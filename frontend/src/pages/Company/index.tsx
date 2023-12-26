@@ -1,13 +1,26 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import s from './index.module.scss'
 import LeftCompanyMenu from '../../components/LeftCompanyMenu/index'
 import HeaderCompany from '../../components/HeaderCompany/index'
 import Table from '../../components/Table/index'
 import TableLineFooter from '../../components/TableLineFooter'
-import StatisticPageMini from '../../components/popup/StatisticPageMini/index';
-import PopUpWrapper from '../../components/PopUpWrapper/index';
+import StatisticPageMini from '../../components/popup/StatisticPageMini/index'
+import PopUpWrapper from '../../components/PopUpWrapper/index'
+import {useSelector} from 'react-redux'
+import {useNavigate} from 'react-router-dom'
 
 const Company: React.FC = () => {
+	const user = useSelector((state: any) => state.user)
+	const navigate = useNavigate()
+
+	useEffect(() => {
+		console.log(user)
+
+		if (user == null) {
+			navigate('/login')
+		}
+	}, [])
+
 	return (
 		<div className={s.wrapper}>
 			<div className={s.leftMenu}>
@@ -17,7 +30,7 @@ const Company: React.FC = () => {
 				{/* COMPANY */}
 				<HeaderCompany textHeader="Компании" needDownMenu={true} />
 				<Table />
-				
+
 				{/* <PopUpWrapper>
 					<StatisticPageMini/>
 				</PopUpWrapper> */}

@@ -23,80 +23,92 @@ import Media from './pages/Media'
 import MyBanners from './pages/MyBanners'
 import StatisticBlogger from './pages/StatisticBlogger/index'
 import {checkAPI} from './api/utils.api'
+import AcceptCode from './pages/AcceptCode'
+
+// let defaultState = {
+// 	user: {
+// id: 1,
+// name: 'Test User',
+// avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
+// permission: {
+// 	id: 0,
+// 	name: 'Просмотр',
+// } as IPermission,
+// nick: '@testuser',
+// isBlogger: false,
+// 	},
+// 	users:
+// 	[
+// 		{
+// 			id: 1,
+// 			name: 'Ольга Петрова',
+// 			avatar: 'https://randomuser.me/api/portraits/thumb/women/16.jpg',
+// 			token: '12345',
+// 			permission: {
+// 				id: 0,
+// 				name: 'Просмотр',
+// 			} as IPermission,
+// 			nick: '@testuser',
+
+// 			isBlogger: false,
+// 		} as IUser,
+// 		{
+// 			id: 2,
+// 			name: 'Екатерина Иванова',
+// 			avatar: 'https://randomuser.me/api/portraits/thumb/women/13.jpg',
+// 			token: '4343',
+// 			permission: {
+// 				id: 0,
+// 				name: 'Просмотр',
+// 			} as IPermission,
+// 			nick: '@testuser',
+
+// 			isBlogger: true,
+// 		} as IUser,
+// 		{
+// 			id: 3,
+// 			name: 'Иван Иванов',
+// 			avatar: 'https://randomuser.me/api/portraits/thumb/men/75.jpg',
+// 			token: '123424245',
+// 			permission: {
+// 				id: 0,
+// 				name: 'Просмотр',
+// 			} as IPermission,
+// 			nick: '@testuser',
+
+// 			isBlogger: false,
+// 		} as IUser,
+// 		{
+// 			id: 4,
+// 			name: 'Человек человеков',
+// 			avatar: 'https://randomuser.me/api/portraits/thumb/men/23.jpg',
+// 			token: '5645634',
+// 			permission: {
+// 				id: 0,
+// 				name: 'Просмотр',
+// 			} as IPermission,
+// 			nick: '@testuser',
+
+// 			isBlogger: false,
+// 		} as IUser,
+// 	] as Array<IUser>,
+
+// 	//Dataset for test
+// 	test: {
+// 		users: Array<IUser>(),
+// 	},
+// 	CurrentURL: '',
+// }
 
 let defaultState = {
-	user: {
-		id: 1,
-		name: 'Test User',
-		avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
-		permission: {
-			id: 0,
-			name: 'Просмотр',
-		} as IPermission,
-		nick: '@testuser',
-		isBlogger: false,
-	},
-	users: 
-	[
-		{
-			id: 1,
-			name: 'Ольга Петрова',
-			avatar: 'https://randomuser.me/api/portraits/thumb/women/16.jpg',
-			token: '12345',
-			permission: {
-				id: 0,
-				name: 'Просмотр',
-			} as IPermission,
-			nick: '@testuser',
-
-			isBlogger: false,
-		} as IUser,
-		{
-			id: 2,
-			name: 'Екатерина Иванова',
-			avatar: 'https://randomuser.me/api/portraits/thumb/women/13.jpg',
-			token: '4343',
-			permission: {
-				id: 0,
-				name: 'Просмотр',
-			} as IPermission,
-			nick: '@testuser',
-
-			isBlogger: true,
-		} as IUser,
-		{
-			id: 3,
-			name: 'Иван Иванов',
-			avatar: 'https://randomuser.me/api/portraits/thumb/men/75.jpg',
-			token: '123424245',
-			permission: {
-				id: 0,
-				name: 'Просмотр',
-			} as IPermission,
-			nick: '@testuser',
-
-			isBlogger: false,
-		} as IUser,
-		{
-			id: 4,
-			name: 'Человек человеков',
-			avatar: 'https://randomuser.me/api/portraits/thumb/men/23.jpg',
-			token: '5645634',
-			permission: {
-				id: 0,
-				name: 'Просмотр',
-			} as IPermission,
-			nick: '@testuser',
-
-			isBlogger: false,
-		} as IUser,
-	] as Array<IUser>,
+	user: null,
+	users: [] as Array<IUser>,
 
 	//Dataset for test
 	test: {
 		users: Array<IUser>(),
 	},
-	CurrentURL: '',
+	verify_user: null,
 }
 
 //Save data or get data to defaultState(Redux) from localStorage if it exists
@@ -118,6 +130,14 @@ const reducer = (state = defaultState, action: any) => {
 			console.log('setUser', action.user)
 
 			return {...state, user: action.user}
+
+		case 'setVerifyUser':
+			console.log('setVerifyUser', action.verify_user)
+
+			return {...state, verify_user: action.verify_user}
+
+		case 'addUser':
+			return {...state, users: [...state.users, action.user]}
 
 		case 'setUrl':
 			localStorage.setItem(
@@ -152,7 +172,12 @@ const check = async () => {
 check()
 
 function getWHeader(router_element: any) {
-	return <><Header/>{router_element}</>
+	return (
+		<>
+			<Header />
+			{router_element}
+		</>
+	)
 }
 
 const router = createBrowserRouter([
@@ -216,6 +241,10 @@ const router = createBrowserRouter([
 	{
 		path: '/statisticBlogger',
 		element: getWHeader(<StatisticBlogger />),
+	},
+	{
+		path: '/acceptCode',
+		element: getWHeader(<AcceptCode />),
 	},
 ])
 ReactDOM.createRoot(document.getElementById('root')!).render(
