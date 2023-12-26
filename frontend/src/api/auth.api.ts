@@ -17,3 +17,10 @@ export const loginAPI = async (login: string) => {
 		return {status: 'error'}
 	}
 }
+
+export const verifyAPI = async (user_id: number, code: string) => {
+	return await axios.post(getApiUrl('verify_code'), {
+		code: code,
+		user_id: user_id,
+	})
+}

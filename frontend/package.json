@@ -21,6 +21,7 @@
 		"@mui/styled-engine-sc": "^6.0.0-alpha.6",
 		"@reduxjs/toolkit": "^1.9.7",
 		"@table-library/react-table-library": "^4.1.7",
+		"@types/axios": "^0.14.0",
 		"@types/chart.js": "^2.9.41",
 		"axios": "^1.6.0",
 		"chart.js": "^4.4.0",

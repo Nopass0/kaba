@@ -137,6 +137,16 @@ class verify_codeAPIViews(APIView):
         saved_code = current_verification.last().code_verification
 
 
+        # id: 1,
+		# name: 'Test User',
+		# avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
+		# permission: {
+		# 	id: 0,
+		# 	name: 'Просмотр',
+		# } as IPermission,
+		# nick: '@testuser',
+		# isBlogger: false,
+
         # Проверка кода верификации
         if str(verify_code) == str(saved_code):
             # Создание токена и его сохранение
@@ -144,7 +154,13 @@ class verify_codeAPIViews(APIView):
             tokenModel(account=current_account.first(), token=token).save()
             data = {
                 'status': 'success',
-                'token': token
+                'token': token,
+                'user_id': current_account.first().id,
+                'name': current_account.first().name_first + ' ' + current_account.first().name_last,
+                'avatar': current_account.first().avatar,
+                # 'permission': current_account.first().permission,
+                'nick': current_account.first().login,
+                'isBlogger': current_account.first().isBlogger,
             }
         else:
             return Response({'error': 'Invalid code.'}, status=status.HTTP_400_BAD_REQUEST)

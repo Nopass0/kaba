@@ -12,7 +12,7 @@ interface IInput {
 	maximumLength?: number
 	conteinerWidth?: string
 	isShowMaxLength?: boolean
-	bgColor?: string,
+	bgColor?: string
 	height?: string
 	onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
@@ -44,14 +44,14 @@ const Input: React.FC<IInput> = ({
 				<input
 					maxLength={maximumLength}
 					onChange={(event) => {
-						onChange
+						onChange(event)
 						setLengthString(maximumLength! - event.target.value.length)
 					}}
 					type={isSecure ? 'password' : 'text'}
 					style={Object.assign(
 						{width: width, minWidth: minWidth},
 						bgColor ? {backgroundColor: bgColor} : {},
-						height ?  {height: height} : {},
+						height ? {height: height} : {},
 					)}
 					placeholder={placeholder}
 					className={s.inputText + ' ' + (errorMsg ? s.error : '')}
