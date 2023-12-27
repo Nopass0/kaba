@@ -25,96 +25,96 @@ import StatisticBlogger from './pages/StatisticBlogger/index'
 import {checkAPI} from './api/utils.api'
 import AcceptCode from './pages/AcceptCode'
 
-// let defaultState = {
-// 	user: {
-// id: 1,
-// name: 'Test User',
-// avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
-// permission: {
-// 	id: 0,
-// 	name: 'Просмотр',
-// } as IPermission,
-// nick: '@testuser',
-// isBlogger: false,
-// 	},
-// 	users:
-// 	[
-// 		{
-// 			id: 1,
-// 			name: 'Ольга Петрова',
-// 			avatar: 'https://randomuser.me/api/portraits/thumb/women/16.jpg',
-// 			token: '12345',
-// 			permission: {
-// 				id: 0,
-// 				name: 'Просмотр',
-// 			} as IPermission,
-// 			nick: '@testuser',
-
-// 			isBlogger: false,
-// 		} as IUser,
-// 		{
-// 			id: 2,
-// 			name: 'Екатерина Иванова',
-// 			avatar: 'https://randomuser.me/api/portraits/thumb/women/13.jpg',
-// 			token: '4343',
-// 			permission: {
-// 				id: 0,
-// 				name: 'Просмотр',
-// 			} as IPermission,
-// 			nick: '@testuser',
-
-// 			isBlogger: true,
-// 		} as IUser,
-// 		{
-// 			id: 3,
-// 			name: 'Иван Иванов',
-// 			avatar: 'https://randomuser.me/api/portraits/thumb/men/75.jpg',
-// 			token: '123424245',
-// 			permission: {
-// 				id: 0,
-// 				name: 'Просмотр',
-// 			} as IPermission,
-// 			nick: '@testuser',
-
-// 			isBlogger: false,
-// 		} as IUser,
-// 		{
-// 			id: 4,
-// 			name: 'Человек человеков',
-// 			avatar: 'https://randomuser.me/api/portraits/thumb/men/23.jpg',
-// 			token: '5645634',
-// 			permission: {
-// 				id: 0,
-// 				name: 'Просмотр',
-// 			} as IPermission,
-// 			nick: '@testuser',
-
-// 			isBlogger: false,
-// 		} as IUser,
-// 	] as Array<IUser>,
-
-// 	//Dataset for test
-// 	test: {
-// 		users: Array<IUser>(),
-// 	},
-// 	CurrentURL: '',
-// }
-
-let isLocalStorage:boolean = localStorage.length === 1
-
 let defaultState = {
-	user: (isLocalStorage && JSON.parse(localStorage.getItem('kaba_data')).user) ? JSON.parse(localStorage.getItem('kaba_data')).user : null,
-	users: [] as Array<IUser>,
+	user: {
+id: 1,
+name: 'Test User',
+avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
+permission: {
+	id: 0,
+	name: 'Просмотр',
+} as IPermission,
+nick: '@testuser',
+isBlogger: false,
+	},
+	users:
+	[
+		{
+			id: 1,
+			name: 'Ольга Петрова',
+			avatar: 'https://randomuser.me/api/portraits/thumb/women/16.jpg',
+			token: '12345',
+			permission: {
+				id: 0,
+				name: 'Просмотр',
+			} as IPermission,
+			nick: '@testuser',
+
+			isBlogger: false,
+		} as IUser,
+		{
+			id: 2,
+			name: 'Екатерина Иванова',
+			avatar: 'https://randomuser.me/api/portraits/thumb/women/13.jpg',
+			token: '4343',
+			permission: {
+				id: 0,
+				name: 'Просмотр',
+			} as IPermission,
+			nick: '@testuser',
+
+			isBlogger: true,
+		} as IUser,
+		{
+			id: 3,
+			name: 'Иван Иванов',
+			avatar: 'https://randomuser.me/api/portraits/thumb/men/75.jpg',
+			token: '123424245',
+			permission: {
+				id: 0,
+				name: 'Просмотр',
+			} as IPermission,
+			nick: '@testuser',
+
+			isBlogger: false,
+		} as IUser,
+		{
+			id: 4,
+			name: 'Человек человеков',
+			avatar: 'https://randomuser.me/api/portraits/thumb/men/23.jpg',
+			token: '5645634',
+			permission: {
+				id: 0,
+				name: 'Просмотр',
+			} as IPermission,
+			nick: '@testuser',
+
+			isBlogger: false,
+		} as IUser,
+	] as Array<IUser>,
 
 	//Dataset for test
 	test: {
 		users: Array<IUser>(),
 	},
-	verify_user: null,
+	CurrentURL: '',
 }
 
-console.log(defaultState, 'default');
-console.log(isLocalStorage, 'LocalStorage')
+// let isLocalStorage:boolean = localStorage.length === 1
+
+// let defaultState = {
+// 	user: (isLocalStorage && JSON.parse(localStorage.getItem('kaba_data')).user) ? JSON.parse(localStorage.getItem('kaba_data')).user : null,
+// 	users: [] as Array<IUser>,
+
+// 	//Dataset for test
+// 	test: {
+// 		users: Array<IUser>(),
+// 	},
+// 	verify_user: null,
+// }
+
+// console.log(defaultState, 'default');
+// console.log(isLocalStorage, 'LocalStorage')
 
 //Save data or get data to defaultState(Redux) from localStorage if it exists
 // defaultState = JSON.parse(localStorage.getItem('kaba_data')!)

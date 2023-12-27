@@ -17,7 +17,7 @@ import './index.css'
 import StatisticDropDownPopUp from '../popup/StatisticDropDownPopUp/index'
 import logo from '../../assets/logo.svg'
 import miniBeta from '../../assets/icons/MiniBeta.svg'
-import ExtraDropDownPopUp from '../popup/ExtraDropDownPopUp/index';
+import ExtraDropDownPopUp from '../popup/ExtraDropDownPopUp/index'
 
 enum PagePopup {
 	Deposite,
@@ -39,7 +39,7 @@ const LeftCompanyMenu: React.FC = () => {
 	const [pagePopup, setPagePopup] = React.useState<PagePopup | null>(null)
 	const [statisticDropDown, setStatisticDropDown] =
 		React.useState<boolean>(false)
-	const [extraDropDown,setExtraDropDown] = React.useState<boolean>(false)
+	const [extraDropDown, setExtraDropDown] = React.useState<boolean>(false)
 	const createCompany = () => {
 		console.log('create company')
 
@@ -86,16 +86,21 @@ const LeftCompanyMenu: React.FC = () => {
 		return () => {
 			document.removeEventListener('click', handleClickOutside)
 		}
-	}, [statisticDropDown,extraDropDown])
+	}, [statisticDropDown, extraDropDown])
 
 	return (
 		<>
 			<div className={s.backgroundWrapper}>
-				<div className={`${s.wrapper} ${['/', '/media', '/mybanners', '/sites'].includes(location.pathname) ? 'top-4 h-screen' : 'h-[90%]'}`}>
+				<div
+					className={`${s.wrapper} ${
+						['/', '/media', '/mybanners', '/sites'].includes(location.pathname)
+							? 'top-4 h-screen'
+							: 'h-[90%]'
+					}`}>
 					<Col className={s.wrapperLeft} width="180px">
 						{['/', '/media', '/mybanners', '/sites'].includes(
 							location.pathname,
-						) ? (	
+						) ? (
 							<div className={s.logo}>
 								<img src={logo} alt="Logo" />
 								<img src={miniBeta} alt="B" />
@@ -353,7 +358,22 @@ const LeftCompanyMenu: React.FC = () => {
 									</Link>
 								</>
 							)}
-							<div className={`${s.statics} ${s.companyPage}`} onClick={() => setExtraDropDown(!extraDropDown)} ref={extraButtonRef}>
+							<mui.Select
+								className=" w-[180px] h-[36px] absolute z-10 opacity-0"
+								renderValue={(option: mui.SelectOption<number> | null) => {
+									if (option == null || option.value === null) {
+										return ''
+									}
+									return `${option.label}`
+								}}>
+								<mui.Option value={1} className='relative top-[-30px] left-[180px]'>
+									<ExtraDropDownPopUp />
+								</mui.Option>
+							</mui.Select>
+							<div
+								className={`${s.statics} ${s.companyPage}`}
+								// onClick={() => setExtraDropDown(!extraDropDown)}
+								ref={extraButtonRef}>
 								<div className={s.companyPageLeft}>
 									<span className={s.companyPageText}>Дополнит.</span>
 								</div>
@@ -585,11 +605,6 @@ const LeftCompanyMenu: React.FC = () => {
 					{statisticDropDown && (
 						<div ref={statisticRef} className={s.statisticDropDown}>
 							<StatisticDropDownPopUp />
-						</div>
-					)}
-					{extraDropDown && (
-						<div ref={extraRef} className={s.extraDropDown}>
-							<ExtraDropDownPopUp/>
 						</div>
 					)}
 				</div>
