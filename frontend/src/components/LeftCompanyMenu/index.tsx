@@ -376,7 +376,7 @@ const LeftCompanyMenu: React.FC = () => {
 								</mui.Option>
 							</mui.Select>
 							<div
-								className={`${s.statics} ${s.companyPage} ${CurrentURL === 'finance' || CurrentURL === 'settings' ? s.active : ''}`}
+								className={`${s.statics} ${s.companyPage} ${location.pathname === '/finance' || location.pathname === '/settings' ? s.active : ''}`}
 								// onClick={() => setExtraDropDown(!extraDropDown)}
 								// ref={extraButtonRef}
 								>
