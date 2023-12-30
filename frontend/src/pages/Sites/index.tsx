@@ -15,7 +15,7 @@ const Sites: React.FC = () => {
 			<div className={s.rightMenu}>
 
 				{/* SITES */}
-				<HeaderCompany textHeader="Компании" />
+				{/* <HeaderCompany textHeader="Компании" /> */}
 				<TableSites />
 
 			</div>

@@ -80,6 +80,7 @@ const Header: React.FC = () => {
 				'/login',
 				'/register',
 				'/choose',
+				'/acceptCode',
 				'/',
 				'/mybanners',
 				'/sites',
@@ -88,10 +89,10 @@ const Header: React.FC = () => {
 				<>
 					<div style={maxWidth} className={s.header_company}>
 						<div className={s.container}>
-							<div className={s.logo}>
+							{/* <div className={s.logo}>
 								<img src={logo} alt="logo" />
 								<img src={BetaLogo} alt="Beta" />
-							</div>
+							</div> */}
 						</div>
 						<div className={s.container}>
 							<div className={s.icons_header}>

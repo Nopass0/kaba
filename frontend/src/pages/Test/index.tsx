@@ -302,7 +302,7 @@ const Test: React.FC = () => {
 			{/* <InfoCompany/> */}
 			{/* <RatePopUp/> */}
 			{/* <DeleteCompany/> */}
-			{/* <StatusAcc/> */}
+			<StatusAcc/>
 			{/* <Select/> */}
 			{/* <StepsInfo
         steps={[
@@ -346,7 +346,7 @@ const Test: React.FC = () => {
 	  {/* <StatusAccDropDown/> */}
 	  {/* <ProfilePopUpLeftSide/> */}
 	  {/* <StatisticDropDownPopUp/> */}
-	  <HeaderDownMenu/>
+	  {/* <HeaderDownMenu/> */}
 		</div>
 	)
 }

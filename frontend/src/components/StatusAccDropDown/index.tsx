@@ -54,7 +54,17 @@ const StatusAccDropDown: React.FC<IStatusAccDropDown> = ({
 
 	return (
 		<div className={s.OneBlockList + ' ' + className}>
-			<ListItemButton className={s.buttonList} onClick={handleClick}>
+			<ListItemButton sx={[
+				{
+					'&:hover': {
+						background: 'none !important'
+					},
+					cursor: 'pointer',
+					'*': {
+						cursor: 'transparent'
+					}
+				}
+			]} className={s.buttonList} onClick={handleClick}>
 				<Col width="auto" className={s.ColList}>
 					<Row width="auto" className={s.RowList}>
 						{svg_icon_title}

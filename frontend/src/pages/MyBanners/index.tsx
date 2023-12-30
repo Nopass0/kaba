@@ -15,7 +15,7 @@ const MyBanners: React.FC = () => {
 			</div>
 			<div className={s.rightMenu}>
 				{/* COMPANY */}
-				<HeaderCompany  textHeader="Мои баннеры"/>
+				{/* <HeaderCompany  textHeader="Мои баннеры"/> */}
 				<TableBanners/>
 				{/* <TableLineFooter className={s.TableLineFooter} /> */}
 				

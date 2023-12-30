@@ -16,6 +16,7 @@ import Deposite from '../popup/DepositePopUp/index'
 import './index.css'
 import StatisticDropDownPopUp from '../popup/StatisticDropDownPopUp/index'
 import logo from '../../assets/logo.svg'
+import BetaLogo from '../../assets/icons/BetaLogo.svg'
 import miniBeta from '../../assets/icons/MiniBeta.svg'
 import ExtraDropDownPopUp from '../popup/ExtraDropDownPopUp/index'
 
@@ -87,16 +88,13 @@ const LeftCompanyMenu: React.FC = () => {
 			document.removeEventListener('click', handleClickOutside)
 		}
 	}, [statisticDropDown, extraDropDown])
-
+	console.log(CurrentURL, 'CURRENT URL');
+	
 	return (
 		<>
 			<div className={s.backgroundWrapper}>
 				<div
-					className={`${s.wrapper} ${
-						['/', '/media', '/mybanners', '/sites'].includes(location.pathname)
-							? 'top-4 h-screen'
-							: 'h-[90%]'
-					}`}>
+					className={`${s.wrapper} top-4 h-screen`}>
 					<Col className={s.wrapperLeft} width="180px">
 						{['/', '/media', '/mybanners', '/sites'].includes(
 							location.pathname,
@@ -106,7 +104,12 @@ const LeftCompanyMenu: React.FC = () => {
 								<img src={miniBeta} alt="B" />
 							</div>
 						) : (
-							<></>
+							<>
+								<div className={s.logo}>
+									<img src={logo} alt="Logo" />
+									<img src={BetaLogo} alt="B" />
+								</div>
+							</>
 						)}
 						<div className={s.userNameLeft}>
 							<span className={s.userNameText}>
@@ -359,22 +362,25 @@ const LeftCompanyMenu: React.FC = () => {
 								</>
 							)}
 							<mui.Select
-								className=" w-[180px] h-[36px] absolute z-10 opacity-0"
+								className=" w-[180px] h-[36px] absolute opacity-0 z-1"
 								renderValue={(option: mui.SelectOption<number> | null) => {
 									if (option == null || option.value === null) {
 										return ''
 									}
 									return `${option.label}`
-								}}>
+								}}
+								// defaultValue={'test'}
+								>
 								<mui.Option value={1} className='relative top-[-30px] left-[180px]'>
 									<ExtraDropDownPopUp />
 								</mui.Option>
 							</mui.Select>
 							<div
-								className={`${s.statics} ${s.companyPage}`}
+								className={`${s.statics} ${s.companyPage} ${CurrentURL === 'finance' || CurrentURL === 'settings' ? s.active : ''}`}
 								// onClick={() => setExtraDropDown(!extraDropDown)}
-								ref={extraButtonRef}>
-								<div className={s.companyPageLeft}>
+								// ref={extraButtonRef}
+								>
+								<div className={`${s.companyPageLeft}`}>
 									<span className={s.companyPageText}>Дополнит.</span>
 								</div>
 								<svg

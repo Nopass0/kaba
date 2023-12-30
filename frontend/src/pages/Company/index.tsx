@@ -28,7 +28,7 @@ const Company: React.FC = () => {
 			</div>
 			<div className={s.rightMenu}>
 				{/* COMPANY */}
-				<HeaderCompany textHeader="Компании" needDownMenu={true} />
+				{/* <HeaderCompany textHeader="Компании" needDownMenu={true} /> */}
 				<Table />
 
 				{/* <PopUpWrapper>

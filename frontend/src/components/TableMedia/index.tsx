@@ -354,7 +354,6 @@ const THEME = {
   
 //   margin-bottom: 20px;
   width: 100%;
-max-height: 82vh;
   
   // scrollbar-gutter: stable;
 //   overflow: hidden;

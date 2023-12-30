@@ -34,7 +34,9 @@
 }
 
 .OneBlockList {
-	margin-top: 16px !important;
+	// margin-top: 16px !important;
+	padding-top: 6px !important;
+	padding-bottom: 8px !important;
 	border-radius: 8px;
 }
 
@@ -90,8 +92,10 @@
 }
 
 .emptyDiv {
+	// background-color: red;
 	position: absolute;
-	width: 20px;
-	height: 20px;
+	right: 10px;
+	width: 40px;
+	height: 40px;
 	z-index: 2;
 }

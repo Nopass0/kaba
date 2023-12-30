@@ -881,7 +881,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 												className={s.audiotoriaNBanners}>
 												<WhiteLabel text={item.audiotoria} />
 												<WhiteLabel
-													text={` и ${item.baners}`}
+													text={` и (${item.baners})`}
 													className="ml-1"
 												/>
 

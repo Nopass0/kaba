@@ -12,7 +12,7 @@ const Media: React.FC = () => {
 				<LeftCompanyMenu />
 			</div>
 			<div className={s.rightMenu}>
-				<HeaderCompany textHeader='Медиаплощадки'/>
+				{/* <HeaderCompany textHeader='Медиаплощадки'/> */}
             	<TableMedia/>
 
 
