@@ -6,7 +6,8 @@ import Line from '../../Line'
 import WhiteLabel from '../../WhiteLabel/index'
 import {Collapse, ListItemButton} from '@mui/material'
 import {ExpandLess, ExpandMore} from '@mui/icons-material'
-import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
+import {useDispatch} from 'react-redux'
 
 interface IExtraDropDownPopUp {
 	className?: string // Added className prop
@@ -15,10 +16,22 @@ interface IExtraDropDownPopUp {
 const ExtraDropDownPopUp: React.FC<IExtraDropDownPopUp> = ({
 	className,
 }: IExtraDropDownPopUp) => {
+	const dispatch = useDispatch()
+
+	const setCurrentUrl = (url: string) => {
+		dispatch({
+			type: 'setUrl',
+			CurrentURL: url,
+		})
+	}
+
 	return (
 		<div className={s.wrapper + ' ' + className}>
 			<Col width="150px" className={s.ColWrapper}>
-				<Link to={'/finance'} className={s.WhiteLabelBtn}>
+				<Link
+					onClick={() => setCurrentUrl('/finance')}
+					to={'/finance'}
+					className={s.WhiteLabelBtn}>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						width="24"
@@ -35,7 +48,10 @@ const ExtraDropDownPopUp: React.FC<IExtraDropDownPopUp> = ({
 					<WhiteLabel className={s.WhiteLabel} text="Финансы" />
 				</Link>
 				<Line width="157px" className={s.Line} />
-				<Link to={'/settings'} className={s.WhiteLabelBtn}>
+				<Link
+					onClick={() => setCurrentUrl('/settings')}
+					to={'/settings'}
+					className={s.WhiteLabelBtn}>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						width="24"

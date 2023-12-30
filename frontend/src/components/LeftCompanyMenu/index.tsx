@@ -88,13 +88,12 @@ const LeftCompanyMenu: React.FC = () => {
 			document.removeEventListener('click', handleClickOutside)
 		}
 	}, [statisticDropDown, extraDropDown])
-	console.log(CurrentURL, 'CURRENT URL');
-	
+	console.log(CurrentURL, 'CURRENT URL')
+
 	return (
 		<>
 			<div className={s.backgroundWrapper}>
-				<div
-					className={`${s.wrapper} top-4 h-screen`}>
+				<div className={`${s.wrapper} top-4 h-screen`}>
 					<Col className={s.wrapperLeft} width="180px">
 						{['/', '/media', '/mybanners', '/sites'].includes(
 							location.pathname,
@@ -370,16 +369,22 @@ const LeftCompanyMenu: React.FC = () => {
 									return `${option.label}`
 								}}
 								// defaultValue={'test'}
-								>
-								<mui.Option value={1} className='relative top-[-30px] left-[180px]'>
+							>
+								<mui.Option
+									value={1}
+									className="relative top-[-30px] left-[180px]">
 									<ExtraDropDownPopUp />
 								</mui.Option>
 							</mui.Select>
 							<div
-								className={`${s.statics} ${s.companyPage} ${location.pathname === '/finance' || location.pathname === '/settings' ? s.active : ''}`}
+								className={`${s.statics} ${s.companyPage} ${
+									CurrentURL === '/finance' || CurrentURL === '/settings'
+										? s.active
+										: ''
+								}`}
 								// onClick={() => setExtraDropDown(!extraDropDown)}
 								// ref={extraButtonRef}
-								>
+							>
 								<div className={`${s.companyPageLeft}`}>
 									<span className={s.companyPageText}>Дополнит.</span>
 								</div>
