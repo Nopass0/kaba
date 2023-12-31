@@ -23,7 +23,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'db_kaba',
         'USER': 'postgres',
-        'PASSWORD': 'root',
+        'PASSWORD': '1488',
         'HOST': 'localhost',
         'PORT': '5432',
     }

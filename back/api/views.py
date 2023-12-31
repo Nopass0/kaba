@@ -1,10 +1,16 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework import status
 from django.core.serializers import serialize
 
+from .permissions import isValidToken
+from .serializers import *
+
+from account.models.action import actionModel
 from account.models.account import accountModel
 from account.models.verification import verificationModel
+from account.models.social_network import social_networkModel
 from ad_advertiser.models.ad.ad_company import ad_companyModel
 from ad_advertiser.models.profile.profile import profileModel
 from .models import tokenModel
@@ -24,9 +30,11 @@ def normalize_phone_number(pNumber: str) -> str | None:
     else:
         return None
     
+
 class check_api(APIView):
     def get(self, request, *args, **kwargs):
         return Response({'status': 'ok'})
+
 
 class verifyAPIViews(APIView):
     """
@@ -167,6 +175,7 @@ class verify_codeAPIViews(APIView):
 
         return Response(data, status=status.HTTP_200_OK)
     
+
 class check_tokenAPIViews(APIView):
     def post(self, request):
         token = request.data.get('token', '')
@@ -178,6 +187,7 @@ class check_tokenAPIViews(APIView):
             return Response({'error': 'token is invalid.'}, status=status.HTTP_400_BAD_REQUEST)
         
         return Response({'status': 'ok', 'user_id': current_token.first().account.id}, status=status.HTTP_200_OK)
+
 
 # all private data can be accessed by user token
 # get ad_companyModel (private POST)
@@ -198,7 +208,9 @@ class getCompaniesAPIViews(APIView):
         print(companies, user)
         return Response(companies, status=status.HTTP_200_OK)
     
+
 # add ad_companyModel (private PUT) TODO
+
 
 # create profile (private POST)
 class createProfileAPIViews(APIView):
@@ -231,6 +243,7 @@ class createProfileAPIViews(APIView):
         profile.save()
         return Response({'status': 'ok', 'user_id': user.id, 'profile_id': profile.id}, status=status.HTTP_200_OK)
     
+
 # get profile (private POST)
 class getProfileAPIViews(APIView):
     def post(self, request):
@@ -253,3 +266,142 @@ class getProfileAPIViews(APIView):
         profile = list(profileModel.objects.filter(account=user).values())
         
         return Response(profile, status=status.HTTP_200_OK)
+    
+
+# Ниже вьюшки ListCreateAPIView для всех моделей в проекте (GET - получение записей, POST - добавление новой записи)
+# Не работают без передачи токена
+class accountModellListCreateView(generics.ListCreateAPIView):
+    queryset = accountModel.objects.all()
+    serializer_class = accountSerializer
+    permission_classes = [isValidToken]
+
+
+class actionModellListCreateView(generics.ListCreateAPIView):
+    queryset = actionModel.objects.all()
+    serializer_class = actionSerializer
+    permission_classes = [isValidToken]
+
+
+class social_networkModelListCreateView(generics.ListCreateAPIView):
+    queryset = social_networkModel.objects.all()
+    serializer_class = social_networkSerializer
+    permission_classes = [isValidToken]
+
+
+class ad_companyModelListCreateView(generics.ListCreateAPIView):
+    queryset = ad_companyModel.objects.all()
+    serializer_class = ad_companySerializer
+    permission_classes = [isValidToken]
+
+
+class ad_audienceModelListCreateView(generics.ListCreateAPIView):
+    queryset = ad_audience.ad_audienceModel.objects.all()
+    serializer_class = ad_audienceSerializer
+    permission_classes = [isValidToken]
+
+
+class ad_bannerModelListCreateView(generics.ListCreateAPIView):
+    queryset = ad_banner.ad_bannerModel.objects.all()
+    serializer_class = ad_bannerSerializer
+    permission_classes = [isValidToken]
+
+
+class ad_companyModelListCreateView(generics.ListCreateAPIView):
+    queryset = columns_ad_company.columns_ad_companyModel.objects.all()
+    serializer_class = columns_ad_companySerializer
+    permission_classes = [isValidToken]
+
+
+class ad_audienceModelListCreateView(generics.ListCreateAPIView):
+    queryset = columns_ad_audience.columns_ad_audienceModel.objects.all()
+    serializer_class = columns_ad_audienceSerializer
+    permission_classes = [isValidToken]
+
+
+class ad_bannerModelListCreateView(generics.ListCreateAPIView):
+    queryset = columns_ad_banner.columns_ad_bannerModel.objects.all()
+    serializer_class = columns_ad_bannerSerializer
+    permission_classes = [isValidToken]
+
+
+class finance_operationModelListCreateView(generics.ListCreateAPIView):
+    queryset = finance_operation.finance_operationModel.objects.all()
+    serializer_class = finance_operationSerializer
+    permission_classes = [isValidToken]
+
+
+class notificationModelListCreateView(generics.ListCreateAPIView):
+    queryset = notification.notificationModel.objects.all()
+    serializer_class = notificationSerializer
+    permission_classes = [isValidToken]
+
+
+class statisticsModelListCreateView(generics.ListCreateAPIView):
+    queryset = statistics.statisticsModel.objects.all()
+    serializer_class = statisticsSerializer
+    permission_classes = [isValidToken]
+
+
+class setting_notificationModelListCreateView(generics.ListCreateAPIView):
+    queryset = setting_notification.setting_notificationModel.objects.all()
+    serializer_class = setting_notificationSerializer
+    permission_classes = [isValidToken]
+
+
+class profileModelListCreateView(generics.ListCreateAPIView):
+    queryset = profile.profileModel.objects.all()
+    serializer_class = profileSerializer
+    permission_classes = [isValidToken]
+
+class siteModelListCreateView(generics.ListCreateAPIView):
+    queryset = site.siteModel.objects.all()
+    serializer_class = siteSerializer
+    permission_classes = [isValidToken]
+
+
+class site_ratingModelListCreateView(generics.ListCreateAPIView):
+    queryset = site_rating.site_ratingModel.objects.all()
+    serializer_class = site_ratingSerializer
+    permission_classes = [isValidToken]
+
+
+class site_profileModelListCreateView(generics.ListCreateAPIView):
+    queryset = site_profile.site_profileModel.objects.all()
+    serializer_class = site_profileSerializer
+    permission_classes = [isValidToken]
+
+
+class banner_profileModelListCreateView(generics.ListCreateAPIView):
+    queryset = banner_profile.banner_profileModel.objects.all()
+    serializer_class = banner_profileSerializer
+    permission_classes = [isValidToken]
+
+
+class banner_chosenModelListCreateView(generics.ListCreateAPIView):
+    queryset = banner_chosen.banner_chosenModel.objects.all()
+    serializer_class = banner_chosenSerializer
+    permission_classes = [isValidToken]
+
+
+class channelModelListCreateView(generics.ListCreateAPIView):
+    queryset = channel.channelModel.objects.all()
+    serializer_class = site_ratingSerializer
+    permission_classes = [isValidToken]
+
+
+class channel_profileModelListCreateView(generics.ListCreateAPIView):
+    queryset = channel_profile.channel_profileModel.objects.all()
+    serializer_class = channel_profileSerializer
+    permission_classes = [isValidToken]
+
+
+class tokenModelListCreateView(generics.ListCreateAPIView):
+    queryset = tokenModel.objects.all()
+    serializer_class = tokenSerializer
+    permission_classes = [isValidToken]
+    
+
+class verificationModelListCreateView(generics.ListCreateAPIView):
+    queryset = verificationModel.objects.all()
+    serializer_class = verificationSerializer
+    permission_classes = [isValidToken]
