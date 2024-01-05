@@ -114,9 +114,16 @@ USE_TZ = False
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'statics')
 
+
 # медиа
 MEDIA_ROOT = os.path.join(BASE_DIR, 'a_media')
 
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'api.exceptions.custom_exception_handler',
+    # другие настройки
+}
