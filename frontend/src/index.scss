@@ -7,6 +7,10 @@
 	font-family: 'Inter', sans-serif;
 }
 
+.stop-scrolling {
+	overflow: hidden;
+}
+
 body {
 	background-color: #1a1a1a;
 }
@@ -91,6 +95,27 @@ body {
 .scrollbar {
 	overflow-y: overlay;
 }
+
+  /* Firefox */
+//   * {
+//     scrollbar-width: auto;
+//     scrollbar-color: #333 transparent;
+//   }
+
+//   /* Chrome, Edge, and Safari */
+//   *::-webkit-scrollbar {
+//     width: 6px;
+//   }
+
+//   *::-webkit-scrollbar-track {
+//     background: transparent;
+//   }
+
+//   *::-webkit-scrollbar-thumb {
+//     background-color: #333;
+//     border-radius: 10px;
+//     border: 4px solid transparent;
+//   }
 
 .p-inputtext {
 	max-width: 528px;

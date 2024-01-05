@@ -21,14 +21,22 @@
 		margin-bottom: 30px;
 	}
 
-	.logo {
+	.logo, .logoMini {
 		display: flex;
 		flex-direction: row;
 		margin-bottom: 32px;
 	}
 
-	.logo img:first-child {
+	.logo img:first-child, .logoMini img:first-child {
 		margin-right: 9px;
+	}
+
+	.logoMini {
+		width: 162px;
+	}
+
+	.logoMini img:first-child {
+		width: 129px;
 	}
 
 	.userNameLeft {
@@ -63,6 +71,10 @@
 		}
 	}
 
+	.NavLabelBalance {
+		font-size: 16px !important;
+	}
+	
 	.buttonBalance {
 		width: 180px;
 		margin-top: 17px;
@@ -76,6 +88,7 @@
 
 	.companyPage {
 		width: 180px;
+		height: 36px;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
@@ -91,10 +104,13 @@
 			align-items: center;
 			padding: 2px 0px;
 			.companyPageText {
+				display: flex;
+				align-items: center;
 				color: #f2f2f2;
 				font-size: 14px;
 				font-weight: 500;
 
+				padding-bottom: 2px;
 				margin-left: 8px;
 			}
 		}

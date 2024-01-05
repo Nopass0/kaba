@@ -295,8 +295,6 @@ const StatisticDropDownMenuGraphPopUp: React.FC<
 						</Row>
 					</ListItemButton>
 
-					<Line width="280px" className={s.Line} />
-
 					<Collapse
 						className={s.Collapse}
 						in={openPrice}

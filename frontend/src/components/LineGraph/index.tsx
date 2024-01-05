@@ -65,6 +65,7 @@ const tooltip = [
 ]
 
 const options = {
+	maintainAspectRatio: false,
 	points: {
 		radius: 0,
 		hoverRadius: 0,
@@ -78,6 +79,7 @@ const options = {
 		mode: 'index',
 		intersect: false,
 	},
+
 	stacked: true,
 	plugins: {
 		legend: {

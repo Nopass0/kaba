@@ -17,45 +17,45 @@ const StatisticAddCompanyPopUp: React.FC<IStatisticAddCompanyPopUp> = ({
 	return (
 		<div className={s.wrapper + ' ' + className}>
 			<Col width="280px" className={s.ColWrapper}>
-				<Row width="232px" className={s.RowCourse}>
-					<CheckBox labelText="" />
-					<Col width="200px">
-						<NavLabel className={s.navLabel} text="курсы английского языка" />
-						<Label isMini={true} text="ID 5748296013" />
-					</Col>
-				</Row>
+				<label htmlFor='1' className={s.RowCourseWrapper}>
+					<div className={s.RowCourse}>
+						<CheckBox id="1" />
+						<Col width="200px" className='ml-[8px] whitespace-nowrap cursor-pointer'>
+							<label className={s.navLabel} htmlFor='1'>курсы английского языка</label>
+							<Label htmlFor='1' isMini={true} className='cursor-pointer' text="ID 5748296013" />
+						</Col>
+					</div>
+				</label>
 				<Line width="280px" className={s.Line} />
-				<Row width="232px" className={s.RowCourse}>
-					<CheckBox labelText="" />
-					<Col width="200px">
-						<NavLabel className={s.navLabel} text="курсы английского языка" />
-						<Label isMini={true} text="ID 5748296013" />
-					</Col>
-				</Row>
+				<label htmlFor='2' className={s.RowCourseWrapper}>
+					<div className={s.RowCourse}>
+						<CheckBox id="2" />
+						<Col width="200px" className='ml-[8px] whitespace-nowrap cursor-pointer'>
+							<label className={s.navLabel} htmlFor='2'>курсы английского языка</label>
+							<Label htmlFor='2' isMini={true} className='cursor-pointer' text="ID 5748296013" />
+						</Col>
+					</div>
+				</label>
 				<Line width="280px" className={s.Line} />
-				<Row width="232px" className={s.RowCourse}>
-					<CheckBox labelText="" />
-					<Col width="200px">
-						<NavLabel className={s.navLabel} text="курсы английского языка" />
-						<Label isMini={true} text="ID 5748296013" />
-					</Col>
-				</Row>
+				<label htmlFor='3' className={s.RowCourseWrapper}>
+					<div className={s.RowCourse}>
+						<CheckBox id="3" />
+						<Col width="200px" className='ml-[8px] whitespace-nowrap cursor-pointer'>
+							<label className={s.navLabel} htmlFor='3'>курсы английского языка</label>
+							<Label htmlFor='3' isMini={true} className='cursor-pointer' text="ID 5748296013" />
+						</Col>
+					</div>
+				</label>
 				<Line width="280px" className={s.Line} />
-				<Row width="232px" className={s.RowCourse}>
-					<CheckBox labelText="" />
-					<Col width="200px">
-						<NavLabel className={s.navLabel} text="курсы английского языка" />
-						<Label isMini={true} text="ID 5748296013" />
-					</Col>
-				</Row>
-				<Line width="280px" className={s.Line} />
-				<Row width="232px" className={s.RowCourse}>
-					<CheckBox labelText="" />
-					<Col width="200px">
-						<NavLabel className={s.navLabel} text="курсы английского языка" />
-						<Label isMini={true} text="ID 5748296013" />
-					</Col>
-				</Row>
+				<label htmlFor='4' className={s.RowCourseWrapper}>
+					<div className={s.RowCourse}>
+						<CheckBox id="4" />
+						<Col width="200px" className='ml-[8px] whitespace-nowrap cursor-pointer'>
+							<label className={s.navLabel} htmlFor='4'>курсы английского языка</label>
+							<Label htmlFor='4' isMini={true} className='cursor-pointer' text="ID 5748296013" />
+						</Col>
+					</div>
+				</label>
 			</Col>
 		</div>
 	)

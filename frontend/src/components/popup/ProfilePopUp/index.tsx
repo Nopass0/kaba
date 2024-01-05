@@ -78,7 +78,7 @@ const ProfilePopUp: React.FC<IProfilePopUp> = ({blogger}: IProfilePopUp) => {
 					text="Управление аккаунтом"
 				/>
 				{/* <Link to="/finance"> */}
-				<Row className={s.AccountPages} width="248px">
+				{/* <Row className={s.AccountPages} width="248px">
 					<Link to="/finance" className={s.AccountPages}>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -95,9 +95,9 @@ const ProfilePopUp: React.FC<IProfilePopUp> = ({blogger}: IProfilePopUp) => {
 						</svg>
 						<span className={s.AccountSpan}>Финансы</span>
 					</Link>
-				</Row>
+				</Row> */}
 				{/* </Link> */}
-				<Line className={s.AccountLineComponent} width="280px" />
+				{/* <Line className={s.AccountLineComponent} width="280px" />
 				<Row className={s.AccountPages} width="248px">
 					<Link to="/settings" className={s.AccountPages}>
 					<svg
@@ -116,7 +116,7 @@ const ProfilePopUp: React.FC<IProfilePopUp> = ({blogger}: IProfilePopUp) => {
 					<span className={s.AccountSpan}>Настройки</span>
 					</Link>
 					
-				</Row>
+				</Row> */}
 				{blogger ? (
 					<>
 						<Line className={s.AccountLineComponent} width="280px" />
@@ -192,13 +192,13 @@ const ProfilePopUp: React.FC<IProfilePopUp> = ({blogger}: IProfilePopUp) => {
 				) : (
 					<></>
 				)}
-				{leftSideOpen ? (
+				{/* {leftSideOpen ? (
 					<div className={s.leftsideOpen}>
 						<ProfilePopUpLeftSide />
 					</div>
 				) : (
 					<></>
-				)}
+				)} */}
 			</Col>
 		</div>
 	)

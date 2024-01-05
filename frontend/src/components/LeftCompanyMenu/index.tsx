@@ -33,7 +33,7 @@ const LeftCompanyMenu: React.FC = () => {
 	const users = useSelector((state: any) => state.users)
 	const location = useLocation()
 	const statisticRef = useRef()
-	const statisticButtonRef = useRef()
+	// const statisticButtonRef = useRef()
 	const extraRef = useRef()
 	const extraButtonRef = useRef()
 	//Current shown popup
@@ -65,13 +65,13 @@ const LeftCompanyMenu: React.FC = () => {
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
-			if (
-				statisticRef.current &&
-				!statisticRef.current.contains(event.target) &&
-				!statisticButtonRef.current.contains(event.target)
-			) {
-				setStatisticDropDown(false)
-			}
+			// if (
+			// 	statisticRef.current &&
+			// 	!statisticRef.current.contains(event.target) &&
+			// 	!statisticButtonRef.current.contains(event.target)
+			// ) {
+			// 	setStatisticDropDown(false)
+			// }
 
 			if (
 				extraRef.current &&
@@ -98,16 +98,16 @@ const LeftCompanyMenu: React.FC = () => {
 						{['/', '/media', '/mybanners', '/sites'].includes(
 							location.pathname,
 						) ? (
-							<div className={s.logo}>
+							<Link to={'/'} className={s.logoMini}>
 								<img src={logo} alt="Logo" />
-								<img src={miniBeta} alt="B" />
-							</div>
+								<img className="w-[24px] h-[24px]" src={miniBeta} alt="B" />
+							</Link>
 						) : (
 							<>
-								<div className={s.logo}>
+								<Link to={'/'} className={s.logo}>
 									<img src={logo} alt="Logo" />
 									<img src={BetaLogo} alt="B" />
-								</div>
+								</Link>
 							</>
 						)}
 						<div className={s.userNameLeft}>
@@ -178,7 +178,7 @@ const LeftCompanyMenu: React.FC = () => {
 						</div>
 						<div className={s.balance}>
 							<Label isMini={true} text="Баланс:" className={s.balanceLabel} />
-							<NavLabel text="791,429.32₽" />
+							<NavLabel className={s.NavLabelBalance} text="791,429.32₽" />
 							{currentUser?.isBlogger ? (
 								<Button className={s.buttonBalance} text="Вывести" />
 							) : (
@@ -314,7 +314,7 @@ const LeftCompanyMenu: React.FC = () => {
 										</svg>
 										<span className={s.companyPageText}>Статистика</span>
 									</div>
-									<svg
+									{/* <svg
 										ref={statisticButtonRef}
 										onClick={() => setStatisticDropDown(!statisticDropDown)}
 										xmlns="http://www.w3.org/2000/svg"
@@ -328,7 +328,7 @@ const LeftCompanyMenu: React.FC = () => {
 											d="M7 4C7 3.44772 7.44772 3 8 3C8.55228 3 9 3.44772 9 4C9 4.55228 8.55228 5 8 5C7.44772 5 7 4.55228 7 4ZM7 12C7 11.4477 7.44772 11 8 11C8.55228 11 9 11.4477 9 12C9 12.5523 8.55228 13 8 13C7.44772 13 7 12.5523 7 12ZM8 7C7.44772 7 7 7.44772 7 8C7 8.55228 7.44772 9 8 9C8.55228 9 9 8.55228 9 8C9 7.44772 8.55228 7 8 7Z"
 											fill="#808080"
 										/>
-									</svg>
+									</svg> */}
 								</div>
 							</Link>
 							{currentUser?.isBlogger ? (
@@ -361,22 +361,53 @@ const LeftCompanyMenu: React.FC = () => {
 								</>
 							)}
 							<mui.Select
-								className=" w-[180px] h-[36px] absolute opacity-0 z-1"
+								className=" w-[180px] h-[36px]  opacity-1 "
 								renderValue={(option: mui.SelectOption<number> | null) => {
 									if (option == null || option.value === null) {
-										return ''
+										return (
+											<>
+												<div
+													className={`${s.statics} ${s.companyPage} ${
+														CurrentURL === '/finance' ||
+														CurrentURL === '/settings'
+															? s.active
+															: ''
+													}`}
+													// onClick={() => setExtraDropDown(!extraDropDown)}
+													// ref={extraButtonRef}
+												>
+													<div className={`${s.companyPageLeft}`}>
+														<span className={s.companyPageText}>Дополнит.</span>
+													</div>
+													<svg
+														onClick={() =>
+															setStatisticDropDown(!statisticDropDown)
+														}
+														xmlns="http://www.w3.org/2000/svg"
+														width="16"
+														height="16"
+														viewBox="0 0 16 16"
+														fill="none">
+														<path
+															fillRule="evenodd"
+															clipRule="evenodd"
+															d="M7 4C7 3.44772 7.44772 3 8 3C8.55228 3 9 3.44772 9 4C9 4.55228 8.55228 5 8 5C7.44772 5 7 4.55228 7 4ZM7 12C7 11.4477 7.44772 11 8 11C8.55228 11 9 11.4477 9 12C9 12.5523 8.55228 13 8 13C7.44772 13 7 12.5523 7 12ZM8 7C7.44772 7 7 7.44772 7 8C7 8.55228 7.44772 9 8 9C8.55228 9 9 8.55228 9 8C9 7.44772 8.55228 7 8 7Z"
+															fill="#808080"
+														/>
+													</svg>
+												</div>
+											</>
+										)
 									}
 									return `${option.label}`
-								}}
-								// defaultValue={'test'}
-							>
+								}}>
 								<mui.Option
 									value={1}
 									className="relative top-[-30px] left-[180px]">
 									<ExtraDropDownPopUp />
 								</mui.Option>
 							</mui.Select>
-							<div
+							{/* <div
 								className={`${s.statics} ${s.companyPage} ${
 									CurrentURL === '/finance' || CurrentURL === '/settings'
 										? s.active
@@ -402,7 +433,7 @@ const LeftCompanyMenu: React.FC = () => {
 										fill="#808080"
 									/>
 								</svg>
-							</div>
+							</div> */}
 						</div>
 					</Col>
 
@@ -555,7 +586,7 @@ const LeftCompanyMenu: React.FC = () => {
 									fill="#CDCCCB"
 								/>
 							</svg>
-							<div className={s.footerAbout}>
+							{/* <div className={s.footerAbout}>
 								<span className={s.footerAboutText}>
 									<a href="#!" className={s.footerTextLink}>
 										О сервисе
@@ -602,7 +633,7 @@ const LeftCompanyMenu: React.FC = () => {
 										</a>
 									</div>
 								</span>
-							</div>
+							</div> */}
 							{/* <div className={s.footerCopy}>
 								<span className={s.footerCopyText}>© 2023 OOO «ИТКАБА»</span>
 							</div> */}
@@ -613,11 +644,11 @@ const LeftCompanyMenu: React.FC = () => {
 							<Deposite onExit={() => setPagePopup(PagePopup.None)} />
 						</PopUpWrapper>
 					)}
-					{statisticDropDown && (
+					{/* {statisticDropDown && (
 						<div ref={statisticRef} className={s.statisticDropDown}>
 							<StatisticDropDownPopUp />
 						</div>
-					)}
+					)} */}
 				</div>
 			</div>
 		</>

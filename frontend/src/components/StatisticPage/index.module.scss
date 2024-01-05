@@ -6,7 +6,7 @@
 	width: 220px;
 	display: flex;
 	flex-direction: column;
-	
+
 	border-radius: 10px;
 	border: 1px solid #262626;
 	background: #262626;
@@ -56,7 +56,8 @@
 // COMPANY
 
 .AddCompanyWrapper {
-	max-width: 1164px;
+	// max-width: 1164px;
+	width: 80vw;
 
 	display: flex;
 	flex-direction: row;
@@ -78,12 +79,11 @@
 }
 
 .AddCompanySpan {
+	height: 48px;
 	border-radius: 10px;
 	background: #262626;
 
-	padding-left: 16px;
-	padding-top: 3px;
-	padding-bottom: 3px;
+	padding: 8px 0 8px 16px;
 	margin-right: 16px;
 	margin-bottom: 16px;
 
@@ -92,7 +92,37 @@
 	.AddCompanySpanTitle {
 		display: flex;
 		justify-content: space-between;
+		height: 16px;
+		cursor: inherit;
+		margin-bottom: 2px;
+		.AddCompanySpanP {
+			color: #f2f2f2;
+			font-family: Inter;
+			font-size: 14px;
+			font-style: normal;
+			font-weight: 400;
+			line-height: 16px; /* 114.286% */
+		}
 
+		.AddCompanyDel {
+			position: relative;
+			bottom: 4px;
+			color: #808080;
+		}
+
+		.AddCompanyDel:hover {
+			color: #f2f2f2;
+			transition: all .2s;
+		}
+	}
+
+	.AddCompanyLabel {
+		color: #808080;
+		font-family: Inter;
+		font-size: 12px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: 14px; /* 116.667% */
 		cursor: inherit;
 	}
 }
@@ -157,7 +187,6 @@
 	background: #262626;
 }
 
-
 .RowButtonsGraph {
 	justify-content: space-between;
 	margin-bottom: 16px;
@@ -204,4 +233,5 @@
 .StatisticAddCompanyPopUp {
 	position: absolute;
 	top: 220px;
+	z-index: 10;
 }

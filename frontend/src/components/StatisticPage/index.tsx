@@ -13,6 +13,8 @@ import InputIcon from 'react-multi-date-picker/components/input_icon'
 import GraphsMenuCheckBox from '../GraphsMenuCheckBox/index'
 import LineGraph from '../LineGraph/index'
 import moment from 'moment'
+import 'moment/locale/ru'
+
 import NavLabel from '../NavLabel'
 import CheckBox from '../CheckBox'
 import {Bar, Bubble, Line as LineChart} from 'react-chartjs-2'
@@ -61,18 +63,56 @@ function randomArray(length: number) {
 }
 
 // //generate array of dates from start date to end date like ["1 January", "2 January", "3 January",..., "1 December","2 December", ..., "31 December"]
-
+moment().locale('ru')
 function generateArrayOfDates(startDate: string, endDate: string): string[] {
-	const start = moment(startDate, 'YYYY-MM-DD')
-	const end = moment(endDate, 'YYYY-MM-DD')
-	const dates = []
+  const start = moment(startDate, 'YYYY-MM-DD');
+  const end = moment(endDate, 'YYYY-MM-DD');
+  const dates: string[] = [];
 
-	while (start.isSameOrBefore(end)) {
-		dates.push(start.format('D MMMM'))
-		start.add(1, 'day')
-	}
+  while (start.isSameOrBefore(end)) {
+    const translateDate = translateToRussian(start.format('D MMMM'));
+    dates.push(translateDate);
+    start.add(1, 'day');
+  }
 
-	return dates
+  return dates;
+}
+
+function translateToRussian(date: string): string {
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  const monthNamesInRussian = [
+	'Января',
+	'Февраля',
+	'Марта',
+	'Апреля',
+	'Мая',
+	'Июня',
+	'Июля',
+	'Августа',
+	'Сентября',
+	'Октября',
+	'Ноября',
+	'Декабря',
+  ];
+
+  const monthIndex = monthNames.indexOf(date.split(' ')[1]);
+  const translatedDate = date.replace(monthNames[monthIndex], monthNamesInRussian[monthIndex]);
+
+  return translatedDate;
 }
 
 // // Example usage
@@ -205,7 +245,7 @@ const optionsBubble = {
 //End Bubble chart
 
 //Bar chart
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July']
+const labels = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
 export const dataBar = {
 	labels,
 	datasets: [
@@ -303,7 +343,7 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 	}, [addCompany])
 	return (
 		<div className={s.wrapper + ' ' + className}>
-			<Col width="1164px" className={s.ColStatistic}>
+			<Col width="100%" className={s.ColStatistic}>
 				<HeaderSubTitle textHeader="Компании" />
 				<div className={s.AddCompanyWrapper}>
 					<div ref={addCompanyPopUpButton}>
@@ -342,8 +382,9 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 					)}
 					<Col width="220px" className={s.AddCompanySpan}>
 						<Row className={s.AddCompanySpanTitle} width="200px">
-							<WhiteLabel text="курсы английского яз…" />
+							<p className={s.AddCompanySpanP}>курсы английского яз…</p>
 							<svg
+							className={s.AddCompanyDel}
 								xmlns="http://www.w3.org/2000/svg"
 								width="24"
 								height="24"
@@ -352,16 +393,17 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 								<rect width="24" height="24" rx="7" fill="#262626" />
 								<path
 									d="M7.16474 16.8352C7.2404 16.9067 7.32656 16.955 7.42323 16.9803C7.51991 17.0055 7.61658 17.0055 7.71325 16.9803C7.80992 16.955 7.89398 16.9067 7.96543 16.8352L12.0004 12.7983L16.0354 16.8352C16.1068 16.9067 16.1909 16.955 16.2876 16.9803C16.3842 17.0055 16.482 17.0065 16.5807 16.9834C16.6795 16.9603 16.7646 16.9109 16.8361 16.8352C16.9075 16.7637 16.9548 16.6796 16.9779 16.5829C17.0011 16.4862 17.0011 16.3894 16.9779 16.2927C16.9548 16.196 16.9075 16.1119 16.8361 16.0404L12.8011 11.9972L16.8361 7.96034C16.9075 7.88885 16.9559 7.80475 16.9811 7.70803C17.0063 7.61131 17.0063 7.5146 16.9811 7.41788C16.9559 7.32116 16.9075 7.23706 16.8361 7.16558C16.7604 7.08988 16.6743 7.04047 16.5776 7.01735C16.4809 6.99422 16.3842 6.99422 16.2876 7.01735C16.1909 7.04047 16.1068 7.08988 16.0354 7.16558L12.0004 11.2025L7.96543 7.16558C7.89398 7.08988 7.80887 7.04047 7.7101 7.01735C7.61132 6.99422 7.5136 6.99422 7.41693 7.01735C7.32026 7.04047 7.2362 7.08988 7.16474 7.16558C7.09329 7.23706 7.04601 7.32116 7.02289 7.41788C6.99977 7.5146 6.99977 7.61131 7.02289 7.70803C7.04601 7.80475 7.09329 7.88885 7.16474 7.96034L11.1997 11.9972L7.16474 16.0404C7.09329 16.1119 7.04495 16.196 7.01974 16.2927C6.99452 16.3894 6.99347 16.4862 7.01658 16.5829C7.0397 16.6796 7.08909 16.7637 7.16474 16.8352Z"
-									fill="#808080"
+									fill="CurrentColor"
 								/>
 							</svg>
 						</Row>
-						<Label isMini={true} text="ID 9876543210" />
+						<p className={s.AddCompanyLabel}>ID 9876543210</p>
 					</Col>
 					<Col width="220px" className={s.AddCompanySpan}>
 						<Row className={s.AddCompanySpanTitle} width="200px">
-							<WhiteLabel text="курсы английского яз…" />
+							<p className={s.AddCompanySpanP}>курсы английского яз…</p>
 							<svg
+							className={s.AddCompanyDel}
 								xmlns="http://www.w3.org/2000/svg"
 								width="24"
 								height="24"
@@ -370,16 +412,17 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 								<rect width="24" height="24" rx="7" fill="#262626" />
 								<path
 									d="M7.16474 16.8352C7.2404 16.9067 7.32656 16.955 7.42323 16.9803C7.51991 17.0055 7.61658 17.0055 7.71325 16.9803C7.80992 16.955 7.89398 16.9067 7.96543 16.8352L12.0004 12.7983L16.0354 16.8352C16.1068 16.9067 16.1909 16.955 16.2876 16.9803C16.3842 17.0055 16.482 17.0065 16.5807 16.9834C16.6795 16.9603 16.7646 16.9109 16.8361 16.8352C16.9075 16.7637 16.9548 16.6796 16.9779 16.5829C17.0011 16.4862 17.0011 16.3894 16.9779 16.2927C16.9548 16.196 16.9075 16.1119 16.8361 16.0404L12.8011 11.9972L16.8361 7.96034C16.9075 7.88885 16.9559 7.80475 16.9811 7.70803C17.0063 7.61131 17.0063 7.5146 16.9811 7.41788C16.9559 7.32116 16.9075 7.23706 16.8361 7.16558C16.7604 7.08988 16.6743 7.04047 16.5776 7.01735C16.4809 6.99422 16.3842 6.99422 16.2876 7.01735C16.1909 7.04047 16.1068 7.08988 16.0354 7.16558L12.0004 11.2025L7.96543 7.16558C7.89398 7.08988 7.80887 7.04047 7.7101 7.01735C7.61132 6.99422 7.5136 6.99422 7.41693 7.01735C7.32026 7.04047 7.2362 7.08988 7.16474 7.16558C7.09329 7.23706 7.04601 7.32116 7.02289 7.41788C6.99977 7.5146 6.99977 7.61131 7.02289 7.70803C7.04601 7.80475 7.09329 7.88885 7.16474 7.96034L11.1997 11.9972L7.16474 16.0404C7.09329 16.1119 7.04495 16.196 7.01974 16.2927C6.99452 16.3894 6.99347 16.4862 7.01658 16.5829C7.0397 16.6796 7.08909 16.7637 7.16474 16.8352Z"
-									fill="#808080"
+									fill="CurrentColor"
 								/>
 							</svg>
 						</Row>
-						<Label isMini={true} text="ID 9876543210" />
+						<p className={s.AddCompanyLabel}>ID 9876543210</p>
 					</Col>
 					<Col width="220px" className={s.AddCompanySpan}>
 						<Row className={s.AddCompanySpanTitle} width="200px">
-							<WhiteLabel text="курсы английского яз…" />
+							<p className={s.AddCompanySpanP}>курсы английского яз…</p>
 							<svg
+							className={s.AddCompanyDel}
 								xmlns="http://www.w3.org/2000/svg"
 								width="24"
 								height="24"
@@ -388,17 +431,18 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 								<rect width="24" height="24" rx="7" fill="#262626" />
 								<path
 									d="M7.16474 16.8352C7.2404 16.9067 7.32656 16.955 7.42323 16.9803C7.51991 17.0055 7.61658 17.0055 7.71325 16.9803C7.80992 16.955 7.89398 16.9067 7.96543 16.8352L12.0004 12.7983L16.0354 16.8352C16.1068 16.9067 16.1909 16.955 16.2876 16.9803C16.3842 17.0055 16.482 17.0065 16.5807 16.9834C16.6795 16.9603 16.7646 16.9109 16.8361 16.8352C16.9075 16.7637 16.9548 16.6796 16.9779 16.5829C17.0011 16.4862 17.0011 16.3894 16.9779 16.2927C16.9548 16.196 16.9075 16.1119 16.8361 16.0404L12.8011 11.9972L16.8361 7.96034C16.9075 7.88885 16.9559 7.80475 16.9811 7.70803C17.0063 7.61131 17.0063 7.5146 16.9811 7.41788C16.9559 7.32116 16.9075 7.23706 16.8361 7.16558C16.7604 7.08988 16.6743 7.04047 16.5776 7.01735C16.4809 6.99422 16.3842 6.99422 16.2876 7.01735C16.1909 7.04047 16.1068 7.08988 16.0354 7.16558L12.0004 11.2025L7.96543 7.16558C7.89398 7.08988 7.80887 7.04047 7.7101 7.01735C7.61132 6.99422 7.5136 6.99422 7.41693 7.01735C7.32026 7.04047 7.2362 7.08988 7.16474 7.16558C7.09329 7.23706 7.04601 7.32116 7.02289 7.41788C6.99977 7.5146 6.99977 7.61131 7.02289 7.70803C7.04601 7.80475 7.09329 7.88885 7.16474 7.96034L11.1997 11.9972L7.16474 16.0404C7.09329 16.1119 7.04495 16.196 7.01974 16.2927C6.99452 16.3894 6.99347 16.4862 7.01658 16.5829C7.0397 16.6796 7.08909 16.7637 7.16474 16.8352Z"
-									fill="#808080"
+									fill="CurrentColor"
 								/>
 							</svg>
 						</Row>
-						<Label isMini={true} text="ID 9876543210" />
+						<p className={s.AddCompanyLabel}>ID 9876543210</p>
 					</Col>
 
 					<Col width="220px" className={s.AddCompanySpan}>
 						<Row className={s.AddCompanySpanTitle} width="200px">
-							<WhiteLabel text="курсы английского яз…" />
+							<p className={s.AddCompanySpanP}>курсы английского яз…</p>
 							<svg
+							className={s.AddCompanyDel}
 								xmlns="http://www.w3.org/2000/svg"
 								width="24"
 								height="24"
@@ -407,15 +451,55 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 								<rect width="24" height="24" rx="7" fill="#262626" />
 								<path
 									d="M7.16474 16.8352C7.2404 16.9067 7.32656 16.955 7.42323 16.9803C7.51991 17.0055 7.61658 17.0055 7.71325 16.9803C7.80992 16.955 7.89398 16.9067 7.96543 16.8352L12.0004 12.7983L16.0354 16.8352C16.1068 16.9067 16.1909 16.955 16.2876 16.9803C16.3842 17.0055 16.482 17.0065 16.5807 16.9834C16.6795 16.9603 16.7646 16.9109 16.8361 16.8352C16.9075 16.7637 16.9548 16.6796 16.9779 16.5829C17.0011 16.4862 17.0011 16.3894 16.9779 16.2927C16.9548 16.196 16.9075 16.1119 16.8361 16.0404L12.8011 11.9972L16.8361 7.96034C16.9075 7.88885 16.9559 7.80475 16.9811 7.70803C17.0063 7.61131 17.0063 7.5146 16.9811 7.41788C16.9559 7.32116 16.9075 7.23706 16.8361 7.16558C16.7604 7.08988 16.6743 7.04047 16.5776 7.01735C16.4809 6.99422 16.3842 6.99422 16.2876 7.01735C16.1909 7.04047 16.1068 7.08988 16.0354 7.16558L12.0004 11.2025L7.96543 7.16558C7.89398 7.08988 7.80887 7.04047 7.7101 7.01735C7.61132 6.99422 7.5136 6.99422 7.41693 7.01735C7.32026 7.04047 7.2362 7.08988 7.16474 7.16558C7.09329 7.23706 7.04601 7.32116 7.02289 7.41788C6.99977 7.5146 6.99977 7.61131 7.02289 7.70803C7.04601 7.80475 7.09329 7.88885 7.16474 7.96034L11.1997 11.9972L7.16474 16.0404C7.09329 16.1119 7.04495 16.196 7.01974 16.2927C6.99452 16.3894 6.99347 16.4862 7.01658 16.5829C7.0397 16.6796 7.08909 16.7637 7.16474 16.8352Z"
-									fill="#808080"
+									fill="CurrentColor"
 								/>
 							</svg>
 						</Row>
-						<Label isMini={true} text="ID 9876543210" />
+						<p className={s.AddCompanyLabel}>ID 9876543210</p>
+					</Col>
+
+					<Col width="220px" className={s.AddCompanySpan}>
+						<Row className={s.AddCompanySpanTitle} width="200px">
+							<p className={s.AddCompanySpanP}>курсы английского яз…</p>
+							<svg
+							className={s.AddCompanyDel}
+								xmlns="http://www.w3.org/2000/svg"
+								width="24"
+								height="24"
+								viewBox="0 0 24 24"
+								fill="none">
+								<rect width="24" height="24" rx="7" fill="#262626" />
+								<path
+									d="M7.16474 16.8352C7.2404 16.9067 7.32656 16.955 7.42323 16.9803C7.51991 17.0055 7.61658 17.0055 7.71325 16.9803C7.80992 16.955 7.89398 16.9067 7.96543 16.8352L12.0004 12.7983L16.0354 16.8352C16.1068 16.9067 16.1909 16.955 16.2876 16.9803C16.3842 17.0055 16.482 17.0065 16.5807 16.9834C16.6795 16.9603 16.7646 16.9109 16.8361 16.8352C16.9075 16.7637 16.9548 16.6796 16.9779 16.5829C17.0011 16.4862 17.0011 16.3894 16.9779 16.2927C16.9548 16.196 16.9075 16.1119 16.8361 16.0404L12.8011 11.9972L16.8361 7.96034C16.9075 7.88885 16.9559 7.80475 16.9811 7.70803C17.0063 7.61131 17.0063 7.5146 16.9811 7.41788C16.9559 7.32116 16.9075 7.23706 16.8361 7.16558C16.7604 7.08988 16.6743 7.04047 16.5776 7.01735C16.4809 6.99422 16.3842 6.99422 16.2876 7.01735C16.1909 7.04047 16.1068 7.08988 16.0354 7.16558L12.0004 11.2025L7.96543 7.16558C7.89398 7.08988 7.80887 7.04047 7.7101 7.01735C7.61132 6.99422 7.5136 6.99422 7.41693 7.01735C7.32026 7.04047 7.2362 7.08988 7.16474 7.16558C7.09329 7.23706 7.04601 7.32116 7.02289 7.41788C6.99977 7.5146 6.99977 7.61131 7.02289 7.70803C7.04601 7.80475 7.09329 7.88885 7.16474 7.96034L11.1997 11.9972L7.16474 16.0404C7.09329 16.1119 7.04495 16.196 7.01974 16.2927C6.99452 16.3894 6.99347 16.4862 7.01658 16.5829C7.0397 16.6796 7.08909 16.7637 7.16474 16.8352Z"
+									fill="CurrentColor"
+								/>
+							</svg>
+						</Row>
+						<p className={s.AddCompanyLabel}>ID 9876543210</p>
+					</Col>
+
+					<Col width="220px" className={s.AddCompanySpan}>
+						<Row className={s.AddCompanySpanTitle} width="200px">
+							<p className={s.AddCompanySpanP}>курсы английского яз…</p>
+							<svg
+							className={s.AddCompanyDel}
+								xmlns="http://www.w3.org/2000/svg"
+								width="24"
+								height="24"
+								viewBox="0 0 24 24"
+								fill="none">
+								<rect width="24" height="24" rx="7" fill="#262626" />
+								<path
+									d="M7.16474 16.8352C7.2404 16.9067 7.32656 16.955 7.42323 16.9803C7.51991 17.0055 7.61658 17.0055 7.71325 16.9803C7.80992 16.955 7.89398 16.9067 7.96543 16.8352L12.0004 12.7983L16.0354 16.8352C16.1068 16.9067 16.1909 16.955 16.2876 16.9803C16.3842 17.0055 16.482 17.0065 16.5807 16.9834C16.6795 16.9603 16.7646 16.9109 16.8361 16.8352C16.9075 16.7637 16.9548 16.6796 16.9779 16.5829C17.0011 16.4862 17.0011 16.3894 16.9779 16.2927C16.9548 16.196 16.9075 16.1119 16.8361 16.0404L12.8011 11.9972L16.8361 7.96034C16.9075 7.88885 16.9559 7.80475 16.9811 7.70803C17.0063 7.61131 17.0063 7.5146 16.9811 7.41788C16.9559 7.32116 16.9075 7.23706 16.8361 7.16558C16.7604 7.08988 16.6743 7.04047 16.5776 7.01735C16.4809 6.99422 16.3842 6.99422 16.2876 7.01735C16.1909 7.04047 16.1068 7.08988 16.0354 7.16558L12.0004 11.2025L7.96543 7.16558C7.89398 7.08988 7.80887 7.04047 7.7101 7.01735C7.61132 6.99422 7.5136 6.99422 7.41693 7.01735C7.32026 7.04047 7.2362 7.08988 7.16474 7.16558C7.09329 7.23706 7.04601 7.32116 7.02289 7.41788C6.99977 7.5146 6.99977 7.61131 7.02289 7.70803C7.04601 7.80475 7.09329 7.88885 7.16474 7.96034L11.1997 11.9972L7.16474 16.0404C7.09329 16.1119 7.04495 16.196 7.01974 16.2927C6.99452 16.3894 6.99347 16.4862 7.01658 16.5829C7.0397 16.6796 7.08909 16.7637 7.16474 16.8352Z"
+									fill="CurrentColor"
+								/>
+							</svg>
+						</Row>
+						<p className={s.AddCompanyLabel}>ID 9876543210</p>
 					</Col>
 				</div>
 
-				<Line width="1164px" className={s.Line} />
+				<Line width="100%" className={s.Line} />
 
 				{/* Graphs */}
 				<HeaderSubTitle textHeader="Ключевые показатели" />
@@ -444,11 +528,13 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 					</div>
 				</div>
 				<GraphsMenuCheckBox topPopUp='550px' />
-				<LineGraph data={data} />
+				<div style={{width: '100%', overflowX: 'scroll', height: '370px'}}>
+						<LineGraph data={data} />
+				</div>
 
-				<Line width="1164px" className={s.Line} />
+				{/* <Line width="1164px" className={s.Line} /> */}
 
-				<HeaderSubTitle textHeader="Эффективность продвижения" />
+				{/* <HeaderSubTitle textHeader="Эффективность продвижения" />
 				<Row width="auto" className={s.RowButtonsGraph}>
 					<div className={s.extendedLink}>
 						<Button
@@ -550,7 +636,7 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 				</div>
 				<div style={graphChange === 3 ? {display: 'block'} : {display: 'none'}}>
 					<LineChart data={dataArea} options={optionsBubble} />
-				</div>
+				</div> */}
 			</Col>
 		</div>
 	)

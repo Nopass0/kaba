@@ -17,12 +17,13 @@
 	}
 
 	.up svg {
+		color: #808080;
 		cursor: pointer;
 	}
 
 	.up svg:hover {
 		transition: all 0.2s;
-		stroke: #f2f2f2;
+		color: #f2f2f2;
 	}
 
 	.down {

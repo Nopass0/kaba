@@ -16,6 +16,16 @@
 		margin-bottom: 13px;
 	}
 
+	.headerRate svg {
+		color: #808080;
+		cursor: pointer;
+	}
+
+	.headerRate svg:hover {
+		color: #f2f2f2;
+		transition: all .2s;
+	}
+
 	.headerRate span {
 		color: #f2f2f2;
 		font-family: Inter;

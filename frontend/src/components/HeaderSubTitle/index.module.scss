@@ -12,3 +12,13 @@
 	align-items: center;
 	margin-bottom: 17px;
 }
+
+.HeaderRow svg {
+	color: #808080;
+	cursor: pointer;
+}
+
+.HeaderRow svg:hover {
+	color: #f2f2f2;
+	transition: all .2s;
+}

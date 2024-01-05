@@ -24,7 +24,12 @@ const Deposite: React.FC<IDeposite> = ({
 	onExit,
 }: IDeposite) => {
 	// const colClassName = `col ${className}`; // Combine className with "col" class using s[className]
+	const [value, setValue] = React.useState('')
 
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const newValue = event.target.value.replace(/[^0-9]/g, '') // remove non-digit characters
+		setValue(newValue)
+	}
 	return (
 		<div className={s.wrapper}>
 			<Col width="248px" className={s.DepositeCol}>
@@ -46,7 +51,12 @@ const Deposite: React.FC<IDeposite> = ({
 				</Row>
 				<Line width="280px" className={s.Line} />
 				<WhiteLabel text="Сумма поплнения" className={s.whiteLabel} />
-				<input placeholder="Сумма, ₽" className={s.input} />
+				<input
+					placeholder="Сумма, ₽"
+					className={s.input}
+					value={value}
+					onChange={handleChange}
+				/>
 				<Line width="280px" className={s.Line} />
 				<NavLabel
 					className={`${s.NavLabel} ${s.NavLabelSum}`}

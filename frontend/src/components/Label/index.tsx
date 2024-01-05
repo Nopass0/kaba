@@ -7,6 +7,7 @@ interface ILabel {
 	className?: string // Added className prop
 	forHtml?: string
 	width?: string
+	htmlFor?: string
 	onClick?: () => void
 }
 
@@ -17,11 +18,13 @@ const Label: React.FC<ILabel> = ({
 	className,
 	// forHtml,
 	onClick,
+	htmlFor
 }: ILabel) => {
 	return (
 		<label
 			onClick={onClick}
 			style={{width: width}}
+			htmlFor={htmlFor}
 			// htmlFor={`${forHtml}`}
 			className={
 				s.label +

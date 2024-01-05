@@ -343,9 +343,9 @@ const StatisticBlogger: React.FC = () => {
 						<LineGraph data={data} />
 					</div>
 
-					<Line width="1164px" className={s.Line} />
+					{/* <Line width="1164px" className={s.Line} /> */}
 
-					<HeaderSubTitle textHeader="Эффективность продвижения" />
+					{/* <HeaderSubTitle textHeader="Эффективность продвижения" />
 					<Row width="1164px" className={s.MenuButtonsWrapper}>
 						<Row width="auto">
 							<ButtonSVG
@@ -445,7 +445,7 @@ const StatisticBlogger: React.FC = () => {
 						style={graph === 3 ? {display: 'block'} : {display: 'none'}}
 						className="w-[1164px]">
 						<LineChart data={dataArea} options={optionsBubble} />
-					</div>
+					</div> */}
 				</div>
 			</div>
 		</>

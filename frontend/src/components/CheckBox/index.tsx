@@ -3,7 +3,7 @@ import s from './index.module.scss'
 
 interface ICheckBox {
 	children?: ReactNode[]
-	labelText?: string
+	labelText?: string | ReactNode
 	className?: string // Added className prop
 	id?: string
 	onChange?: (checked: boolean) => void
