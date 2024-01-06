@@ -351,12 +351,11 @@ const list = [
 const THEME = {
 	Table: `
   --data-table-library_grid-template-columns:  30px 30% 18% 20% 20% repeat(1, minmax(0, 1fr)) ;
-  
-//   margin-bottom: 20px;
+  max-height: 810px;
   width: 100%;
   
   // scrollbar-gutter: stable;
-//   overflow: hidden;
+  overflow: auto;
 
   &::-webkit-scrollbar {
     // position:absolute;

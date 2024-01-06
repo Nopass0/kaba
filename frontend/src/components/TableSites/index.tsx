@@ -26,6 +26,7 @@ import WhiteLabel from '../WhiteLabel'
 import AccountAvatar from '../AccountAvatar'
 import TableLineFooter from '../TableLineFooter'
 import StatusSitePopUp from '../popup/StatusSitePopUP/index'
+import CompaniesTablePopUp from '../popup/CompaniesTablePopUp/index'
 
 const list = [
 	{
@@ -40,203 +41,19 @@ const list = [
 		companies: '3',
 		access: 'Владелец',
 	},
-	{
-		id: '2',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-		},
-		color: '#F3A63B',
-		status: 'На модерации',
-		shows: '2000',
-	},
-	{
-		id: '1',
-		name: {
-			nameCourse: 'курсы английского языка',
-			logoCourse: './asia.svg',
-			linkCourse: 'https://www.google.com/se…',
-		},
-		companyStatus: '+31',
-		counter: 'Подключён',
-		companies: '3',
-		access: 'Владелец',
-	},
-	{
-		id: '2',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-		},
-		color: '#F3A63B',
-		status: 'На модерации',
-		shows: '2000',
-	},
 
-	{
-		id: '1',
-		name: {
-			nameCourse: 'курсы английского языка',
-			logoCourse: './asia.svg',
-			linkCourse: 'https://www.google.com/se…',
-		},
-		companyStatus: '+31',
-		counter: 'Подключён',
-		companies: '3',
-		access: 'Владелец',
-	},
-	{
-		id: '2',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-		},
-		color: '#F3A63B',
-		status: 'На модерации',
-		shows: '2000',
-	},
-	{
-		id: '1',
-		name: {
-			nameCourse: 'курсы английского языка',
-			logoCourse: './asia.svg',
-			linkCourse: 'https://www.google.com/se…',
-		},
-		companyStatus: '+31',
-		counter: 'Подключён',
-		companies: '3',
-		access: 'Владелец',
-	},
-	{
-		id: '2',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-		},
-		color: '#F3A63B',
-		status: 'На модерации',
-		shows: '2000',
-	},
-	{
-		id: '1',
-		name: {
-			nameCourse: 'курсы английского языка',
-			logoCourse: './asia.svg',
-			linkCourse: 'https://www.google.com/se…',
-		},
-		companyStatus: '+31',
-		counter: 'Подключён',
-		companies: '3',
-		access: 'Владелец',
-	},
-	{
-		id: '2',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-		},
-		color: '#F3A63B',
-		status: 'На модерации',
-		shows: '2000',
-	},
-	{
-		id: '1',
-		name: {
-			nameCourse: 'курсы английского языка',
-			logoCourse: './asia.svg',
-			linkCourse: 'https://www.google.com/se…',
-		},
-		companyStatus: '+31',
-		counter: 'Подключён',
-		companies: '3',
-		access: 'Владелец',
-	},
-	{
-		id: '2',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-		},
-		color: '#F3A63B',
-		status: 'На модерации',
-		shows: '2000',
-	},
-	{
-		id: '1',
-		name: {
-			nameCourse: 'курсы английского языка',
-			logoCourse: './asia.svg',
-			linkCourse: 'https://www.google.com/se…',
-		},
-		companyStatus: '+31',
-		counter: 'Подключён',
-		companies: '3',
-		access: 'Владелец',
-	},
-	{
-		id: '2',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-		},
-		color: '#F3A63B',
-		status: 'На модерации',
-		shows: '2000',
-	},
 ]
 
 const THEME = {
 	Table: `
   --data-table-library_grid-template-columns:  30px 25% 15% 15% 12% 15% repeat(1, minmax(0, 1fr)) ;
  
-  margin-bottom: 20px;
   width: 100%;
+  max-height: 810px;
 
   
   // scrollbar-gutter: stable;
-  overflow: hidden;
+  overflow: auto;
 
   &::-webkit-scrollbar {
     // position:absolute;
@@ -805,6 +622,7 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 										</tl.Cell>
 										<tl.Cell>
 											<mui.Select
+												className={s.muiSelectClicks}
 												renderValue={(
 													option: mui.SelectOption<number> | null,
 												) => {
@@ -820,11 +638,20 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 															</>
 														)
 													}
-													return `${option.label}`
+													return (
+														<>
+															<div className={s.Clicks}>
+																<Clicks
+																	width="auto"
+																	count={item.companyStatus}
+																/>
+															</div>
+														</>
+													)
 												}}>
 												<mui.Option
-													className={`cursor-pointer z-10 mt-1`}
-													value={1}>
+													value={1}
+													className={`cursor-pointer z-10 mt-1`}>
 													<StatusSitePopUp
 														circle_color_dw_1={false}
 														text_dw_1="Эффективность целевых действия на 12% ниже среднего по рынку"
@@ -848,7 +675,33 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 										</tl.Cell>
 
 										<tl.Cell>
-											<p className={s.DetailsCell}>{item.companies}</p>
+											<mui.Select
+												className={s.muiSelectDetails}
+												renderValue={(
+													option: mui.SelectOption<number> | null,
+												) => {
+													if (option == null || option.value === null) {
+														return (
+															<>
+																<p className={s.DetailsCell}>
+																	{item.companies}
+																</p>
+															</>
+														)
+													}
+													// return `${option.label}`
+													return (
+														<>
+															<p className={s.DetailsCell}>{item.companies}</p>
+														</>
+													)
+												}}>
+												<mui.Option
+													value={1}
+													className={`cursor-pointer z-10 mt-1`}>
+													<CompaniesTablePopUp />
+												</mui.Option>
+											</mui.Select>
 										</tl.Cell>
 										<tl.Cell>
 											<p>{item.access}</p>

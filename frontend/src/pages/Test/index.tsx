@@ -43,6 +43,7 @@ import StatisticAddCompanyPopUp from '../../components/popup/StatisticAddCompany
 import StatisticDropDownPopUp from '../../components/popup/StatisticDropDownPopUp/index'
 import HeaderDownMenu from '../../components/HeaderDownMenu/index'
 import StatusSitePopUp from '../../components/popup/StatusSitePopUP/index'
+import CompaniesTablePopUp from '../../components/popup/CompaniesTablePopUp/index';
 
 ChartJS.register(LinearScale, PointElement, Tooltip, Legend)
 ChartJS.defaults.borderColor = '#333333'
@@ -369,7 +370,8 @@ const Test: React.FC = () => {
 			{/* <DepositePopUp/> */}
 			{/* <AuditorNBanners/> */}
 			{/* <Chips value={value} onChange={(e) => setValue(e.value)} /> */}
-			<StatisticAddCompanyPopUp/>
+			{/* <StatisticAddCompanyPopUp/> */}
+			<CompaniesTablePopUp/>
 			{/* <StatisticDropDownMenuGraphPopUp/> */}
 			{/* <BubbleGraph data={data}/> */}
 			{/* <Row width="auto">

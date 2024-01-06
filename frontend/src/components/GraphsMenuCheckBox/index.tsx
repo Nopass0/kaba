@@ -10,11 +10,14 @@ interface IGraphsMenuCheckBox {
 	className?: string // Added className prop
 
 	topPopUp?: string
+	StatisticClassName?: string
 }
 
 const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
 	className,
 	topPopUp,
+	StatisticClassName,
+
 
 } 
 : IGraphsMenuCheckBox) => {
@@ -268,27 +271,27 @@ const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
 				</div>
 			</Row>
 				{StatisticDropDown_1 && (
-					<div ref={StatisitcRef_1} className={`${s.StatisticDropDown_1} ${`top-[${topPopUp}]`}`}>
+					<div ref={StatisitcRef_1} className={`${s.StatisticDropDown_1} ${StatisticClassName}`}>
 						<StatisticDropDownMenuGraphPopUp />
 					</div>
 				)}
 				{StatisticDropDown_2 && (
-					<div ref={StatisitcRef_2} className={`${s.StatisticDropDown_2} ${`top-[${topPopUp}]`}`}>
+					<div ref={StatisitcRef_2} className={`${s.StatisticDropDown_2} ${StatisticClassName}`}>
 						<StatisticDropDownMenuGraphPopUp />
 					</div>
 				)}
 				{StatisticDropDown_3 && (
-					<div ref={StatisitcRef_3} className={`${s.StatisticDropDown_3} ${`top-[${topPopUp}]`}`}>
+					<div ref={StatisitcRef_3} className={`${s.StatisticDropDown_3} ${StatisticClassName}`}>
 						<StatisticDropDownMenuGraphPopUp />
 					</div>
 				)}
 				{StatisticDropDown_4 && (
-					<div ref={StatisitcRef_4} className={`${s.StatisticDropDown_4} ${`top-[${topPopUp}]`}`}>
+					<div ref={StatisitcRef_4} className={`${s.StatisticDropDown_4} ${StatisticClassName}`}>
 						<StatisticDropDownMenuGraphPopUp />
 					</div>
 				)}
 				{StatisticDropDown_5 && (
-					<div ref={StatisitcRef_5} className={`${s.StatisticDropDown_5} ${`top-[${topPopUp}]`}`}>
+					<div ref={StatisitcRef_5} className={`${s.StatisticDropDown_5} ${StatisticClassName}`}>
 						<StatisticDropDownMenuGraphPopUp />
 					</div>
 				)}

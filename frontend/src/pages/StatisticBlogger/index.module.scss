@@ -14,19 +14,27 @@
 	max-width: 180px;
 	min-height: 100vh;
 	margin-right: 32px;
+	width: 100%;
 }
 
 .rightMenu {
-	// width: 100%;
-	max-width: 1440px;
-	margin: 0 auto;
+	width: 100%;
+	// max-width: 1440px;
+	// margin: 0 auto;
 	display: flex;
 	flex-direction: column;
 }
-@media screen and (max-width: 1600px) {
+// @media screen and (max-width: 1600px) {
+// 	.rightMenu {
+// 		margin-left: 180px;
+// 		width: 1440px;	
+// 	}
+	
+// }
+@media screen and (max-width: 1440px) {
 	.rightMenu {
 		margin-left: 180px;
-		width: 1440px;	
+		width: 1164px;	
 	}
 	
 }
@@ -150,7 +158,8 @@
 .extendedBlock {
 	display: flex;
 	justify-content: space-between;
-	width: 1164px;
+	// width: 1164px;
+	width: 100%;
 	margin-bottom: 16px;
 }
 

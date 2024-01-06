@@ -4,6 +4,7 @@
 	height: 100%;
 
 	overflow-y: scroll;
+	overflow-x: hidden;
 
 	border-radius: 10px;
 	border: 1px solid #333;
@@ -20,7 +21,6 @@
 	line-height: 16px; /* 114.286% */
 	letter-spacing: -0.087px;
 
-	cursor: pointer;
 }
 
 .Line {
@@ -41,15 +41,4 @@
 
 .RowCourseWrapper {
 	width: 100%;
-	cursor: pointer;
-}
-
-.RowCourseWrapper:hover {
-	transition: all .2s;
-
-	background-color: #333;
-	
-	label::before {
-		background-color: #474747;
-	}
 }

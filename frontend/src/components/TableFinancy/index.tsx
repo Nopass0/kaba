@@ -105,11 +105,11 @@ const THEME = {
 	Table: `
   --data-table-library_grid-template-columns: 25% 25% 25% repeat(1, minmax(0, 1fr)) ;
   width: 100%;
-  margin-bottom: 20px;
+  max-height: 500px;
 
   
   // scrollbar-gutter: stable;
-  overflow: hidden;
+  overflow: auto;
 
   &::-webkit-scrollbar {
     // position:absolute;

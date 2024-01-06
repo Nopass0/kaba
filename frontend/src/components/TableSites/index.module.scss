@@ -34,7 +34,7 @@
 .check {
 	height: 16px;
 }
-.headerCellSort div:first-child{
+.headerCellSort div:first-child {
 	margin-bottom: 2px;
 }
 .headerCellSort_Sort div:first-child {
@@ -164,7 +164,6 @@
 		width: 16px;
 		height: 16px;
 	}
-
 }
 
 .DetailsCell {
@@ -263,14 +262,13 @@
 }
 
 .muiSelect {
-	width: 170px;
-	height: 36px;
+	width: 260px;
+	height: 60px;
 
 	background-color: red;
 	position: absolute;
-	right: 10px;
-	border-radius: 20px;
-
+	right: 5px;
+	z-index: 11;
 	opacity: 0;
 }
 
@@ -315,8 +313,7 @@
 .TableLineFooter {
 	position: fixed;
 	bottom: 40px;
-    left: 28%;
-
+	left: 28%;
 }
 
 .Clicks {
@@ -335,10 +332,20 @@
 	div {
 		margin: 0;
 	}
+}
 
-
+.muiSelectClicks {
+	border-radius: 12px;
 	&:hover {
 		background-color: #333;
-		transition: all .2s;
+		transition: all 0.2s;
+	}
+}
+
+.muiSelectDetails {
+	border-radius: 50%;
+	&:hover {
+		background-color: #333;
+		transition: all 0.2s;
 	}
 }
