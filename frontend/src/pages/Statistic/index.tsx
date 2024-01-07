@@ -26,7 +26,7 @@ const Statistic: React.FC = () => {
 				</div>
 				<div className={s.rightMenu}>
 					{/* Statistic */}
-					<HeaderCompany textHeader="Статистика" />
+					<HeaderCompany positionPopUp='top-[30px]' textHeader="Статистика" />
 					<StatisticPage textHeader="Статистика" />
 					{/* <Col width='360px' className={s.noCompany}>
 					<NavLabel className={s.noCompanyTitle} text='Нет кампаний'/>

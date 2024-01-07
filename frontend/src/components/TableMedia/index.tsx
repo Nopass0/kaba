@@ -351,12 +351,11 @@ const list = [
 const THEME = {
 	Table: `
   --data-table-library_grid-template-columns:  30px 30% 18% 20% 20% repeat(1, minmax(0, 1fr)) ;
-  
-//   margin-bottom: 20px;
+  max-height: 810px;
   width: 100%;
   
   // scrollbar-gutter: stable;
-//   overflow: hidden;
+  overflow: auto;
 
   &::-webkit-scrollbar {
     // position:absolute;
@@ -386,7 +385,6 @@ const THEME = {
     .th {
       padding-top: 10px;
       padding-bottom: 10px;
-      padding-left: 10px;
       background-color: #262626;
       height: 36px;
       min-height: 36px;
@@ -394,7 +392,16 @@ const THEME = {
       align-items: center;
     }
 
+	.th:first-child, .th:nth-child(2), .th:nth-child(3) {
+		padding-left:8px;
+	}
+	.th:first-child {
+		border-radius: 0 0 0 10px;
+	}
 
+	.th:last-child {
+		border-radius: 0 0 10px 0
+	}
   `,
 	HeaderCell: `
     &:not(:last-child):not(:first-child) {
@@ -422,7 +429,7 @@ const THEME = {
 	Cell: `
     padding-top: 10px;
     padding-bottom: 10px;
-    padding-left: 10px;
+    padding-left: 8px;
     font-size: 14px;
     display: flex;
     align-items: center;
@@ -674,14 +681,14 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 													fill="none">
 													<path
 														d="M5 10L8 13L11 10"
-														stroke="#808080"
+														stroke="CurrentColor"
 														strokeWidth="1.2"
 														strokeLinecap="round"
 														strokeLinejoin="round"
 													/>
 													<path
 														d="M5 6L8 3L11 6"
-														stroke="#808080"
+														stroke="CurrentColor"
 														strokeWidth="1.2"
 														strokeLinecap="round"
 														strokeLinejoin="round"
@@ -717,14 +724,14 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 													fill="none">
 													<path
 														d="M5 10L8 13L11 10"
-														stroke="#808080"
+														stroke="CurrentColor"
 														strokeWidth="1.2"
 														strokeLinecap="round"
 														strokeLinejoin="round"
 													/>
 													<path
 														d="M5 6L8 3L11 6"
-														stroke="#808080"
+														stroke="CurrentColor"
 														strokeWidth="1.2"
 														strokeLinecap="round"
 														strokeLinejoin="round"
@@ -740,7 +747,7 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 														fillRule="evenodd"
 														clipRule="evenodd"
 														d="M8.31471 11.5294C7.59118 11.8431 6.81961 12 6 12C5.18039 12 4.40882 11.8431 3.68529 11.5294C2.96176 11.2157 2.32353 10.7824 1.77059 10.2294C1.21765 9.67647 0.784314 9.03824 0.470588 8.31471C0.156863 7.59118 0 6.81961 0 6C0 5.18039 0.156863 4.40882 0.470588 3.68529C0.784314 2.96176 1.21667 2.32353 1.76765 1.77059C2.31863 1.21765 2.95588 0.784314 3.67941 0.470588C4.40294 0.156863 5.17451 0 5.99412 0C6.81373 0 7.58627 0.156863 8.31176 0.470588C9.03726 0.784314 9.67647 1.21765 10.2294 1.77059C10.7824 2.32353 11.2157 2.96176 11.5294 3.68529C11.8431 4.40882 12 5.18039 12 6C12 6.81961 11.8431 7.59118 11.5294 8.31471C11.2157 9.03824 10.7824 9.67647 10.2294 10.2294C9.67647 10.7824 9.03824 11.2157 8.31471 11.5294ZM4.05294 10.6118C4.65686 10.8706 5.30588 11 6 11C6.69412 11 7.34412 10.8706 7.95 10.6118C8.55588 10.3529 9.08726 9.9951 9.54412 9.53824C10.001 9.08137 10.3578 8.55098 10.6147 7.94706C10.8716 7.34314 11 6.69412 11 6C11 5.30588 10.8706 4.65686 10.6118 4.05294C10.3529 3.44902 9.99412 2.91765 9.53529 2.45882C9.07647 2 8.5451 1.64216 7.94118 1.38529C7.33726 1.12843 6.68824 1 5.99412 1C5.3 1 4.65098 1.12843 4.04706 1.38529C3.44314 1.64216 2.91373 2 2.45882 2.45882C2.00392 2.91765 1.64804 3.44902 1.39118 4.05294C1.13431 4.65686 1.00588 5.30588 1.00588 6C1.00588 6.69412 1.13431 7.34314 1.39118 7.94706C1.64804 8.55098 2.0049 9.08137 2.46176 9.53824C2.91863 9.9951 3.44902 10.3529 4.05294 10.6118ZM4.97059 9.22941H7.36471C7.48627 9.22941 7.58823 9.1902 7.67059 9.11176C7.75294 9.03333 7.79412 8.93529 7.79412 8.81765C7.79412 8.7 7.75294 8.60196 7.67059 8.52353C7.58823 8.4451 7.48627 8.40588 7.36471 8.40588H6.63529V5.41176C6.63529 5.25098 6.59608 5.12255 6.51765 5.02647C6.43922 4.93039 6.32549 4.88235 6.17647 4.88235H5.07059C4.94902 4.88235 4.84706 4.92157 4.76471 5C4.68235 5.07843 4.64118 5.17647 4.64118 5.29412C4.64118 5.41176 4.68235 5.5098 4.76471 5.58824C4.84706 5.66667 4.94902 5.70588 5.07059 5.70588H5.7V8.40588H4.97059C4.84902 8.40588 4.74706 8.4451 4.66471 8.52353C4.58235 8.60196 4.54118 8.7 4.54118 8.81765C4.54118 8.93529 4.58235 9.03333 4.66471 9.11176C4.74706 9.1902 4.84902 9.22941 4.97059 9.22941ZM6.49118 3.67647C6.34412 3.82549 6.16274 3.9 5.94706 3.9C5.73529 3.9 5.5549 3.82549 5.40588 3.67647C5.25686 3.52745 5.18235 3.34706 5.18235 3.13529C5.18235 2.91961 5.25686 2.73725 5.40588 2.58824C5.5549 2.43922 5.73529 2.36471 5.94706 2.36471C6.16274 2.36471 6.34412 2.43922 6.49118 2.58824C6.63824 2.73725 6.71176 2.91961 6.71176 3.13529C6.71176 3.34706 6.63824 3.52745 6.49118 3.67647Z"
-														fill="#808080"
+														fill="CurrentColor"
 													/>
 												</svg>
 											</div>
@@ -773,14 +780,14 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 													fill="none">
 													<path
 														d="M5 10L8 13L11 10"
-														stroke="#808080"
+														stroke="CurrentColor"
 														strokeWidth="1.2"
 														strokeLinecap="round"
 														strokeLinejoin="round"
 													/>
 													<path
 														d="M5 6L8 3L11 6"
-														stroke="#808080"
+														stroke="CurrentColor"
 														strokeWidth="1.2"
 														strokeLinecap="round"
 														strokeLinejoin="round"
@@ -808,7 +815,7 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 														<label htmlFor="checkbox_1">{item.name}</label>
 													</Row>
 													<Row width="auto" className={s.rowIdCheckbox}>
-														<svg
+														{/* <svg
 															className="mr-2"
 															xmlns="http://www.w3.org/2000/svg"
 															width="16"
@@ -829,11 +836,11 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 																strokeLinecap="round"
 																strokeLinejoin="round"
 															/>
-														</svg>
+														</svg> */}
 														<Label
 															isMini={true}
 															forHtml="checkbox_1"
-															text={`ID ${item.id}`}
+															text={`${item.id}`}
 														/>
 													</Row>
 												</Col>

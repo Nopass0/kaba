@@ -275,10 +275,13 @@ const StatisticBlogger: React.FC = () => {
 				</div>
 				<div className={s.rightMenu}>
 					{/* Statistic */}
-					<HeaderCompany left_info='550px' left_rate='600px' textHeader="Статистика компании " />
+					<HeaderCompany positionPopUp='top-[30px]' textHeader="Статистика компании " />
 					<CourseForBlogger
-						width_block="1164px"
-						width_text="952px"
+					NeedClicks={false}
+						// width_block="1164px"
+						width_block='100%'
+						width_text='100%'
+						// width_text="952px"
 						title="Курсы английского языка рекламная компания"
 						id="38105701932"
 						svg={
@@ -303,7 +306,7 @@ const StatisticBlogger: React.FC = () => {
 						link="https://www.upwork.com/freelancers/~0154299e52c150ac15"
 					/>
 
-					<Line width="1164px" className={s.Line} />
+					<Line width="100%" className={s.Line} />
 					{/* <StatisticPage /> */}
 					{/* <Col width='360px' className={s.noCompany}>
 					<NavLabel className={s.noCompanyTitle} text='Нет кампаний'/>
@@ -312,7 +315,7 @@ const StatisticBlogger: React.FC = () => {
             	</Col> */}
 
 					{/* Graphs */}
-					<Col width="1164px"></Col>
+					<Col width="100%"></Col>
 					<HeaderSubTitle textHeader="Ключевые показатели" />
 					<div className={s.extendedBlock}>
 						<div className={s.extendedLink}>
@@ -338,14 +341,14 @@ const StatisticBlogger: React.FC = () => {
 							/>
 						</div>
 					</div>
-					<GraphsMenuCheckBox topPopUp='530px' />
-					<div className="w-[1164px]">
+					<GraphsMenuCheckBox StatisticClassName='top-[480px]' />
+					<div style={{width: '100%', overflowX: 'scroll', height: '370px'}}> {/* w-[1164px] */}
 						<LineGraph data={data} />
 					</div>
 
-					<Line width="1164px" className={s.Line} />
+					{/* <Line width="1164px" className={s.Line} /> */}
 
-					<HeaderSubTitle textHeader="Эффективность продвижения" />
+					{/* <HeaderSubTitle textHeader="Эффективность продвижения" />
 					<Row width="1164px" className={s.MenuButtonsWrapper}>
 						<Row width="auto">
 							<ButtonSVG
@@ -445,7 +448,7 @@ const StatisticBlogger: React.FC = () => {
 						style={graph === 3 ? {display: 'block'} : {display: 'none'}}
 						className="w-[1164px]">
 						<LineChart data={dataArea} options={optionsBubble} />
-					</div>
+					</div> */}
 				</div>
 			</div>
 		</>

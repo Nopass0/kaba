@@ -40,7 +40,6 @@
 	overflow: scroll;
 	overflow-x: hidden;
 	overflow-y: overlay;
-	padding: 0 10px 0 0;
 
 	button {
 		display: flex;
@@ -52,12 +51,17 @@
 		margin: 0;
 
 		border-radius: 6px;
-		padding: 6px 8px;
+		padding: 3px 8px;
 	}
 
 	button:hover {
-		transition: all 0.3s;
+		transition: all 0.2s;
+		color: #f2f2f2;
 		background-color: #474747;
+
+		.headerCellSort_SVG svg:first-child path {
+			stroke: #f2f2f2;
+		}
 	}
 }
 
@@ -119,7 +123,6 @@
 // Buttons For Filter
 
 .sortTableButton {
-	width: auto;
 	height: 36px;
 
 	background-color: #1a1a1a;
@@ -132,7 +135,14 @@
 	font-style: normal;
 	font-weight: 400;
 	line-height: 16px; /* 114.286% */
+}
 
+.sortTableButton:last-child {
+	width: 153px;
+}
+
+.sortTableButton:not(:last-child) {
+	width: 159px;
 	margin-right: 8px;
 }
 
@@ -142,7 +152,7 @@
 	justify-content: space-between;
 	align-items: center;
 
-	padding: 10px 10px 10px 16px;
+	padding: 10px 8px 10px 16px;
 
 	.sortTableButtonTextGray {
 		color: #808080;
@@ -152,7 +162,20 @@
 		font-weight: 400;
 		line-height: 16px; /* 114.286% */
 
-		margin-right: 16px;
+		margin-right: 12px;
+	}
+	svg {
+		width: 16px;
+		height: 16px;
+	}
+
+	.sortTableButtonTextGrayExtra {
+		color: #f2f2f2;
+		font-family: Inter;
+		font-size: 14px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: 16px; /* 114.286% */
 	}
 }
 

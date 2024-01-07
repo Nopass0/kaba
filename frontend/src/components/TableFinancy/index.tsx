@@ -105,11 +105,11 @@ const THEME = {
 	Table: `
   --data-table-library_grid-template-columns: 25% 25% 25% repeat(1, minmax(0, 1fr)) ;
   width: 100%;
-  margin-bottom: 20px;
+  max-height: 500px;
 
   
   // scrollbar-gutter: stable;
-  overflow: hidden;
+  overflow: auto;
 
   &::-webkit-scrollbar {
     // position:absolute;
@@ -139,7 +139,6 @@ const THEME = {
     .th {
       padding-top: 10px;
       padding-bottom: 10px;
-      padding-left: 10px;
       background-color: #262626;
       height: 36px;
       min-height: 36px;
@@ -147,6 +146,16 @@ const THEME = {
       align-items: center;
     }
 
+	.th:not(:nth-child(3)) {
+		padding-left: 8px;
+	}
+	.th:first-child {
+		border-radius: 0 0 0 10px;
+	}
+
+	.th:last-child {
+		border-radius: 0 0 10px 0
+	}
 
   `,
 	HeaderCell: `
@@ -175,7 +184,7 @@ const THEME = {
 	Cell: `
     padding-top: 10px;
     padding-bottom: 10px;
-    padding-left: 10px;
+    padding-left: 8px;
     font-size: 14px;
     display: flex;
     align-items: center;
@@ -357,17 +366,17 @@ const TableFinancy: React.FC<ITableFinancy> = ({}: ITableFinancy) => {
 									viewBox="0 0 16 16"
 									fill="none">
 									<path
-										fillRule="evenodd"
-										clipRule="evenodd"
-										d="M7 4C7 3.44772 7.44772 3 8 3C8.55228 3 9 3.44772 9 4C9 4.55228 8.55228 5 8 5C7.44772 5 7 4.55228 7 4ZM7 12C7 11.4477 7.44772 11 8 11C8.55228 11 9 11.4477 9 12C9 12.5523 8.55228 13 8 13C7.44772 13 7 12.5523 7 12ZM8 7C7.44772 7 7 7.44772 7 8C7 8.55228 7.44772 9 8 9C8.55228 9 9 8.55228 9 8C9 7.44772 8.55228 7 8 7Z"
-										fill="#808080"
+										d="M3 6L8 11L13 6"
+										stroke="#808080"
+										stroke-width="1.4"
+										stroke-linecap="round"
+										stroke-linejoin="round"
 									/>
 								</svg>
 							</div>
 						</button>
 						<button className={s.sortTableButton}>
 							<div className={s.sortTableButtonWrapper}>
-								<div className={`absolute right-[0px] w-[139px]`}></div>
 								<p className={s.sortTableButtonTextGray}>Компании:</p>
 								<p>Все</p>
 								<svg
@@ -377,19 +386,18 @@ const TableFinancy: React.FC<ITableFinancy> = ({}: ITableFinancy) => {
 									viewBox="0 0 16 16"
 									fill="none">
 									<path
-										d="M3 11L8 6L13 11"
-										stroke="#F2F2F2"
-										strokeWidth="1.4"
-										strokeLinecap="round"
-										strokeLinejoin="round"
+										d="M3 6L8 11L13 6"
+										stroke="#808080"
+										stroke-width="1.4"
+										stroke-linecap="round"
+										stroke-linejoin="round"
 									/>
 								</svg>
 							</div>
 						</button>
 						<button className={s.sortTableButton}>
 							<div className={s.sortTableButtonWrapper}>
-								<div className={`absolute right-[0px] w-[139px]`}></div>
-								<p className={s.sortTableButtonTextGray}>Дополнительно</p>
+								<p className={s.sortTableButtonTextGrayExtra}>Дополнительно</p>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									width="16"
@@ -397,11 +405,10 @@ const TableFinancy: React.FC<ITableFinancy> = ({}: ITableFinancy) => {
 									viewBox="0 0 16 16"
 									fill="none">
 									<path
-										d="M3 11L8 6L13 11"
-										stroke="#F2F2F2"
-										strokeWidth="1.4"
-										strokeLinecap="round"
-										strokeLinejoin="round"
+										fill-rule="evenodd"
+										clip-rule="evenodd"
+										d="M7 4C7 3.44772 7.44772 3 8 3C8.55228 3 9 3.44772 9 4C9 4.55228 8.55228 5 8 5C7.44772 5 7 4.55228 7 4ZM7 12C7 11.4477 7.44772 11 8 11C8.55228 11 9 11.4477 9 12C9 12.5523 8.55228 13 8 13C7.44772 13 7 12.5523 7 12ZM8 7C7.44772 7 7 7.44772 7 8C7 8.55228 7.44772 9 8 9C8.55228 9 9 8.55228 9 8C9 7.44772 8.55228 7 8 7Z"
+										fill="#808080"
 									/>
 								</svg>
 							</div>
@@ -421,25 +428,21 @@ const TableFinancy: React.FC<ITableFinancy> = ({}: ITableFinancy) => {
 						<>
 							<tl.Header height={36}>
 								<tl.HeaderRow className="bg-[#262626] color-[#808080] h-[36px] rounded-[10px]">
-									<tl.HeaderCell
-										style={{fontWeight: '400', fill: '#808080'}}
-										>
+									<tl.HeaderCell style={{fontWeight: '400', fill: '#808080'}}>
 										Дата
 									</tl.HeaderCell>
 
 									<tl.HeaderCell
 										style={{fontWeight: '400', fill: '#808080'}}
 										className={s.headerCellSort_Sort}
-										sortKey="Status"
-										>
+										sortKey="Status">
 										<p className={s.sortText}>Операция</p>
 									</tl.HeaderCell>
 
 									<tl.HeaderCell
 										style={{fontWeight: '400', fill: '#808080'}}
 										className={s.headerCellSort_Sort}
-										sortKey="Status"
-										>
+										sortKey="Status">
 										<button
 											className={s.headerCellSort_Sort}
 											style={{fontWeight: '400', fill: '#808080'}}
@@ -461,14 +464,14 @@ const TableFinancy: React.FC<ITableFinancy> = ({}: ITableFinancy) => {
 													fill="none">
 													<path
 														d="M5 10L8 13L11 10"
-														stroke="#808080"
+														stroke="CurrentColor"
 														strokeWidth="1.2"
 														strokeLinecap="round"
 														strokeLinejoin="round"
 													/>
 													<path
 														d="M5 6L8 3L11 6"
-														stroke="#808080"
+														stroke="CurrentColor"
 														strokeWidth="1.2"
 														strokeLinecap="round"
 														strokeLinejoin="round"
@@ -480,8 +483,7 @@ const TableFinancy: React.FC<ITableFinancy> = ({}: ITableFinancy) => {
 									<tl.HeaderCell
 										style={{fontWeight: '400', fill: '#808080'}}
 										className={s.headerCellSort_Sort}
-										sortKey="Status"
-										>
+										sortKey="Status">
 										<p className={s.sortText}>Детали</p>
 									</tl.HeaderCell>
 								</tl.HeaderRow>

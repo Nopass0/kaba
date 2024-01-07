@@ -34,13 +34,14 @@
 .check {
 	height: 16px;
 }
-
+.headerCellSort div:first-child {
+	margin-bottom: 2px;
+}
 .headerCellSort_Sort div:first-child {
 	width: 100%;
 	overflow: scroll;
 	overflow-x: hidden;
 	overflow-y: overlay;
-	padding: 0 10px 0 0;
 
 	button {
 		display: flex;
@@ -52,12 +53,17 @@
 		margin: 0;
 
 		border-radius: 6px;
-		padding: 6px 8px;
+		padding: 3px 8px;
 	}
 
 	button:hover {
-		transition: all 0.3s;
+		transition: all 0.2s;
+		color: #f2f2f2;
 		background-color: #474747;
+
+		.headerCellSort_SVG svg:first-child path {
+			stroke: #f2f2f2;
+		}
 	}
 }
 
@@ -142,7 +148,7 @@
 	justify-content: space-between;
 	align-items: center;
 
-	padding: 10px 10px 10px 16px;
+	padding: 10px 8px 10px 16px;
 
 	.sortTableButtonTextGray {
 		color: #808080;
@@ -152,7 +158,11 @@
 		font-weight: 400;
 		line-height: 16px; /* 114.286% */
 
-		margin-right: 16px;
+		margin-right: 12px;
+	}
+	svg {
+		width: 16px;
+		height: 16px;
 	}
 }
 
@@ -252,14 +262,13 @@
 }
 
 .muiSelect {
-	width: 170px;
-	height: 36px;
+	width: 260px;
+	height: 60px;
 
 	background-color: red;
 	position: absolute;
-	right: 10px;
-	border-radius: 20px;
-
+	right: 5px;
+	z-index: 11;
 	opacity: 0;
 }
 
@@ -304,14 +313,13 @@
 .TableLineFooter {
 	position: fixed;
 	bottom: 40px;
-    left: 28%;
-
+	left: 28%;
 }
 
 .Clicks {
 	height: 24px;
 
-	padding: 4px 7px;
+	padding: 4px 7px 4px 3px;
 
 	border-radius: 12px;
 	border: 1px solid #333;
@@ -324,10 +332,20 @@
 	div {
 		margin: 0;
 	}
+}
 
-
+.muiSelectClicks {
+	border-radius: 12px;
 	&:hover {
 		background-color: #333;
-		transition: all .2s;
+		transition: all 0.2s;
+	}
+}
+
+.muiSelectDetails {
+	border-radius: 50%;
+	&:hover {
+		background-color: #333;
+		transition: all 0.2s;
 	}
 }

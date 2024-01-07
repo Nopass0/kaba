@@ -17,12 +17,13 @@
 	}
 
 	.up svg {
+		color: #808080;
 		cursor: pointer;
 	}
 
 	.up svg:hover {
 		transition: all 0.2s;
-		stroke: #f2f2f2;
+		color: #f2f2f2;
 	}
 }
 
@@ -46,13 +47,20 @@
 	justify-content: space-between;
 }
 
-.headerLeft {
+.headerLeft{
 	display: flex;
 	flex-direction: row;
 }
 
-.headerLeft svg {
+.headerLeft svg, .headerRight svg {
 	margin-left: 4px;
+	color: #808080;
+	cursor: pointer;
+}
+
+.headerLeft svg:hover, .headerRight svg:hover {
+	transition: all 0.2s;
+	color: #f2f2f2;
 }
 
 .NavLabel {
@@ -78,10 +86,6 @@
 	flex-direction: row;
 }
 
-.headerRight svg {
-	margin-left: 4px;
-}
-
 .Line {
 	border-radius: 16px;
 	background: #262626;
@@ -97,4 +101,14 @@
 .toolTipHistory {
 	display: flex;
 	align-items: center;
+}
+
+.toolTipHistory svg {
+	color: #808080;
+	cursor: pointer;
+}
+
+.toolTipHistory svg:hover {
+	transition: all .1s;
+	color: #f2f2f2;
 }

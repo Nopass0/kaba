@@ -13,20 +13,28 @@
 .leftMenu {
 	max-width: 180px;
 	min-height: 100vh;
+	width: 100%;
 	margin-right: 32px;
 }
 
 .rightMenu {
-	// width: 100%;
-	max-width: 1440px;
-	margin: 0 auto;
+	width: 100%;
+	// max-width: 1440px;
+	// margin: 0 auto;
 	display: flex;
 	flex-direction: column;
 }
-@media screen and (max-width: 1600px) {
+// @media screen and (max-width: 1600px) {
+// 	.rightMenu {
+// 		margin-left: 180px;
+// 		width: 1440px;	
+// 	}
+// }
+
+@media screen and (max-width: 1440px) {
 	.rightMenu {
 		margin-left: 180px;
-		width: 1440px;	
+		width: 1164px;	
 	}
 	
 }
