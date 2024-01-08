@@ -36,9 +36,20 @@ const list = [
 		budget: '599,941.32',
 		shows: '3',
 	},
-
-
 ]
+for (let i = 2; i <= 50; i++) {
+	list.push({
+		id: i.toString(),
+		name: 'курсы английского языка',
+		nameImg: './asia.svg',
+		companyStatus: '+31',
+		toEnd: '15',
+		PRC: '205%',
+		color: '#57BD53',
+		budget: '599,941.32',
+		shows: '3',
+	})
+}
 
 const THEME = {
 	Table: `

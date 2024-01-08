@@ -129,186 +129,29 @@ const list = [
 		shows: '38,195',
 	},
 
-	{
-		id: '6',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-			isBad: false,
-		},
-		color: '#57BD53',
-		status: 'Активная',
-		shows: '38,195',
-	},
-
-	{
-		id: '6',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-			isBad: false,
-		},
-		color: '#57BD53',
-		status: 'Активная',
-		shows: '38,195',
-	},
-
-	{
-		id: '6',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-			isBad: false,
-		},
-		color: '#57BD53',
-		status: 'Активная',
-		shows: '38,195',
-	},
-
-	{
-		id: '6',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '252',
-			isBad: false,
-		},
-		color: '#57BD53',
-		status: 'Активная',
-		shows: '38,195',
-	},
-
-	{
-		id: '6',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-			isBad: false,
-		},
-		color: '#57BD53',
-		status: 'Активная',
-		shows: '38,195',
-	},
-
-	{
-		id: '6',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-			isBad: false,
-		},
-		color: '#57BD53',
-		status: 'Активная',
-		shows: '38,195',
-	},
-
-	{
-		id: '6',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-			isBad: false,
-		},
-		color: '#57BD53',
-		status: 'Активная',
-		shows: '38,195',
-	},
-
-	{
-		id: '6',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '+31',
-			isBad: false,
-		},
-		color: '#57BD53',
-		status: 'Активная',
-		shows: '38,195',
-	},
-
-	{
-		id: '6',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-			isBad: false,
-		},
-		color: '#57BD53',
-		status: 'Активная',
-		shows: '38,195',
-	},
-
-	{
-		id: '16',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-			isBad: false,
-		},
-		color: '#57BD53',
-		status: 'Активная',
-		shows: '38,195',
-	},
 ]
+
+for (let id = 7; id <= 50; id++) {
+	const newData = {
+	  id: id.toString(),
+	  name: 'курсы английского языка',
+	  companyStatus: '+31',
+	  audiotoria: '3',
+	  baners: '23',
+	  adSite: {
+		name: 'google',
+		image: './asia.svg',
+		url: 'https://www.google.com/se…',
+		status: '+31',
+		isBad: false,
+	  },
+	  color: '#57BD53',
+	  status: 'Активная',
+	  shows: '38,195',
+	};
+  
+	list.push(newData);
+  }
 
 const THEME = {
 	Table: `

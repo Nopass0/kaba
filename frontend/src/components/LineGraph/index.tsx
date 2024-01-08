@@ -18,6 +18,7 @@ import {CrosshairPlugin, Interpolate} from 'chartjs-plugin-crosshair'
 import 'chart.js/auto'
 import {Line} from 'react-chartjs-2'
 import GraphTooltip from '../GraphTooltip/index'
+import { min } from 'moment'
 
 ChartJS.register(
 	CategoryScale,
@@ -34,6 +35,23 @@ ChartJS.defaults.borderColor = '#333333'
 
 interface ILineGraph {
 	data?: any
+}
+
+const chartAreaBorder = {
+	id: 'chartAreaBorder',
+	afterDraw(chart, args, options) {
+		const {
+			ctx,
+			chartArea: {left, top, width, height},
+		} = chart
+		ctx.save()
+		ctx.strokeStyle = options.borderColor
+		ctx.lineWidth = options.borderWidth
+		ctx.setLineDash(options.borderDash || [])
+		ctx.lineDashOffset = options.borderDashOffset
+		ctx.strokeRect(left, top, width, height)
+		ctx.restore()
+	},
 }
 
 const tooltip = [
@@ -82,6 +100,15 @@ const options = {
 
 	stacked: true,
 	plugins: {
+		chartAreaBorder: {
+			borderColor: '#333',
+
+			// borderColor: 'red',
+			borderWidth: 2,
+			// borderDash: [1, 1],
+			borderDashOffset: 2,
+		},
+
 		legend: {
 			display: false,
 			position: 'top',
@@ -149,18 +176,25 @@ const options = {
 			grid: {
 				BorderDash: [33, 40],
 				BorderDashOffset: 2,
-				tickLength: 10,
+				tickLength: 12,
 			},
 			ticks: {
 				callback: function (val, index) {
 					// Hide every 10nd tick label
-					return index % 10 === 0 ? this.getLabelForValue(val) : ''
+					return index % 8 === 0 ? this.getLabelForValue(val) : ''
 				},
-				align: 'center',
+
+				align: 'inner',
 				maxRotation: 0,
+				// maxTicksLimit: 11,
+				// maxTextWidth: 800,
+				labelOffset: 0,
 			},
 		},
 		y: {
+			grid: {
+				tickLength: 0,
+			},
 			gridLines: {
 				borderDash: [10, 10],
 				color: '#979797',
@@ -177,7 +211,13 @@ const LineGraph: React.FC<ILineGraph> = ({data}: ILineGraph) => {
 	return (
 		//line chart
 		<>
-			<Line type="monotone" dot={false} data={data} options={options} />
+			<Line
+				type="monotone"
+				dot={false}
+				data={data}
+				plugins={[chartAreaBorder]}
+				options={options}
+			/>
 			{/* <GraphTooltip info={tooltip} /> */}
 		</>
 	)

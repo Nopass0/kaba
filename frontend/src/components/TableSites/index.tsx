@@ -44,6 +44,23 @@ const list = [
 
 ]
 
+for (let i = 2; i <= 50; i++) {
+	const item = {
+	  id: i.toString(),
+	  name: {
+		nameCourse: 'курсы английского языка',
+		logoCourse: './asia.svg',
+		linkCourse: 'https://www.google.com/se…',
+	  },
+	  companyStatus: '+31',
+	  counter: 'Подключён',
+	  companies: '3',
+	  access: 'Владелец',
+	};
+  
+	list.push(item);
+  }
+
 const THEME = {
 	Table: `
   --data-table-library_grid-template-columns:  30px 25% 15% 15% 12% 15% repeat(1, minmax(0, 1fr)) ;
@@ -75,6 +92,7 @@ const THEME = {
     min-height: 36px;
   `,
 	HeaderRow: `
+	z-index: 3;
     color: #808080;
     border-radius: 10px;
     border: 1px solid #333333;
@@ -88,6 +106,7 @@ const THEME = {
       min-height: 36px;
       display: flex;
       align-items: center;
+	  z-index: 3;
     }
 
 	.th:first-child, .th:nth-child(2) {

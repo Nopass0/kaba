@@ -52,20 +52,60 @@ function randomArray(length: number) {
 	return arr
 }
 
+function translateToRussian(date: string): string {
+	const monthNames = [
+	  'January',
+	  'February',
+	  'March',
+	  'April',
+	  'May',
+	  'June',
+	  'July',
+	  'August',
+	  'September',
+	  'October',
+	  'November',
+	  'December',
+	];
+  
+	const monthNamesInRussian = [
+	  'Января',
+	  'Февраля',
+	  'Марта',
+	  'Апреля',
+	  'Мая',
+	  'Июня',
+	  'Июля',
+	  'Августа',
+	  'Сентября',
+	  'Октября',
+	  'Ноября',
+	  'Декабря',
+	];
+  
+	const monthIndex = monthNames.indexOf(date.split(' ')[1]);
+	const translatedDate = date.replace(monthNames[monthIndex], monthNamesInRussian[monthIndex]);
+  
+	return translatedDate;
+  }
+
 // //generate array of dates from start date to end date like ["1 January", "2 January", "3 January",..., "1 December","2 December", ..., "31 December"]
 
+moment().locale('ru')
 function generateArrayOfDates(startDate: string, endDate: string): string[] {
-	const start = moment(startDate, 'YYYY-MM-DD')
-	const end = moment(endDate, 'YYYY-MM-DD')
-	const dates = []
+  const start = moment(startDate, 'YYYY-MM-DD');
+  const end = moment(endDate, 'YYYY-MM-DD');
+  const dates: string[] = [];
 
-	while (start.isSameOrBefore(end)) {
-		dates.push(start.format('D MMMM'))
-		start.add(1, 'day')
-	}
+  while (start.isSameOrBefore(end)) {
+    const translateDate = translateToRussian(start.format('D MMMM'));
+    dates.push(translateDate);
+    start.add(1, 'day');
+  }
 
-	return dates
+  return dates;
 }
+
 
 // // Example usage
 const startDate = '2022-01-01'
