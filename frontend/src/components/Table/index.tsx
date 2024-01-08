@@ -24,6 +24,7 @@ import TableLineFooter from '../TableLineFooter/index'
 import AuditorNBanners from '../AuditorNBanners'
 import StatusSitePopUp from '../popup/StatusSitePopUP/index'
 import * as mui from '@mui/base'
+import VerticalScroll from '../VerticalScroll'
 
 enum CurrentPopup {
 	None,
@@ -996,7 +997,9 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 							</>
 						)}
 					</tl.Table>
-					<div id="scrollbarForTable"></div>
+					<div id="scrollbarForTable">
+						<VerticalScroll obj="mainTable" />
+					</div>
 				</Col>
 				{downMenu ? (
 					<TableLineFooter
