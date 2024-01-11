@@ -8,13 +8,12 @@ import ChooseAccount from './pages/ChooseAccount'
 import Register from './pages/Register/index'
 import Welcome from './pages/Welcome'
 import Company from './pages/Company'
-import CompanyCreate from './pages/CompanyCreate'
 import {createStore} from 'redux'
 import {Provider} from 'react-redux'
 
 import {IUser, IPermission} from './types'
 import Settings from './pages/Settings'
-import Bloggers from './pages/Bloggers'
+import Bloggers from './pages/bloggers'
 import Finance from './pages/Finance'
 import Sites from './pages/Sites'
 import Statistic from './pages/Statistic'
@@ -24,6 +23,7 @@ import MyBanners from './pages/MyBanners'
 import StatisticBlogger from './pages/StatisticBlogger/index'
 import {checkAPI} from './api/utils.api'
 import AcceptCode from './pages/AcceptCode'
+import CompanyCreate from './pages/CompanyCreate/index';
 
 let defaultState = {
 	user: {

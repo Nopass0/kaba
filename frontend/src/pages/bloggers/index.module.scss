@@ -107,9 +107,14 @@
 }
 
 // Buttons For Filter
-.sortTableButton:first-child {
-	margin-right: 8px;
+// .sortTableButton:first-child {
+// 	margin-right: 8px;
+// }
+
+.sortTableButtons {
+	margin-right: 32px;
 }
+
 
 .sortTableButton {
 	width: 181px;
@@ -163,6 +168,7 @@
 	text-align: center;
 	justify-content: center;
 
+	margin-bottom: 16px;
 	.SpanLoadMore {
 		border-radius: 18px;
 		border: 1px solid #333;
@@ -175,5 +181,11 @@
 		font-style: normal;
 		font-weight: 400;
 		line-height: 16px; /* 114.286% */
+		cursor: pointer;
+	}
+
+	.SpanLoadMore:hover {
+		transition: all .2s;
+		background-color: #333;
 	}
 }

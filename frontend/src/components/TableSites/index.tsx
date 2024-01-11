@@ -779,7 +779,7 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 															</div>
 														),
 												)}
-												<p>{Object(users).length} (625)</p>
+												<p className='leading-4'>{Object(users).length} (625)</p>
 											</Row>
 										</tl.Cell>
 									</tl.Row>

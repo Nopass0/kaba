@@ -10,7 +10,7 @@ interface IHeaderCompany {
 	className?: string // Added className prop
 	needDownMenu?: boolean
 	textHeader: string
-	positionPopUp: string
+	positionPopUp?: string
 }
 
 const HeaderCompany: React.FC<IHeaderCompany> = ({

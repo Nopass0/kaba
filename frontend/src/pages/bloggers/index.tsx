@@ -1,10 +1,10 @@
 import React from 'react'
 import s from './index.module.scss'
 import LeftCompanyMenu from '../../components/LeftCompanyMenu'
-import HeaderCompany from '../../components/HeaderCompany'
 import MenuBannersWCourse from '../../components/MenuBannersWCourses'
 import Row from '../../components/Row'
 import PopUpWrapper from '../../components/PopUpWrapper'
+import HeaderCompany from '../../components/HeaderCompany/index';
 import ContentBanner, {
 	IContentBanner,
 } from '../../components/ContentBanner/index'
@@ -98,11 +98,9 @@ const Bloggers: React.FC = () => {
 			</div>
 			<div className={s.rightMenu}>
 				<HeaderCompany
-					left_info="550px"
-					left_rate="600px"
+					positionPopUp='top-[30px]'
 					textHeader="Формирование баннера"
 				/>
-
 				<div className={s.headerTable}>
 					<label htmlFor="search" className={s.LabelSearch}>
 						<input
@@ -176,7 +174,7 @@ const Bloggers: React.FC = () => {
 						id="9876543210"
 						link="https://www.linkedin.com/in/artem-…"
 						count="245"
-						categories="Статус. комп, Аудитории и Баннеры, Реклам. сайт, Стат…"
+						categories="Статус. комп, Аудитории и Баннеры, Реклам. сайт, Стат… "
 						to_end="15"
 						budget="3,141,941.32"
 						income="19.07"
@@ -185,7 +183,7 @@ const Bloggers: React.FC = () => {
 						error={true}
 						ButtonAdd={true}
 						fav_active={true}
-						className={s.MenuBannersWCourse}
+						className={`${s.MenuBannersWCourse}`}
 						onDetails={() => {
 							setCurrentPopup(CurrentPopup.Content)
 						}}

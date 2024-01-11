@@ -221,7 +221,7 @@ const LeftCompanyMenu: React.FC = () => {
 									onClick={() => setCurrentUrl('mybanners')}>
 									<div
 										className={`${s.companies} ${s.companyPage} ${
-											CurrentURL === 'mybanners' ? s.active : ''
+											location.pathname === '/mybanners' ? s.active : ''
 										}`}>
 										<div className={s.companyPageLeft}>
 											<svg
@@ -245,7 +245,7 @@ const LeftCompanyMenu: React.FC = () => {
 								<Link to="/" onClick={() => setCurrentUrl('company')}>
 									<div
 										className={`${s.companies} ${s.companyPage} ${
-											CurrentURL === 'company' ? s.active : ''
+											location.pathname === '/' ? s.active : ''
 										}`}>
 										<div className={s.companyPageLeft}>
 											<img src={CompanyIcon} alt="Company" />
@@ -258,7 +258,7 @@ const LeftCompanyMenu: React.FC = () => {
 								<Link to="/media" onClick={() => setCurrentUrl('media')}>
 									<div
 										className={`${s.statics} ${s.companyPage} ${
-											CurrentURL === 'media' ? s.active : ''
+											location.pathname === '/media' ? s.active : ''
 										}`}>
 										<div className={s.companyPageLeft}>
 											<svg
@@ -288,7 +288,7 @@ const LeftCompanyMenu: React.FC = () => {
 								onClick={() => setCurrentUrl('statistics')}>
 								<div
 									className={`${s.statics} ${s.companyPage} ${
-										CurrentURL === 'statistics' ? s.active : ''
+										(location.pathname === '/statistics' || location.pathname === '/statisticBlogger') ? s.active : ''
 									}`}>
 									<div className={s.companyPageLeft}>
 										<img src={StatisticIcon} alt="Statistic" srcset="" />
@@ -318,7 +318,7 @@ const LeftCompanyMenu: React.FC = () => {
 									<Link to="/sites" onClick={() => setCurrentUrl('sites')}>
 										<div
 											className={`${s.sites} ${s.companyPage} ${
-												CurrentURL === 'sites' ? s.active : ''
+												location.pathname === '/sites' ? s.active : ''
 											}`}>
 											<div className={s.companyPageLeft}>
 												<img src={SitesIcon} alt="Sites" srcset="" />
@@ -336,8 +336,8 @@ const LeftCompanyMenu: React.FC = () => {
 											<>
 												<div
 													className={`${s.statics} ${s.companyPage} ${
-														CurrentURL === '/finance' ||
-														CurrentURL === '/settings'
+														location.pathname === '/finance' ||
+														location.pathname === '/settings'
 															? s.active
 															: ''
 													}`}
@@ -377,7 +377,7 @@ const LeftCompanyMenu: React.FC = () => {
 							</mui.Select>
 							{/* <div
 								className={`${s.statics} ${s.companyPage} ${
-									CurrentURL === '/finance' || CurrentURL === '/settings'
+									location.pathname === '//finance' || location.pathname === '//settings'
 										? s.active
 										: ''
 								}`}
