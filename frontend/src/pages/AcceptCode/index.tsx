@@ -21,6 +21,26 @@ const AcceptCode: React.FC = () => {
 	const user_ = useSelector((state: any) => state.user)
 
 	const [code, setCode] = React.useState<string>('')
+	const [value, setValue] = React.useState('') // State to hold the input value
+
+	const formatPhoneNumber = (input: string) => {
+		// Strip all characters from the input except digits
+		const digits = input.replace(/[^+\d]/g, '')
+
+		return digits
+	}
+	
+
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const inputVal = event.target.value
+		// Handle deletion to keep "+7"
+		if (inputVal === '') {
+			setValue('')
+		} else {
+			const formattedInput = formatPhoneNumber(inputVal)
+			setValue(formattedInput)
+		}
+	}
 
 	const login = async () => {
 		console.log(userId, code)
@@ -63,15 +83,19 @@ const AcceptCode: React.FC = () => {
 							</svg>
 						</ToolTip>
 					</div>
-					<div className={s.input_row_phone}>
+					<div className={s.input_row_phone} id='input_row_phone'>
 						<Input
 							placeholder="+7 (938) 823 39-19"
 							id="phone_reg"
 							isSecure={false}
 							width="248px"
+							value={value}
+							onChange={handleChange}
+							maximumLength={12}
+							isShowMaxLength={false}
 						/>
 						<Link to={'/login'} className={s.blueButtonRegLink}>
-							<BlueButton className={s.blueButtonReg} text='Назад'/>
+							<BlueButton className={s.blueButtonReg} text="Назад" />
 						</Link>
 					</div>
 					<Label

@@ -14,10 +14,8 @@ interface IInput {
 	isShowMaxLength?: boolean
 	bgColor?: string
 	height?: string
-	autocomplete?: boolean
-	type?: string
-
 	onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+	value?: string
 }
 
 const Input: React.FC<IInput> = ({
@@ -34,8 +32,7 @@ const Input: React.FC<IInput> = ({
 	isShowMaxLength = true,
 	bgColor,
 	height,
-	autocomplete,
-	type,
+	value,
 }: IInput) => {
 	const [lengthString, setLengthString] = React.useState<number>(
 		maximumLength || 0,
@@ -52,7 +49,6 @@ const Input: React.FC<IInput> = ({
 						onChange(event)
 						setLengthString(maximumLength! - event.target.value.length)
 					}}
-					autoComplete={autocomplete ? 'off' : 'on'}
 					type={isSecure ? 'password' : 'text'}
 					style={Object.assign(
 						{width: width, minWidth: minWidth},
@@ -63,6 +59,7 @@ const Input: React.FC<IInput> = ({
 					className={s.inputText + ' ' + (errorMsg ? s.error : '')}
 					name={id ? `input-${id}` : 'input'}
 					id={id ? `input-${id}` : 'input'}
+					value={value}
 				/>
 				{(maximumLength ? maximumLength : 0) &&
 				(isShowMaxLength ? isShowMaxLength : 0) ? (
