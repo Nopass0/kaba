@@ -1,9 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom/client'
-import {
-	createBrowserRouter,
-	RouterProvider,
-} from 'react-router-dom'
+import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import './index.scss'
 import MainPage from './pages/Main'
 import Header from './components/Header'
@@ -28,23 +25,25 @@ import {checkAPI} from './api/utils.api'
 import AcceptCode from './pages/AcceptCode'
 import CompanyCreate from './pages/CompanyCreate/index'
 import ErrorPage from './pages/ErrorPage'
-import { Navigate  } from 'react-router-dom';
+import {Navigate} from 'react-router-dom'
 
 let defaultState = {
-	user: {
-		// id: 1,
-		// name: 'Test User',
-		// avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
-		// permission: {
-		// 	id: 0,
-		// 	name: 'Просмотр',
-		// } as IPermission,
-		// nick: '@testuser',
-		// isBlogger: false,
-	},
+	// user: {
+	// 	// id: 1,
+	// 	// name: 'Test User',
+	// 	// avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
+	// 	// permission: {
+	// 	// 	id: 0,
+	// 	// 	name: 'Просмотр',
+	// 	// } as IPermission,
+	// 	// nick: '@testuser',
+	// 	// isBlogger: false,
+	// } as IUser,
+	user:
+		JSON.parse(localStorage.getItem('kaba_data') || '{}').user || ({} as IUser),
 	users: [
 		{
-			id: 1,
+			user_id: 1,
 			name: 'Ольга Петрова',
 			avatar: 'https://randomuser.me/api/portraits/thumb/women/16.jpg',
 			token: '12345',
@@ -57,7 +56,7 @@ let defaultState = {
 			isBlogger: false,
 		} as IUser,
 		{
-			id: 2,
+			user_id: 2,
 			name: 'Екатерина Иванова',
 			avatar: 'https://randomuser.me/api/portraits/thumb/women/13.jpg',
 			token: '4343',
@@ -70,7 +69,7 @@ let defaultState = {
 			isBlogger: true,
 		} as IUser,
 		{
-			id: 3,
+			user_id: 3,
 			name: 'Иван Иванов',
 			avatar: 'https://randomuser.me/api/portraits/thumb/men/75.jpg',
 			token: '123424245',
@@ -83,7 +82,7 @@ let defaultState = {
 			isBlogger: false,
 		} as IUser,
 		{
-			id: 4,
+			user_id: 4,
 			name: 'Человек человеков',
 			avatar: 'https://randomuser.me/api/portraits/thumb/men/23.jpg',
 			token: '5645634',
@@ -121,10 +120,6 @@ let defaultState = {
 // console.log(isLocalStorage, 'LocalStorage')
 
 //Save data or get data to defaultState(Redux) from localStorage if it exists
-// defaultState = JSON.parse(localStorage.getItem('kaba_data')!)
-// if (localStorage.getItem('kaba_data') !== null) {
-// } else {
-// }
 
 console.log(await checkAPI(), 'CheckAPI')
 
@@ -147,6 +142,10 @@ const reducer = (state = defaultState, action: any) => {
 			console.log('setVerifyUser', action.verify_user)
 
 			return {...state, verify_user: action.verify_user}
+		case 'setVerifyUserPhone':
+			console.log('setVerifyUserPhone', action.verify_user_phone)
+
+			return {...state, verify_user_phone: action.verify_user_phone}
 
 		case 'addUser':
 			return {...state, users: [...state.users, action.user]}
@@ -184,14 +183,22 @@ const store = createStore(reducer)
 // check()
 
 function getWHeader(router_element: any, isPrivate: boolean) {
+	// console.log(defaultState.user.user_id, 'user')
+
 	return (
 		<>
-			{isPrivate && defaultState.user.id === undefined ? (
+			{isPrivate && defaultState.user.user_id === undefined ? (
 				<Navigate to="/login" />
 			) : (
 				<>
-					<Header />
-					{router_element}
+					{!isPrivate && defaultState.user.user_id !== undefined ? (
+						<Navigate to="/" />
+					) : (
+						<>
+							<Header />
+							{router_element}
+						</>
+					)}
 				</>
 			)}
 		</>

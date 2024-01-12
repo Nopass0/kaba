@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import s from './index.module.scss'
 import Col from '../../components/Col'
 import NavLabel from '../../components/NavLabel/index'
@@ -7,8 +7,40 @@ import ToolTip from '../../components/ToolTip'
 import Input from '../../components/Input'
 import BlueButton from '../../components/BlueButton/index'
 import CheckBox from '../../components/CheckBox/index'
+import {registerAPI} from '../../api/auth.api'
 
 const Register: React.FC = () => {
+	const [phone, setPhone] = React.useState('')
+	const [login, setLogin] = React.useState('')
+	const [name, setName] = React.useState('')
+
+	const [cooldown, setCooldown] = React.useState(0)
+
+	useEffect(() => {
+		const timer = setInterval(() => {
+			setCooldown((prevCooldown) => prevCooldown - 1)
+		}, 1000)
+
+		return () => {
+			clearInterval(timer)
+		}
+	}, [])
+
+	const formatCooldown = () => {
+		const minutes = Math.floor(cooldown / 60)
+			.toString()
+			.padStart(2, '0')
+		const seconds = (cooldown % 60).toString().padStart(2, '0')
+		return `${minutes}:${seconds}`
+	}
+
+	const resendCode = async () => {
+		setCooldown(60)
+
+		const res = await registerAPI(login, name, phone)
+		console.log(res)
+	}
+
 	return (
 		<div className={`${s.wrapper} ${s.wrapper_register}`}>
 			<Col width="360px">
@@ -35,6 +67,8 @@ const Register: React.FC = () => {
 					<Input
 						placeholder="Артем Артеменко"
 						id="name_reg"
+						value={name}
+						onChange={(e) => setName(e.target.value)}
 						isSecure={false}></Input>
 				</div>
 
@@ -61,7 +95,9 @@ const Register: React.FC = () => {
 						placeholder="@wizardofadvertising"
 						id="login_reg"
 						isSecure={false}
-						errorMsg="Этот логин уже занят"
+						value={login}
+						onChange={(e) => setLogin(e.target.value)}
+						// errorMsg="Этот логин уже занят" TODO
 					/>
 				</div>
 
@@ -90,6 +126,10 @@ const Register: React.FC = () => {
 							id="phone_reg"
 							isSecure={false}
 							width="248px"
+							onChange={(e) => setPhone(e.target.value)}
+							value={phone}
+							maximumLength={12}
+							isShowMaxLength={false}
 						/>
 						<BlueButton className={s.blueButtonReg} text="Изменить" />
 					</div>
@@ -125,8 +165,12 @@ const Register: React.FC = () => {
 					<Label isMini={true} text="Введите цифры из полученого сообщения" />
 				</div>
 				<BlueButton
-					className={s.blueButtonSendCode_reg}
-					text="Отправить код повторно через 00:56"
+					onClick={resendCode}
+					className={cooldown <= 0 ? `mb-8` : `${s.blueButtonSendCode_reg}`}
+					text={`Отправить код повторно ${
+						cooldown <= 0 ? '' : `через ${formatCooldown()}`
+					}`}
+					disabled={cooldown > 0}
 				/>
 				<div className={s.checkbox_container_reg}>
 					<CheckBox id="checkbox_reg_1" />

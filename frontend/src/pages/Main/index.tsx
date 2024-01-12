@@ -28,6 +28,7 @@ const MainPage: React.FC = () => {
 				let uid = await res.data.user_id
 
 				dispatch({type: 'setVerifyUser', verify_user: uid})
+				dispatch({type: 'setVerifyUserPhone', verify_user_phone: phoneNumber})
 				navigate('/acceptCode')
 			}
 		}

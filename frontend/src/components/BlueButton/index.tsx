@@ -6,6 +6,7 @@ interface IBlueButton {
 	width?: string
 	className?: string // Add className prop
 	onClick?: () => void
+	disabled?: boolean
 }
 
 /**
@@ -19,12 +20,14 @@ const BlueButton: React.FC<IBlueButton> = ({
 	width,
 	className,
 	onClick,
+	disabled,
 }: IBlueButton) => {
 	return (
 		<button
 			onClick={onClick}
 			className={`${s.blueButton} ${className}`}
-			style={{width: width}}>
+			style={{width: width}}
+			disabled={disabled}>
 			{text}
 		</button>
 	)

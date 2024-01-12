@@ -19,6 +19,24 @@ export const loginAPI = async (login: string) => {
 	}
 }
 
+export const registerAPI = async (
+	login: string,
+	name: string,
+	phone: string,
+) => {
+	//check is phone(+7...) or login(@...)
+	if (phoneRegex.test(phone)) {
+		return await axios.post(getApiUrl('verify'), {
+			phone_number: phone,
+			login: login,
+			firstname: name,
+			type: 'register',
+		})
+	} else {
+		return {status: 'error'}
+	}
+}
+
 export const verifyAPI = async (user_id: number, code: string) => {
 	return await axios.post(getApiUrl('verify_code'), {
 		code: code,

@@ -11,17 +11,19 @@ import {Link, useNavigate} from 'react-router-dom'
 import {loginAPI, verifyAPI} from '../../api/auth.api'
 import {useDispatch, useSelector} from 'react-redux'
 import ToolTip from '../../components/ToolTip'
-import {verify} from 'crypto'
 import {IUser} from '../../types'
 
 const AcceptCode: React.FC = () => {
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
 	const userId = useSelector((state: any) => state.verify_user)
+	const userPhone = useSelector((state: any) => state.verify_user_phone)
 	const user_ = useSelector((state: any) => state.user)
 
 	const [code, setCode] = React.useState<string>('')
-	const [value, setValue] = React.useState('') // State to hold the input value
+	const [value, setValue] = React.useState(userPhone) // State to hold the input value
+
+	const [cooldown, setCooldown] = React.useState(60)
 
 	const formatPhoneNumber = (input: string) => {
 		// Strip all characters from the input except digits
@@ -29,7 +31,24 @@ const AcceptCode: React.FC = () => {
 
 		return digits
 	}
-	
+
+	useEffect(() => {
+		const timer = setInterval(() => {
+			setCooldown((prevCooldown) => prevCooldown - 1)
+		}, 1000)
+
+		return () => {
+			clearInterval(timer)
+		}
+	}, [])
+
+	const formatCooldown = () => {
+		const minutes = Math.floor(cooldown / 60)
+			.toString()
+			.padStart(2, '0')
+		const seconds = (cooldown % 60).toString().padStart(2, '0')
+		return `${minutes}:${seconds}`
+	}
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const inputVal = event.target.value
@@ -60,6 +79,15 @@ const AcceptCode: React.FC = () => {
 		}
 	}
 
+	const resendCode = async () => {
+		setCooldown(60)
+
+		console.log(value)
+
+		const res = await loginAPI(value)
+		console.log(res)
+	}
+
 	return (
 		<div className={s.wrapper}>
 			<Col className={s.signin} width="360px">
@@ -83,7 +111,7 @@ const AcceptCode: React.FC = () => {
 							</svg>
 						</ToolTip>
 					</div>
-					<div className={s.input_row_phone} id='input_row_phone'>
+					<div className={s.input_row_phone} id="input_row_phone">
 						<Input
 							placeholder="+7 (938) 823 39-19"
 							id="phone_reg"
@@ -131,8 +159,16 @@ const AcceptCode: React.FC = () => {
 					<Label isMini={true} text="Введите цифры из полученого сообщения" />
 				</div>
 				<BlueButton
-					className={s.blueButtonSendCode_reg}
-					text="Отправить код повторно через 00:56"
+					onClick={resendCode}
+					className={
+						cooldown <= 0
+							? `${s.blueButtonRegisterDis_reg} mb-4`
+							: s.blueButtonSendCode_reg
+					}
+					text={`Отправить код повторно ${
+						cooldown <= 0 ? '' : `через ${formatCooldown()}`
+					}`}
+					disabled={cooldown > 0}
 				/>
 				<BlueButton
 					onClick={login}
