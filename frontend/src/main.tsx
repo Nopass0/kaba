@@ -1,6 +1,9 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom/client'
-import {createBrowserRouter, RouterProvider} from 'react-router-dom'
+import {
+	createBrowserRouter,
+	RouterProvider,
+} from 'react-router-dom'
 import './index.scss'
 import MainPage from './pages/Main'
 import Header from './components/Header'
@@ -23,22 +26,23 @@ import MyBanners from './pages/MyBanners'
 import StatisticBlogger from './pages/StatisticBlogger/index'
 import {checkAPI} from './api/utils.api'
 import AcceptCode from './pages/AcceptCode'
-import CompanyCreate from './pages/CompanyCreate/index';
+import CompanyCreate from './pages/CompanyCreate/index'
+import ErrorPage from './pages/ErrorPage'
+import { Navigate  } from 'react-router-dom';
 
 let defaultState = {
 	user: {
-id: 1,
-name: 'Test User',
-avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
-permission: {
-	id: 0,
-	name: 'Просмотр',
-} as IPermission,
-nick: '@testuser',
-isBlogger: false,
+		// id: 1,
+		// name: 'Test User',
+		// avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
+		// permission: {
+		// 	id: 0,
+		// 	name: 'Просмотр',
+		// } as IPermission,
+		// nick: '@testuser',
+		// isBlogger: false,
 	},
-	users:
-	[
+	users: [
 		{
 			id: 1,
 			name: 'Ольга Петрова',
@@ -122,6 +126,7 @@ isBlogger: false,
 // } else {
 // }
 
+console.log(await checkAPI(), 'CheckAPI')
 
 const reducer = (state = defaultState, action: any) => {
 	switch (action.type) {
@@ -132,7 +137,7 @@ const reducer = (state = defaultState, action: any) => {
 				'kaba_data',
 				JSON.stringify({...state, user: action.user}),
 			),
-			defaultState.user = action.user
+				(defaultState.user = action.user)
 
 			console.log('setUser', action.user, '\n', defaultState.user)
 
@@ -172,17 +177,23 @@ const store = createStore(reducer)
 // 	else return <Company />
 // }
 
-const check = async () => {
-	const response = await checkAPI()
-	console.log(response)
-}
-check()
+// const check = async () => {
+// 	const response = await checkAPI()
+// 	console.log(response)
+// }
+// check()
 
-function getWHeader(router_element: any) {
+function getWHeader(router_element: any, isPrivate: boolean) {
 	return (
 		<>
-			<Header />
-			{router_element}
+			{isPrivate && defaultState.user.id === undefined ? (
+				<Navigate to="/login" />
+			) : (
+				<>
+					<Header />
+					{router_element}
+				</>
+			)}
 		</>
 	)
 }
@@ -191,74 +202,82 @@ const router = createBrowserRouter([
 	//just for test
 	{
 		path: '/login',
-		element: getWHeader(<MainPage />),
+		element: getWHeader(<MainPage />, false),
 	},
-	{
-		path: 'choose',
-		element: getWHeader(<ChooseAccount />),
-	},
+	// {
+	// 	path: 'choose',
+	// 	element: getWHeader(<ChooseAccount />),
+	// },
 	{
 		path: '/',
-		element: getWHeader(<Company />),
+		element: getWHeader(<Company />, true),
 	},
 	{
 		path: '/register',
-		element: getWHeader(<Register />),
+		element: getWHeader(<Register />, false),
 	},
 	{
 		path: '/test',
-		element: getWHeader(<Test />),
+		element: getWHeader(<Test />, false),
 	},
 	{
 		path: '/welcome',
-		element: getWHeader(<Welcome />),
+		element: getWHeader(<Welcome />, true),
 	},
 	{
 		path: '/create',
-		element: getWHeader(<CompanyCreate />),
+		element: getWHeader(<CompanyCreate />, true),
 	},
 	{
 		path: '/settings',
-		element: getWHeader(<Settings />),
+		element: getWHeader(<Settings />, true),
 	},
 	{
 		path: '/bloggers',
-		element: getWHeader(<Bloggers />),
+		element: getWHeader(<Bloggers />, true),
 	},
 	{
 		path: '/finance',
-		element: getWHeader(<Finance />),
+		element: getWHeader(<Finance />, true),
 	},
 	{
 		path: '/sites',
-		element: getWHeader(<Sites />),
+		element: getWHeader(<Sites />, true),
 	},
 	{
 		path: '/statistics',
-		element: getWHeader(<Statistic />),
+		element: getWHeader(<Statistic />, true),
 	},
 	{
 		path: '/media',
-		element: getWHeader(<Media />),
+		element: getWHeader(<Media />, true),
 	},
 	{
 		path: '/mybanners',
-		element: getWHeader(<MyBanners />),
+		element: getWHeader(<MyBanners />, true),
 	},
 	{
 		path: '/statisticBlogger',
-		element: getWHeader(<StatisticBlogger />),
+		element: getWHeader(<StatisticBlogger />, true),
 	},
 	{
 		path: '/acceptCode',
-		element: getWHeader(<AcceptCode />),
+		element: getWHeader(<AcceptCode />, false),
 	},
 ])
 ReactDOM.createRoot(document.getElementById('root')!).render(
-	<React.StrictMode>
-		<Provider store={store}>
-			{/* <Header /> */}
-			<RouterProvider router={router} />
-		</Provider>
-	</React.StrictMode>,
+	<>
+		<React.StrictMode>
+			<Provider store={store}>
+				{(await checkAPI()).status === 200 ? (
+					<>
+						{/* <Header /> */}
+						<RouterProvider router={router} />
+					</>
+				) : (
+					<ErrorPage />
+				)}
+			</Provider>
+		</React.StrictMode>
+	</>,
 )
