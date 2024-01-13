@@ -3,8 +3,19 @@
 	// min-height: 222px;
 
 	// Убрать высоту ниже, если захотим вернуть Финансы и Настройки и добавить min-height:222px;
-	max-height: 222px;
 	height: 130px;
+
+	border-radius: 10px;
+	border: 1px solid #333;
+	background: #262626;
+	box-shadow: 0px 0px 50px 0px rgba(0, 0, 0, 0.1);
+
+	padding: 16px 16px;
+}
+
+.wrapperBlogger {
+	width: 280px;
+	min-height: 222px;
 
 	border-radius: 10px;
 	border: 1px solid #333;

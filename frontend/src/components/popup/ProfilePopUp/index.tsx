@@ -20,7 +20,7 @@ const ProfilePopUp: React.FC<IProfilePopUp> = ({blogger}: IProfilePopUp) => {
 	const user = useSelector((state: any) => state.user)
 	const [leftSideOpen, setLeftSideOpen] = React.useState(false)
 	return (
-		<div className={s.wrapper}>
+		<div className={`${blogger ? s.wrapperBlogger : s.wrapper}`}>
 			<Col width="248px">
 				<Row onClick={() => setLeftSideOpen(!leftSideOpen)} className={`${s.AccountLine}`} width="248px">
 					<AccountAvatar img={user?.avatar} char={user?.name[0]} />
@@ -75,7 +75,7 @@ const ProfilePopUp: React.FC<IProfilePopUp> = ({blogger}: IProfilePopUp) => {
 					}}
 					className={s.AccountBlueButton}
 					width="248px"
-					text="Управление аккаунтом"
+					text="Выйти"
 				/>
 				{/* <Link to="/finance"> */}
 				{/* <Row className={s.AccountPages} width="248px">
