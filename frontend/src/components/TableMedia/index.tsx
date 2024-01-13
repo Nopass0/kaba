@@ -34,21 +34,20 @@ const list = [
 		status: 'Активная',
 		shows: '1000',
 	},
-
 ]
 for (let i = 2; i <= 51; i++) {
 	list.push({
-	  id: i.toString(),
-	  name: 'курсы английского языка',
-	  nameImg: './asia.svg',
-	  companyStatus: '+31',
-	  access: 'Открытый',
-	  PRC: '205%',
-	  color: '#57BD53',
-	  status: 'Активная',
-	  shows: '1000',
-	});
-  }
+		id: i.toString(),
+		name: 'курсы английского языка',
+		nameImg: './asia.svg',
+		companyStatus: '+31',
+		access: 'Открытый',
+		PRC: '205%',
+		color: '#57BD53',
+		status: 'Активная',
+		shows: '1000',
+	})
+}
 
 const THEME = {
 	Table: `
@@ -119,6 +118,10 @@ const THEME = {
     // }
   `,
 	Row: `
+	&:hover {
+		transition: all .2s;
+		background-color: #262626;
+	}
     &.row-select-selected {
       background-color: #262626;
       font-size: 14px;
@@ -157,12 +160,12 @@ const THEME = {
       border-right: 1px solid #333333;
     }
     &:not(:last-child) {
-      border-bottom: 1px solid #333333;
-    }
-
-    &:last-child {
-      border-bottom: 1px solid #333333;
-    }
+		border-top: 1px solid #333333;
+	  }
+  
+	  &:last-child {
+		border-top: 1px solid #333333;
+	  }
 
   `,
 	Body: `
@@ -352,16 +355,14 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 									<tl.HeaderCell
 										style={{fontWeight: '400', fill: '#808080'}}
 										className={s.headerCellSort_Sort}
-										sortKey="Status"
-										>
+										sortKey="Status">
 										<p className={s.sortText}>Доступ</p>
 									</tl.HeaderCell>
 
 									<tl.HeaderCell
 										style={{fontWeight: '400', fill: '#808080'}}
 										className={s.headerCellSort_Sort}
-										sortKey="Status"
-										>
+										sortKey="Status">
 										<button
 											className={s.headerCellSort_Sort}
 											style={{fontWeight: '400', fill: '#808080'}}
@@ -403,8 +404,7 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 									<tl.HeaderCell
 										style={{fontWeight: '400', fill: '#808080'}}
 										className={s.headerCellSort_Sort}
-										sortKey="Status"
-										>
+										sortKey="Status">
 										<button
 											className={s.headerCellSort_Sort}
 											style={{fontWeight: '400', fill: '#808080'}}
@@ -459,8 +459,7 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 									<tl.HeaderCell
 										style={{fontWeight: '400', fill: '#808080'}}
 										className={s.headerCellSort_Sort}
-										sortKey="Status"
-										>
+										sortKey="Status">
 										<button
 											className={s.headerCellSort_Sort}
 											style={{fontWeight: '400', fill: '#808080'}}
@@ -597,7 +596,12 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 					/>
 				</PopUpWrapper>
 			) : null}
-			{downMenu ? <TableLineFooter companies={`${String(company)}`} className={s.TableLineFooter} /> : null}
+			{downMenu ? (
+				<TableLineFooter
+					companies={`${String(company)}`}
+					className={s.TableLineFooter}
+				/>
+			) : null}
 		</>
 	)
 }

@@ -51,7 +51,7 @@ const TableLineFooter: React.FC<ITableLineFooter> = ({
 				</ButtonSVG>
 				<ButtonSVG
 					width="179px"
-					text="Текст текст текст"
+					text="Удалить"
 					className={s.ButtonSVG}>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"

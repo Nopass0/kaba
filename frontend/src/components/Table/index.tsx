@@ -229,6 +229,10 @@ const THEME = {
     // }
   `,
 	Row: `
+	&:hover {
+		transition: all .2s;
+		background-color: #262626;
+	}
     &.row-select-selected {
       background-color: #262626;
       font-size: 14px;
@@ -267,12 +271,13 @@ const THEME = {
       border-right: 1px solid #333333;
     }
     &:not(:last-child) {
-      border-bottom: 1px solid #333333;
+      border-top: 1px solid #333333;
     }
 
     &:last-child {
-      border-bottom: 1px solid #333333;
+      border-top: 1px solid #333333;
     }
+
 
   `,
 	Body: `
@@ -353,8 +358,6 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 			isOpen = 0
 		}
 	}
-
-
 
 	return (
 		<>
@@ -733,24 +736,87 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 													</Row>
 												</tl.Cell>
 												<tl.Cell>
-													<div className={s.Clicks}>
-														<Clicks width="auto" count={item.companyStatus} />
-													</div>
+													<mui.Select
+														className={s.muiSelectClicks}
+														renderValue={(
+															option: mui.SelectOption<number> | null,
+														) => {
+															if (option == null || option.value === null) {
+																return (
+																	<>
+																		<div className={s.Clicks}>
+																			<Clicks
+																				width="auto"
+																				count={item.companyStatus}
+																			/>
+																		</div>
+																	</>
+																)
+															}
+															return (
+																<>
+																	<div className={s.Clicks}>
+																		<Clicks
+																			width="auto"
+																			count={item.companyStatus}
+																		/>
+																	</div>
+																</>
+															)
+														}}>
+														<mui.Option
+															value={1}
+															className={`cursor-pointer z-10 mt-1`}>
+															<StatusSitePopUp
+																circle_color_dw_1={false}
+																text_dw_1="Эффективность целевых действия на 12% ниже среднего по рынку"
+																circle_color_dw_2={false}
+																text_dw_2="Частые сбои с сайтом"
+																circle_color_dw_3={true}
+																text_dw_3="Более 100 дней активных рекламных компаний"
+																circle_color_dw_4={true}
+																text_dw_4="Эффективность целевых действия на 12% выше среднего"
+															/>
+														</mui.Option>
+													</mui.Select>
 												</tl.Cell>
 												<tl.Cell>
-													<div
-														onClick={() => setAudNBan(!audNBan)}
-														className={s.audiotoriaNBanners}>
-														<WhiteLabel text={item.audiotoria} />
-														<WhiteLabel
-															text={` и ${item.baners}`}
-															className="ml-1"
-														/>
-
-														{/* {audNBan ? (
-														<AuditorNBanners className={s.AuditorNBannersPopUp} />
-													) : null} */}
-													</div>
+													<mui.Select
+														className={s.muiSelectClicks}
+														renderValue={(
+															option: mui.SelectOption<number> | null,
+														) => {
+															if (option == null || option.value === null) {
+																return (
+																	<>
+																		<div className={s.audiotoriaNBanners}>
+																			<WhiteLabel text={item.audiotoria} />
+																			<WhiteLabel
+																				text={` и ${item.baners}`}
+																				className="ml-1"
+																			/>
+																		</div>
+																	</>
+																)
+															}
+															return (
+																<>
+																	<div className={s.audiotoriaNBanners}>
+																		<WhiteLabel text={item.audiotoria} />
+																		<WhiteLabel
+																			text={` и ${item.baners}`}
+																			className="ml-1"
+																		/>
+																	</div>
+																</>
+															)
+														}}>
+														<mui.Option
+															value={1}
+															className={`cursor-pointer z-10 mt-1`}>
+															<AuditorNBanners />
+														</mui.Option>
+													</mui.Select>
 												</tl.Cell>
 												<tl.Cell>
 													<Col width="auto">

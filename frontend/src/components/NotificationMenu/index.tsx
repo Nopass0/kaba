@@ -30,7 +30,7 @@ const NotificationMenu: React.FC<INotificationMenu> = ({
 	return (
 		<div className={s.wrapper}>
 			<div className={s.header_notice}>
-				<NavLabel text="Уведомления" />
+				<NavLabel className={s.NavLabel} text="Уведомления" />
 				<button>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"

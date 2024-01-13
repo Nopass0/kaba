@@ -23,7 +23,7 @@ const AuditorNBannersComponent: React.FC<IAuditorNBannersComponent> = ({
 		<div className={s.wrapper + ' ' + className} style={style}>
 			<Col width="248px">
 				<NavLabel className={s.navLabel} text={`${title}`} />
-				<Label isMini={true} text={`ID ${id}`} />
+				<Label className={s.Label} isMini={true} text={`ID ${id}`} />
 			</Col>
 		</div>
 	)

@@ -41,25 +41,24 @@ const list = [
 		companies: '3',
 		access: 'Владелец',
 	},
-
 ]
 
 for (let i = 2; i <= 50; i++) {
 	const item = {
-	  id: i.toString(),
-	  name: {
-		nameCourse: 'курсы английского языка',
-		logoCourse: './asia.svg',
-		linkCourse: 'https://www.google.com/se…',
-	  },
-	  companyStatus: '+31',
-	  counter: 'Подключён',
-	  companies: '3',
-	  access: 'Владелец',
-	};
-  
-	list.push(item);
-  }
+		id: i.toString(),
+		name: {
+			nameCourse: 'курсы английского языка',
+			logoCourse: './asia.svg',
+			linkCourse: 'https://www.google.com/se…',
+		},
+		companyStatus: '+31',
+		counter: 'Подключён',
+		companies: '3',
+		access: 'Владелец',
+	}
+
+	list.push(item)
+}
 
 const THEME = {
 	Table: `
@@ -134,6 +133,10 @@ const THEME = {
     // }
   `,
 	Row: `
+	&:hover {
+		transition: all .2s;
+		background-color: #262626;
+	}
     &.row-select-selected {
       background-color: #262626;
       font-size: 14px;
@@ -172,12 +175,12 @@ const THEME = {
       border-right: 1px solid #333333;
     }
     &:not(:last-child) {
-      border-bottom: 1px solid #333333;
-    }
-
-    &:last-child {
-      border-bottom: 1px solid #333333;
-    }
+		border-top: 1px solid #333333;
+	  }
+  
+	  &:last-child {
+		border-top: 1px solid #333333;
+	  }
 
   `,
 	Body: `
@@ -779,7 +782,9 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 															</div>
 														),
 												)}
-												<p className='leading-4'>{Object(users).length} (625)</p>
+												<p className="leading-4">
+													{Object(users).length} (625)
+												</p>
 											</Row>
 										</tl.Cell>
 									</tl.Row>

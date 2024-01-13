@@ -110,7 +110,7 @@ const Header: React.FC = () => {
 								<svg
 									ref={RateOpenButtonRef}
 									onClick={() => setisRateOpen(!isRateOpen)}
-									className="mr-1"
+									className="mr-4"
 									xmlns="http://www.w3.org/2000/svg"
 									width="24"
 									height="24"
@@ -192,7 +192,7 @@ const Header: React.FC = () => {
 								<svg
 									ref={RateOpenButtonRef}
 									onClick={() => setisRateOpen(!isRateOpen)}
-									className="mr-1"
+									className="mr-4"
 									xmlns="http://www.w3.org/2000/svg"
 									width="24"
 									height="24"
@@ -268,17 +268,17 @@ const Header: React.FC = () => {
 				</div>
 			)}
 			{isProfileOpen && (
-				<div ref={profilePopUpRef} className="absolute right-8 z-10">
+				<div ref={profilePopUpRef} className="absolute right-4 z-10">
 					{' '}
-					{/* right-[10px] */}
+					{/* right-8 */} {/* right-[10px] */}
 					<ProfilePopUp blogger={user?.isBlogger} />
 				</div>
 			)}
 
 			{isNotificationOpen && (
-				<div ref={notificationPopUpRef} className="absolute right-8 z-10">
+				<div ref={notificationPopUpRef} className="absolute right-4 z-10">
 					{' '}
-					{/* right-[150px] */}
+					{/* right-8 */} {/* right-[150px] */}
 					<NotificationMenu
 						text_balance="Balance: $100"
 						num_balance={`100`}
@@ -291,14 +291,16 @@ const Header: React.FC = () => {
 				</div>
 			)}
 			{isStatAcc && (
-				<div ref={statAccPopUpRef} className="absolute right-8 z-10">
+				<div ref={statAccPopUpRef} className="absolute right-4 z-10">
 					{' '}
-					{/* right-[70px] */}
+					{/* right-8 */} {/* right-[70px] */}
 					<StatusAcc />
 				</div>
 			)}
 			{isRateOpen && (
-				<div ref={RateOpenRef} className="absolute right-8 z-10">
+				<div ref={RateOpenRef} className="absolute right-4 z-10">
+					{' '}
+					{/* right-8 */}
 					<RatePopUp onExit={() => setisRateOpen(false)} />
 				</div>
 			)}

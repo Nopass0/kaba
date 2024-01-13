@@ -22,7 +22,7 @@ interface IRatePopUp {
 }
 
 const RatePopUp: React.FC = ({onExit}: IRatePopUp) => {
-	const [value, setValue] = React.useState<number | null>(2)
+	const [value, setValue] = React.useState<number | null>(0)
 	return (
 		<div className={s.wrapper}>
 			<Col width="248px" className={s.containerRate}>

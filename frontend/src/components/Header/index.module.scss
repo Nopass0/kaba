@@ -44,6 +44,7 @@
 
 		.svgDinDon {
 			cursor: pointer;
+			margin-right: 35px;
 		}
 	}
 
@@ -52,7 +53,7 @@
 		height: 32px;
 		border-radius: 16px;
 		padding: 8px 9px;
-		margin-left: 16px;
+		// margin-left: 16px;
 		margin-right: 8px;
 
 		display: flex;
@@ -66,7 +67,7 @@
 		content: '';
 		position: relative;
 		top: 0;
-		left: 55%;
+		left: 171px;
 		display: block;
 		width: 72px;
 		height: 32px;

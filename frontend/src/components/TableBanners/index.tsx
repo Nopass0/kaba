@@ -120,6 +120,10 @@ const THEME = {
     // }
   `,
 	Row: `
+	&:hover {
+		transition: all .2s;
+		background-color: #262626;
+	}
     &.row-select-selected {
       background-color: #262626;
       font-size: 14px;
@@ -158,12 +162,12 @@ const THEME = {
       border-right: 1px solid #333333;
     }
     &:not(:last-child) {
-      border-bottom: 1px solid #333333;
-    }
-
-    &:last-child {
-      border-bottom: 1px solid #333333;
-    }
+		border-top: 1px solid #333333;
+	  }
+  
+	  &:last-child {
+		border-top: 1px solid #333333;
+	  }
 
   `,
 	Body: `
