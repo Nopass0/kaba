@@ -22,7 +22,10 @@ const ProfilePopUp: React.FC<IProfilePopUp> = ({blogger}: IProfilePopUp) => {
 	return (
 		<div className={`${blogger ? s.wrapperBlogger : s.wrapper}`}>
 			<Col width="248px">
-				<Row onClick={() => setLeftSideOpen(!leftSideOpen)} className={`${s.AccountLine}`} width="248px">
+				<Row
+					onClick={() => setLeftSideOpen(!leftSideOpen)}
+					className={`${s.AccountLine}`}
+					width="248px">
 					<AccountAvatar img={user?.avatar} char={user?.name[0]} />
 					<Col className={s.AccountText} width="128px">
 						<NavLabel className={s.AccountName} text={user?.name} />
@@ -72,6 +75,8 @@ const ProfilePopUp: React.FC<IProfilePopUp> = ({blogger}: IProfilePopUp) => {
 				<BlueButton
 					onClick={() => {
 						setLeftSideOpen(!leftSideOpen)
+						window.localStorage.clear()
+						window.location.reload()
 					}}
 					className={s.AccountBlueButton}
 					width="248px"

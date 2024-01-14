@@ -20,8 +20,10 @@ class social_networkModel(models.Model):
     account = models.ForeignKey(accountModel, on_delete=models.CASCADE)
 
     date_creation = models.DateTimeField('Дата и время создания', auto_now_add=True)
-    social_network = models.CharField('Соцсеть', max_length=20, choices=SOCIAL_NETWORK_CHOICES)
+    social_network = models.CharField('Соцсеть', max_length=32, choices=SOCIAL_NETWORK_CHOICES)
     token = models.CharField('Токен', max_length=255)
+    vk_id = models.CharField('VK USER ID', max_length=255, blank=True)
+    ya_id = models.CharField('Яндекс ID', max_length=255, blank=True)
 
     def __str__(self):
         return str(self.pk) +', '+ self.social_network

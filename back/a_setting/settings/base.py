@@ -109,6 +109,16 @@ USE_L10N = True
 
 USE_TZ = False
 
+#VK
+VK_CLIENT_ID = "51643989"
+VK_SECRET_KEY = "DrLAS8cwONDMS0kBEIen"
+VK_REDIRECT = "http://localhost:5001/login/"
+
+#Yandex
+YANDEX_CLIENT_ID = "c850608ba62d47d6a780eaef664b1d04"
+YANDEX_SECRET_KEY = "460af6e6f1c646409303ec8459a6136e"
+YANDEX_REDIRECT = "http://localhost:5001/login/"
+
 
 # статистика
 STATIC_URL = '/static/'

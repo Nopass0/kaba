@@ -8,7 +8,7 @@ import BlueButton from '../../components/BlueButton/index'
 import Button from '../../components/Button/index'
 import SocialButtons from '../../components/SocialButtons'
 import {useNavigate} from 'react-router-dom'
-import {loginAPI} from '../../api/auth.api'
+import {loginAPI, vkLoginAPI, yandexLoginAPI} from '../../api/auth.api'
 import {useDispatch} from 'react-redux'
 import Row from '../../components/Row/index'
 import Gosuslugi from '../../assets/gosuslugiID_znak_L.svg'
@@ -25,6 +25,10 @@ const MainPage: React.FC = () => {
 
 	const isPhone: boolean = phoneRegex.test(phoneNumber)
 
+	const queryParams = new URLSearchParams(window.location.search)
+	const code = queryParams.get('code')
+	const social_type = queryParams.get('sn')
+
 	const login = async () => {
 		if (isPhone) {
 			const res = await loginAPI(phoneNumber)
@@ -39,6 +43,61 @@ const MainPage: React.FC = () => {
 		}
 	}
 
+	if (code) {
+		//api
+
+		switch (social_type) {
+			case 'ya':
+				yandexLoginAPI(code).then((res) => {
+					console.log(res)
+
+					if (res.status === 200 && res.data.status === 'success') {
+						dispatch({type: 'setUser', user: res.data})
+						window.location.pathname = '/'
+					}
+				})
+				break
+			default:
+				vkLoginAPI(code).then((res) => {
+					console.log(res)
+
+					if (res.status === 200 && res.data.status === 'success') {
+						dispatch({type: 'setUser', user: res.data})
+						window.location.pathname = '/'
+					}
+				})
+		}
+	}
+
+	const vk_login = () => {
+		const urlParams = {
+			client_id: '51643989',
+			redirect_uri: 'http://localhost:5001/login/',
+			display: 'popup',
+			scope: '274572383',
+			response_type: 'code',
+		}
+
+		const url = `https://oauth.vk.com/authorize?client_id=${
+			urlParams.client_id
+		}&redirect_uri=${encodeURIComponent(urlParams.redirect_uri)}&display=${
+			urlParams.display
+		}&scope=${urlParams.scope}&response_type=${urlParams.response_type}`
+
+		window.location.href = url
+	}
+
+	const yandex_login = () => {
+		const urlParams = {
+			client_id: 'c850608ba62d47d6a780eaef664b1d04',
+			scope: 'login:info login:email login:avatar login:phone',
+		}
+
+		const url = `https://oauth.yandex.ru/authorize?response_type=code&client_id=${urlParams.client_id}`
+
+		window.location.href = url
+	}
+
 	return (
 		<div className={s.wrapper}>
 			<Col className={s.signin} width="360px">
@@ -48,7 +107,10 @@ const MainPage: React.FC = () => {
 					<img src={Gosuslugi} alt="Gosuslugi" />
 					<p className={s.SocText}>Продолжить с Госуслуги</p>
 				</Row>
-				<Row className={s.SocButtonRow} width="360px">
+				<Row
+					onClick={() => vk_login()}
+					className={s.SocButtonRow}
+					width="360px">
 					<img src={VkIcon} alt="Vkontakte" />
 					<p className={s.SocText}>Продолжить с Вконтакте</p>
 				</Row>
@@ -56,13 +118,24 @@ const MainPage: React.FC = () => {
 					<img src={TGIcon} alt="Telegram" />
 					<p className={s.SocText}>Продолжить с Telegram</p>
 				</Row>
-				<Row className={s.SocButtonRow} width="360px">
+				<Row
+					onClick={() => yandex_login()}
+					className={s.SocButtonRow}
+					width="360px">
 					<img src={YandexIcon} alt="Yandex" />
 					<p className={s.SocText}>Продолжить с Yandex</p>
 				</Row>
 
 				<p className={s.CreateAccText}>
-					Создавая учетную запись, я соглашаюсь с <a href="#!" className={s.BlueLink}>Условиями использования</a> и <a href="#!" className={s.BlueLink}>Политикой конфиденциальности</a>.
+					Создавая учетную запись, я соглашаюсь с{' '}
+					<a href="#!" className={s.BlueLink}>
+						Условиями использования
+					</a>{' '}
+					и{' '}
+					<a href="#!" className={s.BlueLink}>
+						Политикой конфиденциальности
+					</a>
+					.
 				</p>
 
 				{/* Old Login In Account */}

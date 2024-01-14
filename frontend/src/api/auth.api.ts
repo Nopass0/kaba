@@ -24,15 +24,44 @@ export const registerAPI = async (
 	name: string,
 	phone: string,
 ) => {
-	//check is phone(+7...) or login(@...)
+	const formData = new FormData()
+	formData.append('phone_number', phone)
+	formData.append('login', login)
+	formData.append('firstname', name)
+	formData.append('type', 'register')
+
 	if (phoneRegex.test(phone)) {
-		return await axios.post(getApiUrl('verify'), {
-			phone_number: phone,
-			login: login,
-			firstname: name,
-			type: 'register',
-		})
+		return await axios.post(getApiUrl('verify'), formData)
 	} else {
+		return {status: 'error'}
+	}
+}
+
+//socials
+
+//vk
+export const vkLoginAPI = async (code: string) => {
+	const formData = new FormData()
+	formData.append('code', code)
+
+	try {
+		const response = await axios.post(getApiUrl('vk_login'), formData)
+		return response
+	} catch (error) {
+		console.error('Error during VK login:', error)
+		return {status: 'error'}
+	}
+}
+
+export const yandexLoginAPI = async (code: string) => {
+	const formData = new FormData()
+	formData.append('code', code)
+
+	try {
+		const response = await axios.post(getApiUrl('yandex_login'), formData)
+		return response
+	} catch (error) {
+		console.error('Error during Yandex login:', error)
 		return {status: 'error'}
 	}
 }

@@ -8,7 +8,7 @@ class tokenModel(models.Model):
     # Связанный аккаунт
     account = models.ForeignKey(accountModel, on_delete=models.CASCADE)
     # Сам токен
-    token = models.CharField('Токен', max_length=16)
+    token = models.CharField('Токен', max_length=255)
     creation_date = models.DateTimeField('Дата создания', auto_now_add=True)
     expiration_date = models.DateTimeField('Дата сгорания')
 

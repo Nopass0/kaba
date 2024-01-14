@@ -17,6 +17,11 @@ urlpatterns = [
     # Get profile
     path('getProfile', getProfileAPIViews.as_view()),
     # path('try_sms', try_sms, name='try_sms'),
+    
+    #vk login
+    path('vk_login', vk_authAPIViews.as_view()),
+    #yandex login
+    path('yandex_login', yandex_authAPIViews.as_view()),
 
     # Пути для взаимодействия с БД. GET - получение записей, POST - добавление новой записи  
     path('accountModel', accountModellListCreateView.as_view()),

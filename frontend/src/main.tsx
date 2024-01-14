@@ -274,17 +274,17 @@ const router = createBrowserRouter([
 ])
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<>
-		<React.StrictMode>
-			<Provider store={store}>
-				{(await checkAPI()).status === 200 ? (
-					<>
-						{/* <Header /> */}
-						<RouterProvider router={router} />
-					</>
-				) : (
-					<ErrorPage />
-				)}
-			</Provider>
-		</React.StrictMode>
+		{/* <React.StrictMode> */}
+		<Provider store={store}>
+			{(await checkAPI()).status === 200 ? (
+				<>
+					{/* <Header /> */}
+					<RouterProvider router={router} />
+				</>
+			) : (
+				<ErrorPage />
+			)}
+		</Provider>
+		{/* </React.StrictMode> */}
 	</>,
 )
