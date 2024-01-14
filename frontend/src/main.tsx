@@ -219,10 +219,10 @@ const router = createBrowserRouter([
 		path: '/',
 		element: getWHeader(<Company />, true),
 	},
-	{
-		path: '/register',
-		element: getWHeader(<Register />, false),
-	},
+	// {
+	// 	path: '/register',
+	// 	element: getWHeader(<Register />, false),
+	// },
 	{
 		path: '/test',
 		element: getWHeader(<Test />, false),
@@ -267,10 +267,10 @@ const router = createBrowserRouter([
 		path: '/statisticBlogger',
 		element: getWHeader(<StatisticBlogger />, true),
 	},
-	{
-		path: '/acceptCode',
-		element: getWHeader(<AcceptCode />, false),
-	},
+	// {
+	// 	path: '/acceptCode',
+	// 	element: getWHeader(<AcceptCode />, false),
+	// },
 ])
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<>

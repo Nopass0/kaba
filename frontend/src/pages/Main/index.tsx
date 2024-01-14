@@ -10,6 +10,11 @@ import SocialButtons from '../../components/SocialButtons'
 import {useNavigate} from 'react-router-dom'
 import {loginAPI} from '../../api/auth.api'
 import {useDispatch} from 'react-redux'
+import Row from '../../components/Row/index'
+import Gosuslugi from '../../assets/gosuslugiID_znak_L.svg'
+import VkIcon from '../../assets/vk-svgrepo-com (1).svg'
+import TGIcon from '../../assets/telegram-new-2019-seeklogo.com.svg'
+import YandexIcon from '../../assets/Yandex_icon.svg'
 
 const MainPage: React.FC = () => {
 	const navigate = useNavigate()
@@ -37,8 +42,31 @@ const MainPage: React.FC = () => {
 	return (
 		<div className={s.wrapper}>
 			<Col className={s.signin} width="360px">
-				<NavLabel text="Вход в аккаунт" />
-				<div className={s.input_container}>
+				<NavLabel className={s.NavLabel} text="Вход в аккаунт" />
+
+				<Row className={s.SocButtonRow} width="360px">
+					<img src={Gosuslugi} alt="Gosuslugi" />
+					<p className={s.SocText}>Продолжить с Госуслуги</p>
+				</Row>
+				<Row className={s.SocButtonRow} width="360px">
+					<img src={VkIcon} alt="Vkontakte" />
+					<p className={s.SocText}>Продолжить с Вконтакте</p>
+				</Row>
+				<Row className={s.SocButtonRow} width="360px">
+					<img src={TGIcon} alt="Telegram" />
+					<p className={s.SocText}>Продолжить с Telegram</p>
+				</Row>
+				<Row className={s.SocButtonRow} width="360px">
+					<img src={YandexIcon} alt="Yandex" />
+					<p className={s.SocText}>Продолжить с Yandex</p>
+				</Row>
+
+				<p className={s.CreateAccText}>
+					Создавая учетную запись, я соглашаюсь с <a href="#!" className={s.BlueLink}>Условиями использования</a> и <a href="#!" className={s.BlueLink}>Политикой конфиденциальности</a>.
+				</p>
+
+				{/* Old Login In Account */}
+				{/* <div className={s.input_container}>
 					<Label text="Логин или телефон" />
 					<Input
 						placeholder="Ввести..."
@@ -62,7 +90,7 @@ const MainPage: React.FC = () => {
 				<div className={s.socials}>
 					<Label text="Или войти с помощью" />
 					<SocialButtons className={s.socialButtons} />
-				</div>
+				</div> */}
 			</Col>
 		</div>
 	)
