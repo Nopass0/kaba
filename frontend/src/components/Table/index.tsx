@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import s from './index.module.scss'
 
 import {useTheme} from '@table-library/react-table-library/theme'
@@ -25,11 +25,55 @@ import AuditorNBanners from '../AuditorNBanners'
 import StatusSitePopUp from '../popup/StatusSitePopUP/index'
 import * as mui from '@mui/base'
 import VerticalScroll from '../VerticalScroll'
+import {getCompaniesAPI} from '../../api/data.api'
+import {useSelector} from 'react-redux'
 
 enum CurrentPopup {
 	None,
 	Cols,
 }
+
+// Пример данных
+// [
+//     {
+//         "id": 1,
+//         "account_id": 1,
+//         "site_id": 1,
+//         "date_creation": "2024-01-15T17:31:56.663173",
+//         "name": "Гугл компания",
+//         "date_start": "2024-01-15T17:31:56.663173",
+//         "date_finish": "2024-01-15T17:31:56.663173",
+//         "budget_week": 2200,
+//         "channel_taboo": [
+//             "Яндекс"
+//         ],
+//         "phrase_plus": [
+//             "Гугл"
+//         ],
+//         "phrase_minus": [
+//             "Гугл"
+//         ],
+//         "status_text": "Активная",
+//         "views": 15000,
+//         "site": {
+//             "id": 1,
+//             "domain": "https://google.com/",
+//             "date_creation": "2024-01-15T17:31:56.663173"
+//         },
+//         "ad_status": [
+//             {
+//                 "id": 2,
+//                 "status": true,
+//                 "text": "Хорошо"
+//             },
+//             {
+//                 "id": 1,
+//                 "status": false,
+//                 "text": "Плохо"
+//             }
+//         ]
+//     }
+// ]
 
 const list = [
 	{
@@ -304,7 +348,12 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 	const [company, setCompany] = useState<number>(0)
 	const [currentPopup, setCurrentPopup] = useState(CurrentPopup.None)
 	const [downMenu, setDownMenu] = useState(false)
+	const [tableList, setTableList] = useState()
 	const theme = useTheme(THEME)
+
+	const user = useSelector((state: any) => state.user)
+	const token = user.token
+
 	const select = useRowSelect(
 		data,
 		{
@@ -331,6 +380,16 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 			},
 		},
 	)
+
+	useEffect(() => {
+		async function getCompanies(token: string) {
+			const res = await getCompaniesAPI(token)
+			console.log(res.data, 'List of companies')
+
+			return res.data
+		}
+		getCompanies(token)
+	}, [])
 
 	tl.useCustom('search', data, {
 		state: {search},

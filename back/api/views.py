@@ -6,6 +6,8 @@ from django.core.serializers import serialize
 import urllib.parse
 import requests
 
+from ad_advertiser.models.site.site import siteModel
+
 
 from .permissions import isValidToken
 from .serializers import *
@@ -17,7 +19,7 @@ from account.models.account import accountModel
 from account.models.social_network import social_networkModel
 from account.models.verification import verificationModel
 from account.models.social_network import social_networkModel
-from ad_advertiser.models.ad.ad_company import ad_companyModel
+from ad_advertiser.models.ad.ad_company import ad_companyModel, ad_statusModel
 from ad_advertiser.models.profile.profile import profileModel
 from .models import tokenModel
 
@@ -288,6 +290,9 @@ class yandex_authAPIViews(APIView):
         if not code:
             return Response({'error': 'code is required.'}, status=status.HTTP_400_BAD_REQUEST)
         
+        if debug:
+            print("Yandex code:", code)
+        
         yandex_api_url = "https://oauth.yandex.ru/token"
         params = {
             "grant_type": "authorization_code",
@@ -297,9 +302,14 @@ class yandex_authAPIViews(APIView):
         }
         
         try:
-            api_response = requests.post(yandex_api_url, params=params)
+            api_response = requests.post(yandex_api_url, data=params)
+            #create request with form data
+            
             api_response.raise_for_status()  # Проверка на ошибки HTTP
             token_data = api_response.json()
+            
+            if debug:
+                print("0------------------------------------------------\nYandex API response:", api_response)
             
             access_token = token_data['access_token']
             
@@ -324,8 +334,11 @@ class yandex_authAPIViews(APIView):
             last_name = user_data['last_name']
             photo = user_data['default_avatar_id']
             avatar = f"https://avatars.yandex.net/get-yapic/{photo}/islands-200"
-            phone = user_data['default_phone']
+            phone = user_data['default_phone'].get('number', '')
             login = user_data['login']
+            
+            if debug:
+                print("3------------------------------------------------\nYandex API response:", user_id, first_name, last_name, avatar, phone, login)
                 
         except Exception as e:
             print("[2]---------------------------------------Error parsing Yandex API response:", e)
@@ -476,9 +489,26 @@ class getCompaniesAPIViews(APIView):
             return Response({'error': 'token is invalid.'}, status=status.HTTP_400_BAD_REQUEST)
 
         user = current_token.first().account
-        companies = list(ad_companyModel.objects.filter(profile=user.id).values())
+        companies = list(ad_companyModel.objects.filter(account=user.id).values())
         
-        print(companies, user)
+        #create one object with all data
+        for company in companies:
+            site = siteModel.objects.filter(id=company["site_id"])
+            if not site.exists():
+                return Response({'error': 'site not found.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            site = site.first()
+            
+            #JSON serialization
+            company["site"] = {}
+            company["site"]["id"] = site.id
+            company["site"]["domain"] = site.domain
+            company["site"]["date_creation"] = site.date_creation
+            
+            # ad_statusModel and ad_companyModel many-to-many relation. Get all ad_statusModel objects for this company
+            company["ad_status"] = list(ad_statusModel.objects.filter(companies=company["id"]).values())
+        
+        print(companies, user, site)
         return Response(companies, status=status.HTTP_200_OK)
     
 

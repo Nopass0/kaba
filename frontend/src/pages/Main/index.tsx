@@ -103,10 +103,10 @@ const MainPage: React.FC = () => {
 			<Col className={s.signin} width="360px">
 				<NavLabel className={s.NavLabel} text="Вход в аккаунт" />
 
-				<Row className={s.SocButtonRow} width="360px">
+				{/* <Row className={s.SocButtonRow} width="360px">
 					<img src={Gosuslugi} alt="Gosuslugi" />
 					<p className={s.SocText}>Продолжить с Госуслуги</p>
-				</Row>
+				</Row> */}
 				<Row
 					onClick={() => vk_login()}
 					className={s.SocButtonRow}
@@ -114,10 +114,10 @@ const MainPage: React.FC = () => {
 					<img src={VkIcon} alt="Vkontakte" />
 					<p className={s.SocText}>Продолжить с Вконтакте</p>
 				</Row>
-				<Row className={s.SocButtonRow} width="360px">
+				{/* <Row className={s.SocButtonRow} width="360px">
 					<img src={TGIcon} alt="Telegram" />
 					<p className={s.SocText}>Продолжить с Telegram</p>
-				</Row>
+				</Row> */}
 				<Row
 					onClick={() => yandex_login()}
 					className={s.SocButtonRow}
