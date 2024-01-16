@@ -5,12 +5,14 @@ interface IBlueLabel {
 	text?: string
 	isMini?: boolean
 	className?: string
+	onClick?: () => void
 }
 
 const BlueLabel: React.FC<IBlueLabel> = ({
 	text,
 	isMini,
 	className,
+	onClick,
 }: IBlueLabel) => {
 	return (
 		<label
@@ -18,7 +20,8 @@ const BlueLabel: React.FC<IBlueLabel> = ({
 				s.blueLabel +
 				(className ? ` ${className}` : '') +
 				(isMini ? ` ${s.miniLabel}` : '')
-			}>
+			}
+			onClick={onClick}>
 			{text}
 		</label>
 	)

@@ -508,7 +508,7 @@ class getCompaniesAPIViews(APIView):
             # ad_statusModel and ad_companyModel many-to-many relation. Get all ad_statusModel objects for this company
             company["ad_status"] = list(ad_statusModel.objects.filter(companies=company["id"]).values())
         
-        print(companies, user, site)
+            print(companies, user, site)
         return Response(companies, status=status.HTTP_200_OK)
     
 

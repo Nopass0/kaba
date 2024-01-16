@@ -22,6 +22,7 @@ const MainPage: React.FC = () => {
 	const phoneRegex = /^(\+7|8)\d{10}$/
 
 	const [phoneNumber, setPhoneNumber] = React.useState<string>('')
+	const [whoUser, setWhoUser] = React.useState<boolean>(false)
 
 	const isPhone: boolean = phoneRegex.test(phoneNumber)
 
@@ -102,7 +103,15 @@ const MainPage: React.FC = () => {
 		<div className={s.wrapper}>
 			<Col className={s.signin} width="360px">
 				<NavLabel className={s.NavLabel} text="Вход в аккаунт" />
+				<Col width="360px" onClick={() => setWhoUser(!whoUser)} className={`${s.ChooseCol} ${whoUser ? s.active : ''}`}>
+					<NavLabel className={s.ChooseNavLabel} text='Рекламодатель'/>
+					<p className={s.ChooseText}>Создавайте и настраиваете рекламные объявления, отслеживаете результаты и анализируете эффективность</p>
+				</Col>
 
+				<Col width="360px" onClick={() => setWhoUser(!whoUser)} className={`${s.ChooseCol} ${s.ChooseColLast} ${whoUser ? '' : s.active}`}>
+					<NavLabel className={s.ChooseNavLabel} text='Блоггер'/>
+					<p className={s.ChooseText}>Находите интересные рекламные предложения, чтобы максимизировать вашу прибыль от контента</p>
+				</Col>
 				{/* <Row className={s.SocButtonRow} width="360px">
 					<img src={Gosuslugi} alt="Gosuslugi" />
 					<p className={s.SocText}>Продолжить с Госуслуги</p>

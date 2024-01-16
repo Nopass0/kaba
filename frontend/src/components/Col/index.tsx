@@ -5,6 +5,7 @@ interface ICol {
 	children?: ReactNode[] | ReactNode | null | undefined
 	width?: string
 	className?: string // Added className prop
+	onClick?: () => void
 }
 
 /**
@@ -16,11 +17,12 @@ interface ICol {
  * @param {string} props.className - The custom class name to be added to the column.
  * @return {ReactElement} The rendered column component.
  */
-const Col: React.FC<ICol> = ({children, width, className}: ICol) => {
+const Col: React.FC<ICol> = ({children, width, className, onClick}: ICol) => {
 	// const colClassName = `col ${className}`; // Combine className with "col" class using s[className]
 
 	return (
 		<div
+			onClick={onClick}
 			className={s.col + ' ' + className}
 			style={{width: width ? width : 'auto'}}>
 			{children}

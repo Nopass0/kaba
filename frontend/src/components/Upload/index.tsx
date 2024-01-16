@@ -11,6 +11,7 @@ interface IUpload {
 	width?: string
 	fileType?: FileType
 	height?: string
+	onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 const Upload: React.FC<IUpload> = ({
@@ -19,6 +20,7 @@ const Upload: React.FC<IUpload> = ({
 	width,
 	fileType = FileType.image,
 	height,
+	onChange,
 }: IUpload) => {
 	const component = useRef<HTMLDivElement>(null)
 	const [isDragging, setIsDragging] = useState(false)
@@ -85,6 +87,7 @@ const Upload: React.FC<IUpload> = ({
 				minHeight: height ? height : '166px',
 				minWidth: width ? width : '166px',
 			}}
+			onChange={onChange}
 			ref={component}
 			className={`${s.imageBlock} ${isDragging ? s.dragging : ''}`}
 			onClick={handleImageBlockClick}

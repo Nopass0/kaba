@@ -44,6 +44,7 @@ const Input: React.FC<IInput> = ({
 			className={className + ' ' + s.inputContainer}>
 			<div style={{width: width, minWidth: minWidth}} className={s.inputRow}>
 				<input
+					autoComplete='off'
 					maxLength={maximumLength}
 					onChange={(event) => {
 						onChange(event)
