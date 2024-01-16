@@ -100,6 +100,7 @@ const CompanyCreate: React.FC = () => {
 		//add path to image
 		setImages([...images, URL.createObjectURL(file)])
 	}
+	console.log(globalState, 'HLOBAL STATE')
 
 	const handleAddVideo = (file: File) => {}
 
@@ -1454,6 +1455,42 @@ const CompanyCreate: React.FC = () => {
 									// 	bImg,
 									// 	bUnvirfied,
 									// })}
+									onClick={() =>
+										setGlobalState({
+											Company: {
+												cName: cName,
+												cLink: cLink,
+												cSettingsLink: cSettingsLink,
+												cDateStart: cDateStart,
+												cDateEnd: cDateEnd,
+												cTarget: cTarget,
+												cWeekBudget: cWeekBudget,
+												cKeyWord: cKeyWord,
+												cKeyWordDel: cKeyWordDel,
+												cBabShow: cBanShow,
+											},
+
+											Auditor: {
+												aName: aName,
+												aGeography: aGeography,
+												aFavor: aFavor,
+												aDevice: aDevice,
+												aGenderNAge: aGenderNAge,
+											},
+
+											Banner: {
+												bName: bName,
+												bLink: bLink,
+												bOptionTitle: bOptionTitle,
+												bOptionDescription: bOptionDescription,
+												bOptionDescText: bOptionDescText,
+												bVideo: bVideo,
+												bAudio: bAudio,
+												bImg: bImg,
+												bUnvirfied: bUnvirfied,
+											},
+										})
+									}
 								/>
 								{/* <BlueButton
 									width="120px"
