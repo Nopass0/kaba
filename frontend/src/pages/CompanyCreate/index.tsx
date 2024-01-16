@@ -716,6 +716,42 @@ const CompanyCreate: React.FC = () => {
 								<BlueLabel
 									className={`float-right mr-[24px] cursor-pointer`}
 									text="Сохранить и выйти"
+									onClick={() =>
+										setGlobalState({
+											Company: {
+												cName: cName,
+												cLink: cLink,
+												cSettingsLink: cSettingsLink,
+												cDateStart: cDateStart,
+												cDateEnd: cDateEnd,
+												cTarget: cTarget,
+												cWeekBudget: cWeekBudget,
+												cKeyWord: cKeyWord,
+												cKeyWordDel: cKeyWordDel,
+												cBabShow: cBanShow,
+											},
+
+											Auditor: {
+												aName: aName,
+												aGeography: aGeography,
+												aFavor: aFavor,
+												aDevice: aDevice,
+												aGenderNAge: aGenderNAge,
+											},
+
+											Banner: {
+												bName: bName,
+												bLink: bLink,
+												bOptionTitle: bOptionTitle,
+												bOptionDescription: bOptionDescription,
+												bOptionDescText: bOptionDescText,
+												bVideo: bVideo,
+												bAudio: bAudio,
+												bImg: bImg,
+												bUnvirfied: bUnvirfied,
+											},
+										})
+									}
 								/>
 								<BlueButton
 									width="120px"
@@ -1069,6 +1105,42 @@ const CompanyCreate: React.FC = () => {
 								<BlueLabel
 									className={`float-right mr-[24px]`}
 									text="Сохранить и выйти"
+									onClick={() =>
+										setGlobalState({
+											Company: {
+												cName: cName,
+												cLink: cLink,
+												cSettingsLink: cSettingsLink,
+												cDateStart: cDateStart,
+												cDateEnd: cDateEnd,
+												cTarget: cTarget,
+												cWeekBudget: cWeekBudget,
+												cKeyWord: cKeyWord,
+												cKeyWordDel: cKeyWordDel,
+												cBabShow: cBanShow,
+											},
+
+											Auditor: {
+												aName: aName,
+												aGeography: aGeography,
+												aFavor: aFavor,
+												aDevice: aDevice,
+												aGenderNAge: aGenderNAge,
+											},
+
+											Banner: {
+												bName: bName,
+												bLink: bLink,
+												bOptionTitle: bOptionTitle,
+												bOptionDescription: bOptionDescription,
+												bOptionDescText: bOptionDescText,
+												bVideo: bVideo,
+												bAudio: bAudio,
+												bImg: bImg,
+												bUnvirfied: bUnvirfied,
+											},
+										})
+									}
 								/>
 								<BlueButton
 									width="120px"
