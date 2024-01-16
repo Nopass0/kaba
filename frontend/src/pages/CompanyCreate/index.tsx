@@ -115,11 +115,11 @@ const CompanyCreate: React.FC = () => {
 		},
 		{
 			title: 'Начало и окончание компании*',
-			isDone: false,
+			isDone: true,
 		},
 		{
 			title: 'Цель*',
-			isDone: false,
+			isDone: true,
 		},
 		{
 			title: 'Недельный бюджет',

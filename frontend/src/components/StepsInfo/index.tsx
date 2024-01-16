@@ -27,7 +27,7 @@ const StepsInfo: React.FC<IStepsInfo> = ({steps}: IStepsInfo) => {
 	return (
 		<Col width="246px" className={s.stepsInfo}>
 			{steps.map((step, index) => (
-				<Row width="248px" key={index} className={s.stepRow}>
+				<Row width="246px" key={index} className={s.stepRow}>
 					{step.isDone ? (
 						<>
 							<WhiteLabel
@@ -37,23 +37,23 @@ const StepsInfo: React.FC<IStepsInfo> = ({steps}: IStepsInfo) => {
 							/>
 							<svg
 								className={s.stepDone}
-								width="10"
-								height="8"
-								viewBox="0 0 10 8"
-								fill="none"
-								xmlns="http://www.w3.org/2000/svg">
+								xmlns="http://www.w3.org/2000/svg"
+								width="16"
+								height="16"
+								viewBox="0 0 16 16"
+								fill="none">
 								<path
-									d="M8.5 1.5L3.6875 6.5L1.5 4.22727"
+									d="M11.5 5.5L6.6875 10.5L4.5 8.22727"
 									stroke="#F2F2F2"
-									strokeWidth="1.4"
-									strokeLinecap="round"
-									strokeLinejoin="round"
+									stroke-width="1.4"
+									stroke-linecap="round"
+									stroke-linejoin="round"
 								/>
 							</svg>
 						</>
 					) : (
 						<>
-							<Label text={step.title} className={s.stepTitle} />
+							<Label text={step.title} className={s.stepTitleGrey} />
 						</>
 					)}
 				</Row>

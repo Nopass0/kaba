@@ -22,9 +22,8 @@
 @media screen and (max-width: 1440px) {
 	.rightMenu {
 		margin-left: 180px;
-		width: 1440px;	
+		width: 1440px;
 	}
-	
 }
 // Header
 
@@ -59,7 +58,15 @@
 }
 
 .stepsMenu {
-	margin-top: 124px;
+	margin-top: 112px;
+	margin-left: 32px;
+}
+
+@media screen and (min-width: 1050px) {
+	.stepsMenu {
+		position: fixed;
+		right: 32px;
+	}
 }
 
 .chips {
@@ -109,7 +116,6 @@
 .RowTitle {
 	align-items: center;
 	margin-bottom: 17px;
-
 }
 
 .headerNotiBlock {
@@ -225,8 +231,8 @@
 	width: 379px;
 }
 
-
-.DropImageRow, .DropVideoRow {
+.DropImageRow,
+.DropVideoRow {
 	flex-wrap: wrap;
 }
 
@@ -237,7 +243,7 @@
 
 	border-radius: 10px;
 	border: 1px solid #262626;
-	background: rgba(0, 0, 0, 0.40);
+	background: rgba(0, 0, 0, 0.4);
 
 	margin-right: 16px;
 	margin-bottom: 16px;
