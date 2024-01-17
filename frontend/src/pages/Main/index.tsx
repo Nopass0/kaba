@@ -9,7 +9,7 @@ import Button from '../../components/Button/index'
 import SocialButtons from '../../components/SocialButtons'
 import {useNavigate} from 'react-router-dom'
 import {loginAPI, vkLoginAPI, yandexLoginAPI} from '../../api/auth.api'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import Row from '../../components/Row/index'
 import Gosuslugi from '../../assets/gosuslugiID_znak_L.svg'
 import VkIcon from '../../assets/vk-svgrepo-com (1).svg'
@@ -20,9 +20,17 @@ const MainPage: React.FC = () => {
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
 	const phoneRegex = /^(\+7|8)\d{10}$/
+	const isBloggerSelector = useSelector((state: any) => state.isBlogger)
 
 	const [phoneNumber, setPhoneNumber] = React.useState<string>('')
 	const [whoUser, setWhoUser] = React.useState<boolean>(false)
+
+	console.log(isBloggerSelector, 'ISBLOGGER')
+	console.log(whoUser, 'whouser')
+
+	useEffect(() => {
+		setWhoUser(isBloggerSelector)
+	}, [whoUser, isBloggerSelector])
 
 	const isPhone: boolean = phoneRegex.test(phoneNumber)
 
@@ -99,18 +107,38 @@ const MainPage: React.FC = () => {
 		window.location.href = url
 	}
 
+	const isBlogger = (isBlogger: boolean) => {
+		dispatch({type: 'setIsBlogger', isBlogger: isBlogger})
+		setWhoUser(isBlogger)
+		console.log(whoUser, 'whouser 2')
+	}
+
 	return (
 		<div className={s.wrapper}>
 			<Col className={s.signin} width="360px">
 				<NavLabel className={s.NavLabel} text="Вход в аккаунт" />
-				<Col width="360px" onClick={() => setWhoUser(!whoUser)} className={`${s.ChooseCol} ${whoUser ? s.active : ''}`}>
-					<NavLabel className={s.ChooseNavLabel} text='Рекламодатель'/>
-					<p className={s.ChooseText}>Создавайте и настраиваете рекламные объявления, отслеживаете результаты и анализируете эффективность</p>
+				<Col
+					width="360px"
+					onClick={() => isBlogger(false)}
+					className={`${s.ChooseCol} ${whoUser ? '' : s.active}`}>
+					<NavLabel className={s.ChooseNavLabel} text="Рекламодатель" />
+					<p className={s.ChooseText}>
+						Создавайте и настраиваете рекламные объявления, отслеживаете
+						результаты и анализируете эффективность
+					</p>
 				</Col>
 
-				<Col width="360px" onClick={() => setWhoUser(!whoUser)} className={`${s.ChooseCol} ${s.ChooseColLast} ${whoUser ? '' : s.active}`}>
-					<NavLabel className={s.ChooseNavLabel} text='Блоггер'/>
-					<p className={s.ChooseText}>Находите интересные рекламные предложения, чтобы максимизировать вашу прибыль от контента</p>
+				<Col
+					width="360px"
+					onClick={() => isBlogger(true)}
+					className={`${s.ChooseCol} ${s.ChooseColLast} ${
+						whoUser ? s.active : ''
+					}`}>
+					<NavLabel className={s.ChooseNavLabel} text="Блоггер" />
+					<p className={s.ChooseText}>
+						Находите интересные рекламные предложения, чтобы максимизировать
+						вашу прибыль от контента
+					</p>
 				</Col>
 				{/* <Row className={s.SocButtonRow} width="360px">
 					<img src={Gosuslugi} alt="Gosuslugi" />

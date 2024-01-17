@@ -10,7 +10,6 @@
 .logo {
 	display: flex;
 	flex-direction: row;
-
 }
 
 .logo img:first-child {
@@ -30,7 +29,6 @@
 .table_header_company {
 	margin-left: 202px;
 }
-
 
 .container {
 	display: flex;
@@ -83,7 +81,7 @@
 	}
 
 	.icons_header svg:hover {
-		transition: all .2s;
+		transition: all 0.2s;
 		color: #f2f2f2;
 	}
 
@@ -100,5 +98,49 @@
 
 	.touchSVG {
 		opacity: 1;
+	}
+
+	.down {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+
+		font-size: 14px;
+		font-weight: 400;
+
+		.companiesMenu {
+			padding: 10px;
+			cursor: pointer;
+			margin-right: 4px;
+			border-radius: 10px;
+
+			.companiesText {
+				color: #f2f2f2;
+				font-family: Inter;
+				font-size: 14px;
+				font-style: normal;
+				font-weight: 400;
+				line-height: 16px; /* 114.286% */
+				margin-right: 8px;
+			}
+
+			.companiesNum {
+				padding: 4px 8px;
+				border-radius: 12px;
+				background: #333;
+
+				color: #f2f2f2;
+				text-align: center;
+				font-family: Inter;
+				font-size: 14px;
+				font-style: normal;
+				font-weight: 400;
+				line-height: 16px; /* 114.286% */
+			}
+		}
+	}
+	.companiesMenuActive,
+	.companiesMenu:hover {
+		background: #262626;
 	}
 }

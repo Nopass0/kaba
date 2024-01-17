@@ -39,6 +39,8 @@ let defaultState = {
 	// 	// nick: '@testuser',
 	// 	// isBlogger: false,
 	// } as IUser,
+	isBlogger:
+		JSON.parse(localStorage.getItem('kaba_data') || '{}').isBlogger || false,
 	user:
 		JSON.parse(localStorage.getItem('kaba_data') || '{}').user || ({} as IUser),
 	users: [
@@ -101,6 +103,8 @@ let defaultState = {
 		users: Array<IUser>(),
 	},
 	CurrentURL: '',
+
+	SwitchCreatePage: 1,
 }
 
 // let isLocalStorage:boolean = localStorage.length === 1
@@ -122,7 +126,6 @@ let defaultState = {
 //Save data or get data to defaultState(Redux) from localStorage if it exists
 
 console.log(await checkAPI(), 'CheckAPI')
-
 const reducer = (state = defaultState, action: any) => {
 	switch (action.type) {
 		case 'getUser':
@@ -160,6 +163,19 @@ const reducer = (state = defaultState, action: any) => {
 
 			return {...state, CurrentURL: action.CurrentURL}
 
+		case 'setIsBlogger':
+			localStorage.setItem(
+				'kaba_data',
+				JSON.stringify({...state, isBlogger: action.isBlogger}),
+			)
+			defaultState.isBlogger = action.isBlogger
+
+			console.log(action.isBlogger, 'ACTIONBLOGGER')
+
+			return {...state, isBlogger: action.isBlogger}
+
+		case 'setSwitchCreatePage':
+			return {...state, SwitchCreatePage: action.SwitchCreatePage}
 		default:
 			return state
 	}
@@ -205,47 +221,33 @@ function getWHeader(router_element: any, isPrivate: boolean) {
 	)
 }
 
-const router = createBrowserRouter([
-	//just for test
-	{
-		path: '/login',
-		element: getWHeader(<MainPage />, false),
-	},
-	// {
-	// 	path: 'choose',
-	// 	element: getWHeader(<ChooseAccount />),
-	// },
-	{
-		path: '/',
-		element: getWHeader(<Company />, true),
-	},
-	// {
-	// 	path: '/register',
-	// 	element: getWHeader(<Register />, false),
-	// },
-	{
-		path: '/test',
-		element: getWHeader(<Test />, false),
-	},
-	{
-		path: '/welcome',
-		element: getWHeader(<Welcome />, true),
-	},
-	{
-		path: '/create',
-		element: getWHeader(<CompanyCreate />, true),
-	},
-	{
-		path: '/settings',
-		element: getWHeader(<Settings />, true),
-	},
+const PageBlogger = [
 	{
 		path: '/bloggers',
 		element: getWHeader(<Bloggers />, true),
 	},
 	{
-		path: '/finance',
-		element: getWHeader(<Finance />, true),
+		path: '/',
+		element: getWHeader(<MyBanners />, true),
+	},
+	{
+		path: '/statisticBlogger',
+		element: getWHeader(<StatisticBlogger />, true),
+	},
+	{
+		path: '/media',
+		element: getWHeader(<Media />, true),
+	},
+]
+
+const PageAdvertiser = [
+	{
+		path: '/',
+		element: getWHeader(<Company />, true),
+	},
+	{
+		path: '/create',
+		element: getWHeader(<CompanyCreate />, true),
 	},
 	{
 		path: '/sites',
@@ -255,23 +257,52 @@ const router = createBrowserRouter([
 		path: '/statistics',
 		element: getWHeader(<Statistic />, true),
 	},
+]
+
+const PageBase = [
 	{
-		path: '/media',
-		element: getWHeader(<Media />, true),
+		path: '/login',
+		element: getWHeader(<MainPage />, false),
+	},
+	// {
+	// 	path: 'choose',
+	// 	element: getWHeader(<ChooseAccount />),
+	// },
+	// {
+	// 	path: '/register',
+	// 	element: getWHeader(<Register />, false),
+	// },
+	{
+		path: '/test',
+		element: getWHeader(<Test />, false),
+	},
+	// {
+	// 	path: '/welcome',
+	// 	element: getWHeader(<Welcome />, true),
+	// },
+	{
+		path: '/settings',
+		element: getWHeader(<Settings />, true),
 	},
 	{
-		path: '/mybanners',
-		element: getWHeader(<MyBanners />, true),
+		path: '/finance',
+		element: getWHeader(<Finance />, true),
 	},
-	{
-		path: '/statisticBlogger',
-		element: getWHeader(<StatisticBlogger />, true),
-	},
+
 	// {
 	// 	path: '/acceptCode',
 	// 	element: getWHeader(<AcceptCode />, false),
 	// },
-])
+]
+
+function AllPage() {
+	let isBloggerPage = defaultState.isBlogger
+	let pages = [...PageBase, ...(isBloggerPage ? PageBlogger : PageAdvertiser)]
+
+	return pages
+}
+
+const router = createBrowserRouter(AllPage())
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<>
 		{/* <React.StrictMode> */}

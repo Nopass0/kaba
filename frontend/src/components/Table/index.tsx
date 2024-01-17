@@ -199,7 +199,7 @@ for (let id = 7; id <= 50; id++) {
 
 const THEME = {
 	Table: `
-  --data-table-library_grid-template-columns:  30px 20% 15% 15% 15% 15% 10% repeat(1, minmax(0, 1fr)) ;
+	--data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) ;  // 30px 20% 15% 15% 15% 15% 10% repeat(1, minmax(0, 1fr));
   width: 100%;
   min-width: 1164px;
   max-height: 810px;
@@ -431,6 +431,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 								value={search}
 								onChange={handleSearch}
 								placeholder="Найти..."
+								autoComplete='off'
 							/>
 							<svg
 								className={s.iconSearch}
@@ -519,7 +520,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 													</Col>
 												</Row>
 											</tl.HeaderCell>
-											<tl.HeaderCell
+											{/* <tl.HeaderCell
 												style={{fontWeight: '400', fill: '#808080'}}
 												className={s.headerCellSort_Sort}
 												sortKey="Status">
@@ -572,7 +573,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 														</svg>
 													</div>
 												</button>
-											</tl.HeaderCell>
+											</tl.HeaderCell> */}
 											<tl.HeaderCell
 												style={{fontWeight: '400', fill: '#808080'}}
 												className={s.headerCellSort_Sort}
@@ -619,7 +620,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 												style={{fontWeight: '400', fill: '#808080'}}>
 												Реклам. сайт
 											</tl.HeaderCell>
-											<tl.HeaderCell
+											{/* <tl.HeaderCell
 												style={{fontWeight: '400', fill: '#808080'}}
 												className={s.headerCellSort_Sort}
 												sortKey="Status">
@@ -672,7 +673,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 														</svg>
 													</div>
 												</button>
-											</tl.HeaderCell>
+											</tl.HeaderCell> */}
 											<tl.HeaderCell
 												style={{fontWeight: '400', fill: '#808080'}}
 												className={s.headerCellSort_Sort}
@@ -794,7 +795,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 														</Col>
 													</Row>
 												</tl.Cell>
-												<tl.Cell>
+												{/* <tl.Cell>
 													<mui.Select
 														className={s.muiSelectClicks}
 														renderValue={(
@@ -838,7 +839,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 															/>
 														</mui.Option>
 													</mui.Select>
-												</tl.Cell>
+												</tl.Cell> */}
 												<tl.Cell>
 													<mui.Select
 														className={s.muiSelectClicks}
@@ -896,7 +897,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 														</a>
 													</Col>
 												</tl.Cell>
-												<tl.Cell>
+												{/* <tl.Cell>
 													<mui.Select
 														className={s.muiSelectClicks}
 														renderValue={(
@@ -940,7 +941,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 															/>
 														</mui.Option>
 													</mui.Select>
-												</tl.Cell>
+												</tl.Cell> */}
 												<tl.Cell>
 													<p
 														id={

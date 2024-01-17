@@ -19,13 +19,18 @@ import Image from '../../components/Image'
 import Upload from '../../components/Upload'
 import {FileType, TGenderNAge} from '../../types'
 import Select from '../../components/Select/index'
+import { useSelector } from 'react-redux';
 
 const CompanyCreate: React.FC = () => {
 	// const [value, setValue] = React.useState<any>()
 	// const [value2, setValue2] = React.useState<any>()
 	// const [value3, setValue3] = React.useState<any>()
-	const [switchPage, setSwitchPage] = React.useState<number>(1)
+	// const [switchPage, setSwitchPage] = React.useState<number>(1)
 
+	let switchPage = useSelector((state: any) => state.SwitchCreatePage)
+
+	console.log(switchPage, 'SWITCH PAGE');
+	
 	const [checked, setChecked] = React.useState(false)
 	const [checked_1, setChecked_1] = React.useState(false)
 
@@ -142,38 +147,14 @@ const CompanyCreate: React.FC = () => {
 			</div>
 			<div className={` ${s.rightMenu}`}>
 				<HeaderCompanyCreate />
-				<div className={s.down}>
-					<button
-						onClick={() => setSwitchPage(1)}
-						className={`${s.companiesMenu} ${
-							switchPage === 1 ? s.companiesMenuActive : ''
-						}`}>
-						<span className={s.companiesText}>Настройки компании</span>
-					</button>
-					<button
-						onClick={() => setSwitchPage(2)}
-						className={`${s.companiesMenu} ${
-							switchPage === 2 ? s.companiesMenuActive : ''
-						}`}>
-						<span className={s.companiesText}>Аудитория</span>
-						<span className={s.companiesNum}>0</span>
-					</button>
-					<button
-						onClick={() => setSwitchPage(3)}
-						className={`${s.companiesMenu} ${
-							switchPage === 3 ? s.companiesMenuActive : ''
-						}`}>
-						<span className={s.companiesText}>Баннеры</span>
-						<span className={s.companiesNum}>33</span>
-					</button>
-				</div>
+				
 				<div
 					id="page-1"
 					style={switchPage === 1 ? {display: 'block'} : {display: 'none'}}>
 					<Col className={s.contentCol} width="528px">
 						<WhiteLabel
 							className={s.content}
-							text="Название компании*"
+							text="Название Компании*"
 							size="16px"
 						/>
 						<Input

@@ -75,7 +75,10 @@ const ProfilePopUp: React.FC<IProfilePopUp> = ({blogger}: IProfilePopUp) => {
 				<BlueButton
 					onClick={() => {
 						setLeftSideOpen(!leftSideOpen)
-						window.localStorage.clear()
+						// window.localStorage.clear()
+						let OldLocal = JSON.parse(localStorage.getItem('kaba_data'))
+						OldLocal.user = undefined
+						localStorage.setItem('kaba_data', JSON.stringify(OldLocal))
 						window.location.reload()
 					}}
 					className={s.AccountBlueButton}
