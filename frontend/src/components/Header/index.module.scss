@@ -7,6 +7,21 @@
 	align-items: center;
 }
 
+@media screen and (max-width: 1440px) {
+	.container {
+		// max-width: 1440px;
+		// width: 1100px;
+	}
+
+	.down {
+		width: 100%;
+		margin: 0 auto;
+		// margin-left: 0px !important;
+		// margin-right: 211px;
+	}
+}
+
+
 .logo {
 	display: flex;
 	flex-direction: row;
@@ -29,11 +44,14 @@
 .table_header_company {
 	margin-left: 202px;
 }
+ru_mur Hime_tsu shadowifey norafawn
 
 .container {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	justify-content: space-between;
+	flex-wrap: nowrap;
 
 	.icons_header {
 		display: flex;
@@ -99,48 +117,52 @@
 	.touchSVG {
 		opacity: 1;
 	}
+}
 
-	.down {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
+.down {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 
-		font-size: 14px;
-		font-weight: 400;
+	font-size: 14px;
+	font-weight: 400;
 
-		.companiesMenu {
-			padding: 10px;
-			cursor: pointer;
-			margin-right: 4px;
-			border-radius: 10px;
+	margin-left: 219px;
 
-			.companiesText {
-				color: #f2f2f2;
-				font-family: Inter;
-				font-size: 14px;
-				font-style: normal;
-				font-weight: 400;
-				line-height: 16px; /* 114.286% */
-				margin-right: 8px;
-			}
+	.companiesMenu {
+		padding: 10px;
+		cursor: pointer;
+		margin-right: 4px;
+		border-radius: 10px;
+		white-space: nowrap;
 
-			.companiesNum {
-				padding: 4px 8px;
-				border-radius: 12px;
-				background: #333;
+		.companiesText {
+			color: #f2f2f2;
+			font-family: Inter;
+			font-size: 14px;
+			font-style: normal;
+			font-weight: 400;
+			line-height: 16px; /* 114.286% */
+			margin-right: 8px;
+		}
 
-				color: #f2f2f2;
-				text-align: center;
-				font-family: Inter;
-				font-size: 14px;
-				font-style: normal;
-				font-weight: 400;
-				line-height: 16px; /* 114.286% */
-			}
+		.companiesNum {
+			padding: 4px 8px;
+			border-radius: 12px;
+			background: #333;
+
+			color: #f2f2f2;
+			text-align: center;
+			font-family: Inter;
+			font-size: 14px;
+			font-style: normal;
+			font-weight: 400;
+			line-height: 16px; /* 114.286% */
 		}
 	}
-	.companiesMenuActive,
-	.companiesMenu:hover {
-		background: #262626;
-	}
+}
+
+.companiesMenuActive,
+.companiesMenu:hover {
+	background: #262626;
 }
