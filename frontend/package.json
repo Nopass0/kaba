@@ -26,6 +26,7 @@
 		"axios": "^1.6.0",
 		"chart.js": "^4.4.0",
 		"chartjs-plugin-crosshair": "^2.0.0",
+		"jsdom": "^23.2.0",
 		"moment": "^2.29.4",
 		"primereact": "^10.1.1",
 		"rc-tree-select": "^5.15.0",

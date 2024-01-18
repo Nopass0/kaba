@@ -10,12 +10,6 @@ urlpatterns = [
     path('check', check_api.as_view()),
     # Проверка токена
     path('check_token', check_tokenAPIViews.as_view()),
-    # Create profile
-    path('createProfile', createProfileAPIViews.as_view()),
-    # Get profile
-    path('getProfile', getProfileAPIViews.as_view()),
-    # path('try_sms', try_sms, name='try_sms'),
-    
     #vk login
     path('vk_login', vk_authAPIViews.as_view()),
     #yandex login
@@ -23,6 +17,19 @@ urlpatterns = [
     
     #get companies
     path('getCompanies', getCompaniesAPIViews.as_view()),
+    #get balance
+    path('getBalance', getBalanceAPIViews.as_view()),
+    # getWalletOperationsAPIViews
+    path('getWalletOperations', getWalletOperationsAPIViews.as_view()),
+    # GetAudience
+    path('getAudience', GetAudience.as_view()),
+    # GetBanners
+    path('getBanners', GetBanners.as_view()),
+    # GetSites
+    path('getSites', GetSites.as_view()),
+    
+    # AddCompany
+    path('addCompany', AddCompany.as_view()),
 
     # # Пути для взаимодействия с БД. GET - получение записей, POST - добавление новой записи  
     # path('accountModel', accountModellListCreateView.as_view()),

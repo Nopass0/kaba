@@ -1,3 +1,4 @@
+import json
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
@@ -7,7 +8,15 @@ import urllib.parse
 import requests
 
 from ad_advertiser.models.site.site import siteModel
+from ad_advertiser.models.ad.ad_audience import ad_audienceModel
+from ad_advertiser.models.ad.ad_banner import ad_bannerModel
 
+from datetime import datetime, timedelta
+import random
+from rest_framework import status
+
+from datetime import datetime
+from django.utils.dateparse import parse_datetime
 
 from .permissions import isValidToken
 from .serializers import *
@@ -15,7 +24,7 @@ from .serializers import *
 from a_setting.settings.base import *
 
 from account.models.action import actionModel
-from account.models.account import accountModel
+from account.models.account import accountModel, walletModel, walletOperationsModel
 from account.models.social_network import social_networkModel
 from account.models.verification import verificationModel
 from account.models.social_network import social_networkModel
@@ -512,11 +521,8 @@ class getCompaniesAPIViews(APIView):
         return Response(companies, status=status.HTTP_200_OK)
     
 
-# add ad_companyModel (private PUT) TODO
-
-
-# create profile (private POST)
-class createProfileAPIViews(APIView):
+# get balance (private POST)
+class getBalanceAPIViews(APIView):
     def post(self, request):
         # get user by token
         token = request.data.get('token', '')
@@ -528,27 +534,12 @@ class createProfileAPIViews(APIView):
             return Response({'error': 'token is invalid.'}, status=status.HTTP_400_BAD_REQUEST)
 
         user = current_token.first().account
-        
-        # check is already exist
-        if profileModel.objects.filter(profile=user.id).exists():
-            return Response({'error': 'profile already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+        balance = walletModel.objects.filter(account=user.id).first().balance
+        currency = walletModel.objects.filter(account=user.id).first().currency_sign
+        return Response({'balance': balance, 'currency': currency, 'status': 'ok'}, status=status.HTTP_200_OK)
 
-        # data_legal_country = models.CharField('Юр.данные. Страна', max_length=65, choices=DATA_LEGAL_COUNTRY_CHOICES)
-        # data_legal_currency  = models.CharField('Юр.данные. Валюта', max_length=40, choices=DATA_LEGAL_CURRENCY_CHOICES)
-        # data_legal_form  = models.CharField('Юр.данные. Организационно-правовая форма', max_length=40, choices=DATA_LEGAL_FORM_CHOICES, blank=False)
-        # data_legal_id  = models.CharField('Юр.данные. Идентификатор организации', max_length=10, choices=DATA_LEGAL_ID_CHOICES, blank=False)
-        
-        profile = profileModel(profile=user,
-            data_legal_country=request.data.get('data_legal_country', ''),
-            data_legal_currency=request.data.get('data_legal_currency', ''),
-            data_legal_form=request.data.get('data_legal_form', ''),
-            data_legal_id=request.data.get('data_legal_id', ''),)
-        profile.save()
-        return Response({'status': 'ok', 'user_id': user.id, 'profile_id': profile.id}, status=status.HTTP_200_OK)
-    
-
-# get profile (private POST)
-class getProfileAPIViews(APIView):
+# get wallet operations (private POST)
+class getWalletOperationsAPIViews(APIView):
     def post(self, request):
         # get user by token
         token = request.data.get('token', '')
@@ -560,151 +551,164 @@ class getProfileAPIViews(APIView):
             return Response({'error': 'token is invalid.'}, status=status.HTTP_400_BAD_REQUEST)
 
         user = current_token.first().account
+        wallet = walletModel.objects.filter(account=user.id).first()
+        operations = list(walletOperationsModel.objects.filter(wallet=wallet).values())
+        return Response(operations, status=status.HTTP_200_OK)
+
+class AddCompany(APIView):
+
+    def post(self, request):
+        # Debug mode
+        debug = True
+
+        # Debug data
+        debug_data = {
+            'company_name': ['Test Company 1', 'Test Company 2'],
+            'site_domain': ['google.com', 'yandex.ru'],
+            'phrase_plus': ['keyword1', 'keyword2'],
+            'phrase_minus': ['phrase1', 'phrase2'],
+            'auditor_name': ['Auditoria 1', 'Auditoria 2'],
+            'geography': ['Russia', 'USA'],
+            'device': ['mobile', 'PC'],
+            'banner_name': ['Banner 1', 'Banner 2'],
+            'banner_link': ['http://example.com', 'http://example2.com'],
+        }
+
+        # Get user by token
+        token = request.data.get('token', '')
+        if not token:
+            return Response({'error': 'Token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        current_token = tokenModel.objects.filter(token=token)
+        if not current_token.exists():
+            return Response({'error': 'Token is invalid.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Extracting and parsing data from request
+        try:
+            company_data = json.loads(request.data.get('Company', '{}'))
+            auditor_data = json.loads(request.data.get('Auditor', '{}'))
+            banner_data = json.loads(request.data.get('Banner', '{}'))
+        except json.JSONDecodeError:
+            return Response({'error': 'Invalid JSON data.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Retrieve or create the site
+        site, _ = siteModel.objects.get_or_create(
+            domain=company_data.get('cLink', random.choice(debug_data['site_domain']) if debug else '')
+        )
         
-        # check if profile exists
-        if not profileModel.objects.filter(account=user).exists():
-            return Response({'error': 'profile does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        #Create random data_start
 
-        # retrieve profile
-        profile = list(profileModel.objects.filter(account=user).values())
+        # Generate random data_start
+        data_start_temp = datetime.now() - timedelta(days=random.randint(1, 30))
         
-        return Response(profile, status=status.HTTP_200_OK)
+        # Generate random data_end
+        data_end_temp = data_start_temp + timedelta(days=random.randint(1, 30))
+        
+        #status text random variants
+        status_text_temp = ["Активная", "На модерации", "Отклонена", "Завершена"]
+
+        # Create ad_company
+        company = ad_companyModel.objects.create(
+            name=company_data.get('cName', random.choice(debug_data['company_name']) if debug else ''),
+            site=site,
+            date_start=parse_datetime(company_data.get('cDateStart', '')) if company_data.get('cDateStart', '') else data_start_temp,
+            date_finish=parse_datetime(company_data.get('cDateEnd', '')) if company_data.get('cDateEnd', '') else data_end_temp,
+            budget_week=int(company_data.get('cWeekBudget', 0)),
+            channel_taboo=company_data.get('cSettingsLink', []),
+            phrase_plus=company_data.get('cKeyWord', []),
+            phrase_minus=company_data.get('cKeyWordDel', []),
+            status_text=random.choice(status_text_temp),  # Assuming a default or empty status text
+            views=0,  # Assuming default views count
+            account=current_token.first().account,  # Assuming account is linked with token
+        )
+
+        # Create ad_audience
+        audience = ad_audienceModel.objects.create(
+            name=auditor_data.get('aName', random.choice(debug_data['auditor_name']) if debug else ''),
+            site=site,
+            ad_company=company,
+            geography=auditor_data.get('aGeography', []),
+            category=auditor_data.get('aFavor', []),
+            interest=[],
+            gender_age=auditor_data.get('aGenderNAge', []),
+            device=auditor_data.get('aDevice', []),
+            solvency=[],
+            account=current_token.first().account,  # Assuming account is linked with token
+        )
+
+        # Create ad_banner
+        banner = ad_bannerModel.objects.create(
+            account=current_token.first().account,  # Assuming account is linked with token
+            site=site,
+            ad_company=company,
+            ad_audience=audience,
+            name=banner_data.get('bName', random.choice(debug_data['banner_name']) if debug else ''),
+            link=banner_data.get('bLink', random.choice(debug_data['banner_link']) if debug else ''),
+            title_option=[],  # Assuming title options are not provided in your data
+            description_option=banner_data.get('bOptionDescText', []),
+            image_option=[],
+            video_option=[],
+            audio_option=[],
+            channel_private_bool=banner_data.get('bUnvirfied', True if debug else False)
+        )
+
+        return Response({'message': 'Company, Auditor, and Banner created successfully!'}, status=status.HTTP_201_CREATED)
     
+class GetAudience(APIView):
 
-# Ниже вьюшки ListCreateAPIView для всех моделей в проекте (GET - получение записей, POST - добавление новой записи)
-# Не работают без передачи токена
-class accountModellListCreateView(generics.ListCreateAPIView):
-    queryset = accountModel.objects.all()
-    serializer_class = accountSerializer
-    permission_classes = [isValidToken]
+    def get(self, request):
+        token = request.GET.get('token', '')
 
+        if not token:
+            return Response({'error': 'Token is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
-class actionModellListCreateView(generics.ListCreateAPIView):
-    queryset = actionModel.objects.all()
-    serializer_class = actionSerializer
-    permission_classes = [isValidToken]
+        current_token = tokenModel.objects.filter(token=token).first()
+        if not current_token:
+            return Response({'error': 'Token is invalid.'}, status=status.HTTP_400_BAD_REQUEST)
 
+        audiences = ad_audienceModel.objects.filter(account=current_token.account)
+        audience_data = [{'name': audience.name, 'geography': audience.geography, 'device': audience.device} for audience in audiences]
 
-class social_networkModelListCreateView(generics.ListCreateAPIView):
-    queryset = social_networkModel.objects.all()
-    serializer_class = social_networkSerializer
-    permission_classes = [isValidToken]
+        return Response({'audiences': audience_data}, status=status.HTTP_200_OK)
 
+class GetBanners(APIView):
 
-class ad_companyModelListCreateView(generics.ListCreateAPIView):
-    queryset = ad_companyModel.objects.all()
-    serializer_class = ad_companySerializer
-    permission_classes = [isValidToken]
+    def get(self, request):
+        token = request.GET.get('token', '')
 
+        if not token:
+            return Response({'error': 'Token is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
-class ad_audienceModelListCreateView(generics.ListCreateAPIView):
-    queryset = ad_audience.ad_audienceModel.objects.all()
-    serializer_class = ad_audienceSerializer
-    permission_classes = [isValidToken]
+        current_token = tokenModel.objects.filter(token=token).first()
+        if not current_token:
+            return Response({'error': 'Token is invalid.'}, status=status.HTTP_400_BAD_REQUEST)
 
+        banners = ad_bannerModel.objects.filter(account=current_token.account)
+        banner_data = [{'name': banner.name, 'link': banner.link, 'title_option': banner.title_option} for banner in banners]
 
-class ad_bannerModelListCreateView(generics.ListCreateAPIView):
-    queryset = ad_banner.ad_bannerModel.objects.all()
-    serializer_class = ad_bannerSerializer
-    permission_classes = [isValidToken]
+        return Response({'banners': banner_data}, status=status.HTTP_200_OK)
 
+class GetSites(APIView):
 
-class ad_companyModelListCreateView(generics.ListCreateAPIView):
-    queryset = columns_ad_company.columns_ad_companyModel.objects.all()
-    serializer_class = columns_ad_companySerializer
-    permission_classes = [isValidToken]
+    def get(self, request):
+        token = request.GET.get('token', '')
 
+        if not token:
+            return Response({'error': 'Token is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
-class ad_audienceModelListCreateView(generics.ListCreateAPIView):
-    queryset = columns_ad_audience.columns_ad_audienceModel.objects.all()
-    serializer_class = columns_ad_audienceSerializer
-    permission_classes = [isValidToken]
+        current_token = tokenModel.objects.filter(token=token).first()
+        if not current_token:
+            return Response({'error': 'Token is invalid.'}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Fetch related banners and companies
+        banners = ad_bannerModel.objects.filter(account=current_token.account)
+        companies = ad_companyModel.objects.filter(account=current_token.account)
 
-class ad_bannerModelListCreateView(generics.ListCreateAPIView):
-    queryset = columns_ad_banner.columns_ad_bannerModel.objects.all()
-    serializer_class = columns_ad_bannerSerializer
-    permission_classes = [isValidToken]
+        # Extract unique site ids from banners and companies
+        site_ids = set(banners.values_list('site', flat=True)) | set(companies.values_list('site', flat=True))
 
+        # Fetch unique sites by ids
+        unique_sites = siteModel.objects.filter(id__in=site_ids).distinct()
+        site_data = [{'id': site.id, 'domain': site.domain, 'date_creation': site.date_creation} for site in unique_sites]
 
-class finance_operationModelListCreateView(generics.ListCreateAPIView):
-    queryset = finance_operation.finance_operationModel.objects.all()
-    serializer_class = finance_operationSerializer
-    permission_classes = [isValidToken]
-
-
-class notificationModelListCreateView(generics.ListCreateAPIView):
-    queryset = notification.notificationModel.objects.all()
-    serializer_class = notificationSerializer
-    permission_classes = [isValidToken]
-
-
-class statisticsModelListCreateView(generics.ListCreateAPIView):
-    queryset = statistics.statisticsModel.objects.all()
-    serializer_class = statisticsSerializer
-    permission_classes = [isValidToken]
-
-
-class setting_notificationModelListCreateView(generics.ListCreateAPIView):
-    queryset = setting_notification.setting_notificationModel.objects.all()
-    serializer_class = setting_notificationSerializer
-    permission_classes = [isValidToken]
-
-
-class profileModelListCreateView(generics.ListCreateAPIView):
-    queryset = profile.profileModel.objects.all()
-    serializer_class = profileSerializer
-    permission_classes = [isValidToken]
-
-class siteModelListCreateView(generics.ListCreateAPIView):
-    queryset = site.siteModel.objects.all()
-    serializer_class = siteSerializer
-    permission_classes = [isValidToken]
-
-
-class site_ratingModelListCreateView(generics.ListCreateAPIView):
-    queryset = site_rating.site_ratingModel.objects.all()
-    serializer_class = site_ratingSerializer
-    permission_classes = [isValidToken]
-
-
-class site_profileModelListCreateView(generics.ListCreateAPIView):
-    queryset = site_profile.site_profileModel.objects.all()
-    serializer_class = site_profileSerializer
-    permission_classes = [isValidToken]
-
-
-class banner_profileModelListCreateView(generics.ListCreateAPIView):
-    queryset = banner_profile.banner_profileModel.objects.all()
-    serializer_class = banner_profileSerializer
-    permission_classes = [isValidToken]
-
-
-class banner_chosenModelListCreateView(generics.ListCreateAPIView):
-    queryset = banner_chosen.banner_chosenModel.objects.all()
-    serializer_class = banner_chosenSerializer
-    permission_classes = [isValidToken]
-
-
-class channelModelListCreateView(generics.ListCreateAPIView):
-    queryset = channel.channelModel.objects.all()
-    serializer_class = site_ratingSerializer
-    permission_classes = [isValidToken]
-
-
-class channel_profileModelListCreateView(generics.ListCreateAPIView):
-    queryset = channel_profile.channel_profileModel.objects.all()
-    serializer_class = channel_profileSerializer
-    permission_classes = [isValidToken]
-
-
-class tokenModelListCreateView(generics.ListCreateAPIView):
-    queryset = tokenModel.objects.all()
-    serializer_class = tokenSerializer
-    permission_classes = [isValidToken]
-    
-
-class verificationModelListCreateView(generics.ListCreateAPIView):
-    queryset = verificationModel.objects.all()
-    serializer_class = verificationSerializer
-    permission_classes = [isValidToken]
+        return Response({'sites': site_data}, status=status.HTTP_200_OK)

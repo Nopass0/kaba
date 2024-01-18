@@ -19,7 +19,8 @@ import Image from '../../components/Image'
 import Upload from '../../components/Upload'
 import {FileType, TGenderNAge} from '../../types'
 import Select from '../../components/Select/index'
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux'
+import {addCompanyAPI} from '../../api/data.api'
 
 const CompanyCreate: React.FC = () => {
 	// const [value, setValue] = React.useState<any>()
@@ -29,8 +30,8 @@ const CompanyCreate: React.FC = () => {
 
 	let switchPage = useSelector((state: any) => state.SwitchCreatePage)
 
-	console.log(switchPage, 'SWITCH PAGE');
-	
+	console.log(switchPage, 'SWITCH PAGE')
+
 	const [checked, setChecked] = React.useState(false)
 	const [checked_1, setChecked_1] = React.useState(false)
 
@@ -75,6 +76,9 @@ const CompanyCreate: React.FC = () => {
 	const [bAudio, setBAudio] = useState<File>()
 	const [bImg, setBImg] = useState<File>()
 	const [bUnvirfied, setBUnvirfied] = useState<boolean>(false)
+
+	const user = useSelector((state: any) => state.user)
+	const token = user.token
 
 	const handleClick_settings = () => {
 		setOpen_settings(!open_settings)
@@ -147,7 +151,7 @@ const CompanyCreate: React.FC = () => {
 			</div>
 			<div className={` ${s.rightMenu}`}>
 				<HeaderCompanyCreate />
-				
+
 				<div
 					id="page-1"
 					style={switchPage === 1 ? {display: 'block'} : {display: 'none'}}>
@@ -697,41 +701,77 @@ const CompanyCreate: React.FC = () => {
 								<BlueLabel
 									className={`float-right mr-[24px] cursor-pointer`}
 									text="Сохранить и выйти"
-									onClick={() =>
-										setGlobalState({
-											Company: {
-												cName: cName,
-												cLink: cLink,
-												cSettingsLink: cSettingsLink,
-												cDateStart: cDateStart,
-												cDateEnd: cDateEnd,
-												cTarget: cTarget,
-												cWeekBudget: cWeekBudget,
-												cKeyWord: cKeyWord,
-												cKeyWordDel: cKeyWordDel,
-												cBabShow: cBanShow,
-											},
+									onClick={
+										() => {
+											addCompanyAPI(
+												token,
+												{
+													cName: cName,
+													cLink: cLink,
+													cSettingsLink: cSettingsLink,
+													cDateStart: cDateStart,
+													cDateEnd: cDateEnd,
+													cTarget: cTarget,
+													cWeekBudget: cWeekBudget,
+													cKeyWord: cKeyWord,
+													cKeyWordDel: cKeyWordDel,
+													cBabShow: cBanShow,
+												},
+												{
+													aName: aName,
+													aGeography: aGeography,
+													aFavor: aFavor,
+													aDevice: aDevice,
+													aGenderNAge: aGenderNAge,
+												},
+												{
+													bName: bName,
+													bLink: bLink,
+													bOptionTitle: bOptionTitle,
+													bOptionDescription: bOptionDescription,
+													bOptionDescText: bOptionDescText,
+													bVideo: bVideo,
+													bAudio: bAudio,
+													bImg: bImg,
+													bUnvirfied: bUnvirfied,
+												},
+											)
+										}
+										// 	setGlobalState({
+										// Company: {
+										// 	cName: cName,
+										// 	cLink: cLink,
+										// 	cSettingsLink: cSettingsLink,
+										// 	cDateStart: cDateStart,
+										// 	cDateEnd: cDateEnd,
+										// 	cTarget: cTarget,
+										// 	cWeekBudget: cWeekBudget,
+										// 	cKeyWord: cKeyWord,
+										// 	cKeyWordDel: cKeyWordDel,
+										// 	cBabShow: cBanShow,
+										// },
 
-											Auditor: {
-												aName: aName,
-												aGeography: aGeography,
-												aFavor: aFavor,
-												aDevice: aDevice,
-												aGenderNAge: aGenderNAge,
-											},
+										// Auditor: {
+										// 	aName: aName,
+										// 	aGeography: aGeography,
+										// 	aFavor: aFavor,
+										// 	aDevice: aDevice,
+										// 	aGenderNAge: aGenderNAge,
+										// },
 
-											Banner: {
-												bName: bName,
-												bLink: bLink,
-												bOptionTitle: bOptionTitle,
-												bOptionDescription: bOptionDescription,
-												bOptionDescText: bOptionDescText,
-												bVideo: bVideo,
-												bAudio: bAudio,
-												bImg: bImg,
-												bUnvirfied: bUnvirfied,
-											},
-										})
+										// Banner: {
+										// 	bName: bName,
+										// 	bLink: bLink,
+										// 	bOptionTitle: bOptionTitle,
+										// 	bOptionDescription: bOptionDescription,
+										// 	bOptionDescText: bOptionDescText,
+										// 	bVideo: bVideo,
+										// 	bAudio: bAudio,
+										// 	bImg: bImg,
+										// 	bUnvirfied: bUnvirfied,
+										// },
+										// 	})
+										// }
 									}
 								/>
 								<BlueButton
@@ -1509,8 +1549,9 @@ const CompanyCreate: React.FC = () => {
 									// 	bUnvirfied,
 									// })}
 									onClick={() =>
-										setGlobalState({
-											Company: {
+										addCompanyAPI(
+											token,
+											{
 												cName: cName,
 												cLink: cLink,
 												cSettingsLink: cSettingsLink,
@@ -1523,7 +1564,7 @@ const CompanyCreate: React.FC = () => {
 												cBabShow: cBanShow,
 											},
 
-											Auditor: {
+											{
 												aName: aName,
 												aGeography: aGeography,
 												aFavor: aFavor,
@@ -1531,7 +1572,7 @@ const CompanyCreate: React.FC = () => {
 												aGenderNAge: aGenderNAge,
 											},
 
-											Banner: {
+											{
 												bName: bName,
 												bLink: bLink,
 												bOptionTitle: bOptionTitle,
@@ -1542,7 +1583,7 @@ const CompanyCreate: React.FC = () => {
 												bImg: bImg,
 												bUnvirfied: bUnvirfied,
 											},
-										})
+										)
 									}
 								/>
 								{/* <BlueButton

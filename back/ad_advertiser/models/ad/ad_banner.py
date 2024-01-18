@@ -5,13 +5,14 @@ from ad_advertiser.models.profile.profile import profileModel
 from ad_advertiser.models.site.site import siteModel
 from ad_advertiser.models.ad.ad_company import ad_companyModel
 from ad_advertiser.models.ad.ad_audience import ad_audienceModel
+from account.models.account import accountModel
 
 
 # 
 class ad_bannerModel(models.Model):
 
     # Профиль
-    profile = models.ForeignKey(profileModel, related_name='ad_bannerModel_profileModel', on_delete=models.CASCADE)
+    account = models.ForeignKey(accountModel, related_name='ad_bannerModel_accountModel', blank=True, null=True, on_delete=models.CASCADE)
 
     # Сайт
     site = models.ForeignKey(siteModel, related_name='ad_bannerModel_siteModel', on_delete=models.CASCADE)

@@ -27,6 +27,7 @@ import * as mui from '@mui/base'
 import VerticalScroll from '../VerticalScroll'
 import {getCompaniesAPI} from '../../api/data.api'
 import {useSelector} from 'react-redux'
+import axios from 'axios'
 
 enum CurrentPopup {
 	None,
@@ -75,127 +76,27 @@ enum CurrentPopup {
 //     }
 // ]
 
-const list = [
-	{
-		id: '1',
-		name: 'курсы английского языка',
-		companyStatus: '+252',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com',
-			status: '+31',
-		},
-		color: '#57BD53',
-		status: 'Активная',
-		shows: '1000',
-	},
-	{
-		id: '2',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-		},
-		color: '#F3A63B',
-		status: 'На модерации',
-		shows: '2000',
-	},
-	{
-		id: '3',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-		},
-		color: '#808080',
-		status: 'Завершена',
-		shows: '3000',
-	},
-	{
-		id: '4',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-		},
-		color: '#57BD53',
-		status: 'Активная',
-		shows: '4000',
-	},
-	{
-		id: '5',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-		},
-		color: '#F3553E',
-		status: 'Отклонена',
-		shows: '502,195',
-	},
-	{
-		id: '6',
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '31',
-			isBad: false,
-		},
-		color: '#57BD53',
-		status: 'Активная',
-		shows: '38,195',
-	},
-]
+// for (let id = 7; id <= 50; id++) {
+// 	const newData = {
+// 		id: id.toString(),
+// 		name: 'курсы английского языка',
+// 		companyStatus: '+31',
+// 		audiotoria: '3',
+// 		baners: '23',
+// 		adSite: {
+// 			name: 'google',
+// 			image: './asia.svg',
+// 			url: 'https://www.google.com/se…',
+// 			status: '+31',
+// 			isBad: false,
+// 		},
+// 		color: '#57BD53',
+// 		status: 'Активная',
+// 		shows: '38,195',
+// 	}
 
-for (let id = 7; id <= 50; id++) {
-	const newData = {
-		id: id.toString(),
-		name: 'курсы английского языка',
-		companyStatus: '+31',
-		audiotoria: '3',
-		baners: '23',
-		adSite: {
-			name: 'google',
-			image: './asia.svg',
-			url: 'https://www.google.com/se…',
-			status: '+31',
-			isBad: false,
-		},
-		color: '#57BD53',
-		status: 'Активная',
-		shows: '38,195',
-	}
-
-	list.push(newData)
-}
+// 	list.push(newData)
+// }
 
 const THEME = {
 	Table: `
@@ -337,7 +238,136 @@ interface ITable {
 }
 
 const Table: React.FC<ITable> = ({}: ITable) => {
-	const data = {nodes: list}
+	// const list = [
+	// 	{
+	// 		id: '1',
+	// 		name: 'курсы английского языка',
+	// 		companyStatus: '+252',
+	// 		audiotoria: '3',
+	// 		baners: '23',
+	// 		adSite: {
+	// 			name: 'google',
+	// 			image: './asia.svg',
+	// 			url: 'https://www.google.com',
+	// 			status: '+31',
+	// 		},
+	// 		color: '#57BD53',
+	// 		status: 'Активная',
+	// 		shows: '1000',
+	// 	},
+	// 	{
+	// 		id: '2',
+	// 		name: 'курсы английского языка',
+	// 		companyStatus: '+31',
+	// 		audiotoria: '3',
+	// 		baners: '23',
+	// 		adSite: {
+	// 			name: 'google',
+	// 			image: './asia.svg',
+	// 			url: 'https://www.google.com/se…',
+	// 			status: '31',
+	// 		},
+	// 		color: '#F3A63B',
+	// 		status: 'На модерации',
+	// 		shows: '2000',
+	// 	},
+	// 	{
+	// 		id: '3',
+	// 		name: 'курсы английского языка',
+	// 		companyStatus: '+31',
+	// 		audiotoria: '3',
+	// 		baners: '23',
+	// 		adSite: {
+	// 			name: 'google',
+	// 			image: './asia.svg',
+	// 			url: 'https://www.google.com/se…',
+	// 			status: '31',
+	// 		},
+	// 		color: '#808080',
+	// 		status: 'Завершена',
+	// 		shows: '3000',
+	// 	},
+	// 	{
+	// 		id: '4',
+	// 		name: 'курсы английского языка',
+	// 		companyStatus: '+31',
+	// 		audiotoria: '3',
+	// 		baners: '23',
+	// 		adSite: {
+	// 			name: 'google',
+	// 			image: './asia.svg',
+	// 			url: 'https://www.google.com/se…',
+	// 			status: '31',
+	// 		},
+	// 		color: '#57BD53',
+	// 		status: 'Активная',
+	// 		shows: '4000',
+	// 	},
+	// 	{
+	// 		id: '5',
+	// 		name: 'курсы английского языка',
+	// 		companyStatus: '+31',
+	// 		audiotoria: '3',
+	// 		baners: '23',
+	// 		adSite: {
+	// 			name: 'google',
+	// 			image: './asia.svg',
+	// 			url: 'https://www.google.com/se…',
+	// 			status: '31',
+	// 		},
+	// 		color: '#F3553E',
+	// 		status: 'Отклонена',
+	// 		shows: '502,195',
+	// 	},
+	// 	{
+	// 		id: '6',
+	// 		name: 'курсы английского языка',
+	// 		companyStatus: '+31',
+	// 		audiotoria: '3',
+	// 		baners: '23',
+	// 		adSite: {
+	// 			name: 'google',
+	// 			image: './asia.svg',
+	// 			url: 'https://www.google.com/se…',
+	// 			status: '31',
+	// 			isBad: false,
+	// 		},
+	// 		color: '#57BD53',
+	// 		status: 'Активная',
+	// 		shows: '38,195',
+	// 	},
+	// ]
+
+	const getFaviconUrl = (url: string) => {
+		try {
+			let favico = `https://s2.googleusercontent.com/s2/favicons?domain=${url}&sz=8`
+			console.log(favico, 'favico')
+
+			return favico // Fallback to default location
+		} catch (error) {
+			console.error('Error fetching or parsing URL:', error)
+			return ''
+		}
+	}
+
+	const getNameFromDomain = (url: string): string => {
+		try {
+			let hostname = url
+
+			// Remove 'www.' if it exists
+			hostname = hostname.replace(/^www\./, '')
+			hostname = hostname.replace(/^https?:\/\//, '')
+			console.log(hostname)
+
+			// Get the portion before the first '.' character
+			const name = hostname.split('.')[0]
+
+			return name
+		} catch (error) {
+			console.error('Error parsing URL:', error)
+			return 'Invalid URL'
+		}
+	}
 
 	const [search, setSearch] = useState('')
 	const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -353,6 +383,19 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 
 	const user = useSelector((state: any) => state.user)
 	const token = user.token
+	const [companies, setCompanies] = useState([])
+
+	const data = {nodes: companies}
+
+	useEffect(() => {
+		async function getCompanies(token: string) {
+			const res = await getCompaniesAPI(token)
+			console.log(res.data, 'List of companies')
+			setCompanies(res.data)
+			return res.data
+		}
+		getCompanies(token)
+	}, [])
 
 	const select = useRowSelect(
 		data,
@@ -380,16 +423,6 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 			},
 		},
 	)
-
-	useEffect(() => {
-		async function getCompanies(token: string) {
-			const res = await getCompaniesAPI(token)
-			console.log(res.data, 'List of companies')
-
-			return res.data
-		}
-		getCompanies(token)
-	}, [])
 
 	tl.useCustom('search', data, {
 		state: {search},
@@ -431,7 +464,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 								value={search}
 								onChange={handleSearch}
 								placeholder="Найти..."
-								autoComplete='off'
+								autoComplete="off"
 							/>
 							<svg
 								className={s.iconSearch}
@@ -516,7 +549,9 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 												style={{fontWeight: '400'}}>
 												<Row width="auto">
 													<Col width="auto">
-														<p>Название, ID</p>
+														<p onLoad={() => console.log(tableList, 'list')}>
+															Название, ID
+														</p>
 													</Col>
 												</Row>
 											</tl.HeaderCell>
@@ -790,7 +825,8 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 																	strokeLinejoin="round"
 																/>
 															</svg> */}
-																<Label isMini={true} text={`${item.id}`} />
+																<Label isMini={true} text={`ID${index}`} />
+																{/* Make by ID from server */}
 															</Row>
 														</Col>
 													</Row>
@@ -850,9 +886,9 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 																return (
 																	<>
 																		<div className={s.audiotoriaNBanners}>
-																			<WhiteLabel text={item.audiotoria} />
+																			<WhiteLabel text="3" />
 																			<WhiteLabel
-																				text={` и ${item.baners}`}
+																				text={` и 23`}
 																				className="ml-1"
 																			/>
 																		</div>
@@ -862,9 +898,9 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 															return (
 																<>
 																	<div className={s.audiotoriaNBanners}>
-																		<WhiteLabel text={item.audiotoria} />
+																		<WhiteLabel text="4" />
 																		<WhiteLabel
-																			text={` и ${item.baners}`}
+																			text={` и 24`}
 																			className="ml-1"
 																		/>
 																	</div>
@@ -882,18 +918,20 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 													<Col width="auto">
 														<Row width="auto">
 															<img
-																src={item.adSite.image}
-																alt={item.adSite.name}
+																src={getFaviconUrl(item.site.domain)}
+																alt={item.site.domain}
 																className="mr-1"
 															/>
-															<WhiteLabel text={item.adSite.name} />
+															<WhiteLabel
+																text={getNameFromDomain(item.site.domain)}
+															/>
 														</Row>
 														<a
 															target="_blank"
 															rel="noopener noreferrer"
 															className={s.AdSiteUrl}
-															href={item.adSite.url}>
-															{item.adSite.url}
+															href={item.site.domain}>
+															{item.site.domain}
 														</a>
 													</Col>
 												</tl.Cell>
@@ -945,21 +983,21 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 												<tl.Cell>
 													<p
 														id={
-															item.status === 'Активная'
+															item.status_text === 'Активная'
 																? 'green'
-																: item.status === 'Отклонена'
+																: item.status_text === 'Отклонена'
 																  ? 'red'
-																  : item.status === 'Завершена'
+																  : item.status_text === 'Завершена'
 																    ? 'gray'
-																    : item.status === 'На модерации'
+																    : item.status_text === 'На модерации'
 																      ? 'yellow'
 																      : 'gray'
 														}>
-														{item.status}
+														{item.status_text}
 													</p>
 												</tl.Cell>
 												<tl.Cell>
-													<p>{item.shows}</p>
+													<p>{item.views}</p>
 												</tl.Cell>
 											</tl.Row>
 										))}

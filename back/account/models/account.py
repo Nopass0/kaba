@@ -1,6 +1,30 @@
 from django.db import models
 
 
+class walletModel(models.Model):
+    date_creation = models.DateTimeField('Дата и время создания', auto_now_add=True)
+    balance = models.IntegerField('Баланс', default=0)
+    #Знак валюты
+    currency_sign = models.CharField('Знак валюты', max_length=1, default='₽')
+    account = models.OneToOneField('accountModel', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.pk)
+
+class walletOperationsModel(models.Model):
+    date_creation = models.DateTimeField('Дата и время создания', auto_now_add=True)
+    balance = models.IntegerField('Баланс', default=0)
+    #Знак валюты
+    currency_sign = models.CharField('Знак валюты', max_length=1, default='₽')
+    # Пополнение или списание
+    operation = models.CharField('Операция', max_length=100)
+    choices = (('+', 'Пополнение'), ('-', 'Списание'))
+    operationType = models.CharField('Тип операции', max_length=1, choices=choices, default='+')
+    wallet = models.ForeignKey('accountModel', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.pk)
+
 # Модель пользователей
 class accountModel(models.Model):
     date_creation = models.DateTimeField('Дата и время создания', auto_now_add=True)

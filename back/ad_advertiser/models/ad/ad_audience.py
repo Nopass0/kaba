@@ -6,13 +6,14 @@ from ad_advertiser.models.profile.profile import profileModel
 from ad_advertiser.models.site.site import siteModel
 from ad_advertiser.models.ad.ad_company import ad_companyModel
 from ad_advertiser.models.ad.derivative.ad_audience_choices import SOLVENCY_CHOICES
+from account.models.account import accountModel
 
 
 # 
 class ad_audienceModel(models.Model):
 
     # Профиль
-    profile = models.ForeignKey(profileModel, related_name='ad_audienceModel_profileModel', on_delete=models.CASCADE)
+    account = models.ForeignKey(accountModel, related_name='ad_audienceModel_accountModel', on_delete=models.CASCADE, blank=True, null=True)
 
     # Сайт
     site = models.ForeignKey(siteModel, related_name='ad_audienceModel_siteModel', on_delete=models.CASCADE)
