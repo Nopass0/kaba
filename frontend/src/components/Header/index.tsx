@@ -123,7 +123,8 @@ const Header: React.FC = () => {
 										className={`${s.companiesMenu} ${
 											switchPage === 1 ? s.companiesMenuActive : ''
 										}`}>
-										<span className={s.companiesText}>Настройки компании</span>
+										<span className={s.companiesText}>Компании</span>
+										{/* <span className={s.companiesNum}>0</span> */}
 									</button>
 									<button
 										onClick={() => SwitcherPages(2)}
@@ -131,7 +132,7 @@ const Header: React.FC = () => {
 											switchPage === 2 ? s.companiesMenuActive : ''
 										}`}>
 										<span className={s.companiesText}>Аудитория</span>
-										<span className={s.companiesNum}>0</span>
+										{/* <span className={s.companiesNum}>0</span> */}
 									</button>
 									<button
 										onClick={() => SwitcherPages(3)}
@@ -139,7 +140,7 @@ const Header: React.FC = () => {
 											switchPage === 3 ? s.companiesMenuActive : ''
 										}`}>
 										<span className={s.companiesText}>Баннеры</span>
-										<span className={s.companiesNum}>33</span>
+										{/* <span className={s.companiesNum}>33</span> */}
 									</button>
 								</div>
 								<div className={s.container}>

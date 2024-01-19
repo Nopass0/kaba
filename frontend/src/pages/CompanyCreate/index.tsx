@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import s from './index.module.scss'
 import LeftCompanyMenu from '../../components/LeftCompanyMenu/index'
 import Row from '../../components/Row/index'
@@ -113,7 +113,7 @@ const CompanyCreate: React.FC = () => {
 
 	const handleAddVideo = (file: File) => {}
 
-	const steps = [
+	const [stepCompany, setStepCompany] = React.useState([
 		{
 			title: 'Название компании*',
 			isDone: true,
@@ -142,7 +142,69 @@ const CompanyCreate: React.FC = () => {
 			title: 'Запрет показов',
 			isDone: false,
 		},
-	]
+	])
+
+	const [stepAudi, setStepAudi] = React.useState([
+		{
+			title: 'Название аудитории*',
+			isDone: false,
+		},
+		{
+			title: 'География показов',
+			isDone: false,
+		},
+		{
+			title: 'Категория',
+			isDone: false,
+		},
+		{
+			title: 'Интересы',
+			isDone: false,
+		},
+		{
+			title: 'Устройства',
+			isDone: false,
+		},
+		{
+			title: 'Пол и возраст',
+			isDone: false,
+		},
+	])
+
+	const [stepBanner, setStepBanner] = React.useState([
+		{
+			title: 'Название баннера*',
+			isDone: false,
+		},
+		{
+			title: 'Ссылка на рекламируемую страницу',
+			isDone: false,
+		},
+		{
+			title: 'Варианты заголовка',
+			isDone: false,
+		},
+		{
+			title: 'Варианты описаний',
+			isDone: false,
+		},
+		{
+			title: 'Дополнительные настройки',
+			isDone: false,
+		},
+
+	])
+
+	function StepSwitch() {
+		switch (switchPage){
+			case 1:
+				return stepCompany;
+			case 2:
+				return stepAudi;
+			case 3:
+				return stepBanner;
+		}
+	}
 
 	return (
 		<div className={s.wrapper}>
@@ -167,11 +229,10 @@ const CompanyCreate: React.FC = () => {
 							placeholder="Введите название..."
 							className={`${s.inputText}`}
 						/>
-						<WhiteLabel
-							className="mt-[32px]"
-							text="Ссылка на рекламируемую страницу"
-							size="16px"
-						/>
+
+						<Line width="528px" className={s.Line} />
+
+						<WhiteLabel text="Ссылка на рекламируемую страницу" size="16px" />
 						<Row
 							width="528px"
 							className="mt-[17px] w-[528px] flex justify-between ">
@@ -251,7 +312,9 @@ const CompanyCreate: React.FC = () => {
 								isMini={true}
 							/>
 						</Col>
-						<Col width="528px" className={`mt-[32px] w-[528px]`}>
+						<Line width="528px" className={s.Line} />
+
+						{/* <Col width="528px" className={`mt-[32px] w-[528px]`}>
 							<WhiteLabel
 								className="mb-[17px]"
 								text="Параметры ссылки"
@@ -282,8 +345,8 @@ const CompanyCreate: React.FC = () => {
 									</svg>
 								</div>
 							</Row>
-						</Col>
-						<Col width="528px" className={`mt-[32px] w-[528px]`}>
+						</Col> */}
+						<Col width="528px" className={` w-[528px]`}>
 							<WhiteLabel text="Начало и окончание компании*" size="16px" />
 							<Row width="528px" className={`mt-[17px] w-[260px] h-[36px]`}>
 								<div
@@ -304,7 +367,9 @@ const CompanyCreate: React.FC = () => {
 								</div>
 							</Row>
 						</Col>
-						<Col width="528px" className={`mt-[32px]`}>
+						<Line width="528px" className={s.Line} />
+
+						<Col width="528px" className={``}>
 							<Row
 								className={`flex items-center text-[#808080] hover:text-[#f2f2f2] transition-all`}>
 								<WhiteLabel className={`mr-[4px]`} text="Цель*" size="16px" />
@@ -323,6 +388,7 @@ const CompanyCreate: React.FC = () => {
 									/>
 								</svg>
 							</Row>
+
 							{/* <Row width="528px" className={``}>
 								<Select
 									className={`text-[14px] mt-[17px]`}
@@ -447,7 +513,9 @@ const CompanyCreate: React.FC = () => {
 								</Col>
 							</div>
 						</Col>
-						<Col className={`mt-[32px]`} width="528px">
+						<Line width="528px" className={s.Line} />
+
+						<Col className={``} width="528px">
 							<Row
 								className={`items-center text-[#808080] hover:text-[#f2f2f2] transition-all`}
 								width="528px">
@@ -491,7 +559,7 @@ const CompanyCreate: React.FC = () => {
 									onChange={(e) => setCWeekBudget(e.target.value)}
 									id="sumInput"
 									width="100%"
-									placeholder="Введите ссылку..."
+									placeholder=""
 									className={`${s.inputText} `}
 								/>
 								<div
@@ -501,7 +569,10 @@ const CompanyCreate: React.FC = () => {
 							</Row>
 						</Col>
 					</Col>
-					<Col className={`mt-[32px]`}>
+
+					<Col className={``}>
+						<Line width="528px" className={s.Line} />
+
 						<WhiteLabel size="16px" text="Тематические слова" />
 						<Row
 							className={`items-center mt-[17px] text-[#808080] hover:text-[#f2f2f2] transition-all`}>
@@ -591,7 +662,9 @@ const CompanyCreate: React.FC = () => {
 							</div>
 						</Row>
 					</Col>
-					<Col width="528px" className={`mt-[32px]`}>
+
+					<Col width="528px" className={``}>
+						<Line width="528px" className={s.Line} />
 						<Row className={`items-center`}>
 							<WhiteLabel
 								className={`mr-[4px]`}
@@ -696,7 +769,9 @@ const CompanyCreate: React.FC = () => {
 								</div>
 							</Row>
 						</Col>
-						<div className={`my-[32px] w-[528px] float-right `}>
+						<Line width="528px" className={s.Line} />
+
+						<div className={`mb-[32px] w-[528px] float-right `}>
 							<Row width="auto" className={`items-center float-right`}>
 								<BlueLabel
 									className={`float-right mr-[24px] cursor-pointer`}
@@ -1379,7 +1454,7 @@ const CompanyCreate: React.FC = () => {
 						</div>
 						<Line width="528px" className={s.Line} />
 
-						<WhiteLabel text="Варианты видео" className={`mb-2`} size="16px" />
+						{/* <WhiteLabel text="Варианты видео" className={`mb-2`} size="16px" />
 
 						<Row width="600px" className={s.DropVideoRow}>
 							<iframe src="https://www.youtube.com/embed/E2J1mMzdA1Y" />
@@ -1472,7 +1547,7 @@ const CompanyCreate: React.FC = () => {
 							/>
 						</Row>
 
-						<Line width="528px" className={s.Line} />
+						<Line width="528px" className={s.Line} /> */}
 
 						<WhiteLabel
 							text="Варианты изображение"
@@ -1489,7 +1564,7 @@ const CompanyCreate: React.FC = () => {
 
 						<Line width="528px" className={s.Line} />
 
-						<Col width="528px">
+						{/* <Col width="528px">
 							<ListItemButton
 								className={s.ListMoreSettings}
 								onClick={handleClick_settings}>
@@ -1515,7 +1590,7 @@ const CompanyCreate: React.FC = () => {
 							<Switch onChange={(e) => setBUnvirfied(e)} />
 						</Row>
 
-						<Line width="528px" className={s.Line} />
+						<Line width="528px" className={s.Line} /> */}
 
 						<div className={`w-[528px] float-right mb-16 `}>
 							<Row width="auto" className={`items-center float-right`}>
@@ -1597,7 +1672,7 @@ const CompanyCreate: React.FC = () => {
 				</div>
 			</div>
 			<div className={s.stepsMenu}>
-				<StepsInfo steps={steps} />
+				<StepsInfo steps={StepSwitch()} />
 			</div>
 		</div>
 	)
