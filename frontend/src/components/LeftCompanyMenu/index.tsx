@@ -23,6 +23,7 @@ import StatisticIcon from '../../assets/statistic.svg'
 import CompanyIcon from '../../assets/company.svg'
 import SitesIcon from '../../assets/sites.svg'
 import logoLeftMenu from '../../assets/logo_w_leftMenu.svg'
+import {getBalanceAPI} from '../../api/data.api'
 
 enum PagePopup {
 	Deposite,
@@ -46,6 +47,18 @@ const LeftCompanyMenu: React.FC = () => {
 	const [statisticDropDown, setStatisticDropDown] =
 		React.useState<boolean>(false)
 	const [extraDropDown, setExtraDropDown] = React.useState<boolean>(false)
+
+	const [balance, setBalance] = React.useState<number>(0)
+	const [currency, setCurrency] = React.useState<string>('₽')
+
+	useEffect(() => {
+		const getBalance = async () => {
+			const res = await getBalanceAPI(currentUser.token)
+			setBalance(res.data.balance)
+			setCurrency(res.data.currency)
+		}
+	}, [])
+
 	const createCompany = () => {
 		console.log('create company')
 
@@ -183,8 +196,15 @@ const LeftCompanyMenu: React.FC = () => {
 							</mui.Select>
 						</div>
 						<div className={s.balance}>
-							<Label isMini={true} text="Баланс:" className={s.balanceLabel} />
-							<NavLabel className={s.NavLabelBalance} text="791,429.32₽" />
+							<Label
+								isMini={true}
+								text={`Баланс:`}
+								className={s.balanceLabel}
+							/>
+							<NavLabel
+								className={s.NavLabelBalance}
+								text={`${balance}${currency}`}
+							/>
 							{isBlogger ? (
 								<Button className={s.buttonBalance} text="Вывести" />
 							) : (
@@ -284,13 +304,14 @@ const LeftCompanyMenu: React.FC = () => {
 								<></>
 							)}
 							<Link
-								to={`/${
-									!isBlogger ? 'statistics' : 'statisticBlogger'
-								}`}
+								to={`/${!isBlogger ? 'statistics' : 'statisticBlogger'}`}
 								onClick={() => setCurrentUrl('statistics')}>
 								<div
 									className={`${s.statics} ${s.companyPage} ${
-										(location.pathname === '/statistics' || location.pathname === '/statisticBlogger') ? s.active : ''
+										location.pathname === '/statistics' ||
+										location.pathname === '/statisticBlogger'
+											? s.active
+											: ''
 									}`}>
 									<div className={s.companyPageLeft}>
 										<img src={StatisticIcon} alt="Statistic" srcset="" />
@@ -323,7 +344,7 @@ const LeftCompanyMenu: React.FC = () => {
 												location.pathname === '/sites' ? s.active : ''
 											}`}>
 											<div className={s.companyPageLeft}>
-												<img src={SitesIcon} alt="Sites"/>
+												<img src={SitesIcon} alt="Sites" />
 												<span className={s.companyPageText}>Сайты</span>
 											</div>
 										</div>
@@ -410,7 +431,7 @@ const LeftCompanyMenu: React.FC = () => {
 					{/* Footer */}
 					<Col className={s.wrapperRight} width="180px">
 						<div className={s.footerCompany}>
-							<img src={logoLeftMenu} alt="Invest"/>
+							<img src={logoLeftMenu} alt="Invest" />
 							{/* <div className={s.footerAbout}>
 								<span className={s.footerAboutText}>
 									<a href="#!" className={s.footerTextLink}>

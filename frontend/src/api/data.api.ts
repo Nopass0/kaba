@@ -65,14 +65,29 @@ export const getBannersAPI = async (token: string) => {
 
 // Function to get sites data
 export const getSitesAPI = async (token: string) => {
+	try {
+		const response = await axios.get(getApiUrl('getSites'), {
+			params: {
+				token,
+			},
+		})
+		return response
+	} catch (error) {
+		console.error('Error during getSites:', error)
+		return {status: 'error'}
+	}
+}
+
+//get balance
+export const getBalanceAPI = async (token: string) => {
 	const formData = new FormData()
 	formData.append('token', token)
 
 	try {
-		const response = await axios.post(getApiUrl('getSites'), formData)
+		const response = await axios.post(getApiUrl('getBalance'), formData)
 		return response
 	} catch (error) {
-		console.error('Error during getSites:', error)
+		console.error('Error during getBalance:', error)
 		return {status: 'error'}
 	}
 }

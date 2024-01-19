@@ -2,7 +2,7 @@ import React, {ReactNode} from 'react'
 import s from './index.module.scss'
 
 interface ICol {
-	children?: ReactNode[] | ReactNode | null | undefined
+	children?: ReactNode[] | ReactNode | null | undefined | void | void[]
 	width?: string
 	className?: string // Added className prop
 	onClick?: () => void

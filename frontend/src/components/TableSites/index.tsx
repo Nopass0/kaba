@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import s from './index.module.scss'
 
 import {useTheme} from '@table-library/react-table-library/theme'
@@ -27,6 +27,7 @@ import AccountAvatar from '../AccountAvatar'
 import TableLineFooter from '../TableLineFooter'
 import StatusSitePopUp from '../popup/StatusSitePopUP/index'
 import CompaniesTablePopUp from '../popup/CompaniesTablePopUp/index'
+import {getSitesAPI} from '../../api/data.api'
 
 const list = [
 	{
@@ -60,9 +61,11 @@ for (let i = 2; i <= 50; i++) {
 	list.push(item)
 }
 
+//old --data-table-library_grid-template-columns:  30px 25% 15% 15% 12% 15% repeat(1, minmax(0, 1fr)) ;
+
 const THEME = {
 	Table: `
-  --data-table-library_grid-template-columns:  30px 25% 15% 15% 12% 15% repeat(1, minmax(0, 1fr)) ;
+  --data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) ;
  
   width: 100%;
   max-height: 810px;
@@ -201,8 +204,6 @@ enum CurrentPopup {
 }
 
 const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
-	const data = {nodes: list}
-
 	const [search, setSearch] = useState('')
 	const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setSearch(event.target.value)
@@ -211,6 +212,56 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 	const [downMenu, setDownMenu] = useState<boolean>(false)
 	const [company, setCompany] = useState<number>(0)
 	const theme = useTheme(THEME)
+
+	const user = useSelector((state: any) => state.user)
+	const token = user.token
+
+	const [sites, setSites] = useState([])
+	const data = {nodes: sites}
+
+	const getFaviconUrl = (url: string) => {
+		try {
+			let favico = `https://s2.googleusercontent.com/s2/favicons?domain=${url}&sz=8`
+			console.log(favico, 'favico')
+
+			return favico // Fallback to default location
+		} catch (error) {
+			console.error('Error fetching or parsing URL:', error)
+			return ''
+		}
+	}
+
+	const getNameFromDomain = (url: string): string => {
+		try {
+			let hostname = url
+
+			// Remove 'www.' if it exists
+			hostname = hostname.replace(/^www\./, '')
+			hostname = hostname.replace(/^https?:\/\//, '')
+			console.log(hostname)
+
+			// Get the portion before the first '.' character
+			const name = hostname.split('.')[0]
+
+			return name
+		} catch (error) {
+			console.error('Error parsing URL:', error)
+			return 'Invalid URL'
+		}
+	}
+
+	useEffect(() => {
+		async function getSites(token: string) {
+			const res = await getSitesAPI(token)
+			console.log(res.data, 'List of getSites')
+			console.log(res.data.sites, 'List of getSites')
+
+			setSites(res.data.sites)
+			return res.data
+		}
+		getSites(token)
+	}, [])
+
 	const select = useRowSelect(
 		data,
 		{
@@ -343,7 +394,7 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 										</Row>
 									</tl.HeaderCell>
 
-									<tl.HeaderCell
+									{/* <tl.HeaderCell
 										style={{fontWeight: '400', fill: '#808080'}}
 										className={s.headerCellSort_Sort}
 										sortKey="Status">
@@ -450,7 +501,7 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 												</svg>
 											</div>
 										</button>
-									</tl.HeaderCell>
+									</tl.HeaderCell> */}
 
 									<tl.HeaderCell
 										style={{fontWeight: '400', fill: '#808080'}}
@@ -493,7 +544,7 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 											</div>
 										</button>
 									</tl.HeaderCell>
-									<tl.HeaderCell
+									{/* <tl.HeaderCell
 										style={{fontWeight: '400', fill: '#808080'}}
 										className={s.headerCellSort_Sort}
 										sortKey="Status">
@@ -587,7 +638,7 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 												</svg>
 											</div>
 										</button>
-									</tl.HeaderCell>
+									</tl.HeaderCell> */}
 								</tl.HeaderRow>
 							</tl.Header>
 
@@ -600,12 +651,12 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 												<Col width="auto">
 													<Row width="auto">
 														<img
-															src={item.name.logoCourse}
+															src={getFaviconUrl(item.domain)}
 															alt=""
 															className="mr-1"
 														/>
 														<label htmlFor="checkbox_1">
-															{item.name.nameCourse}
+															{getNameFromDomain(item.domain)}
 														</label>
 													</Row>
 													<Row width="auto" className={s.rowIdCheckbox}>
@@ -635,14 +686,14 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 															target="_blank"
 															rel="noopener noreferrer"
 															className={s.LinkCourseUrl}
-															href={`${item.name.linkCourse}`}>
-															{`${item.name.linkCourse}`}
+															href={`${item.domain}`}>
+															{`${item.domain}`}
 														</a>
 													</Row>
 												</Col>
 											</Row>
 										</tl.Cell>
-										<tl.Cell>
+										{/* <tl.Cell>
 											<mui.Select
 												className={s.muiSelectClicks}
 												renderValue={(
@@ -694,7 +745,7 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 												</p>
 												<Label isMini={true} text={`ID ${item.id}`} />
 											</Col>
-										</tl.Cell>
+										</tl.Cell> */}
 
 										<tl.Cell>
 											<mui.Select
@@ -706,7 +757,7 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 														return (
 															<>
 																<p className={s.DetailsCell}>
-																	{item.companies}
+																	{item.companies.length}
 																</p>
 															</>
 														)
@@ -714,18 +765,20 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 													// return `${option.label}`
 													return (
 														<>
-															<p className={s.DetailsCell}>{item.companies}</p>
+															<p className={s.DetailsCell}>
+																{item.companies.length}
+															</p>
 														</>
 													)
 												}}>
 												<mui.Option
 													value={1}
 													className={`cursor-pointer z-10 mt-1`}>
-													<CompaniesTablePopUp />
+													<CompaniesTablePopUp companies={item.companies} />
 												</mui.Option>
 											</mui.Select>
 										</tl.Cell>
-										<tl.Cell>
+										{/* <tl.Cell>
 											<p>{item.access}</p>
 										</tl.Cell>
 										<tl.Cell>
@@ -786,7 +839,7 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 													{Object(users).length} (625)
 												</p>
 											</Row>
-										</tl.Cell>
+										</tl.Cell> */}
 									</tl.Row>
 								))}
 							</tl.Body>

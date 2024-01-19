@@ -3,7 +3,7 @@ import s from './index.module.scss'
 
 interface ILine {
 	width?: string
-	className: string
+	className?: string
 }
 
 const Line: React.FC<ILine> = ({width, className}: ILine) => {

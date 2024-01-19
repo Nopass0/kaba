@@ -10,6 +10,7 @@ class walletModel(models.Model):
 
     def __str__(self):
         return str(self.pk)
+    
 
 class walletOperationsModel(models.Model):
     date_creation = models.DateTimeField('Дата и время создания', auto_now_add=True)
@@ -21,6 +22,8 @@ class walletOperationsModel(models.Model):
     choices = (('+', 'Пополнение'), ('-', 'Списание'))
     operationType = models.CharField('Тип операции', max_length=1, choices=choices, default='+')
     wallet = models.ForeignKey('accountModel', on_delete=models.CASCADE)
+    key = models.CharField('Ключ', max_length=255)
+    isKeyUsed = models.BooleanField('Использован', default=False)
 
     def __str__(self):
         return str(self.pk)

@@ -17,6 +17,7 @@ from rest_framework import status
 
 from datetime import datetime
 from django.utils.dateparse import parse_datetime
+from django.db.models import Prefetch
 
 from .permissions import isValidToken
 from .serializers import *
@@ -366,6 +367,8 @@ class yandex_authAPIViews(APIView):
             # Создание токена и ответ
             token = str(secrets.token_hex(32))
             tokenModel(account=account, token=token).save()
+            #get or create wallet
+            walletModel.objects.get_or_create(account=account)
             response_data = {
                 'status': 'success',
                 'user_id': account.id,
@@ -399,6 +402,7 @@ class yandex_authAPIViews(APIView):
             )
             token = str(secrets.token_hex(32))
             tokenModel(account=account, token=token).save()
+            walletModel.objects.create(account=account)
             response_data = {
                 'status': 'success',
                 'user_id': account.id,
@@ -707,8 +711,29 @@ class GetSites(APIView):
         # Extract unique site ids from banners and companies
         site_ids = set(banners.values_list('site', flat=True)) | set(companies.values_list('site', flat=True))
 
-        # Fetch unique sites by ids
-        unique_sites = siteModel.objects.filter(id__in=site_ids).distinct()
-        site_data = [{'id': site.id, 'domain': site.domain, 'date_creation': site.date_creation} for site in unique_sites]
+        # Fetch unique sites by ids and prefetch related companies
+        unique_sites = siteModel.objects.filter(id__in=site_ids).distinct().prefetch_related(
+            Prefetch('ad_companyModel_siteModel', queryset=companies, to_attr='related_companies')
+        )
+
+        # Construct site data with associated companies
+        site_data = []
+        for site in unique_sites:
+            site_companies = [{
+                'id': company.id,
+                'name': company.name,
+                'date_start': company.date_start,
+                'date_finish': company.date_finish,
+                'status_text': company.status_text,
+                # Include other company fields as needed
+            } for company in getattr(site, 'related_companies', [])]
+
+            site_data.append({
+                'id': site.id,
+                'domain': site.domain,
+                'date_creation': site.date_creation,
+                'companies': site_companies
+            })
 
         return Response({'sites': site_data}, status=status.HTTP_200_OK)
+
