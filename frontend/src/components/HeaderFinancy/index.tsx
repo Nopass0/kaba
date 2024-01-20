@@ -1,4 +1,4 @@
-import React, {ReactNode} from 'react'
+import React, {ReactNode, useEffect} from 'react'
 import s from './index.module.scss'
 import NavLabel from '../NavLabel/index'
 import Row from '../Row'
@@ -10,6 +10,8 @@ import ToolTip from '../ToolTip/index'
 import PopUpWrapper from '../PopUpWrapper'
 import TableCol from '../popup/TableColsPopUp'
 import Deposite from '../popup/DepositePopUp'
+import {useSelector} from 'react-redux'
+import {getBalanceAPI} from '../../api/data.api'
 
 interface IHeaderFinancy {
 	children?: ReactNode[] | ReactNode
@@ -28,6 +30,17 @@ const HeaderFinancy: React.FC<IHeaderFinancy> = ({
 	connect,
 }: IHeaderFinancy) => {
 	const [currentPopup, setCurrentPopup] = React.useState(CurrentPopup.None)
+	const user = useSelector((state: any) => state.user)
+	const token = user?.token
+	const [balance, setBalance] = React.useState(0)
+
+	useEffect(() => {
+		const getBalance = async () => {
+			let res = await getBalanceAPI(token)
+			setBalance(res.data.balance)
+		}
+		getBalance()
+	}, [])
 
 	return (
 		<div className={s.wrapper + ' ' + className}>
@@ -87,8 +100,8 @@ const HeaderFinancy: React.FC<IHeaderFinancy> = ({
 							text="Пополнить"
 						/>
 					</Row>
-					<NavLabel className={s.NavLabel} text="791,429.32₽" />
-					<Label isMini={true} text="823,429.32₽ с НДС " />
+					<NavLabel className={s.NavLabel} text={`${balance}₽`} />
+					<Label isMini={true} text={`${Number(balance) * 1.2}₽ с НДС`} />
 				</div>
 				<div className={s.blockRight}>
 					<Row width="auto" className={s.blockHeader}>

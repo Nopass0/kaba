@@ -10,6 +10,8 @@ import CheckBox from '../../CheckBox'
 import NavLabel from '../../NavLabel/index'
 import Line from '../../Line'
 import ButtonSVG from '../../ButtonSVG'
+import {deposit, depositApply} from '../../../api/payment.api'
+import {useSelector} from 'react-redux'
 
 interface IDeposite {
 	// className?: string // Added className prop
@@ -24,12 +26,37 @@ const Deposite: React.FC<IDeposite> = ({
 	onExit,
 }: IDeposite) => {
 	// const colClassName = `col ${className}`; // Combine className with "col" class using s[className]
-	const [value, setValue] = React.useState('')
+	const [value, setValue] = React.useState('0')
+	const user = useSelector((state: any) => state.user)
+	const token = user?.token
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const newValue = event.target.value.replace(/[^0-9]/g, '') // remove non-digit characters
-		setValue(newValue)
+		setValue(hormalizeValue(newValue))
 	}
+
+	const hormalizeValue = (value: string) => {
+		value = value.replace(/[^0-9]/g, '') // remove non-digit characters
+		//remove leading zeros
+		value = value.replace(/^0+/, '')
+		return value
+	}
+
+	const handleDeposite = async () => {
+		console.log('Deposite', value)
+
+		//request deposit
+		let req = await deposit(token, Number(value))
+		localStorage.setItem('invoice_id', req.data.invoice_id)
+		//open in new tab
+		window.open(req.data.url, '_blank')
+
+		//close popup popup
+		onExit()
+
+		console.log(req)
+	}
+
 	return (
 		<div className={s.wrapper}>
 			<Col width="248px" className={s.DepositeCol}>
@@ -60,7 +87,7 @@ const Deposite: React.FC<IDeposite> = ({
 				<Line width="280px" className={s.Line} />
 				<NavLabel
 					className={`${s.NavLabel} ${s.NavLabelSum}`}
-					text={`Итого: ${sum_in_rub}₽`}
+					text={`Итого: ${value}₽`}
 				/>
 				<Label isMini={true} text="Укажите сумму" />
 				<Line width="280px" className={s.Line} />
@@ -74,7 +101,12 @@ const Deposite: React.FC<IDeposite> = ({
 				</div>
 				<div className={s.ButtonWrapper}>
 					<div></div>
-					<ButtonSVG width="120px" text="Оплатить" className={s.ButtonDep} />
+					<ButtonSVG
+						onClick={handleDeposite}
+						width="120px"
+						text="Оплатить"
+						className={s.ButtonDep}
+					/>
 				</div>
 			</Col>
 		</div>

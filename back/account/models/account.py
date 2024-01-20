@@ -21,9 +21,9 @@ class walletOperationsModel(models.Model):
     operation = models.CharField('Операция', max_length=100)
     choices = (('+', 'Пополнение'), ('-', 'Списание'))
     operationType = models.CharField('Тип операции', max_length=1, choices=choices, default='+')
-    wallet = models.ForeignKey('accountModel', on_delete=models.CASCADE)
-    key = models.CharField('Ключ', max_length=255)
-    isKeyUsed = models.BooleanField('Использован', default=False)
+    wallet = models.ForeignKey('walletModel', on_delete=models.CASCADE)
+    invoice_id = models.CharField('Ключ', max_length=255, blank=True, null=True)
+    isConfirm = models.BooleanField('Использован', default=False)
 
     def __str__(self):
         return str(self.pk)

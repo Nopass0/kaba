@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import s from './index.module.scss'
 
 import {useTheme} from '@table-library/react-table-library/theme'
@@ -16,6 +16,11 @@ import Button from '../Button'
 import DatePicker from 'react-multi-date-picker'
 import InputIcon from 'react-multi-date-picker/components/input_icon'
 import Col from '../Col'
+import {format, parseISO} from 'date-fns'
+import {ru} from 'date-fns/locale'
+
+import {getUserWalletOperationsAPI} from '../../api/payment.api'
+import {useSelector} from 'react-redux'
 
 // import './index.css'
 
@@ -235,7 +240,38 @@ interface ITableFinancy {
 }
 
 const TableFinancy: React.FC<ITableFinancy> = ({}: ITableFinancy) => {
-	const data = {nodes: list}
+	const [data, setData] = useState({nodes: []}) // Изменено с list на useState
+	const [isLoading, setIsLoading] = useState(true) // Состояние загрузки
+	const user = useSelector((state: any) => state.user)
+	const token = user?.token
+
+	useEffect(() => {
+		const fetchData = async () => {
+			setIsLoading(true)
+			try {
+				const response = await getUserWalletOperationsAPI(token)
+				if (response.status === 200) {
+					const formattedData = response.data.map((item) => ({
+						...item,
+						date_creation: format(
+							parseISO(item.date_creation),
+							'd MMM yyyy, HH:mm',
+							{locale: ru},
+						),
+					}))
+					setData({nodes: formattedData}) // Предполагается, что API возвращает массив операций
+				} else {
+					console.error('Error fetching data:', response.status)
+				}
+			} catch (error) {
+				console.error('Error fetching data:', error)
+			}
+			setIsLoading(false)
+		}
+
+		fetchData()
+		console.log(data, 'data')
+	}, []) // Пустой массив зависимостей гарантирует, что данные загружаются только при монтировании компонента
 
 	const [search, setSearch] = useState('')
 	const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -497,18 +533,29 @@ const TableFinancy: React.FC<ITableFinancy> = ({}: ITableFinancy) => {
 								{tableList.map((item: any) => (
 									<tl.Row key={item.id} item={item}>
 										<tl.Cell>
-											<p>{item.date}</p>
+											<p>{item.date_creation}</p>
 										</tl.Cell>
 										<tl.Cell>
-											<p>{item.operation}</p>
+											{item.operation === '' ? (
+												<p className={`text-[#808080]`}>Ожидание платежа</p>
+											) : (
+												<p>{item.operation}</p>
+											)}
 										</tl.Cell>
 										<tl.Cell>
-											<p id={item.Sum.charAt(0) === '+' ? 'green' : ''}>
-												{item.Sum}
+											<p
+												id={
+													item.operationType.charAt(0) === '+' ? 'green' : ''
+												}>
+												{item.operationType}
+												{item.balance}
+												{item.currency_sign}
 											</p>
 										</tl.Cell>
 										<tl.Cell>
-											<p className={s.DetailsCell}>{item.Details}</p>
+											<p className={s._DetailsCell}>
+												Инвойс №{item.invoice_id}
+											</p>
 										</tl.Cell>
 									</tl.Row>
 								))}

@@ -26,6 +26,7 @@ import AcceptCode from './pages/AcceptCode'
 import CompanyCreate from './pages/CompanyCreate/index'
 import ErrorPage from './pages/ErrorPage'
 import {Navigate} from 'react-router-dom'
+import {depositApply} from './api/payment.api'
 
 let defaultState = {
 	// user: {
@@ -123,7 +124,23 @@ let defaultState = {
 // console.log(defaultState, 'default');
 // console.log(isLocalStorage, 'LocalStorage')
 
-//Save data or get data to defaultState(Redux) from localStorage if it exists
+//Save data or get data to defaultState(Redux) from localStorage if it exist
+
+//if field invoice_id exist in localStorage then ...
+const checkDeposit = async (iid: string) => {
+	console.log(iid, 'iid')
+	let res = await depositApply(defaultState.user.token, iid)
+	console.log(res, 'res')
+	if (res.data.status == 'ok') {
+		//delete invoice_id from localStorage
+		localStorage.removeItem('invoice_id')
+	}
+}
+
+if (localStorage.getItem('invoice_id')) {
+	let iid = localStorage.getItem('invoice_id')
+	checkDeposit(iid)
+}
 
 console.log(await checkAPI(), 'CheckAPI')
 const reducer = (state = defaultState, action: any) => {

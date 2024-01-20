@@ -28,6 +28,14 @@ urlpatterns = [
     # GetSites
     path('getSites', GetSites.as_view()),
     
+    #deposit
+    path('deposit', depositAPIViews.as_view()),
+    #deposit apply
+    path('deposit_apply', depositApplyAPIViews.as_view()),
+    
+    #get all operations
+    path('getOperations', getWalletOperationsAPIViews.as_view()),
+    
     # AddCompany
     path('addCompany', AddCompany.as_view()),
 

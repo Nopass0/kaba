@@ -119,6 +119,10 @@ YANDEX_CLIENT_ID = "c850608ba62d47d6a780eaef664b1d04"
 YANDEX_SECRET_KEY = "460af6e6f1c646409303ec8459a6136e"
 YANDEX_REDIRECT = "http://localhost:5001/login/"
 
+#Paykeeper
+PAYKEEPER_LOGIN = "demo"
+PAYKEEPER_PASSWORD = "demo"
+PAYKEEPER_URL = "https://demo.paykeeper.ru"
 
 # статистика
 STATIC_URL = '/static/'

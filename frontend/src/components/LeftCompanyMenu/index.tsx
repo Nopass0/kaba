@@ -54,9 +54,13 @@ const LeftCompanyMenu: React.FC = () => {
 	useEffect(() => {
 		const getBalance = async () => {
 			const res = await getBalanceAPI(currentUser.token)
+			console.log(res.data)
+
 			setBalance(res.data.balance)
 			setCurrency(res.data.currency)
 		}
+
+		getBalance()
 	}, [])
 
 	const createCompany = () => {

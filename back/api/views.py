@@ -1,3 +1,4 @@
+import base64
 import json
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -521,7 +522,7 @@ class getCompaniesAPIViews(APIView):
             # ad_statusModel and ad_companyModel many-to-many relation. Get all ad_statusModel objects for this company
             company["ad_status"] = list(ad_statusModel.objects.filter(companies=company["id"]).values())
         
-            print(companies, user, site)
+            # print(companies, user, site)
         return Response(companies, status=status.HTTP_200_OK)
     
 
@@ -737,3 +738,199 @@ class GetSites(APIView):
 
         return Response({'sites': site_data}, status=status.HTTP_200_OK)
 
+class depositAPIViews(APIView):
+    def post(self, request):
+        # get user by token
+        token = request.data.get('token', '')
+        if not token:
+            return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        current_token = tokenModel.objects.filter(token=token)
+        if not current_token.exists():
+            return Response({'error': 'token is invalid.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user = current_token.first().account
+        currency = walletModel.objects.filter(account=user.id).first().currency_sign
+        
+        pay_amount = request.data.get('pay_amount', '')
+        if not pay_amount:
+            return Response({'error': 'pay_amount is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        pay_amount = float(pay_amount)
+        
+        clientId = user.id
+        service_name = "Пополнение баланса"
+        
+        data = {
+            "clientId": str(clientId),
+            "service_name": service_name,
+            "pay_amount": str(pay_amount),
+            "token": ""
+        }
+        
+        url = PAYKEEPER_URL + "/change/invoice/preview/"
+        
+        #base64 encoded login and password (login:password) for basic auth
+        encoded_login = base64.b64encode(bytes(PAYKEEPER_LOGIN + ":" + PAYKEEPER_PASSWORD, "utf-8")).decode("utf-8")
+        print(encoded_login, "Encoded login")
+        headers = {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Basic " + encoded_login
+        }
+        
+        token_paykeeper = ""
+        
+        #get token using only headers
+        response = requests.post(PAYKEEPER_URL + "/info/settings/token/", headers=headers)
+        if response.status_code == 200:
+            print(response.json())
+            token_paykeeper = response.json()["token"]
+            data["token"] = str(token_paykeeper)
+
+        #check token
+        if token_paykeeper == "":
+            return Response({'error': 'paykeeper token is invalid.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        invoice_id = ""
+        invoice_url = ""
+        print(token_paykeeper, "Token paykeeper")
+        
+        #response to url by using token in body, and headers applyed
+        # data = json.dumps(data)
+        response = requests.post(url, headers=headers, data=data)
+        if response.status_code == 200:
+            print(response.json(), "Data:", data)
+            invoice_id = response.json()["invoice_id"]
+            invoice_url = response.json()["invoice_url"]
+        
+        if invoice_id == "":
+            return Response({'error': 'paykeeper invoice id is invalid.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if invoice_url == "":
+            return Response({'error': 'paykeeper invoice url is invalid.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        wallet = walletModel.objects.filter(account=user.id).first()
+        walletOperationsModel.objects.create(
+            wallet=wallet,
+            balance=pay_amount,
+            invoice_id=invoice_id,
+            isConfirm=False
+        )
+        
+        return Response({'url': invoice_url, 'invoice_id': invoice_id, 'status': 'ok'}, status=status.HTTP_200_OK)
+    
+class depositApplyAPIViews(APIView):
+    def post(self, request):
+        # Получение пользователя по токену
+        token = request.data.get('token', '')
+        if not token:
+            return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        current_token = tokenModel.objects.filter(token=token)
+        if not current_token.exists():
+            return Response({'error': 'token is invalid.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user = current_token.first().account
+        currency = walletModel.objects.filter(account=user.id).first().currency_sign
+        
+        invoice_id = request.data.get('invoice_id', '')
+        
+        if not invoice_id:
+            return Response({'error': 'invoice_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        wallet = walletModel.objects.filter(account=user.id).first()
+        
+        print("Start invoice_id", invoice_id)
+        
+        # Кодированные логин и пароль для базовой аутентификации
+        encoded_login = base64.b64encode(bytes(PAYKEEPER_LOGIN + ":" + PAYKEEPER_PASSWORD, "utf-8")).decode("utf-8")
+        
+        headers = {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": "Basic " + encoded_login
+        }
+        
+        token_paykeeper = ""
+        
+        body_data = {
+            "token": token_paykeeper,
+            "id": invoice_id
+        }
+        print(body_data, "body_data")
+        
+        # Получение токена используя только заголовки
+        response = requests.get(PAYKEEPER_URL + "/info/settings/token/", headers=headers)
+        if response.status_code == 200:
+            token_paykeeper = response.json()["token"]
+            body_data = {
+                "token": token_paykeeper
+            }
+        
+        # Проверка токена
+        if token_paykeeper == "":
+            return Response({'error': 'paykeeper token is invalid.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        operation = walletOperationsModel.objects.filter(invoice_id=invoice_id, wallet=wallet).first()
+        
+        # Если операция уже была подтверждена, возвращаем статус ok
+        if operation.isConfirm:
+            return Response({'status': 'ok'}, status=status.HTTP_200_OK)
+        
+        url = PAYKEEPER_URL + "/info/invoice/byid/?id=" + invoice_id
+        print(url)
+        
+        response = requests.get(url, headers=headers, json=body_data, data=body_data)
+        if response.status_code == 200:
+            print(response.json())
+            if response.json()["status"] == "paid":
+                isConfirm = True
+            else:
+                isConfirm = False
+        
+        if not isConfirm:
+            return Response({'error': 'paykeeper error.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Пополнение баланса происходит только если операция не была подтверждена ранее.
+        if not operation.isConfirm:
+            wallet.balance += operation.balance
+            wallet.save()
+        
+            operation.isConfirm = True
+            operation.operationType = '+'
+            operation.operation = 'Пополнение'
+            operation.save()
+        
+        return Response({'status': 'ok'}, status=status.HTTP_200_OK)
+
+class WalletOperationsView(APIView):
+    def get(self, request):
+        token = request.data.get('token', '')
+        if not token:
+            return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Получение данных пользователя по токену (замените следующую строку своей логикой получения пользователя)
+        user = accountModel.objects.filter(token=token).first()  # Реализуйте функцию get_user_by_token(token)
+        if user is None:
+            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        wallet = walletModel.objects.filter(account=user).first()
+        if not wallet:
+            return Response({'error': 'Wallet not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        operations = walletOperationsModel.objects.filter(wallet=wallet)
+        
+        # Формируем список операций для ответа
+        operations_list = []
+        for operation in operations:
+            operation_data = {
+                'date_creation': operation.date_creation,
+                'balance': operation.balance,
+                'currency_sign': operation.currency_sign,
+                'operation': operation.operation,
+                'operationType': operation.operationType,
+                'invoice_id': operation.invoice_id,
+                'isConfirm': operation.isConfirm
+            }
+            operations_list.append(operation_data)
+        
+        return Response({'operations': operations_list}, status=status.HTTP_200_OK)
