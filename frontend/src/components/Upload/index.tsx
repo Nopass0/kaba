@@ -86,6 +86,7 @@ const Upload: React.FC<IUpload> = ({
 				height: height ? height : '166px',
 				minHeight: height ? height : '166px',
 				minWidth: width ? width : '166px',
+				cursor: 'pointer',
 			}}
 			onChange={onChange}
 			ref={component}
@@ -99,11 +100,12 @@ const Upload: React.FC<IUpload> = ({
 			<input type="file" name="" id="" hidden />
 			<Col width="auto" className={s.overlay}>
 				<WhiteLabel
-					className="w-full"
+					className="w-full cursor-pointer"
 					text={`Загрузить ${getFileTypeName()}`}
 				/>
 				{!isMini && (
 					<Label
+						className="cursor-pointer"
 						text="Выберите файл на компьютере или перетащите его"
 						isMini={true}
 					/>

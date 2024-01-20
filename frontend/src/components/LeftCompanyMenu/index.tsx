@@ -239,11 +239,11 @@ const LeftCompanyMenu: React.FC = () => {
 						<div className={s.companyListPages}>
 							{isBlogger ? (
 								<Link
-									to="/mybanners"
+									to="/ "
 									onClick={() => setCurrentUrl('mybanners')}>
 									<div
 										className={`${s.companies} ${s.companyPage} ${
-											location.pathname === '/mybanners' ? s.active : ''
+											location.pathname === '/' ? s.active : ''
 										}`}>
 										<div className={s.companyPageLeft}>
 											<svg

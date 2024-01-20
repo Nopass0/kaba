@@ -27,6 +27,9 @@ const Header: React.FC = () => {
 	const [isRateOpen, setisRateOpen] = React.useState(false)
 	const [switchPage, setSwitchPage] = React.useState<number>(1)
 
+	
+	let switchPageSelector = useSelector((state: any) => state.SwitchCreatePage)
+
 	const RateOpenRef = useRef()
 	const RateOpenButtonRef = useRef()
 
@@ -90,9 +93,11 @@ const Header: React.FC = () => {
 	}, [isProfileOpen, isNotificationOpen, isStatAcc, isRateOpen])
 
 	const SwitcherPages = (page: number) => {
-		setSwitchPage(page)
-		dispatch({type: 'setSwitchCreatePage', SwitchCreatePage: page})
-		console.log(switchPage, page, 'PAGE')
+			setSwitchPage(page)
+			dispatch({type: 'setSwitchCreatePage', SwitchCreatePage: page})
+		
+		console.log(switchPage, 
+			'SWITCHPAGE\n', page, 'PAGE\n', switchPageSelector, 'SWITCHPAGESELECTOR')
 	}
 
 	return (

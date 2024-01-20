@@ -16,6 +16,8 @@ interface IInput {
 	height?: string
 	onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 	value?: string
+	isDigits?: boolean
+	onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void
 }
 
 const Input: React.FC<IInput> = ({
@@ -33,10 +35,13 @@ const Input: React.FC<IInput> = ({
 	bgColor,
 	height,
 	value,
+	isDigits,
+	onKeyDown,
 }: IInput) => {
 	const [lengthString, setLengthString] = React.useState<number>(
 		maximumLength || 0,
 	)
+	const [valueDigit, setValueDigit] = React.useState('')
 
 	return (
 		<div
@@ -44,11 +49,17 @@ const Input: React.FC<IInput> = ({
 			className={className + ' ' + s.inputContainer}>
 			<div style={{width: width, minWidth: minWidth}} className={s.inputRow}>
 				<input
-					autoComplete='off'
+
+					autoComplete="off"
 					maxLength={maximumLength}
 					onChange={(event) => {
 						onChange(event)
 						setLengthString(maximumLength! - event.target.value.length)
+						if (isDigits) {
+							setValueDigit(event.target.value.replace(/[^0-9]/g, ''))
+						
+							
+						}
 					}}
 					type={isSecure ? 'password' : 'text'}
 					style={Object.assign(
@@ -60,7 +71,8 @@ const Input: React.FC<IInput> = ({
 					className={s.inputText + ' ' + (errorMsg ? s.error : '')}
 					name={id ? `input-${id}` : 'input'}
 					id={id ? `input-${id}` : 'input'}
-					value={value}
+					value={isDigits ? valueDigit : value}
+					onKeyDown={onKeyDown}
 				/>
 				{(maximumLength ? maximumLength : 0) &&
 				(isShowMaxLength ? isShowMaxLength : 0) ? (
