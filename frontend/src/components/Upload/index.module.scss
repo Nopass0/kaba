@@ -1,4 +1,5 @@
 .imageBlock {
+	
 	border-radius: 10px;
 	border: 1px dashed #333;
 	background: #1a1a1a;
@@ -11,6 +12,7 @@
 }
 
 .overlay {
+	cursor: pointer;
 	display: flex;
 	justify-content: center;
 	text-align: center;

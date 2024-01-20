@@ -19,14 +19,17 @@ import Image from '../../components/Image'
 import Upload from '../../components/Upload'
 import {FileType, TGenderNAge} from '../../types'
 import Select from '../../components/Select/index'
-import {useSelector} from 'react-redux'
+import {useSelector, useDispatch} from 'react-redux'
 import {addCompanyAPI} from '../../api/data.api'
-
+import DatePicker from 'react-multi-date-picker'
+import InputIcon from 'react-multi-date-picker/components/input_icon'
+import * as mui from '@mui/base'
 const CompanyCreate: React.FC = () => {
 	// const [value, setValue] = React.useState<any>()
 	// const [value2, setValue2] = React.useState<any>()
 	// const [value3, setValue3] = React.useState<any>()
 	// const [switchPage, setSwitchPage] = React.useState<number>(1)
+	const dispatch = useDispatch()
 
 	let switchPage = useSelector((state: any) => state.SwitchCreatePage)
 
@@ -80,6 +83,22 @@ const CompanyCreate: React.FC = () => {
 	const user = useSelector((state: any) => state.user)
 	const token = user.token
 
+	const weekDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
+	const months = [
+		'Январь',
+		'Февраль',
+		'Март',
+		'Апрель',
+		'Май',
+		'Июнь',
+		'Июль',
+		'Август',
+		'Сентябрь',
+		'Октябрь',
+		'Ноябрь',
+		'Декабрь',
+	]
+
 	const handleClick_settings = () => {
 		setOpen_settings(!open_settings)
 	}
@@ -89,25 +108,39 @@ const CompanyCreate: React.FC = () => {
 	}
 
 	const [images, setImages] = React.useState<string[]>([
-		'https://placehold.co/166x166',
-		'https://placehold.co/166x166',
-		'https://placehold.co/166x166',
+		// 'https://placehold.co/166x166',
+		// 'https://placehold.co/166x166',
+		// 'https://placehold.co/166x166',
 	])
 
-	const textArea = document.getElementById('desc')
+	// const textArea = document.getElementById('desc')
 
-	textArea?.addEventListener('keyup', (e) => {
-		if (e.key === 'Enter' && textAreaValue !== '') {
-			setBOptionDescText((prev) => [...prev, textAreaValue])
-			console.log('VALUE TEXT')
-			e.preventDefault()
-			setTextAreaValue('')
-		}
-	})
+	// textArea?.addEventListener('keyup', (e) => {
+	// 	if (e.key === 'Enter' && textAreaValue !== '') {
+	// 		setBOptionDescText((prev) => [...prev, textAreaValue])
+	// 		console.log('VALUE TEXT')
+	// 		e.preventDefault()
+	// 		setTextAreaValue('')
+	// 	}
+	// })
 
 	const handleAddImage = (file: File) => {
 		//add path to image
 		setImages([...images, URL.createObjectURL(file)])
+		// setStepBanner((prevStepBanner) =>
+		// 	prevStepBanner.map((step) =>
+		// 		step.title === 'Варианты изображение'
+		// 			? {...step, isDone: true}
+		// 			: step,
+		// 	),
+		// )
+		// setStepBanner((prevStepBanner) =>
+		// 		prevStepBanner.map((step) =>
+		// 			step.title === 'Варианты изображение'
+		// 				? {...step, isDone: false}
+		// 				: step,
+		// 		),
+		// )
 	}
 	console.log(globalState, 'HLOBAL STATE')
 
@@ -116,19 +149,19 @@ const CompanyCreate: React.FC = () => {
 	const [stepCompany, setStepCompany] = React.useState([
 		{
 			title: 'Название компании*',
-			isDone: true,
+			isDone: false,
 		},
 		{
 			title: 'Ссылка на рекламируемую страницу*',
-			isDone: true,
+			isDone: false,
 		},
 		{
 			title: 'Начало и окончание компании*',
-			isDone: true,
+			isDone: false,
 		},
 		{
 			title: 'Цель*',
-			isDone: true,
+			isDone: false,
 		},
 		{
 			title: 'Недельный бюджет',
@@ -136,7 +169,7 @@ const CompanyCreate: React.FC = () => {
 		},
 		{
 			title: 'Тематические слова',
-			isDone: true,
+			isDone: false,
 		},
 		{
 			title: 'Запрет показов',
@@ -177,10 +210,6 @@ const CompanyCreate: React.FC = () => {
 			isDone: false,
 		},
 		{
-			title: 'Ссылка на рекламируемую страницу',
-			isDone: false,
-		},
-		{
 			title: 'Варианты заголовка',
 			isDone: false,
 		},
@@ -189,22 +218,22 @@ const CompanyCreate: React.FC = () => {
 			isDone: false,
 		},
 		{
-			title: 'Дополнительные настройки',
+			title: 'Варианты изображение',
 			isDone: false,
 		},
-
 	])
 
 	function StepSwitch() {
-		switch (switchPage){
+		switch (switchPage) {
 			case 1:
-				return stepCompany;
+				return stepCompany
 			case 2:
-				return stepAudi;
+				return stepAudi
 			case 3:
-				return stepBanner;
+				return stepBanner
 		}
 	}
+	console.log(stepCompany, 'STPEPEP')
 
 	return (
 		<div className={s.wrapper}>
@@ -224,7 +253,26 @@ const CompanyCreate: React.FC = () => {
 							size="16px"
 						/>
 						<Input
-							onChange={(e) => setCName(e.target.value)}
+							onChange={(e) => {
+								setCName(e.target.value)
+								if (e.target.value.length > 0) {
+									setStepCompany((prevStepCompany) =>
+										prevStepCompany.map((step) =>
+											step.title === 'Название компании*'
+												? {...step, isDone: true}
+												: step,
+										),
+									)
+								} else {
+									setStepCompany((prevStepCompany) =>
+										prevStepCompany.map((step) =>
+											step.title === 'Название компании*'
+												? {...step, isDone: false}
+												: step,
+										),
+									)
+								}
+							}}
 							width="100%"
 							placeholder="Введите название..."
 							className={`${s.inputText}`}
@@ -237,7 +285,37 @@ const CompanyCreate: React.FC = () => {
 							width="528px"
 							className="mt-[17px] w-[528px] flex justify-between ">
 							<Input
-								onChange={(e) => setCLink(e.target.value)}
+								onChange={(e) => {
+									setCLink(e.target.value)
+									if (e.target.value.length > 0) {
+										setStepCompany((prevStepCompany) =>
+											prevStepCompany.map((step) =>
+												step.title === 'Ссылка на рекламируемую страницу*'
+													? {...step, isDone: true}
+													: step,
+											),
+										)
+									} else {
+										setStepCompany((prevStepCompany) =>
+											prevStepCompany.map((step) =>
+												step.title === 'Ссылка на рекламируемую страницу*'
+													? {...step, isDone: false}
+													: step,
+											),
+										)
+									}
+								}}
+								onKeyDown={(e) => {
+									if (e.key === 'Enter' && !e.repeat) {
+										e.preventDefault
+										console.log("ENTER PRESS");
+										let link_target = document.getElementById('link_target')
+										
+										e.target.value = ''
+										
+									} 
+								}}
+
 								id="urlInput"
 								width="100%"
 								placeholder="Введите ссылку..."
@@ -267,6 +345,7 @@ const CompanyCreate: React.FC = () => {
 							</div>
 						</Row>
 						<Col
+						iD='link_target'
 							width="528px"
 							className={`mt-[8px] w-[528px] h-[48px] flex flex-col rounded-[10px] border border-[#262626]`}>
 							<Row className={`ml-[16px] mt-[4px] flex items-center w-full`}>
@@ -352,10 +431,25 @@ const CompanyCreate: React.FC = () => {
 								<div
 									className={`mr-[8px] border rounded-[10px] flex justify-between border-[#262626] h-[36px] w-[260px]`}>
 									<Label className={`my-[5px] ml-[16px]`} text="Начало:" />
-									<WhiteLabel
+									{/* <WhiteLabel
 										className={`mr-[18px] my-[5px]`}
 										text="08.11.2023"
-									/>
+									/> */}
+									<div className={s.DatePicker}>
+										<DatePicker
+											weekDays={weekDays}
+											months={months}
+											numberOfMonths={1}
+											fixMainPosition={true}
+											arrow={false}
+											highlightToday={false}
+											// animations={[
+											//     opacity({ from: 0.1, to: 1, duration: 400 })
+
+											// ]}
+											// render={<InputIcon />}
+										/>
+									</div>
 								</div>
 								<div
 									className={`border rounded-[10px] flex justify-between border-[#262626] h-[36px] w-[260px]`}>
@@ -479,7 +573,30 @@ const CompanyCreate: React.FC = () => {
 											<Label className={``} text="До: " />
 											<Row className={`w-[114px] ml-[8px]`}>
 												<Input
-													onChange={(e) => setCTarget(e.target.value)}
+													onChange={(e) => {
+														setCTarget(e.target.value)
+														if (
+															e.target.value.length > 0 &&
+															/^\d+$/.test(e.target.value)
+														) {
+															setStepCompany((prevStepCompany) =>
+																prevStepCompany.map((step) =>
+																	step.title === 'Цель*'
+																		? {...step, isDone: true}
+																		: step,
+																),
+															)
+														} else {
+															setStepCompany((prevStepCompany) =>
+																prevStepCompany.map((step) =>
+																	step.title === 'Цель*'
+																		? {...step, isDone: false}
+																		: step,
+																),
+															)
+														}
+													}}
+													isDigits={true}
 													isShowMaxLength={false}
 													maximumLength={5}
 													conteinerWidth="114px"
@@ -556,7 +673,30 @@ const CompanyCreate: React.FC = () => {
 								width="528px"
 								className="mt-[17px] w-[528px] flex justify-between">
 								<Input
-									onChange={(e) => setCWeekBudget(e.target.value)}
+									onChange={(e) => {
+										setCWeekBudget(e.target.value)
+										if (
+											e.target.value.length > 0 &&
+											/^\d+$/.test(e.target.value)
+										) {
+											setStepCompany((prevStepCompany) =>
+												prevStepCompany.map((step) =>
+													step.title === 'Недельный бюджет'
+														? {...step, isDone: true}
+														: step,
+												),
+											)
+										} else {
+											setStepCompany((prevStepCompany) =>
+												prevStepCompany.map((step) =>
+													step.title === 'Недельный бюджет'
+														? {...step, isDone: false}
+														: step,
+												),
+											)
+										}
+									}}
+									isDigits={true}
 									id="sumInput"
 									width="100%"
 									placeholder=""
@@ -592,17 +732,42 @@ const CompanyCreate: React.FC = () => {
 								/>
 							</svg>
 						</Row>
+						
 						<Row
 							width="528px"
 							className="mt-[8px] w-[528px] flex justify-between">
+								
 							<Chips
 								className={s.chips}
 								value={cKeyWord}
-								onChange={(e) => setCKeyWord(e.value)}
+								onChange={(e) => {
+									setCKeyWord(e.value)
+									if (e.target.value.length > 0) {
+										setStepCompany((prevStepCompany) =>
+											prevStepCompany.map((step) =>
+												step.title === 'Тематические слова'
+													? {...step, isDone: true}
+													: step,
+											),
+										)
+									} else {
+										setStepCompany((prevStepCompany) =>
+											prevStepCompany.map((step) =>
+												step.title === 'Тематические слова'
+													? {...step, isDone: false}
+													: step,
+											),
+										)
+									}
+								}}
 							/>
-							<div
-								className={`right-[30px] top-[6px] cursor-pointer relative z-10 text-[#808080] hover:text-[#f2f2f2] transition-all`}>
-								<svg
+							
+							<mui.Select
+								className='right-[30px] top-[6px] cursor-pointer relative w-[24px] h-[24px] text-[#808080] hover:text-[#f2f2f2] rounded-[6px] hover:bg-[#333] active:bg-[#333] active:text-[#f2f2f2] focus:bg-[#333] focus:text-[#f2f2f2] transition-all '
+								renderValue={(option: mui.SelectOption<number> | null) => {
+									if (option == null || option.value === null) {
+										return <>
+										<svg
 									className="cursor-pointer"
 									width="24"
 									height="24"
@@ -616,7 +781,41 @@ const CompanyCreate: React.FC = () => {
 										fill="CurrentColor"
 									/>
 								</svg>
-							</div>
+										</>
+									}
+									return <>
+									<svg
+									className="cursor-pointer"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg">
+									<path
+										fillRule="evenodd"
+										clipRule="evenodd"
+										d="M11.9991 7.94531C12.277 7.94531 12.5132 7.85027 12.7079 7.66019C12.9026 7.47011 13 7.23883 13 6.96636C13 6.78989 12.955 6.62823 12.865 6.4814C12.775 6.33457 12.6544 6.21763 12.5031 6.13058C12.3519 6.04353 12.1839 6 11.9991 6C11.813 6 11.6449 6.04353 11.4949 6.13058C11.3449 6.21763 11.2249 6.33457 11.135 6.4814C11.045 6.62823 11 6.78989 11 6.96636C11 7.1488 11.045 7.31316 11.135 7.45944C11.2249 7.60572 11.3449 7.72327 11.4949 7.81209C11.6449 7.9009 11.813 7.94531 11.9991 7.94531ZM11.9991 12.9813C12.277 12.9813 12.5132 12.8861 12.7079 12.6958C12.9026 12.5055 13 12.2761 13 12.0076C13 11.8286 12.955 11.6652 12.865 11.5172C12.775 11.3693 12.6544 11.2521 12.5031 11.1657C12.3519 11.0792 12.1839 11.036 11.9991 11.036C11.813 11.036 11.6449 11.0792 11.4949 11.1657C11.3449 11.2521 11.2249 11.3693 11.135 11.5172C11.045 11.6652 11 11.8286 11 12.0076C11 12.1879 11.045 12.3514 11.135 12.4981C11.2249 12.6448 11.3449 12.762 11.4949 12.8497C11.6449 12.9374 11.813 12.9813 11.9991 12.9813ZM12.7079 17.7159C12.5132 17.9053 12.277 18 11.9991 18C11.813 18 11.6449 17.9564 11.4949 17.8691C11.3449 17.7818 11.2249 17.6645 11.135 17.5173C11.045 17.3701 11 17.208 11 17.031C11 16.8504 11.045 16.6862 11.135 16.5384C11.2249 16.3905 11.3449 16.2729 11.4949 16.1856C11.6449 16.0983 11.813 16.0547 11.9991 16.0547C12.1839 16.0547 12.3519 16.0983 12.5031 16.1856C12.6544 16.2729 12.775 16.3905 12.865 16.5384C12.955 16.6862 13 16.8504 13 17.031C13 17.2982 12.9026 17.5265 12.7079 17.7159Z"
+										fill="CurrentColor"
+									/>
+								</svg>
+									</>
+								}}>
+								<mui.Option
+									value={1}
+									className={`cursor-pointer z-10 mt-1`}>
+										<div className={s.CopyNClearWrapper}>
+									<div className={s.CopyNClear}>
+										<div className={s.CopyAll}>
+											<p className={s.Copy_text}>Скопировать всё</p>
+										</div>
+										<Line width='150px' className={s.CopyNClearLine}/>
+										<div className={s.Clear}>
+											<p className={s.Clear_text}>Очистить</p>
+										</div>
+									</div>
+								</div>
+									</mui.Option>
+							</mui.Select>
 						</Row>
 						<Row
 							className={`items-center mt-[17px] text-[#808080] hover:text-[#f2f2f2] transition-all`}>
@@ -642,11 +841,34 @@ const CompanyCreate: React.FC = () => {
 							<Chips
 								className={s.chips}
 								value={cKeyWordDel}
-								onChange={(e) => setCKeyWordDel(e.value)}
+								onChange={(e) => {
+									setCKeyWordDel(e.value)
+									if (e.target.value.length > 0) {
+										setStepCompany((prevStepCompany) =>
+											prevStepCompany.map((step) =>
+												step.title === 'Тематические слова'
+													? {...step, isDone: true}
+													: step,
+											),
+										)
+									} else {
+										setStepCompany((prevStepCompany) =>
+											prevStepCompany.map((step) =>
+												step.title === 'Тематические слова'
+													? {...step, isDone: false}
+													: step,
+											),
+										)
+									}
+								}}
 							/>
-							<div
-								className={`right-[30px] top-[6px] cursor-pointer relative z-10 text-[#808080] hover:text-[#f2f2f2] transition-all`}>
-								<svg
+							<mui.Select
+								className='right-[30px] top-[6px] cursor-pointer relative w-[24px] h-[24px] text-[#808080] hover:text-[#f2f2f2] rounded-[6px] hover:bg-[#333] active:bg-[#333] active:text-[#f2f2f2] focus:bg-[#333] focus:text-[#f2f2f2] transition-all '
+								renderValue={(option: mui.SelectOption<number> | null) => {
+									if (option == null || option.value === null) {
+										return <>
+										<svg
+									className="cursor-pointer"
 									width="24"
 									height="24"
 									viewBox="0 0 24 24"
@@ -659,7 +881,41 @@ const CompanyCreate: React.FC = () => {
 										fill="CurrentColor"
 									/>
 								</svg>
-							</div>
+										</>
+									}
+									return <>
+									<svg
+									className="cursor-pointer"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg">
+									<path
+										fillRule="evenodd"
+										clipRule="evenodd"
+										d="M11.9991 7.94531C12.277 7.94531 12.5132 7.85027 12.7079 7.66019C12.9026 7.47011 13 7.23883 13 6.96636C13 6.78989 12.955 6.62823 12.865 6.4814C12.775 6.33457 12.6544 6.21763 12.5031 6.13058C12.3519 6.04353 12.1839 6 11.9991 6C11.813 6 11.6449 6.04353 11.4949 6.13058C11.3449 6.21763 11.2249 6.33457 11.135 6.4814C11.045 6.62823 11 6.78989 11 6.96636C11 7.1488 11.045 7.31316 11.135 7.45944C11.2249 7.60572 11.3449 7.72327 11.4949 7.81209C11.6449 7.9009 11.813 7.94531 11.9991 7.94531ZM11.9991 12.9813C12.277 12.9813 12.5132 12.8861 12.7079 12.6958C12.9026 12.5055 13 12.2761 13 12.0076C13 11.8286 12.955 11.6652 12.865 11.5172C12.775 11.3693 12.6544 11.2521 12.5031 11.1657C12.3519 11.0792 12.1839 11.036 11.9991 11.036C11.813 11.036 11.6449 11.0792 11.4949 11.1657C11.3449 11.2521 11.2249 11.3693 11.135 11.5172C11.045 11.6652 11 11.8286 11 12.0076C11 12.1879 11.045 12.3514 11.135 12.4981C11.2249 12.6448 11.3449 12.762 11.4949 12.8497C11.6449 12.9374 11.813 12.9813 11.9991 12.9813ZM12.7079 17.7159C12.5132 17.9053 12.277 18 11.9991 18C11.813 18 11.6449 17.9564 11.4949 17.8691C11.3449 17.7818 11.2249 17.6645 11.135 17.5173C11.045 17.3701 11 17.208 11 17.031C11 16.8504 11.045 16.6862 11.135 16.5384C11.2249 16.3905 11.3449 16.2729 11.4949 16.1856C11.6449 16.0983 11.813 16.0547 11.9991 16.0547C12.1839 16.0547 12.3519 16.0983 12.5031 16.1856C12.6544 16.2729 12.775 16.3905 12.865 16.5384C12.955 16.6862 13 16.8504 13 17.031C13 17.2982 12.9026 17.5265 12.7079 17.7159Z"
+										fill="CurrentColor"
+									/>
+								</svg>
+									</>
+								}}>
+								<mui.Option
+									value={1}
+									className={`cursor-pointer z-10 mt-1`}>
+										<div className={s.CopyNClearWrapper}>
+									<div className={s.CopyNClear}>
+										<div className={s.CopyAll}>
+											<p className={s.Copy_text}>Скопировать всё</p>
+										</div>
+										<Line width='150px' className={s.CopyNClearLine}/>
+										<div className={s.Clear}>
+											<p className={s.Clear_text}>Очистить</p>
+										</div>
+									</div>
+								</div>
+									</mui.Option>
+							</mui.Select>
 						</Row>
 					</Col>
 
@@ -689,14 +945,44 @@ const CompanyCreate: React.FC = () => {
 							<Label className={`mt-[17px]`} text="Сайты (домены)" />
 							<Row width="528px" className={`mt-[8px]`}>
 								<Input
-									onChange={(e) => setCBanShow(e.target.value)}
+									onChange={(e) => {
+										setCBanShow(e.target.value)
+										if (e.target.value.length > 0) {
+											setStepCompany((prevStepCompany) =>
+												prevStepCompany.map((step) =>
+													step.title === 'Запрет показов'
+														? {...step, isDone: true}
+														: step,
+												),
+											)
+										} else {
+											setStepCompany((prevStepCompany) =>
+												prevStepCompany.map((step) =>
+													step.title === 'Запрет показов'
+														? {...step, isDone: false}
+														: step,
+												),
+											)
+										}
+									}}
 									conteinerWidth="528px"
 									width="528px"
 									placeholder="https://test.ru/test/testik"
+									onKeyDown={(e) => {
+										if (e.key === 'Enter' && !e.repeat) {
+											e.preventDefault
+											console.log("ENTER PRESS");
+											let banShow = document.getElementById('banShow')
+											
+											e.target.value = ''
+											
+										} 
+									}}
 								/>
 							</Row>
 						</Col>
-						<Col
+						<Col 
+							iD='banShow'
 							width="528px"
 							className={`mt-[8px] border border-[#262626] rounded-[10px]`}>
 							<Row
@@ -868,7 +1154,26 @@ const CompanyCreate: React.FC = () => {
 							size="16px"
 						/>
 						<Input
-							onChange={(e) => setAName(e.target.value)}
+							onChange={(e) => {
+								setAName(e.target.value)
+								if (e.target.value.length > 0) {
+									setStepAudi((prevStepAudi) =>
+										prevStepAudi.map((step) =>
+											step.title === 'Название аудитории*'
+												? {...step, isDone: true}
+												: step,
+										),
+									)
+								} else {
+									setStepAudi((prevStepAudi) =>
+										prevStepAudi.map((step) =>
+											step.title === 'Название аудитории*'
+												? {...step, isDone: false}
+												: step,
+										),
+									)
+								}
+							}}
 							width="100%"
 							placeholder="Введите название..."
 							className={`${s.inputText}`}
@@ -900,24 +1205,81 @@ const CompanyCreate: React.FC = () => {
 								<Chips
 									className={s.chips}
 									value={aGeography}
-									onChange={(e) => setAGeography(e.value)}
+									onChange={(e) => {
+										setAGeography(e.value)
+										if (e.target.value.length > 0) {
+											setStepAudi((prevStepAudi) =>
+												prevStepAudi.map((step) =>
+													step.title === 'География показов'
+														? {...step, isDone: true}
+														: step,
+												),
+											)
+										} else {
+											setStepAudi((prevStepAudi) =>
+												prevStepAudi.map((step) =>
+													step.title === 'География показов'
+														? {...step, isDone: false}
+														: step,
+												),
+											)
+										}
+									}}
 								/>
-								<div
-									className={`right-[30px] top-[6px] cursor-pointer relative w-[24px] h-[24px] text-[#808080] hover:text-[#f2f2f2] hover:rounded-[6px] hover:bg-[#333] transition-all`}>
+								<mui.Select
+								className='right-[30px] top-[6px] cursor-pointer relative w-[24px] h-[24px] text-[#808080] hover:text-[#f2f2f2] rounded-[6px] hover:bg-[#333] active:bg-[#333] active:text-[#f2f2f2] focus:bg-[#333] focus:text-[#f2f2f2] transition-all '
+								renderValue={(option: mui.SelectOption<number> | null) => {
+									if (option == null || option.value === null) {
+										return <>
+										<svg
+									className="cursor-pointer"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg">
+									<path
+										fillRule="evenodd"
+										clipRule="evenodd"
+										d="M11.9991 7.94531C12.277 7.94531 12.5132 7.85027 12.7079 7.66019C12.9026 7.47011 13 7.23883 13 6.96636C13 6.78989 12.955 6.62823 12.865 6.4814C12.775 6.33457 12.6544 6.21763 12.5031 6.13058C12.3519 6.04353 12.1839 6 11.9991 6C11.813 6 11.6449 6.04353 11.4949 6.13058C11.3449 6.21763 11.2249 6.33457 11.135 6.4814C11.045 6.62823 11 6.78989 11 6.96636C11 7.1488 11.045 7.31316 11.135 7.45944C11.2249 7.60572 11.3449 7.72327 11.4949 7.81209C11.6449 7.9009 11.813 7.94531 11.9991 7.94531ZM11.9991 12.9813C12.277 12.9813 12.5132 12.8861 12.7079 12.6958C12.9026 12.5055 13 12.2761 13 12.0076C13 11.8286 12.955 11.6652 12.865 11.5172C12.775 11.3693 12.6544 11.2521 12.5031 11.1657C12.3519 11.0792 12.1839 11.036 11.9991 11.036C11.813 11.036 11.6449 11.0792 11.4949 11.1657C11.3449 11.2521 11.2249 11.3693 11.135 11.5172C11.045 11.6652 11 11.8286 11 12.0076C11 12.1879 11.045 12.3514 11.135 12.4981C11.2249 12.6448 11.3449 12.762 11.4949 12.8497C11.6449 12.9374 11.813 12.9813 11.9991 12.9813ZM12.7079 17.7159C12.5132 17.9053 12.277 18 11.9991 18C11.813 18 11.6449 17.9564 11.4949 17.8691C11.3449 17.7818 11.2249 17.6645 11.135 17.5173C11.045 17.3701 11 17.208 11 17.031C11 16.8504 11.045 16.6862 11.135 16.5384C11.2249 16.3905 11.3449 16.2729 11.4949 16.1856C11.6449 16.0983 11.813 16.0547 11.9991 16.0547C12.1839 16.0547 12.3519 16.0983 12.5031 16.1856C12.6544 16.2729 12.775 16.3905 12.865 16.5384C12.955 16.6862 13 16.8504 13 17.031C13 17.2982 12.9026 17.5265 12.7079 17.7159Z"
+										fill="CurrentColor"
+									/>
+								</svg>
+										</>
+									}
+									return <>
 									<svg
-										width="24"
-										height="24"
-										viewBox="0 0 24 24"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg">
-										<path
-											fillRule="evenodd"
-											clipRule="evenodd"
-											d="M11.9991 7.94531C12.277 7.94531 12.5132 7.85027 12.7079 7.66019C12.9026 7.47011 13 7.23883 13 6.96636C13 6.78989 12.955 6.62823 12.865 6.4814C12.775 6.33457 12.6544 6.21763 12.5031 6.13058C12.3519 6.04353 12.1839 6 11.9991 6C11.813 6 11.6449 6.04353 11.4949 6.13058C11.3449 6.21763 11.2249 6.33457 11.135 6.4814C11.045 6.62823 11 6.78989 11 6.96636C11 7.1488 11.045 7.31316 11.135 7.45944C11.2249 7.60572 11.3449 7.72327 11.4949 7.81209C11.6449 7.9009 11.813 7.94531 11.9991 7.94531ZM11.9991 12.9813C12.277 12.9813 12.5132 12.8861 12.7079 12.6958C12.9026 12.5055 13 12.2761 13 12.0076C13 11.8286 12.955 11.6652 12.865 11.5172C12.775 11.3693 12.6544 11.2521 12.5031 11.1657C12.3519 11.0792 12.1839 11.036 11.9991 11.036C11.813 11.036 11.6449 11.0792 11.4949 11.1657C11.3449 11.2521 11.2249 11.3693 11.135 11.5172C11.045 11.6652 11 11.8286 11 12.0076C11 12.1879 11.045 12.3514 11.135 12.4981C11.2249 12.6448 11.3449 12.762 11.4949 12.8497C11.6449 12.9374 11.813 12.9813 11.9991 12.9813ZM12.7079 17.7159C12.5132 17.9053 12.277 18 11.9991 18C11.813 18 11.6449 17.9564 11.4949 17.8691C11.3449 17.7818 11.2249 17.6645 11.135 17.5173C11.045 17.3701 11 17.208 11 17.031C11 16.8504 11.045 16.6862 11.135 16.5384C11.2249 16.3905 11.3449 16.2729 11.4949 16.1856C11.6449 16.0983 11.813 16.0547 11.9991 16.0547C12.1839 16.0547 12.3519 16.0983 12.5031 16.1856C12.6544 16.2729 12.775 16.3905 12.865 16.5384C12.955 16.6862 13 16.8504 13 17.031C13 17.2982 12.9026 17.5265 12.7079 17.7159Z"
-											fill="CurrentColor"
-										/>
-									</svg>
+									className="cursor-pointer"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg">
+									<path
+										fillRule="evenodd"
+										clipRule="evenodd"
+										d="M11.9991 7.94531C12.277 7.94531 12.5132 7.85027 12.7079 7.66019C12.9026 7.47011 13 7.23883 13 6.96636C13 6.78989 12.955 6.62823 12.865 6.4814C12.775 6.33457 12.6544 6.21763 12.5031 6.13058C12.3519 6.04353 12.1839 6 11.9991 6C11.813 6 11.6449 6.04353 11.4949 6.13058C11.3449 6.21763 11.2249 6.33457 11.135 6.4814C11.045 6.62823 11 6.78989 11 6.96636C11 7.1488 11.045 7.31316 11.135 7.45944C11.2249 7.60572 11.3449 7.72327 11.4949 7.81209C11.6449 7.9009 11.813 7.94531 11.9991 7.94531ZM11.9991 12.9813C12.277 12.9813 12.5132 12.8861 12.7079 12.6958C12.9026 12.5055 13 12.2761 13 12.0076C13 11.8286 12.955 11.6652 12.865 11.5172C12.775 11.3693 12.6544 11.2521 12.5031 11.1657C12.3519 11.0792 12.1839 11.036 11.9991 11.036C11.813 11.036 11.6449 11.0792 11.4949 11.1657C11.3449 11.2521 11.2249 11.3693 11.135 11.5172C11.045 11.6652 11 11.8286 11 12.0076C11 12.1879 11.045 12.3514 11.135 12.4981C11.2249 12.6448 11.3449 12.762 11.4949 12.8497C11.6449 12.9374 11.813 12.9813 11.9991 12.9813ZM12.7079 17.7159C12.5132 17.9053 12.277 18 11.9991 18C11.813 18 11.6449 17.9564 11.4949 17.8691C11.3449 17.7818 11.2249 17.6645 11.135 17.5173C11.045 17.3701 11 17.208 11 17.031C11 16.8504 11.045 16.6862 11.135 16.5384C11.2249 16.3905 11.3449 16.2729 11.4949 16.1856C11.6449 16.0983 11.813 16.0547 11.9991 16.0547C12.1839 16.0547 12.3519 16.0983 12.5031 16.1856C12.6544 16.2729 12.775 16.3905 12.865 16.5384C12.955 16.6862 13 16.8504 13 17.031C13 17.2982 12.9026 17.5265 12.7079 17.7159Z"
+										fill="CurrentColor"
+									/>
+								</svg>
+									</>
+								}}>
+								<mui.Option
+									value={1}
+									className={`cursor-pointer z-10 mt-1`}>
+										<div className={s.CopyNClearWrapper}>
+									<div className={s.CopyNClear}>
+										<div className={s.CopyAll}>
+											<p className={s.Copy_text}>Скопировать всё</p>
+										</div>
+										<Line width='150px' className={s.CopyNClearLine}/>
+										<div className={s.Clear}>
+											<p className={s.Clear_text}>Очистить</p>
+										</div>
+									</div>
 								</div>
+									</mui.Option>
+							</mui.Select>
 							</Row>
 						</Col>
 
@@ -970,12 +1332,34 @@ const CompanyCreate: React.FC = () => {
 							<Chips
 								className={s.chips}
 								value={aFavor}
-								onChange={(e) => setAFavor(e.value)}
+								onChange={(e) => {
+									setAFavor(e.value)
+									if (e.target.value.length > 0) {
+										setStepAudi((prevStepAudi) =>
+											prevStepAudi.map((step) =>
+												step.title === 'Интересы'
+													? {...step, isDone: true}
+													: step,
+											),
+										)
+									} else {
+										setStepAudi((prevStepAudi) =>
+											prevStepAudi.map((step) =>
+												step.title === 'Интересы'
+													? {...step, isDone: false}
+													: step,
+											),
+										)
+									}
+								}}
 							/>
-							<div
-								className={`right-[30px] top-[6px] cursor-pointer relative z-10`}>
-								<svg
-									className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
+							<mui.Select
+								className='right-[30px] top-[6px] cursor-pointer relative w-[24px] h-[24px] text-[#808080] hover:text-[#f2f2f2] rounded-[6px] hover:bg-[#333] active:bg-[#333] active:text-[#f2f2f2] focus:bg-[#333] focus:text-[#f2f2f2] transition-all '
+								renderValue={(option: mui.SelectOption<number> | null) => {
+									if (option == null || option.value === null) {
+										return <>
+										<svg
+									className="cursor-pointer"
 									width="24"
 									height="24"
 									viewBox="0 0 24 24"
@@ -988,7 +1372,41 @@ const CompanyCreate: React.FC = () => {
 										fill="CurrentColor"
 									/>
 								</svg>
-							</div>
+										</>
+									}
+									return <>
+									<svg
+									className="cursor-pointer"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg">
+									<path
+										fillRule="evenodd"
+										clipRule="evenodd"
+										d="M11.9991 7.94531C12.277 7.94531 12.5132 7.85027 12.7079 7.66019C12.9026 7.47011 13 7.23883 13 6.96636C13 6.78989 12.955 6.62823 12.865 6.4814C12.775 6.33457 12.6544 6.21763 12.5031 6.13058C12.3519 6.04353 12.1839 6 11.9991 6C11.813 6 11.6449 6.04353 11.4949 6.13058C11.3449 6.21763 11.2249 6.33457 11.135 6.4814C11.045 6.62823 11 6.78989 11 6.96636C11 7.1488 11.045 7.31316 11.135 7.45944C11.2249 7.60572 11.3449 7.72327 11.4949 7.81209C11.6449 7.9009 11.813 7.94531 11.9991 7.94531ZM11.9991 12.9813C12.277 12.9813 12.5132 12.8861 12.7079 12.6958C12.9026 12.5055 13 12.2761 13 12.0076C13 11.8286 12.955 11.6652 12.865 11.5172C12.775 11.3693 12.6544 11.2521 12.5031 11.1657C12.3519 11.0792 12.1839 11.036 11.9991 11.036C11.813 11.036 11.6449 11.0792 11.4949 11.1657C11.3449 11.2521 11.2249 11.3693 11.135 11.5172C11.045 11.6652 11 11.8286 11 12.0076C11 12.1879 11.045 12.3514 11.135 12.4981C11.2249 12.6448 11.3449 12.762 11.4949 12.8497C11.6449 12.9374 11.813 12.9813 11.9991 12.9813ZM12.7079 17.7159C12.5132 17.9053 12.277 18 11.9991 18C11.813 18 11.6449 17.9564 11.4949 17.8691C11.3449 17.7818 11.2249 17.6645 11.135 17.5173C11.045 17.3701 11 17.208 11 17.031C11 16.8504 11.045 16.6862 11.135 16.5384C11.2249 16.3905 11.3449 16.2729 11.4949 16.1856C11.6449 16.0983 11.813 16.0547 11.9991 16.0547C12.1839 16.0547 12.3519 16.0983 12.5031 16.1856C12.6544 16.2729 12.775 16.3905 12.865 16.5384C12.955 16.6862 13 16.8504 13 17.031C13 17.2982 12.9026 17.5265 12.7079 17.7159Z"
+										fill="CurrentColor"
+									/>
+								</svg>
+									</>
+								}}>
+								<mui.Option
+									value={1}
+									className={`cursor-pointer z-10 mt-1`}>
+										<div className={s.CopyNClearWrapper}>
+									<div className={s.CopyNClear}>
+										<div className={s.CopyAll}>
+											<p className={s.Copy_text}>Скопировать всё</p>
+										</div>
+										<Line width='150px' className={s.CopyNClearLine}/>
+										<div className={s.Clear}>
+											<p className={s.Clear_text}>Очистить</p>
+										</div>
+									</div>
+								</div>
+									</mui.Option>
+							</mui.Select>
 						</Row>
 
 						<Line width="528px" className={s.Line} />
@@ -1014,12 +1432,34 @@ const CompanyCreate: React.FC = () => {
 							<Chips
 								className={s.chips}
 								value={aDevice}
-								onChange={(e) => setADevice(e.value)}
+								onChange={(e) => {
+									setADevice(e.value)
+									if (e.target.value.length > 0) {
+										setStepAudi((prevStepAudi) =>
+											prevStepAudi.map((step) =>
+												step.title === 'Устройства'
+													? {...step, isDone: true}
+													: step,
+											),
+										)
+									} else {
+										setStepAudi((prevStepAudi) =>
+											prevStepAudi.map((step) =>
+												step.title === 'Устройства'
+													? {...step, isDone: false}
+													: step,
+											),
+										)
+									}
+								}}
 							/>
-							<div
-								className={`right-[30px] top-[6px] cursor-pointer relative z-10`}>
-								<svg
-									className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
+							<mui.Select
+								className='right-[30px] top-[6px] cursor-pointer relative w-[24px] h-[24px] text-[#808080] hover:text-[#f2f2f2] rounded-[6px] hover:bg-[#333] active:bg-[#333] active:text-[#f2f2f2] focus:bg-[#333] focus:text-[#f2f2f2] transition-all '
+								renderValue={(option: mui.SelectOption<number> | null) => {
+									if (option == null || option.value === null) {
+										return <>
+										<svg
+									className="cursor-pointer"
 									width="24"
 									height="24"
 									viewBox="0 0 24 24"
@@ -1032,7 +1472,41 @@ const CompanyCreate: React.FC = () => {
 										fill="CurrentColor"
 									/>
 								</svg>
-							</div>
+										</>
+									}
+									return <>
+									<svg
+									className="cursor-pointer"
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg">
+									<path
+										fillRule="evenodd"
+										clipRule="evenodd"
+										d="M11.9991 7.94531C12.277 7.94531 12.5132 7.85027 12.7079 7.66019C12.9026 7.47011 13 7.23883 13 6.96636C13 6.78989 12.955 6.62823 12.865 6.4814C12.775 6.33457 12.6544 6.21763 12.5031 6.13058C12.3519 6.04353 12.1839 6 11.9991 6C11.813 6 11.6449 6.04353 11.4949 6.13058C11.3449 6.21763 11.2249 6.33457 11.135 6.4814C11.045 6.62823 11 6.78989 11 6.96636C11 7.1488 11.045 7.31316 11.135 7.45944C11.2249 7.60572 11.3449 7.72327 11.4949 7.81209C11.6449 7.9009 11.813 7.94531 11.9991 7.94531ZM11.9991 12.9813C12.277 12.9813 12.5132 12.8861 12.7079 12.6958C12.9026 12.5055 13 12.2761 13 12.0076C13 11.8286 12.955 11.6652 12.865 11.5172C12.775 11.3693 12.6544 11.2521 12.5031 11.1657C12.3519 11.0792 12.1839 11.036 11.9991 11.036C11.813 11.036 11.6449 11.0792 11.4949 11.1657C11.3449 11.2521 11.2249 11.3693 11.135 11.5172C11.045 11.6652 11 11.8286 11 12.0076C11 12.1879 11.045 12.3514 11.135 12.4981C11.2249 12.6448 11.3449 12.762 11.4949 12.8497C11.6449 12.9374 11.813 12.9813 11.9991 12.9813ZM12.7079 17.7159C12.5132 17.9053 12.277 18 11.9991 18C11.813 18 11.6449 17.9564 11.4949 17.8691C11.3449 17.7818 11.2249 17.6645 11.135 17.5173C11.045 17.3701 11 17.208 11 17.031C11 16.8504 11.045 16.6862 11.135 16.5384C11.2249 16.3905 11.3449 16.2729 11.4949 16.1856C11.6449 16.0983 11.813 16.0547 11.9991 16.0547C12.1839 16.0547 12.3519 16.0983 12.5031 16.1856C12.6544 16.2729 12.775 16.3905 12.865 16.5384C12.955 16.6862 13 16.8504 13 17.031C13 17.2982 12.9026 17.5265 12.7079 17.7159Z"
+										fill="CurrentColor"
+									/>
+								</svg>
+									</>
+								}}>
+								<mui.Option
+									value={1}
+									className={`cursor-pointer z-10 mt-1`}>
+										<div className={s.CopyNClearWrapper}>
+									<div className={s.CopyNClear}>
+										<div className={s.CopyAll}>
+											<p className={s.Copy_text}>Скопировать всё</p>
+										</div>
+										<Line width='150px' className={s.CopyNClearLine}/>
+										<div className={s.Clear}>
+											<p className={s.Clear_text}>Очистить</p>
+										</div>
+									</div>
+								</div>
+									</mui.Option>
+							</mui.Select>
 						</Row>
 
 						<Line width="528px" className={s.Line} />
@@ -1100,6 +1574,7 @@ const CompanyCreate: React.FC = () => {
 												width="40px"
 												className={`text-[14px]`}
 												placeholder="18"
+												isDigits={true}
 											/>
 										</span>
 										<span className="text-[14px] cursor-pointer w-[130px] justify-between flex items-center h-[36px] pl-[16px]">
@@ -1114,6 +1589,7 @@ const CompanyCreate: React.FC = () => {
 												height="20px"
 												className={`text-[14px]`}
 												placeholder="25"
+												isDigits={true}
 											/>
 										</span>
 									</Row>
@@ -1242,6 +1718,12 @@ const CompanyCreate: React.FC = () => {
 									width="120px"
 									className={`float-right h-[36px] w-[120px]`}
 									text="Далее"
+									onClick={() =>
+										dispatch({
+											type: 'setSwitchCreatePage',
+											SwitchCreatePage: 3,
+										})
+									}
 								/>
 							</Row>
 						</div>
@@ -1258,12 +1740,31 @@ const CompanyCreate: React.FC = () => {
 							size="16px"
 						/>
 						<Input
-							onChange={(e) => setBName(e.target.value)}
+							onChange={(e) => {
+								setBName(e.target.value)
+								if (e.target.value.length > 0) {
+									setStepBanner((prevStepBanner) =>
+										prevStepBanner.map((step) =>
+											step.title === 'Название баннера*'
+												? {...step, isDone: true}
+												: step,
+										),
+									)
+								} else {
+									setStepBanner((prevStepBanner) =>
+										prevStepBanner.map((step) =>
+											step.title === 'Название баннера*'
+												? {...step, isDone: false}
+												: step,
+										),
+									)
+								}
+							}}
 							width="100%"
 							placeholder="Введите название..."
 							className={`${s.inputText}`}
 						/>
-						<Line width={'528px'} className={s.Line} />
+						{/* <Line width={'528px'} className={s.Line} />
 
 						<WhiteLabel text="Ссылка на рекламируемую страницу" size="16px" />
 						<Row
@@ -1345,7 +1846,7 @@ const CompanyCreate: React.FC = () => {
 								text="https://test.com/test/testik"
 								isMini={true}
 							/>
-						</Col>
+						</Col> */}
 
 						<Line width="528px" className={s.Line} />
 
@@ -1376,13 +1877,42 @@ const CompanyCreate: React.FC = () => {
 							style={checked_1 ? {display: 'flex'} : {display: 'none'}}
 							className={s.DescBlock}>
 							<textarea
-								onChange={(e) => setTextAreaValue(e.target.value)}
+								onChange={(e) => {
+									setTextAreaValue(e.target.value)
+									if (e.target.value.length > 0) {
+										setStepBanner((prevStepBanner) =>
+											prevStepBanner.map((step) =>
+												step.title === 'Варианты описаний'
+													? {...step, isDone: true}
+													: step,
+											),
+										)
+									} else {
+										setStepBanner((prevStepBanner) =>
+											prevStepBanner.map((step) =>
+												step.title === 'Варианты описаний'
+													? {...step, isDone: false}
+													: step,
+											),
+										)
+									}
+								}}
+								onKeyDown={(e) => {
+									if (e.key === 'Enter' && !e.repeat) {
+										e.preventDefault
+										console.log("ENTER PRESS");
+										let textAreaDesc = document.getElementById('textAreaDesc')
+										
+										e.target.value = ''
+										
+									} 
+								}}
 								value={textAreaValue}
 								name="descr"
 								id="desc"
 								className={s.textAreaDesc}
 								placeholder="Добавить..."></textarea>
-							<Col width="528px" className={s.ColAfterTextArea}>
+							<Col iD='textAreaDesc' width="528px" className={s.ColAfterTextArea}>
 								<div className={s.BlockAfterTextArea}>
 									<p className={s.TextBlockAfter}>
 										Рекламные платформы, такие как Facebook, Google Ads или
