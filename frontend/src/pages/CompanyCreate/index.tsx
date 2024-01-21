@@ -125,11 +125,24 @@ const CompanyCreate: React.FC = () => {
 	// 	}
 	// })
 
-	const handleAddImage = (file: File) => {
-		//add path to image
-		setImages([...images, URL.createObjectURL(file)])
+	const onClose = (id: string) => {
+		setImages(images.filter((image) => image.id !== id))
 	}
 
+	const handleAddImage = (file: File) => {
+		//add path to image
+		setImages([
+			...images,
+			{id: generateUniqueId(), file: URL.createObjectURL(file)},
+		])
+	}
+
+	function generateUniqueId() {
+		return (
+			Math.random().toString(36).substring(2, 10) +
+			Math.random().toString(36).substring(2, 10)
+		)
+	}
 	const handleAddVideo = (file: File) => {}
 
 	const [stepCompany, setStepCompany] = React.useState([
@@ -231,7 +244,9 @@ const CompanyCreate: React.FC = () => {
 			return ''
 		}
 	}
-
+	useEffect(() => {
+		console.log(images, 'images')
+	}, [images])
 	const getNameFromDomain = (url: string): string => {
 		try {
 			let hostname = url
@@ -253,8 +268,8 @@ const CompanyCreate: React.FC = () => {
 
 	return (
 		<div className={s.wrapper}>
-			<div className={s.leftMenu}>
-				<LeftCompanyMenu />
+			<div className={s.stepsMenu}>
+				<StepsInfo steps={StepSwitch()} />
 			</div>
 			<div className={` ${s.rightMenu}`}>
 				<HeaderCompanyCreate />
@@ -337,19 +352,19 @@ const CompanyCreate: React.FC = () => {
 							/>
 							<div
 								onClick={() => {
-									(
+									;(
 										document.querySelector(
 											'#input-urlInput',
 										) as HTMLInputElement
 									).value = ''
 									setCLink('')
 									setStepCompany((prevStepCompany) =>
-											prevStepCompany.map((step) =>
-												step.title === 'Ссылка на рекламируемую страницу*'
-													? {...step, isDone: false}
-													: step,
-											),
-										)
+										prevStepCompany.map((step) =>
+											step.title === 'Ссылка на рекламируемую страницу*'
+												? {...step, isDone: false}
+												: step,
+										),
+									)
 								}}
 								className={`right-[30px] top-[6px] cursor-pointer relative `}>
 								<svg
@@ -371,13 +386,18 @@ const CompanyCreate: React.FC = () => {
 							iD="link_target"
 							width="528px"
 							className={`mt-[8px] w-[528px] min-h-[48px] flex flex-col flex-wrap overflow-y-scroll rounded-[10px] border border-[#262626]`}>
-							<Row className={`ml-[16px] mt-[4px] max-w-[528px] flex flex-wrap items-center`}>
+							<Row
+								className={`ml-[16px] mt-[4px] max-w-[528px] flex flex-wrap items-center`}>
 								<img
 									src={getFaviconUrl(cLink)}
 									alt={cLink}
 									className="mr-1 w-[16px] h-[16px]"
 								/>
-								<WhiteLabel text={getNameFromDomain(cLink.length <= 40 ? cLink : cLink.slice(0, 75) + '...')} />
+								<WhiteLabel
+									text={getNameFromDomain(
+										cLink.length <= 40 ? cLink : cLink.slice(0, 75) + '...',
+									)}
+								/>
 							</Row>
 							<Label
 								className={`ml-[16px] mb-[8px] flex-wrap`}
@@ -568,11 +588,11 @@ const CompanyCreate: React.FC = () => {
 											<Row className={`w-[114px] ml-[8px]`}>
 												<Input
 													onChange={(e) => {
-														setCTarget(e.target.value)
 														if (
 															e.target.value.length > 0 &&
 															/^\d+$/.test(e.target.value)
 														) {
+															setCTarget(e.target.value)
 															setStepCompany((prevStepCompany) =>
 																prevStepCompany.map((step) =>
 																	step.title === 'Цель*'
@@ -590,7 +610,9 @@ const CompanyCreate: React.FC = () => {
 															)
 														}
 														console.log(e.target.value)
+														
 													}}
+													value={cTarget}
 													id="targetInput"
 													isDigits={true}
 													isShowMaxLength={false}
@@ -608,19 +630,14 @@ const CompanyCreate: React.FC = () => {
 											</Row>
 											<div
 												onClick={() => {
-													let inputElement = document.getElementById(
-														'input-targetInput',
-													) as HTMLInputElement
-
-													inputElement.value = ''
-													// setStepCompany((prevStepCompany) =>
-													// 		prevStepCompany.map((step) =>
-													// 			step.title === 'Цель*'
-													// 				? {...step, isDone: false}
-													// 				: step,
-													// 		),
-													// 	)
-													// setCTarget('')
+													setCTarget('')
+													setStepCompany((prevStepCompany) =>
+														prevStepCompany.map((step) =>
+															step.title === 'Цель*'
+																? {...step, isDone: false}
+																: step,
+														),
+													)
 												}}
 												className={`absolute z-2 text-[#808080] hover:text-[#f2f2f2] transition-all`}>
 												<svg
@@ -713,8 +730,7 @@ const CompanyCreate: React.FC = () => {
 									placeholder=""
 									className={`${s.inputText} `}
 								/>
-								<div
-									className={`right-[30px] top-[6px] cursor-pointer relative z-10`}>
+								<div className={`right-[30px] top-[6px] relative`}>
 									<p>₽</p>
 								</div>
 							</Row>
@@ -832,12 +848,14 @@ const CompanyCreate: React.FC = () => {
 											<Line width="150px" className={s.CopyNClearLine} />
 											<div
 												onClick={() => {
-													let chipsContent = document.getElementById('CKeyWord')
-													chipsContent.innerText = ''
-													console.log(
-														chipsContent.innerText,
-														'chipsContent.value',
+													setStepCompany((prevStepCompany) =>
+														prevStepCompany.map((step) =>
+															step.title === 'Тематические слова'
+																? {...step, isDone: false}
+																: step,
+														),
 													)
+													setCKeyWord([])
 												}}
 												className={s.Clear}>
 												<p className={s.Clear_text}>Очистить</p>
@@ -1006,7 +1024,7 @@ const CompanyCreate: React.FC = () => {
 											e.preventDefault
 											console.log('ENTER PRESS')
 											let banShow = document.getElementById('banShow')
-
+											// Hooks
 											e.target.value = ''
 										}
 									}}
@@ -1125,7 +1143,7 @@ const CompanyCreate: React.FC = () => {
 													bOptionDescText: bOptionDescText,
 													bVideo: bVideo,
 													bAudio: bAudio,
-													bImg: bImg,
+													bImg: images,
 													bUnvirfied: bUnvirfied,
 												},
 											)
@@ -1746,7 +1764,7 @@ const CompanyCreate: React.FC = () => {
 												bOptionDescText: bOptionDescText,
 												bVideo: bVideo,
 												bAudio: bAudio,
-												bImg: bImg,
+												bImg: images,
 												bUnvirfied: bUnvirfied,
 											},
 										})
@@ -2127,7 +2145,7 @@ const CompanyCreate: React.FC = () => {
 
 						<Row width="600px" className={s.DropImageRow}>
 							{images.map((image) => (
-								<Image src={image} />
+								<Image onClose={onClose} id={image.id} src={image.file} />
 							))}
 							<Upload propFunction={handleAddImage} />
 						</Row>
@@ -2225,7 +2243,7 @@ const CompanyCreate: React.FC = () => {
 												bOptionDescText: bOptionDescText,
 												bVideo: bVideo,
 												bAudio: bAudio,
-												bImg: bImg,
+												bImg: images,
 												bUnvirfied: bUnvirfied,
 											},
 										)
@@ -2241,8 +2259,8 @@ const CompanyCreate: React.FC = () => {
 					</Col>
 				</div>
 			</div>
-			<div className={s.stepsMenu}>
-				<StepsInfo steps={StepSwitch()} />
+			<div className={s.leftMenu}>
+				<LeftCompanyMenu />
 			</div>
 		</div>
 	)

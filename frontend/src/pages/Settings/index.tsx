@@ -10,19 +10,16 @@ import GeneralSettings from '../../components/GeneralSettings/index'
 import NotificationSettings from '../../components/NotificationSettings/index'
 
 const Settings: React.FC = () => {
-	const [wrap, setWrap] = useState(
-		localStorage.getItem('wrap_item') === 'GeneralSettings' ? (
-			<GeneralSettings />
-		) : (
-			<NotificationSettings />
-		),
-	)
+	// const [wrap, setWrap] = useState(
+	// 	localStorage.getItem('wrap_item') === 'GeneralSettings' ? (
+	// 		<GeneralSettings />
+	// 	) : (
+	// 		<NotificationSettings />
+	// 	),
+	// )
 
 	return (
 		<div className={s.wrapper}>
-			<div className={s.leftMenu}>
-				<LeftCompanyMenu />
-			</div>
 			<div className={s.rightMenu}>
 				<div className={s.headerSettings}>
 					<div className={s.up}>
@@ -55,7 +52,7 @@ const Settings: React.FC = () => {
 						</svg> */}
 					</div>
 					<Row className={s.rowButtons} width="auto">
-						<Button
+						{/* <Button
 							width="80px"
 							onClick={() => {
 								setWrap(<GeneralSettings />)
@@ -68,7 +65,7 @@ const Settings: React.FC = () => {
 									: {backgroundColor: 'none'}
 							}
 							text="Общие"
-						/>
+						/> */}
 						{/* <Button
 							width="126px"
 							onClick={() => {
@@ -84,8 +81,12 @@ const Settings: React.FC = () => {
 							text="Уведомления"
 						/> */}
 					</Row>
-					{wrap}
+					{/* {wrap} */}
+					<GeneralSettings />
 				</div>
+			</div>
+			<div className={s.leftMenu}>
+				<LeftCompanyMenu />
 			</div>
 		</div>
 	)

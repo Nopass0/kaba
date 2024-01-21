@@ -21,9 +21,7 @@ const Statistic: React.FC = () => {
 	return (
 		<>
 			<div className={s.wrapper}>
-				<div className={s.leftMenu}>
-					<LeftCompanyMenu />
-				</div>
+				
 				<div className={s.rightMenu}>
 					{/* Statistic */}
 					<HeaderCompany positionPopUp='top-[30px]' textHeader="Статистика" />
@@ -33,6 +31,9 @@ const Statistic: React.FC = () => {
 					<Label className={s.noCompanyLabel} width='360px' isMini={true} text='У вас нет ни одной кампании соответствующей заданным параметрам'/>
 					<BlueButton width='180px' text='Создать'/>
             	</Col> */}
+				</div>
+				<div className={s.leftMenu}>
+					<LeftCompanyMenu />
 				</div>
 			</div>
 		</>

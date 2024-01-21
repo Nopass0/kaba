@@ -3,19 +3,23 @@ import s from './index.module.scss'
 
 interface IImage {
 	src?: string
+	onClose?: (id: string) => void
+	id?: string
 }
 
 const placeholder = 'https://placehold.jp/3d4070/ffffff/150x150.png'
 
-const Image: React.FC<IImage> = ({src}: IImage) => {
-	const component = useRef<any>()
+const Image: React.FC<IImage> = ({src,onClose, id}: IImage) => {
+	
 
 	const close = () => {
-		component.current.remove()
+		// component.current.remove()
+		onClose(id)
 	}
 
+
 	return (
-		<div ref={component} className={s.imageBlock}>
+		<div  className={s.imageBlock} id={id}>
 			<img className={s.image} src={src ? src : placeholder} alt="image" />
 			<div className={s.overlay}>
 				<svg

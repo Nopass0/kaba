@@ -50,7 +50,13 @@ const GeneralSettings: React.FC<IGeneralSettings> = ({
 						</svg>
 					</ToolTip>
 				</Row>
-				<Input width="100%" className={s.Input} placeholder="Введите страну" />
+				<Input
+					width="528px"
+					minWidth="528px"
+					conteinerWidth="528px"
+					className={s.Input}
+					placeholder="Введите страну"
+				/>
 				<Select
 					width="528px"
 					maxSelectWidth="528px"
@@ -91,7 +97,7 @@ const GeneralSettings: React.FC<IGeneralSettings> = ({
 					onChange={handleChangeOrganization}
 					width="528px"
 					minWidth="528px"
-					conteinerWidth='528px'
+					conteinerWidth="528px"
 					placeholder="ИНН"
 					isDigits={true}
 				/>

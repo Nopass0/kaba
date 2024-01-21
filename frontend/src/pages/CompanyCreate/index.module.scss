@@ -3,7 +3,7 @@
 	margin: 0px auto 0px auto;
 	padding: 11px 32px 0px 32px;
 	display: flex;
-	flex-direction: row;
+	flex-direction: row-reverse;
 	color: white;
 }
 
@@ -353,7 +353,7 @@
 // Link Target Input
 
 .linkTargetInput {
-	
+
 	div {
 		input:placeholder {
 			color: red !important;

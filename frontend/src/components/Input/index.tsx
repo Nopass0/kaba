@@ -41,24 +41,20 @@ const Input: React.FC<IInput> = ({
 	const [lengthString, setLengthString] = React.useState<number>(
 		maximumLength || 0,
 	)
-	const [valueDigit, setValueDigit] = React.useState('')
-
+	// const [valueDigit, setValueDigit] = React.useState('')
 	return (
 		<div
 			style={{width: conteinerWidth}}
 			className={className + ' ' + s.inputContainer}>
 			<div style={{width: width, minWidth: minWidth}} className={s.inputRow}>
 				<input
-
 					autoComplete="off"
 					maxLength={maximumLength}
 					onChange={(event) => {
 						onChange(event)
 						setLengthString(maximumLength! - event.target.value.length)
 						if (isDigits) {
-							setValueDigit(event.target.value.replace(/[^0-9]/g, ''))
-						
-							
+							value = event.target.value.replace(/[^0-9]/g, '')
 						}
 					}}
 					type={isSecure ? 'password' : 'text'}
@@ -71,7 +67,7 @@ const Input: React.FC<IInput> = ({
 					className={s.inputText + ' ' + (errorMsg ? s.error : '')}
 					name={id ? `input-${id}` : 'input'}
 					id={id ? `input-${id}` : 'input'}
-					value={isDigits ? valueDigit : value}
+					value={value}
 					onKeyDown={onKeyDown}
 				/>
 				{(maximumLength ? maximumLength : 0) &&
