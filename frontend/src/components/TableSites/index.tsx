@@ -649,11 +649,11 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 										<tl.Cell className="bg-[#1A1A1A]">
 											<Row width="auto">
 												<Col width="auto">
-													<Row width="auto">
+													<Row width="auto" className='flex items-center'>
 														<img
 															src={getFaviconUrl(item.domain)}
 															alt=""
-															className="mr-1"
+															className="mr-1 w-[16px] h-[16px]"
 														/>
 														<label htmlFor="checkbox_1">
 															{getNameFromDomain(item.domain)}

@@ -30,6 +30,8 @@ const Deposite: React.FC<IDeposite> = ({
 	const user = useSelector((state: any) => state.user)
 	const token = user?.token
 
+	const [disabledBtn, setDisabledBtn] = React.useState(true)
+
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const newValue = event.target.value.replace(/[^0-9]/g, '') // remove non-digit characters
 		setValue(hormalizeValue(newValue))
@@ -91,7 +93,12 @@ const Deposite: React.FC<IDeposite> = ({
 				/>
 				<Label isMini={true} text="Укажите сумму" />
 				<Line width="280px" className={s.Line} />
-				<div className={s.checkbox_container_reg}>
+				<div
+					onClick={() => {
+						let checkbox = document.getElementById('checkbox_reg_1')
+						checkbox.checked ? setDisabledBtn(false) : setDisabledBtn(true)
+					}}
+					className={s.checkbox_container_reg}>
 					<CheckBox id="checkbox_reg_1" />
 					<label htmlFor="checkbox_reg_1">
 						Создавая учетную запись, я соглашаюсь с{' '}
@@ -102,6 +109,7 @@ const Deposite: React.FC<IDeposite> = ({
 				<div className={s.ButtonWrapper}>
 					<div></div>
 					<ButtonSVG
+						disabled={disabledBtn}
 						onClick={handleDeposite}
 						width="120px"
 						text="Оплатить"

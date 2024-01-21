@@ -21,9 +21,9 @@
 	background: #333;
 }
 
-.button:hover,
-.button:focus,
-.button:active {
+.button.hover:hover,
+.button.hover:focus,
+.button.hover:active {
 	background: #474747;
 	transition: all 0.2s;
 }

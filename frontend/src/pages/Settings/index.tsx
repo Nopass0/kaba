@@ -69,7 +69,7 @@ const Settings: React.FC = () => {
 							}
 							text="Общие"
 						/>
-						<Button
+						{/* <Button
 							width="126px"
 							onClick={() => {
 								setWrap(<NotificationSettings />)
@@ -82,7 +82,7 @@ const Settings: React.FC = () => {
 									: {background: '#262626'}
 							}
 							text="Уведомления"
-						/>
+						/> */}
 					</Row>
 					{wrap}
 				</div>

@@ -7,6 +7,7 @@ interface IButtonSVG {
 	className?: string
 	width?: string
 	onClick?: () => void
+	disabled?: boolean
 }
 
 const ButtonSVG: React.FC<IButtonSVG> = ({
@@ -15,15 +16,18 @@ const ButtonSVG: React.FC<IButtonSVG> = ({
 	className,
 	width,
 	onClick,
+	disabled,
 }: IButtonSVG) => {
 	return (
 		<div className={s.wrapper}>
 			<button
+				disabled={disabled}
 				onClick={onClick}
 				style={{width: `${width}`}}
-				className={s.button + ' ' + className}>
+				className={`${s.button} ${disabled ? '' : s.hover} ${className}`}>
 				{children}
 				{text}
+				
 			</button>
 		</div>
 	)

@@ -349,3 +349,14 @@
 		background: #474747;
 	}
 }
+
+// Link Target Input
+
+.linkTargetInput {
+	
+	div {
+		input:placeholder {
+			color: red !important;
+		}
+	}
+} 

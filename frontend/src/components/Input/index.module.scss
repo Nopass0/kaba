@@ -10,9 +10,14 @@
 	&::placeholder {
 		color: #808080;
 	}
+
 	&:focus {
 		outline: none;
 	}
+}
+
+.inputText[type=text] {
+	padding-right: 20px;
 }
 
 .inputRow {

@@ -340,7 +340,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 
 	const getFaviconUrl = (url: string) => {
 		try {
-			let favico = `https://s2.googleusercontent.com/s2/favicons?domain=${url}&sz=8`
+			let favico = `https://s2.googleusercontent.com/s2/favicons?domain=${url}&sz=16`
 			console.log(favico, 'favico')
 
 			return favico // Fallback to default location
@@ -916,11 +916,11 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 												</tl.Cell>
 												<tl.Cell>
 													<Col width="auto">
-														<Row width="auto">
+														<Row width="auto" className='flex items-center'>
 															<img
 																src={getFaviconUrl(item.site.domain)}
 																alt={item.site.domain}
-																className="mr-1"
+																className="mr-1 w-[16px] h-[16px]"
 															/>
 															<WhiteLabel
 																text={getNameFromDomain(item.site.domain)}

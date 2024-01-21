@@ -9,6 +9,7 @@ import PopUpWrapper from '../../components/PopUpWrapper/index'
 import {useSelector} from 'react-redux'
 import {useNavigate} from 'react-router-dom'
 import AuditorNBanners from '../../components/AuditorNBanners/index';
+import { Calendar } from 'primereact/calendar';
 
 const Company: React.FC = () => {
 	const user = useSelector((state: any) => state.user)
@@ -28,9 +29,10 @@ const Company: React.FC = () => {
 				<LeftCompanyMenu />
 			</div>
 			<div className={s.rightMenu}>
+				<Calendar/>
 				{/* COMPANY */}
 				{/* <HeaderCompany textHeader="Компании" needDownMenu={true} /> */}
-				<Table />
+				{/* <Table /> */}
 				{/* <PopUpWrapper>
 					<StatisticPageMini/>
 				</PopUpWrapper> */}

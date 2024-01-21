@@ -133,7 +133,7 @@ const LeftCompanyMenu: React.FC = () => {
 								</Link>
 							</>
 						)}
-						<div className={s.userNameLeft}>
+						{/* <div className={s.userNameLeft}>
 							<span className={s.userNameText}>
 								<AccountAvatar
 									img={currentUser?.avatar}
@@ -198,7 +198,7 @@ const LeftCompanyMenu: React.FC = () => {
 									))}
 								</Col>
 							</mui.Select>
-						</div>
+						</div> */}
 						<div className={s.balance}>
 							<Label
 								isMini={true}

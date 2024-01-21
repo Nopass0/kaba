@@ -91,7 +91,9 @@ const GeneralSettings: React.FC<IGeneralSettings> = ({
 					onChange={handleChangeOrganization}
 					width="528px"
 					minWidth="528px"
+					conteinerWidth='528px'
 					placeholder="ИНН"
+					isDigits={true}
 				/>
 				<Row width="auto" className={s.blueLinkRow}>
 					<Label

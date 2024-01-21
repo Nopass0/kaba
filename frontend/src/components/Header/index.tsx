@@ -182,7 +182,7 @@ const Header: React.FC = () => {
 												fill="CurrentColor"
 											/>
 										</svg>
-										<div
+										{/* <div
 											ref={statAccPopUpButtonRef}
 											onClick={() => {
 												setIsStatAcc(!isStatAcc)
@@ -204,7 +204,7 @@ const Header: React.FC = () => {
 												</svg>
 											</div>
 											<span>+245</span>
-										</div>
+										</div> */}
 										<div ref={profilePopUpButtonRef}>
 											<AccountAvatar
 												className="cursor-pointer"
@@ -262,7 +262,7 @@ const Header: React.FC = () => {
 											fill="CurrentColor"
 										/>
 									</svg>
-									<div
+									{/* <div
 										ref={statAccPopUpButtonRef}
 										onClick={() => {
 											setIsStatAcc(!isStatAcc)
@@ -284,7 +284,7 @@ const Header: React.FC = () => {
 											</svg>
 										</div>
 										<span>+245</span>
-									</div>
+									</div> */}
 									<div ref={profilePopUpButtonRef}>
 										<AccountAvatar
 											className="cursor-pointer"
@@ -345,7 +345,7 @@ const Header: React.FC = () => {
 										fill="CurrentColor"
 									/>
 								</svg>
-								<div
+								{/* <div
 									ref={statAccPopUpButtonRef}
 									onClick={() => {
 										setIsStatAcc(!isStatAcc)
@@ -367,7 +367,7 @@ const Header: React.FC = () => {
 										</svg>
 									</div>
 									<span>+245</span>
-								</div>
+								</div> */}
 								<div ref={profilePopUpButtonRef}>
 									<AccountAvatar
 										className="cursor-pointer"

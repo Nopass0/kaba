@@ -78,19 +78,19 @@
 		cursor: pointer;
 	}
 
-	.icons_header::before {
-		content: '';
-		position: relative;
-		top: 0;
-		left: 171px;
-		display: block;
-		width: 72px;
-		height: 32px;
-		border-radius: 16px;
-		background-color: #57bd53;
-		opacity: 0.15;
-		z-index: -1;
-	}
+	// .icons_header::before {
+	// 	content: '';
+	// 	position: relative;
+	// 	top: 0;
+	// 	left: 171px;
+	// 	display: block;
+	// 	width: 72px;
+	// 	height: 32px;
+	// 	border-radius: 16px;
+	// 	background-color: #57bd53;
+	// 	opacity: 0.15;
+	// 	z-index: -1;
+	// }
 
 	.icons_header svg {
 		cursor: pointer;
