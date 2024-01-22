@@ -25,6 +25,11 @@ import DatePicker from 'react-multi-date-picker'
 import InputIcon from 'react-multi-date-picker/components/input_icon'
 import * as mui from '@mui/base'
 import {eachHourOfInterval} from 'date-fns'
+import {TreeSelect, TreeSelectChangeEvent} from 'primereact/treeselect'
+import {TreeNode} from 'primereact/treenode'
+import 'primereact/resources/themes/md-light-indigo/theme.css'
+import './index.css'
+// import { NodeService } from './service/NodeService';
 const CompanyCreate: React.FC = () => {
 	// const [value, setValue] = React.useState<any>()
 	// const [value2, setValue2] = React.useState<any>()
@@ -33,8 +38,6 @@ const CompanyCreate: React.FC = () => {
 	const dispatch = useDispatch()
 
 	let switchPage = useSelector((state: any) => state.SwitchCreatePage)
-
-	console.log(switchPage, 'SWITCH PAGE')
 
 	const [checked, setChecked] = React.useState(false)
 	const [checked_1, setChecked_1] = React.useState(false)
@@ -80,6 +83,54 @@ const CompanyCreate: React.FC = () => {
 	const [bAudio, setBAudio] = useState<File>()
 	const [bImg, setBImg] = useState<File>()
 	const [bUnvirfied, setBUnvirfied] = useState<boolean>(false)
+
+	// Array DOM Element's
+	const [banShowArray, setBanShowArray] = useState<HTMLElement[]>([])
+
+	// Tree Select
+	const [nodes, setNodes] = useState<TreeNode[] | null>([
+		{
+			key: '0',
+			label: 'Название, ID',
+			data: 'NameID',
+			children: [
+				{
+					key: '0-0',
+					label: 'Статус. комп.',
+					data: 'StatusComp',
+					children: [
+						{
+							key: '0-0-0',
+							label: 'Expenses.doc',
+							data: 'Expenses Document',
+						},
+						{
+							key: '0-0-1',
+							label: 'Resume.doc',
+							data: 'Resume Document',
+						},
+					],
+				},
+				{
+					key: '0-1',
+					label: 'Home',
+					data: 'Home Folder',
+					children: [
+						{
+							key: '0-1-0',
+							label: 'Invoices.txt',
+							data: 'Invoices for this month',
+						},
+					],
+				},
+			],
+		},
+	])
+	const [selectedNodeKeys, setSelectedNodeKeys] = useState<string[]>(null)
+
+	// useEffect(() => {
+	//     NodeService.getTreeNodes().then((data) => setNodes(data));
+	// }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const user = useSelector((state: any) => state.user)
 	const token = user.token
@@ -244,9 +295,7 @@ const CompanyCreate: React.FC = () => {
 			return ''
 		}
 	}
-	useEffect(() => {
-		console.log(images, 'images')
-	}, [images])
+
 	const getNameFromDomain = (url: string): string => {
 		try {
 			let hostname = url
@@ -266,6 +315,41 @@ const CompanyCreate: React.FC = () => {
 		}
 	}
 
+	const togglerTemplate = (option) => {
+		return <img src="custom-icon.png" alt="custom-icon" />
+	}
+	const CustomCollapseIcon = () => (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="16"
+			height="16"
+			viewBox="0 0 16 16"
+			fill="none">
+			<path
+				d="M3 10L8 5L13 10"
+				stroke="#808080"
+				strokeWidth="1.4"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+		</svg>
+	)
+	const CustomExpandIcon = () => (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="16"
+			height="16"
+			viewBox="0 0 16 16"
+			fill="none">
+			<path
+				d="M3 6L8 11L13 6"
+				stroke="#808080"
+				stroke-width="1.4"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			/>
+		</svg>
+	)
 	return (
 		<div className={s.wrapper}>
 			<div className={s.stepsMenu}>
@@ -395,13 +479,13 @@ const CompanyCreate: React.FC = () => {
 								/>
 								<WhiteLabel
 									text={getNameFromDomain(
-										cLink.length <= 40 ? cLink : cLink.slice(0, 75) + '...',
+										cLink.length <= 40 ? cLink : cLink.slice(0, 70) + '...',
 									)}
 								/>
 							</Row>
 							<Label
 								className={`ml-[16px] mb-[8px] flex-wrap`}
-								text={cLink.length <= 40 ? cLink : cLink.slice(0, 75) + '...'}
+								text={cLink.length <= 40 ? cLink : cLink.slice(0, 70) + '...'}
 								isMini={true}
 							/>
 						</Col>
@@ -588,11 +672,13 @@ const CompanyCreate: React.FC = () => {
 											<Row className={`w-[114px] ml-[8px]`}>
 												<Input
 													onChange={(e) => {
+														if (/^\d+$/.test(e.target.value)) {
+															setCTarget(e.target.value)
+														}
 														if (
 															e.target.value.length > 0 &&
 															/^\d+$/.test(e.target.value)
 														) {
-															setCTarget(e.target.value)
 															setStepCompany((prevStepCompany) =>
 																prevStepCompany.map((step) =>
 																	step.title === 'Цель*'
@@ -600,7 +686,8 @@ const CompanyCreate: React.FC = () => {
 																		: step,
 																),
 															)
-														} else {
+														} else if (e.target.value.length === 0) {
+															setCTarget('')
 															setStepCompany((prevStepCompany) =>
 																prevStepCompany.map((step) =>
 																	step.title === 'Цель*'
@@ -609,8 +696,6 @@ const CompanyCreate: React.FC = () => {
 																),
 															)
 														}
-														console.log(e.target.value)
-														
 													}}
 													value={cTarget}
 													id="targetInput"
@@ -702,7 +787,9 @@ const CompanyCreate: React.FC = () => {
 								className="mt-[17px] w-[528px] flex justify-between">
 								<Input
 									onChange={(e) => {
-										setCWeekBudget(e.target.value)
+										if (/^\d+$/.test(e.target.value)) {
+											setCWeekBudget(e.target.value)
+										}
 										if (
 											e.target.value.length > 0 &&
 											/^\d+$/.test(e.target.value)
@@ -714,7 +801,8 @@ const CompanyCreate: React.FC = () => {
 														: step,
 												),
 											)
-										} else {
+										} else if (e.target.value.length === 0) {
+											setCWeekBudget('')
 											setStepCompany((prevStepCompany) =>
 												prevStepCompany.map((step) =>
 													step.title === 'Недельный бюджет'
@@ -724,6 +812,7 @@ const CompanyCreate: React.FC = () => {
 											)
 										}
 									}}
+									value={cWeekBudget}
 									isDigits={true}
 									id="sumInput"
 									width="100%"
@@ -848,13 +937,15 @@ const CompanyCreate: React.FC = () => {
 											<Line width="150px" className={s.CopyNClearLine} />
 											<div
 												onClick={() => {
-													setStepCompany((prevStepCompany) =>
-														prevStepCompany.map((step) =>
-															step.title === 'Тематические слова'
-																? {...step, isDone: false}
-																: step,
-														),
-													)
+													if (cKeyWordDel.length === 0) {
+														setStepCompany((prevStepCompany) =>
+															prevStepCompany.map((step) =>
+																step.title === 'Тематические слова'
+																	? {...step, isDone: false}
+																	: step,
+															),
+														)
+													}
 													setCKeyWord([])
 												}}
 												className={s.Clear}>
@@ -887,6 +978,7 @@ const CompanyCreate: React.FC = () => {
 							width="528px"
 							className="mt-[8px] w-[528px] flex justify-between">
 							<Chips
+								id="cKeyWordDel"
 								className={s.chips}
 								value={cKeyWordDel}
 								onChange={(e) => {
@@ -955,11 +1047,31 @@ const CompanyCreate: React.FC = () => {
 								<mui.Option value={1} className={`cursor-pointer z-10 mt-1`}>
 									<div className={s.CopyNClearWrapper}>
 										<div className={s.CopyNClear}>
-											<div className={s.CopyAll}>
+											<div
+												onClick={() => {
+													let chipsContent =
+														document.getElementById('cKeyWordDel')?.innerText
+													navigator.clipboard.writeText(chipsContent)
+												}}
+												className={s.CopyAll}>
 												<p className={s.Copy_text}>Скопировать всё</p>
 											</div>
 											<Line width="150px" className={s.CopyNClearLine} />
-											<div className={s.Clear}>
+											<div
+												onClick={() => {
+													if (cKeyWord.length === 0) {
+														setStepCompany((prevStepCompany) =>
+															prevStepCompany.map((step) =>
+																step.title === 'Тематические слова'
+																	? {...step, isDone: false}
+																	: step,
+															),
+														)
+													}
+
+													setCKeyWordDel([])
+												}}
+												className={s.Clear}>
 												<p className={s.Clear_text}>Очистить</p>
 											</div>
 										</div>
@@ -1023,8 +1135,35 @@ const CompanyCreate: React.FC = () => {
 										if (e.key === 'Enter' && !e.repeat && !e.shiftKey) {
 											e.preventDefault
 											console.log('ENTER PRESS')
-											let banShow = document.getElementById('banShow')
 											// Hooks
+											setBanShowArray((prevArray) => [
+												...prevArray,
+												<>
+													<Row
+														width="528px"
+														className={`items-center pl-[16px] pb-[5px] my-[5px] justify-between ${s.list}`}>
+														<div className="w-[500px] flex justify-between items-center text-[#808080] hover:text-[#f2f2f2] transition-all">
+															<WhiteLabel
+																className={`w-[200px]`}
+																size="14px"
+																text={e.target.value}
+															/>
+															<svg
+																className="cursor-pointer"
+																width="16"
+																height="16"
+																viewBox="0 0 16 16"
+																fill="none"
+																xmlns="http://www.w3.org/2000/svg">
+																<path
+																	d="M4.13179 11.8681C4.19232 11.9253 4.26125 11.964 4.33859 11.9842C4.41592 12.0044 4.49326 12.0044 4.5706 11.9842C4.64794 11.964 4.71519 11.9253 4.77235 11.8681L8.00033 8.63863L11.2283 11.8681C11.2855 11.9253 11.3527 11.964 11.4301 11.9842C11.5074 12.0044 11.5856 12.0052 11.6646 11.9867C11.7436 11.9682 11.8117 11.9287 11.8689 11.8681C11.926 11.811 11.9639 11.7437 11.9823 11.6663C12.0008 11.5889 12.0008 11.5116 11.9823 11.4342C11.9639 11.3568 11.926 11.2895 11.8689 11.2323L8.64088 7.99778L11.8689 4.76827C11.926 4.71108 11.9647 4.6438 11.9849 4.56643C12.005 4.48905 12.005 4.41168 11.9849 4.3343C11.9647 4.25693 11.926 4.18965 11.8689 4.13246C11.8083 4.07191 11.7394 4.03238 11.6621 4.01388C11.5847 3.99537 11.5074 3.99537 11.4301 4.01388C11.3527 4.03238 11.2855 4.07191 11.2283 4.13246L8.00033 7.36197L4.77235 4.13246C4.71519 4.07191 4.64709 4.03238 4.56808 4.01388C4.48906 3.99537 4.41088 3.99537 4.33354 4.01388C4.25621 4.03238 4.18896 4.07191 4.13179 4.13246C4.07463 4.18965 4.0368 4.25693 4.01831 4.3343C3.99982 4.41168 3.99982 4.48905 4.01831 4.56643C4.0368 4.6438 4.07463 4.71108 4.13179 4.76827L7.35978 7.99778L4.13179 11.2323C4.07463 11.2895 4.03596 11.3568 4.01579 11.4342C3.99561 11.5116 3.99477 11.5889 4.01327 11.6663C4.03176 11.7437 4.07127 11.811 4.13179 11.8681Z"
+																	fill="CurrentColor"
+																/>
+															</svg>
+														</div>
+													</Row>
+												</>,
+											])
 											e.target.value = ''
 										}
 									}}
@@ -1058,52 +1197,8 @@ const CompanyCreate: React.FC = () => {
 									</svg>
 								</div>
 							</Row>
-							<Row
-								width="528px"
-								className={`items-center pl-[16px] pb-[5px] my-[5px] justify-between ${s.list}`}>
-								<div className="w-[500px] flex justify-between items-center text-[#808080] hover:text-[#f2f2f2] transition-all">
-									<WhiteLabel
-										className={`w-[200px]`}
-										size="14px"
-										text="https://test.ru"
-									/>
-									<svg
-										className="cursor-pointer"
-										width="16"
-										height="16"
-										viewBox="0 0 16 16"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg">
-										<path
-											d="M4.13179 11.8681C4.19232 11.9253 4.26125 11.964 4.33859 11.9842C4.41592 12.0044 4.49326 12.0044 4.5706 11.9842C4.64794 11.964 4.71519 11.9253 4.77235 11.8681L8.00033 8.63863L11.2283 11.8681C11.2855 11.9253 11.3527 11.964 11.4301 11.9842C11.5074 12.0044 11.5856 12.0052 11.6646 11.9867C11.7436 11.9682 11.8117 11.9287 11.8689 11.8681C11.926 11.811 11.9639 11.7437 11.9823 11.6663C12.0008 11.5889 12.0008 11.5116 11.9823 11.4342C11.9639 11.3568 11.926 11.2895 11.8689 11.2323L8.64088 7.99778L11.8689 4.76827C11.926 4.71108 11.9647 4.6438 11.9849 4.56643C12.005 4.48905 12.005 4.41168 11.9849 4.3343C11.9647 4.25693 11.926 4.18965 11.8689 4.13246C11.8083 4.07191 11.7394 4.03238 11.6621 4.01388C11.5847 3.99537 11.5074 3.99537 11.4301 4.01388C11.3527 4.03238 11.2855 4.07191 11.2283 4.13246L8.00033 7.36197L4.77235 4.13246C4.71519 4.07191 4.64709 4.03238 4.56808 4.01388C4.48906 3.99537 4.41088 3.99537 4.33354 4.01388C4.25621 4.03238 4.18896 4.07191 4.13179 4.13246C4.07463 4.18965 4.0368 4.25693 4.01831 4.3343C3.99982 4.41168 3.99982 4.48905 4.01831 4.56643C4.0368 4.6438 4.07463 4.71108 4.13179 4.76827L7.35978 7.99778L4.13179 11.2323C4.07463 11.2895 4.03596 11.3568 4.01579 11.4342C3.99561 11.5116 3.99477 11.5889 4.01327 11.6663C4.03176 11.7437 4.07127 11.811 4.13179 11.8681Z"
-											fill="CurrentColor"
-										/>
-									</svg>
-								</div>
-							</Row>
-							<Row
-								width="528px"
-								className={`items-center pl-[16px] pb-[5px] my-[5px] justify-between ${s.list}`}>
-								<div className="w-[500px] flex justify-between items-center text-[#808080] hover:text-[#f2f2f2] transition-all">
-									<WhiteLabel
-										className={`w-[200px]`}
-										size="14px"
-										text="https://test.ru"
-									/>
-									<svg
-										className="cursor-pointer"
-										width="16"
-										height="16"
-										viewBox="0 0 16 16"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg">
-										<path
-											d="M4.13179 11.8681C4.19232 11.9253 4.26125 11.964 4.33859 11.9842C4.41592 12.0044 4.49326 12.0044 4.5706 11.9842C4.64794 11.964 4.71519 11.9253 4.77235 11.8681L8.00033 8.63863L11.2283 11.8681C11.2855 11.9253 11.3527 11.964 11.4301 11.9842C11.5074 12.0044 11.5856 12.0052 11.6646 11.9867C11.7436 11.9682 11.8117 11.9287 11.8689 11.8681C11.926 11.811 11.9639 11.7437 11.9823 11.6663C12.0008 11.5889 12.0008 11.5116 11.9823 11.4342C11.9639 11.3568 11.926 11.2895 11.8689 11.2323L8.64088 7.99778L11.8689 4.76827C11.926 4.71108 11.9647 4.6438 11.9849 4.56643C12.005 4.48905 12.005 4.41168 11.9849 4.3343C11.9647 4.25693 11.926 4.18965 11.8689 4.13246C11.8083 4.07191 11.7394 4.03238 11.6621 4.01388C11.5847 3.99537 11.5074 3.99537 11.4301 4.01388C11.3527 4.03238 11.2855 4.07191 11.2283 4.13246L8.00033 7.36197L4.77235 4.13246C4.71519 4.07191 4.64709 4.03238 4.56808 4.01388C4.48906 3.99537 4.41088 3.99537 4.33354 4.01388C4.25621 4.03238 4.18896 4.07191 4.13179 4.13246C4.07463 4.18965 4.0368 4.25693 4.01831 4.3343C3.99982 4.41168 3.99982 4.48905 4.01831 4.56643C4.0368 4.6438 4.07463 4.71108 4.13179 4.76827L7.35978 7.99778L4.13179 11.2323C4.07463 11.2895 4.03596 11.3568 4.01579 11.4342C3.99561 11.5116 3.99477 11.5889 4.01327 11.6663C4.03176 11.7437 4.07127 11.811 4.13179 11.8681Z"
-											fill="CurrentColor"
-										/>
-									</svg>
-								</div>
-							</Row>
+
+							{banShowArray}
 						</Col>
 						<Line width="528px" className={s.Line} />
 
@@ -1253,6 +1348,7 @@ const CompanyCreate: React.FC = () => {
 							</Row>
 							<Row width="528px" className="w-[528px] flex justify-between">
 								<Chips
+									id="aGeography"
 									className={s.chips}
 									value={aGeography}
 									onChange={(e) => {
@@ -1321,11 +1417,29 @@ const CompanyCreate: React.FC = () => {
 									<mui.Option value={1} className={`cursor-pointer z-10 mt-1`}>
 										<div className={s.CopyNClearWrapper}>
 											<div className={s.CopyNClear}>
-												<div className={s.CopyAll}>
+												<div
+													onClick={() => {
+														let chipsContent =
+															document.getElementById('aGeography')?.innerText
+														navigator.clipboard.writeText(chipsContent)
+													}}
+													className={s.CopyAll}>
 													<p className={s.Copy_text}>Скопировать всё</p>
 												</div>
 												<Line width="150px" className={s.CopyNClearLine} />
-												<div className={s.Clear}>
+												<div
+													onClick={() => {
+														setStepAudi((prevStepAudi) =>
+															prevStepAudi.map((step) =>
+																step.title === 'География показов'
+																	? {...step, isDone: false}
+																	: step,
+															),
+														)
+
+														setAGeography([])
+													}}
+													className={s.Clear}>
 													<p className={s.Clear_text}>Очистить</p>
 												</div>
 											</div>
@@ -1355,11 +1469,123 @@ const CompanyCreate: React.FC = () => {
 								/>
 							</svg>
 						</Row>
-						<Input
+						{/* <Input
 							width="100%"
 							placeholder="Введите название..."
 							className={`${s.inputText}`}
-						/>
+						/> */}
+						<TreeSelect
+							value={selectedNodeKeys}
+							onChange={(e: TreeSelectChangeEvent) =>
+								setSelectedNodeKeys(e.value)
+							}
+							options={nodes}
+							metaKeySelection={false}
+							className="md:w-20rem w-full"
+							selectionMode="checkbox"
+							// togglerTemplate={togglerTemplate}
+							// collapseIcon={<CollapseIcon />}
+							// expandIcon={<ExpandIcon />}
+							expandedKeys={(e) => {
+								console.log(e,'KETS');
+							}}
+							onExpand={(e) => {
+								console.log(e,'onExpand');
+							}}
+							onNodeExpand={(e) => {console.log(e, 'EXPANDAGDOSGK');
+							}}
+							onNodeCollapse={(e) => {console.log(e, 'fdagadg');
+							} }
+							// togglerTemplate={(node) => {
+							// 	const onToggle = (node, event) => {
+							// 		if (node.expanded) {
+							// 			node.collapseNode({originalEvent: event, node})
+							// 		} else {
+							// 			node.expandNode({originalEvent: event, node})
+							// 		}
+							// 	}
+							// 	console.log(node.expanded, 'eXPANDED')
+
+							// 	return (
+							// 		<div>
+							// 			{node.children && (
+							// 				<div className="w-full absolute left-0">
+							// 					{node.expanded ? (
+							// 						<button
+							// 							onClick={(event) => onToggle(node, event)}
+							// 							type="button"
+							// 							tabindex="-1"
+							// 							aria-label="Collapse"
+							// 							data-pc-section="toggler">
+							// 							<svg
+							// 								xmlns="http://www.w3.org/2000/svg"
+							// 								width="16"
+							// 								height="16"
+							// 								viewBox="0 0 16 16"
+							// 								fill="none">
+							// 								<path
+							// 									d="M3 10L8 5L13 10"
+							// 									stroke="CurrentColor"
+							// 									strokeWidth="1.4"
+							// 									strokeLinecap="round"
+							// 									strokeLinejoin="round"
+							// 								/>
+							// 							</svg>
+							// 						</button>
+							// 					) : (
+							// 						<button
+							// 							onClick={(event) => onToggle(node, event)}
+							// 							type="button"
+							// 							tabindex="-1"
+							// 							aria-label="Expand"
+							// 							data-pc-section="toggler">
+							// 							<svg
+							// 								xmlns="http://www.w3.org/2000/svg"
+							// 								width="16"
+							// 								height="16"
+							// 								viewBox="0 0 16 16"
+							// 								fill="none">
+							// 								<path
+							// 									d="M3 6L8 11L13 6"
+							// 									stroke="CurrentColor"
+							// 									stroke-width="1.4"
+							// 									stroke-linecap="round"
+							// 									stroke-linejoin="round"
+							// 								/>
+							// 							</svg>
+							// 						</button>
+							// 					)}
+							// 				</div>
+							// 			)}
+							// 		</div>
+							// 	)
+							// }}
+							display="chip"
+							placeholder="Выбор категории"
+							pt={{
+								root: {
+									className:
+										'bg-[#262626] rounded-[10px] h-[36px] outline-none ',
+								},
+								labelContainer: {className: 'h-[36px]'},
+								label: {
+									className:
+										'h-[36px] py-[5.5px] pl-[16px] text-[#808080] text-[14px]',
+								},
+								token: {className: 'bg-[#333] rounded-[12px] h-[24px] '},
+								tokenLabel: {className: 'text-[#f2f2f2]'},
+								trigger: {className: 'hidden'},
+								closeIcon: {className: 'hidden'},
+								header: {className: 'hidden p-0 m-0'},
+								panel: {className: 'bg-[#262626] rounded-[10px] '},
+								wrapper: {className: 'bg-[#262626] rounded-[10px] '},
+								tree: {
+									content: ({context}) => ({
+										className: context.expanded ? '' : '',
+										
+									}),
+								},
+							}}></TreeSelect>
 
 						<Line width="528px" className={s.Line} />
 
@@ -1382,6 +1608,7 @@ const CompanyCreate: React.FC = () => {
 						</Row>
 						<Row width="528px" className="w-[528px] flex justify-between">
 							<Chips
+								id="aFavor"
 								className={s.chips}
 								value={aFavor}
 								onChange={(e) => {
@@ -1450,11 +1677,29 @@ const CompanyCreate: React.FC = () => {
 								<mui.Option value={1} className={`cursor-pointer z-10 mt-1`}>
 									<div className={s.CopyNClearWrapper}>
 										<div className={s.CopyNClear}>
-											<div className={s.CopyAll}>
+											<div
+												onClick={() => {
+													let chipsContent =
+														document.getElementById('aFavor')?.innerText
+													navigator.clipboard.writeText(chipsContent)
+												}}
+												className={s.CopyAll}>
 												<p className={s.Copy_text}>Скопировать всё</p>
 											</div>
 											<Line width="150px" className={s.CopyNClearLine} />
-											<div className={s.Clear}>
+											<div
+												onClick={() => {
+													setStepAudi((prevStepAudi) =>
+														prevStepAudi.map((step) =>
+															step.title === 'Интересы'
+																? {...step, isDone: false}
+																: step,
+														),
+													)
+
+													setAFavor([])
+												}}
+												className={s.Clear}>
 												<p className={s.Clear_text}>Очистить</p>
 											</div>
 										</div>
@@ -1484,6 +1729,7 @@ const CompanyCreate: React.FC = () => {
 						</Row>
 						<Row width="528px" className="w-[528px] flex justify-between">
 							<Chips
+								id="aDevice"
 								className={s.chips}
 								value={aDevice}
 								onChange={(e) => {
@@ -1552,11 +1798,29 @@ const CompanyCreate: React.FC = () => {
 								<mui.Option value={1} className={`cursor-pointer z-10 mt-1`}>
 									<div className={s.CopyNClearWrapper}>
 										<div className={s.CopyNClear}>
-											<div className={s.CopyAll}>
+											<div
+												onClick={() => {
+													let chipsContent =
+														document.getElementById('aDevice')?.innerText
+													navigator.clipboard.writeText(chipsContent)
+												}}
+												className={s.CopyAll}>
 												<p className={s.Copy_text}>Скопировать всё</p>
 											</div>
 											<Line width="150px" className={s.CopyNClearLine} />
-											<div className={s.Clear}>
+											<div
+												onClick={() => {
+													setStepAudi((prevStepAudi) =>
+														prevStepAudi.map((step) =>
+															step.title === 'Устройства'
+																? {...step, isDone: false}
+																: step,
+														),
+													)
+
+													setADevice([])
+												}}
+												className={s.Clear}>
 												<p className={s.Clear_text}>Очистить</p>
 											</div>
 										</div>
@@ -1957,7 +2221,6 @@ const CompanyCreate: React.FC = () => {
 									if (e.key === 'Enter' && !e.repeat && !e.shiftKey) {
 										e.preventDefault
 										console.log('ENTER PRESS')
-										let textAreaDesc = document.getElementById('textAreaDesc')
 
 										e.target.value = ''
 									}
@@ -1971,6 +2234,31 @@ const CompanyCreate: React.FC = () => {
 								iD="textAreaDesc"
 								width="528px"
 								className={s.ColAfterTextArea}>
+								<div className={s.BlockAfterTextArea}>
+									<p className={s.TextBlockAfter}>
+										Рекламные платформы, такие как Facebook, Google Ads или
+										Apple Search Ads, регулярно обновляют свои алгоритмы. Эти
+										изменения могут затронуть таргетинг, ставки, релевантность
+										объявлений и оптимизацию кампаний. Если вы не следите за
+										обновлениями и не адаптируете свою рекламу, она может стать
+										менее эффективной и не окупаться.
+									</p>
+									<button className={s.ButtonAfterExit}>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="16"
+											height="16"
+											viewBox="0 0 16 16"
+											fill="none">
+											<path
+												d="M4.13179 11.8681C4.19232 11.9253 4.26125 11.964 4.33859 11.9842C4.41592 12.0044 4.49326 12.0044 4.5706 11.9842C4.64794 11.964 4.71519 11.9253 4.77235 11.8681L8.00033 8.63863L11.2283 11.8681C11.2855 11.9253 11.3527 11.964 11.4301 11.9842C11.5074 12.0044 11.5856 12.0052 11.6646 11.9867C11.7436 11.9682 11.8117 11.9287 11.8689 11.8681C11.926 11.811 11.9639 11.7437 11.9823 11.6663C12.0008 11.5889 12.0008 11.5116 11.9823 11.4342C11.9639 11.3568 11.926 11.2895 11.8689 11.2323L8.64088 7.99778L11.8689 4.76827C11.926 4.71108 11.9647 4.6438 11.9849 4.56643C12.005 4.48905 12.005 4.41168 11.9849 4.3343C11.9647 4.25693 11.926 4.18965 11.8689 4.13246C11.8083 4.07191 11.7394 4.03238 11.6621 4.01388C11.5847 3.99537 11.5074 3.99537 11.4301 4.01388C11.3527 4.03238 11.2855 4.07191 11.2283 4.13246L8.00033 7.36197L4.77235 4.13246C4.71519 4.07191 4.64709 4.03238 4.56808 4.01388C4.48906 3.99537 4.41088 3.99537 4.33354 4.01388C4.25621 4.03238 4.18896 4.07191 4.13179 4.13246C4.07463 4.18965 4.0368 4.25693 4.01831 4.3343C3.99982 4.41168 3.99982 4.48905 4.01831 4.56643C4.0368 4.6438 4.07463 4.71108 4.13179 4.76827L7.35978 7.99778L4.13179 11.2323C4.07463 11.2895 4.03596 11.3568 4.01579 11.4342C3.99561 11.5116 3.99477 11.5889 4.01327 11.6663C4.03176 11.7437 4.07127 11.811 4.13179 11.8681Z"
+												fill="#808080"
+											/>
+										</svg>
+									</button>
+								</div>
+								<Line width="528px" className={s.Line} />
+
 								<div className={s.BlockAfterTextArea}>
 									<p className={s.TextBlockAfter}>
 										Рекламные платформы, такие как Facebook, Google Ads или
