@@ -91,3 +91,46 @@ export const getBalanceAPI = async (token: string) => {
 		return {status: 'error'}
 	}
 }
+
+export const getAllActiveCompaniesAPI = async () => {
+	try {
+		const response = await axios.get(getApiUrl('getAllActiveCompanies'))
+		return response
+	} catch (error) {
+		console.error('Error during getAllActiveCompanies:', error)
+		return {status: 'error'}
+	}
+}
+
+export const addCompanyToBloggerAPI = async (
+	token: string,
+	company_id: number,
+) => {
+	const formData = new FormData()
+	formData.append('token', token)
+	formData.append('company_id', company_id.toString())
+
+	try {
+		const response = await axios.post(
+			getApiUrl('addCompanyToBlogger'),
+			formData,
+		)
+		return response
+	} catch (error) {
+		console.error('Error during addCompanyToBlogger:', error)
+		return {status: 'error'}
+	}
+}
+
+export const getCompanyBloggersAPI = async (token: string) => {
+	const formData = new FormData()
+	formData.append('token', token)
+
+	try {
+		const response = await axios.post(getApiUrl('getCompanyBloggers'), formData)
+		return response
+	} catch (error) {
+		console.error('Error during getCompanyBloggers:', error)
+		return {status: 'error'}
+	}
+}

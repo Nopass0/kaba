@@ -30,7 +30,7 @@ from account.models.account import accountModel, walletModel, walletOperationsMo
 from account.models.social_network import social_networkModel
 from account.models.verification import verificationModel
 from account.models.social_network import social_networkModel
-from ad_advertiser.models.ad.ad_company import ad_companyModel, ad_statusModel
+from ad_advertiser.models.ad.ad_company import ad_bloggerCompanyModel, ad_companyModel, ad_statusModel
 from ad_advertiser.models.profile.profile import profileModel
 from .models import tokenModel
 
@@ -370,6 +370,7 @@ class yandex_authAPIViews(APIView):
             tokenModel(account=account, token=token).save()
             #get or create wallet
             walletModel.objects.get_or_create(account=account)
+            
             response_data = {
                 'status': 'success',
                 'user_id': account.id,
@@ -403,7 +404,7 @@ class yandex_authAPIViews(APIView):
             )
             token = str(secrets.token_hex(32))
             tokenModel(account=account, token=token).save()
-            walletModel.objects.create(account=account)
+            walletModel.objects.create(account=account).save()
             response_data = {
                 'status': 'success',
                 'user_id': account.id,
@@ -539,6 +540,7 @@ class getBalanceAPIViews(APIView):
             return Response({'error': 'token is invalid.'}, status=status.HTTP_400_BAD_REQUEST)
 
         user = current_token.first().account
+        walletModel.objects.get_or_create(account=user)
         balance = walletModel.objects.filter(account=user.id).first().balance
         currency = walletModel.objects.filter(account=user.id).first().currency_sign
         return Response({'balance': balance, 'currency': currency, 'status': 'ok'}, status=status.HTTP_200_OK)
@@ -909,7 +911,8 @@ class WalletOperationsView(APIView):
             return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Получение данных пользователя по токену (замените следующую строку своей логикой получения пользователя)
-        user = accountModel.objects.filter(token=token).first()  # Реализуйте функцию get_user_by_token(token)
+        current_token = tokenModel.objects.filter(token=token)
+        user = current_token.first().account # Реализуйте функцию get_user_by_token(token)
         if user is None:
             return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
         
@@ -934,3 +937,117 @@ class WalletOperationsView(APIView):
             operations_list.append(operation_data)
         
         return Response({'operations': operations_list}, status=status.HTTP_200_OK)
+    
+    
+class getAllActiveCompanies(APIView):
+
+    def get(self, request):
+        # Fetch all active companies
+        active_companies = ad_companyModel.objects.filter(
+            status_text='Активная'  # Assuming 'Active' is the status for active companies
+        ).prefetch_related(
+            'ad_bannerModel_ad_companyModel',  # Relationship from company to banners
+            'ad_audienceModel_ad_companyModel',  # Relationship from company to audiences
+            'ad_statusModel_companies',  # Relationship from company to statuses
+        ).select_related(
+            'site'  # Relationship from company to site
+        )
+
+        # Construct the response data
+        companies_data = []
+        for company in active_companies:
+            # ad_bloggerCompanyModel.objects.filter
+            company_info = {
+                'id': company.id,
+                'name': company.name,
+                'date_start': company.date_start,
+                'date_finish': company.date_finish,
+                'status_text': company.status_text,
+                'budget_week': company.budget_week,
+                'views': company.views,
+                'site': {
+                    'id': company.site.id if company.site else None,
+                    'domain': company.site.domain if company.site else '',
+                    'date_creation': company.site.date_creation if company.site else None
+                },
+                'banners': [
+                    {
+                        'id': banner.id,
+                        'name': banner.name,
+                        'link': banner.link,
+                        # Add more banner fields as needed
+                        'title_option': banner.title_option,
+                        'description_option': banner.description_option,
+                        'image_option': banner.image_option,
+                        'video_option': banner.video_option,
+                        'audio_option': banner.audio_option,
+                        'channel_private_bool': banner.channel_private_bool,
+                    } for banner in company.ad_bannerModel_ad_companyModel.all()
+                ],
+                'audiences': [
+                    {
+                        'id': audience.id,
+                        'name': audience.name,
+                        # Add more audience fields as needed
+                        'geography': audience.geography,
+                        'category': audience.category,
+                        'interest': audience.interest,
+                        'gender_age': audience.gender_age,
+                        'device': audience.device,
+                        'solvency': audience.solvency,
+                    } for audience in company.ad_audienceModel_ad_companyModel.all()
+                ],
+                'statuses': [
+                    {
+                        'id': status.id,
+                        'status': status.status,
+                        'text': status.text,
+                    } for status in company.ad_statusModel_companies.all()
+                ]
+            }
+            companies_data.append(company_info)
+
+        return Response({'companies': companies_data}, status=status.HTTP_200_OK)
+
+class addCompanyToBlogger(APIView):
+    def post(self, request):
+        token = request.data.get('token', '')
+        if not token:
+            return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        current_token = tokenModel.objects.filter(token=token)
+        user = current_token.first().account
+        if user is None:
+            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        company_id = request.data.get('company_id', '')
+        if not company_id:
+            return Response({'error': 'company_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        company = ad_companyModel.objects.filter(id=company_id).first()
+        if company is None:
+            return Response({'error': 'Company not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        ad_bloggerCompanyModel.objects.get_or_create(account=user, company=company)
+
+        return Response({'status': 'ok'}, status=status.HTTP_200_OK)
+    
+class getCompanyBloggers(APIView):
+    def post(self, request):
+        token = request.data.get('token', '')
+        if not token:
+            return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        current_token = tokenModel.objects.filter(token=token)
+        user = current_token.first().account
+        if user is None:
+            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        bloggers = ad_bloggerCompanyModel.objects.filter(account=user).values()
+        
+        #get companies
+        for blogger in bloggers:
+            company = ad_companyModel.objects.filter(id=blogger["company_id"]).values()
+            blogger["company"] = company
+      
+        return Response({'bloggers': list(bloggers)}, status=status.HTTP_200_OK)

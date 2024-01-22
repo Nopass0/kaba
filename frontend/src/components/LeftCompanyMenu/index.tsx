@@ -242,9 +242,7 @@ const LeftCompanyMenu: React.FC = () => {
 						)}
 						<div className={s.companyListPages}>
 							{isBlogger ? (
-								<Link
-									to="/ "
-									onClick={() => setCurrentUrl('mybanners')}>
+								<Link to="/ " onClick={() => setCurrentUrl('mybanners')}>
 									<div
 										className={`${s.companies} ${s.companyPage} ${
 											location.pathname === '/' ? s.active : ''
@@ -318,7 +316,7 @@ const LeftCompanyMenu: React.FC = () => {
 											: ''
 									}`}>
 									<div className={s.companyPageLeft}>
-										<img src={StatisticIcon} alt="Statistic" srcset="" />
+										<img src={StatisticIcon} alt="Statistic" srcSet="" />
 										<span className={s.companyPageText}>Статистика</span>
 									</div>
 									{/* <svg
