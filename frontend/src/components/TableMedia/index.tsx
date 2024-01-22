@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import s from './index.module.scss'
 
 import {useTheme} from '@table-library/react-table-library/theme'
@@ -21,6 +21,8 @@ import WhiteLabel from '../WhiteLabel'
 import PopUpWrapper from '../PopUpWrapper'
 import TableCol from '../popup/TableColsPopUp'
 import TableLineFooter from '../TableLineFooter'
+import {getCompanyBloggersAPI} from '../../api/data.api'
+import {useSelector} from 'react-redux'
 
 const list = [
 	{
@@ -186,7 +188,6 @@ enum CurrentPopup {
 }
 
 const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
-	const data = {nodes: list}
 	const [downMenu, setDownMenu] = useState(false)
 	const [search, setSearch] = useState('')
 	const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -195,6 +196,34 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 	// const sort = useSort(data);
 
 	const [currentPopup, setCurrentPopup] = useState(CurrentPopup.None)
+
+	const user = useSelector((state: any) => state.user)
+	const token = user.token
+
+	const [companies, setCompanies] = useState([])
+
+	useEffect(() => {
+		const getCompanies = async () => {
+			let res = await getCompanyBloggersAPI(token)
+			setCompanies(res.data.bloggers)
+			console.log(res.data.bloggers)
+		}
+		getCompanies()
+	}, [])
+
+	const data = {nodes: companies}
+
+	const getFaviconUrl = (url: string) => {
+		try {
+			let favico = `https://s2.googleusercontent.com/s2/favicons?domain=${url}&sz=16`
+			console.log(favico, 'favico')
+
+			return favico // Fallback to default location
+		} catch (error) {
+			console.error('Error fetching or parsing URL:', error)
+			return ''
+		}
+	}
 
 	const [company, setCompany] = useState<number>(0)
 	const theme = useTheme(THEME)
@@ -509,11 +538,14 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 												<Col width="auto">
 													<Row width="auto">
 														<img
-															src={item.nameImg}
-															alt={item.name}
+															// src={getFaviconUrl(item.companysite.domain)}
+															src={getFaviconUrl('google.com')}
+															alt={item.company.name}
 															className="mr-2"
 														/>
-														<label htmlFor="checkbox_1">{item.name}</label>
+														<label htmlFor="checkbox_1">
+															{item.company.name}
+														</label>
 													</Row>
 													<Row width="auto" className={s.rowIdCheckbox}>
 														{/* <svg
@@ -541,7 +573,7 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 														<Label
 															isMini={true}
 															forHtml="checkbox_1"
-															text={`${item.id}`}
+															text={`${item.company.id}`}
 														/>
 													</Row>
 												</Col>
@@ -550,34 +582,36 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 
 										<tl.Cell>
 											<Row width="auto">
-												<WhiteLabel text={item.access} />
+												<WhiteLabel text={item.company.access} />
 											</Row>
 										</tl.Cell>
 										<tl.Cell>
 											<p
 												id={
-													item.status === 'Активная'
+													item.company.status_text === 'Активная'
 														? 'green'
-														: item.status === 'Отклонена'
+														: item.company.status_text === 'Отклонена'
 														  ? 'red'
-														  : item.status === 'Завершена'
+														  : item.company.status_text === 'Завершена'
 														    ? 'gray'
-														    : item.status === 'На модерации'
+														    : item.company.status_text === 'На модерации'
 														      ? 'yellow'
 														      : 'gray'
 												}>
-												{item.status}
+												{item.company.status_text}
 											</p>
 										</tl.Cell>
 
 										<tl.Cell>
-											<p id={item.PRC.charAt(0) === '2' ? 'green' : ''}>
-												{item.PRC}
-											</p>
+											{/* <p id={item.companyPRC.charAt(0) === '2' ? 'green' : ''}> */}
+											{/* {item.companyPRC} */}
+											<p>200</p>
+											{/* </p> */}
 										</tl.Cell>
 
 										<tl.Cell>
-											<p>{item.shows}</p>
+											{/* <p>{item.companyshows}</p> */}
+											<p>200</p>
 										</tl.Cell>
 									</tl.Row>
 								))}

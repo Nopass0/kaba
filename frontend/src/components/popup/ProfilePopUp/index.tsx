@@ -31,7 +31,7 @@ const ProfilePopUp: React.FC<IProfilePopUp> = ({blogger}: IProfilePopUp) => {
 						<NavLabel className={s.AccountName} text={user?.name} />
 						<Row width="128px">
 							<Label isMini={true} text={user?.nick} />
-							<svg
+							{/* <svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="16"
 								height="16"
@@ -53,10 +53,10 @@ const ProfilePopUp: React.FC<IProfilePopUp> = ({blogger}: IProfilePopUp) => {
 									strokeLinecap="round"
 									strokeLinejoin="round"
 								/>
-							</svg>
+							</svg> */}
 						</Row>
 					</Col>
-					<svg
+					{/* <svg
 						className={s.AccountSvg}
 						xmlns="http://www.w3.org/2000/svg"
 						width="16"
@@ -70,7 +70,7 @@ const ProfilePopUp: React.FC<IProfilePopUp> = ({blogger}: IProfilePopUp) => {
 							strokeLinecap="round"
 							strokeLinejoin="round"
 						/>
-					</svg>
+					</svg> */}
 				</Row>
 				<BlueButton
 					onClick={() => {

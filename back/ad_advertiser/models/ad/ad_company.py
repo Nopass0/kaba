@@ -56,3 +56,7 @@ class ad_statusModel(models.Model):
     status = models.BooleanField('Состояние', default=True)
     text = models.CharField('Текст', max_length=512, blank=False)
     companies = models.ManyToManyField(ad_companyModel, related_name='ad_statusModel_companies', blank=True)
+    
+class ad_bloggerCompanyModel(models.Model):
+    company = models.ForeignKey(ad_companyModel, related_name='ad_bloggerCompanyModel_company', on_delete=models.CASCADE)
+    account = models.ForeignKey(accountModel, related_name='ad_bloggerCompanyModel_account', on_delete=models.CASCADE)

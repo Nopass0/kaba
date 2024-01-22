@@ -35,6 +35,12 @@ urlpatterns = [
     
     #get all operations
     path('getOperations', getWalletOperationsAPIViews.as_view()),
+    #getAllActiveCompanies
+    path('getAllActiveCompanies', getAllActiveCompanies.as_view()),
+    #addCompanyToBlogger
+    path('addCompanyToBlogger', addCompanyToBlogger.as_view()),
+    #getCompanyBloggers
+    path('getCompanyBloggers', getCompanyBloggers.as_view()),
     
     # AddCompany
     path('addCompany', AddCompany.as_view()),
