@@ -1,0 +1,45 @@
+.chipContainer {
+	display: flex;
+	flex-wrap: wrap;
+	padding: 8px;
+	border: 1px solid #ccc; // Light grey border
+	border-radius: 4px; // Rounded corners for the container
+	background-color: #f9f9f9; // Light background color for the container
+
+	// Mimic the look of a typical input field
+	&:focus-within {
+		border-color: #a0a0a0; // Darker border color when focused
+	}
+}
+
+.chip {
+	margin: 4px;
+	padding: 4px 8px;
+	display: flex;
+	align-items: center;
+	background-color: #e0e0e0; // Light grey background for each chip
+	border-radius: 16px; // Rounded corners for the chips
+
+	// Styling for the text inside the chip
+	span {
+		margin-right: 8px; // Space between text and the close button
+		font-size: 14px; // Text size
+	}
+
+	// Styling for the close (remove) button inside the chip
+	button {
+		cursor: pointer;
+		border: none;
+		background-color: transparent;
+		font-size: 14px;
+		line-height: 1;
+
+		&:hover {
+			color: #ff0000; // Color change on hover for visual feedback
+		}
+
+		&:focus {
+			outline: none; // Remove default outline for a cleaner look
+		}
+	}
+}
