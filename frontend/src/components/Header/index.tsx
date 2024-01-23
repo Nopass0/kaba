@@ -118,7 +118,9 @@ const Header: React.FC = () => {
 				'acceptCode',
 				'',
 				'sites',
-			].includes(location.pathname.split('/')[1]) || isBlogger ? (
+			].includes(location.pathname.split('/')[1]) || (isBlogger && ![
+				'login',
+			].includes(location.pathname.split('/')[1])) ? (
 				<>
 					{['create'].includes(location.pathname.split('/')[1]) ? (
 						<>

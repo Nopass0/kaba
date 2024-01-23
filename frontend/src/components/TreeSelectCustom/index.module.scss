@@ -1,15 +1,87 @@
+.muiSelect {
+	width: 100%;
+	height: 36px;
+	border-radius: 10px;
+	background: #262626;
+}
+
+.muiOption {
+	width: 528px;
+	max-height: 320px;
+	flex-shrink: 0;
+
+	border-radius: 10px;
+	border: 1px solid #333;
+	background: #262626;
+	box-shadow: 0px 0px 50px 0px rgba(0, 0, 0, 0.1);
+}
+
+.ul {
+	padding: 10px 0;
+}
+
+.optionWrapper {
+	width: 100%;
+	* {
+		cursor: pointer;
+	}
+	font-family: Inter;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 16px; /* 114.286% */
+
+	display: flex;
+	justify-content: space-between;
+}
+
+.optionInput {
+	display: block;
+	width: 0px;
+	height: 0px;
+
+	cursor: pointer;
+	position: absolute;
+	border-radius: 5px;
+
+	&:checked {
+		&::before {
+			content: url('../src/assets/icons/Shape.svg');
+			border: 1px solid transparent;
+			background-color: #4169e1;
+			display: flex !important;
+		}
+	}
+}
+.optionInput::before {
+	display: block;
+	content: '';
+	border: none;
+	background-color: #333;
+	border-radius: 5px;
+	width: 16px;
+	height: 16px;
+
+	position: relative;
+}
+
+.OptionsLine {
+	margin: 10px 0;
+	background: #333;
+}
+
 .chipContainer {
 	display: flex;
 	flex-wrap: wrap;
-	padding: 8px;
-	border: 1px solid #ccc; // Light grey border
-	border-radius: 4px; // Rounded corners for the container
-	background-color: #f9f9f9; // Light background color for the container
+	// padding: 8px;
+	// border: 1px solid #ccc; // Light grey border
+	// border-radius: 4px; // Rounded corners for the container
+	// background-color: #f9f9f9; // Light background color for the container
 
 	// Mimic the look of a typical input field
-	&:focus-within {
-		border-color: #a0a0a0; // Darker border color when focused
-	}
+	// &:focus-within {
+	// 	border-color: #a0a0a0; // Darker border color when focused
+	// }
 }
 
 .chip {
@@ -17,17 +89,26 @@
 	padding: 4px 8px;
 	display: flex;
 	align-items: center;
-	background-color: #e0e0e0; // Light grey background for each chip
-	border-radius: 16px; // Rounded corners for the chips
+	border-radius: 12px;
+	background: #333;
 
 	// Styling for the text inside the chip
 	span {
-		margin-right: 8px; // Space between text and the close button
-		font-size: 14px; // Text size
+		margin-right: 4px; // Space between text and the close button
+		color: #f2f2f2;
+		font-family: Inter;
+		font-size: 14px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: 16px; /* 114.286% */
 	}
 
 	// Styling for the close (remove) button inside the chip
 	button {
+		width: 16px;
+		height: 16px;
+		flex-shrink: 0;
+
 		cursor: pointer;
 		border: none;
 		background-color: transparent;

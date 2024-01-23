@@ -36,6 +36,8 @@ const Bloggers: React.FC = () => {
 		getInfo()
 	}, [])
 
+	const [currentItem, setCurrentItem] = React.useState<object>({})
+
 	const bannerContent: IContentBannerDetails = {
 		className: 'banner-class',
 
@@ -54,7 +56,7 @@ const Bloggers: React.FC = () => {
 				<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
 			</svg>
 		),
-		course_title: 'Course Title',
+		course_title: '',
 		course_id: '12345',
 		course_ooo: 'OOO',
 		course_link: 'https://example.com',
@@ -252,6 +254,7 @@ const Bloggers: React.FC = () => {
 							fav_active={true}
 							className={`${s.MenuBannersWCourse}`}
 							onDetails={() => {
+								setCurrentItem(item)
 								setCurrentPopup(CurrentPopup.Content)
 							}}
 						/>
@@ -263,11 +266,12 @@ const Bloggers: React.FC = () => {
 			</div>
 			{currentPopup === CurrentPopup.Content && (
 				<PopUpWrapper onExit={bannerContent.onExit}>
+
 					<ContentBannerDetails
 						className={bannerContent.className}
 						course_svg={bannerContent.course_svg}
-						course_title={bannerContent.course_title}
-						course_id={bannerContent.course_id}
+						course_title={currentItem.name}
+						course_id={currentItem.id}
 						course_ooo={bannerContent.course_ooo}
 						course_link={bannerContent.course_link}
 						stat_toEnd={bannerContent.stat_toEnd}

@@ -1,11 +1,14 @@
 import React, {useState} from 'react'
 import s from './index.module.scss'
-
+import * as mui from '@mui/base'
+import ChipsX from '../../assets/xChips.svg'
+import Line from '../Line'
 export type Option = {
 	value: string
 	label: string
 	subOptions?: Option[]
 	expand?: boolean // Optional, if you want to control the initial expand state from the options data
+	isChecked?: boolean
 }
 
 export type TreeSelectCustomProps = {
@@ -34,7 +37,7 @@ export const TreeSelectCustom: React.FC<TreeSelectCustomProps> = ({
 
 	const handleCheckboxChange = (option: Option, isChecked: boolean) => {
 		const newCheckedValues = {...checkedValues}
-
+		options.isChecked = !isChecked
 		const setCheckedRecursively = (opt: Option, checked: boolean) => {
 			newCheckedValues[opt.value] = checked
 
@@ -62,18 +65,15 @@ export const TreeSelectCustom: React.FC<TreeSelectCustomProps> = ({
 	}
 
 	const renderOptions = (options: Option[], depth: number = 0) => (
-		<ul style={{paddingLeft: depth * 20}}>
-			{depth > 0 && <hr />}
+		<ul className={s.ul} style={{paddingLeft: depth > 0 ? depth * 20 : '16px'}}>
 			{options.map((option) => (
-				<li key={option.value}>
-					<div>
-						{option.subOptions && (
-							<button onClick={() => toggleExpand(option)}>
-								{expandedValues[option.value] ? '-' : '+'}
-							</button>
-						)}
-						<label>
+				<li className={s.li} key={option.value}>
+					<div
+						style={{color: checkedValues[option.value] ? '#f2f2f2' : '#808080'}}
+						className={s.optionWrapper}>
+						<label className={s.optionLabel}>
 							<input
+								className={s.optionInput}
 								type="checkbox"
 								checked={checkedValues[option.value] || false}
 								onChange={(e) => handleCheckboxChange(option, e.target.checked)}
@@ -82,9 +82,47 @@ export const TreeSelectCustom: React.FC<TreeSelectCustomProps> = ({
 										el.indeterminate = checkedValues[option.value] === undefined
 								}}
 							/>
-							{option.label}
+              <div className="ml-8">
+							  {option.label}
+              </div>
 						</label>
+						{option.subOptions && (
+							<button onClick={() => toggleExpand(option)}>
+								{expandedValues[option.value] ? (
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="16"
+										height="16"
+										viewBox="0 0 16 16"
+										fill="none">
+										<path
+											d="M3 10L8 5L13 10"
+											stroke="CurrentColor"
+											stroke-width="1.4"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										/>
+									</svg>
+								) : (
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="16"
+										height="16"
+										viewBox="0 0 16 16"
+										fill="none">
+										<path
+											d="M3 6L8 11L13 6"
+											stroke="CurrentColor"
+											stroke-width="1.4"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										/>
+									</svg>
+								)}
+							</button>
+						)}
 					</div>
+						<Line width={'528px'} className={s.OptionsLine} />
 					{option.subOptions &&
 						expandedValues[option.value] &&
 						renderOptions(option.subOptions, depth + 1)}
@@ -95,17 +133,52 @@ export const TreeSelectCustom: React.FC<TreeSelectCustomProps> = ({
 
 	return (
 		<div>
-			<div className={s.chipContainer}>
-				{Object.entries(checkedValues)
-					.filter(([_, checked]) => checked)
-					.map(([value, _]) => (
-						<div key={value} className={s.chip}>
-							<span>{value}</span>
-							<button onClick={() => handleRemoveChip(value)}>x</button>
-						</div>
-					))}
-			</div>
-			{renderOptions(options)}
+			<mui.Select
+				className={s.muiSelect}
+				multiple={true}
+				renderValue={(option: mui.SelectOption<number> | null) => {
+					if (option == null || option.value === null) {
+						return (
+							<>
+								<div className={s.chipContainer}>
+									{Object.entries(checkedValues)
+										.filter(([_, checked]) => checked)
+										.map(([value, _]) => (
+											<div key={value} className={s.chip}>
+												<span>{value}</span>
+												<button onClick={() => handleRemoveChip(value)}>
+													<img src={ChipsX} alt="ChipsX" />
+												</button>
+											</div>
+										))}
+								</div>
+							</>
+						)
+					}
+					return (
+						<>
+							<div className={s.chipContainer}>
+								{Object.entries(checkedValues)
+									.filter(([_, checked]) => checked)
+									.map(([value, _]) => (
+										<div key={value} className={s.chip}>
+											<span>{value}</span>
+											<button onClick={() => handleRemoveChip(value)}>
+												<img src={ChipsX} alt="ChipsX" />
+											</button>
+										</div>
+									))}
+							</div>
+						</>
+					)
+				}}>
+				<mui.Option
+					value={1}
+					className={`${s.muiOption} cursor-pointer z-10 mt-1`}>
+					{renderOptions(options)}
+				</mui.Option>
+			</mui.Select>
+			{/* {renderOptions(options)} */}
 		</div>
 	)
 }

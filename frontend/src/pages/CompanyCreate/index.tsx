@@ -28,7 +28,7 @@ import {eachHourOfInterval} from 'date-fns'
 // import {TreeSelect, TreeSelectChangeEvent} from 'primereact/treeselect'
 // import {TreeNode} from 'primereact/treenode'
 // import 'primereact/resources/themes/md-light-indigo/theme.css'
-import './index.css'
+// import './index.css'
 // import { NodeService } from './service/NodeService';
 import {TreeSelectCustom, Option} from '../../components/TreeSelectCustom/index'
 
