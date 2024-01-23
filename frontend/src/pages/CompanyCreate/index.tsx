@@ -25,11 +25,13 @@ import DatePicker from 'react-multi-date-picker'
 import InputIcon from 'react-multi-date-picker/components/input_icon'
 import * as mui from '@mui/base'
 import {eachHourOfInterval} from 'date-fns'
-import {TreeSelect, TreeSelectChangeEvent} from 'primereact/treeselect'
-import {TreeNode} from 'primereact/treenode'
-import 'primereact/resources/themes/md-light-indigo/theme.css'
+// import {TreeSelect, TreeSelectChangeEvent} from 'primereact/treeselect'
+// import {TreeNode} from 'primereact/treenode'
+// import 'primereact/resources/themes/md-light-indigo/theme.css'
 import './index.css'
 // import { NodeService } from './service/NodeService';
+import TreeSelectCustom from '../../components/TreeSelectCustom/index';
+
 const CompanyCreate: React.FC = () => {
 	// const [value, setValue] = React.useState<any>()
 	// const [value2, setValue2] = React.useState<any>()
@@ -529,11 +531,11 @@ const CompanyCreate: React.FC = () => {
 								<div
 									className={`mr-[8px] border rounded-[10px] flex justify-between border-[#262626] h-[36px] w-[260px]`}>
 									<Label className={`my-[5px] ml-[16px]`} text="Начало:" />
-									{/* <WhiteLabel
+									<WhiteLabel
 										className={`mr-[18px] my-[5px]`}
 										text="08.11.2023"
-									/> */}
-									<div className={s.DatePicker}>
+									/>
+									{/* <div className={s.DatePicker}>
 										<DatePicker
 											weekDays={weekDays}
 											months={months}
@@ -547,7 +549,7 @@ const CompanyCreate: React.FC = () => {
 											// ]}
 											// render={<InputIcon />}
 										/>
-									</div>
+									</div> */}
 								</div>
 								<div
 									className={`border rounded-[10px] flex justify-between border-[#262626] h-[36px] w-[260px]`}>
@@ -856,6 +858,9 @@ const CompanyCreate: React.FC = () => {
 								id="CKeyWord"
 								className={s.chips}
 								value={cKeyWord}
+							// 	removeIcon={`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+							// 	<path d="M4.13179 11.8681C4.19232 11.9253 4.26125 11.964 4.33859 11.9842C4.41592 12.0044 4.49326 12.0044 4.5706 11.9842C4.64794 11.964 4.71519 11.9253 4.77235 11.8681L8.00033 8.63863L11.2283 11.8681C11.2855 11.9253 11.3527 11.964 11.4301 11.9842C11.5074 12.0044 11.5856 12.0052 11.6646 11.9867C11.7436 11.9682 11.8117 11.9287 11.8689 11.8681C11.926 11.811 11.9639 11.7437 11.9823 11.6663C12.0008 11.5889 12.0008 11.5116 11.9823 11.4342C11.9639 11.3568 11.926 11.2895 11.8689 11.2323L8.64088 7.99778L11.8689 4.76827C11.926 4.71108 11.9647 4.6438 11.9849 4.56643C12.005 4.48905 12.005 4.41168 11.9849 4.3343C11.9647 4.25693 11.926 4.18965 11.8689 4.13246C11.8083 4.07191 11.7394 4.03238 11.6621 4.01388C11.5847 3.99537 11.5074 3.99537 11.4301 4.01388C11.3527 4.03238 11.2855 4.07191 11.2283 4.13246L8.00033 7.36197L4.77235 4.13246C4.71519 4.07191 4.64709 4.03238 4.56808 4.01388C4.48906 3.99537 4.41088 3.99537 4.33354 4.01388C4.25621 4.03238 4.18896 4.07191 4.13179 4.13246C4.07463 4.18965 4.0368 4.25693 4.01831 4.3343C3.99982 4.41168 3.99982 4.48905 4.01831 4.56643C4.0368 4.6438 4.07463 4.71108 4.13179 4.76827L7.35978 7.99778L4.13179 11.2323C4.07463 11.2895 4.03596 11.3568 4.01579 11.4342C3.99561 11.5116 3.99477 11.5889 4.01327 11.6663C4.03176 11.7437 4.07127 11.811 4.13179 11.8681Z" fill="#808080"/>
+							//   </svg>`}
 								onChange={(e) => {
 									setCKeyWord(e.value)
 									if (e.target.value.length > 0) {
@@ -1474,7 +1479,8 @@ const CompanyCreate: React.FC = () => {
 							placeholder="Введите название..."
 							className={`${s.inputText}`}
 						/> */}
-						<TreeSelect
+						<TreeSelectCustom />
+						{/* <TreeSelect
 							value={selectedNodeKeys}
 							onChange={(e: TreeSelectChangeEvent) =>
 								setSelectedNodeKeys(e.value)
@@ -1483,28 +1489,60 @@ const CompanyCreate: React.FC = () => {
 							metaKeySelection={false}
 							className="md:w-20rem w-full"
 							selectionMode="checkbox"
+							
 							// togglerTemplate={togglerTemplate}
-							// collapseIcon={<CollapseIcon />}
-							// expandIcon={<ExpandIcon />}
+							// collapseIcon={}
 							expandedKeys={(e) => {
 								console.log(e,'KETS');
 							}}
 							onExpand={(e) => {
 								console.log(e,'onExpand');
 							}}
-							onNodeExpand={(e) => {console.log(e, 'EXPANDAGDOSGK');
+							onNodeExpand={(e) => {console.log(e.originalEvent.target, 'EXPANDAGDOSGK');
 							}}
-							onNodeCollapse={(e) => {console.log(e, 'fdagadg');
+							onNodeCollapse={(e) => {console.log(e.originalEvent.target, 'fdagadg');
 							} }
-							// togglerTemplate={(node) => {
+							// togglerTemplate={(node,event,context) => {
+								
+							// // 	event.props.collapseIcon = `<svg
+							// // 	xmlns="http://www.w3.org/2000/svg"
+							// // 	width="16"
+							// // 	height="16"
+							// // 	viewBox="0 0 16 16"
+							// // 	fill="none">
+							// // 	<path
+							// // 		d="M3 10L8 5L13 10"
+							// // 		stroke="#808080"
+							// // 		strokeWidth="1.4"
+							// // 		strokeLinecap="round"
+							// // 		strokeLinejoin="round"
+							// // 	/>
+							// // </svg>`
+							// // 	event.props.expandIcon = `<svg
+							// // 	xmlns="http://www.w3.org/2000/svg"
+							// // 	width="16"
+							// // 	height="16"
+							// // 	viewBox="0 0 16 16"
+							// // 	fill="none">
+							// // 	<path
+							// // 		d="M3 6L8 11L13 6"
+							// // 		stroke="#808080"
+							// // 		stroke-width="1.4"
+							// // 		stroke-linecap="round"
+							// // 		stroke-linejoin="round"
+							// // 	/>
+							// // </svg>`
+							// console.log(node,event,context, 'TESTESTET');
+								
 							// 	const onToggle = (node, event) => {
+					
+							// 		console.log(event, 'event', node, 'node')
 							// 		if (node.expanded) {
 							// 			node.collapseNode({originalEvent: event, node})
 							// 		} else {
 							// 			node.expandNode({originalEvent: event, node})
 							// 		}
 							// 	}
-							// 	console.log(node.expanded, 'eXPANDED')
 
 							// 	return (
 							// 		<div>
@@ -1512,7 +1550,10 @@ const CompanyCreate: React.FC = () => {
 							// 				<div className="w-full absolute left-0">
 							// 					{node.expanded ? (
 							// 						<button
-							// 							onClick={(event) => onToggle(node, event)}
+							// 							onClick={(node,event) => {
+							// 								onToggle(node, event) 
+														
+							// 							}}
 							// 							type="button"
 							// 							tabindex="-1"
 							// 							aria-label="Collapse"
@@ -1585,7 +1626,7 @@ const CompanyCreate: React.FC = () => {
 										
 									}),
 								},
-							}}></TreeSelect>
+							}}></TreeSelect> */}
 
 						<Line width="528px" className={s.Line} />
 

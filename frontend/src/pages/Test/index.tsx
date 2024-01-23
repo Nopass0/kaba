@@ -32,8 +32,8 @@ import {
 	Legend,
 } from 'chart.js'
 import {Bubble} from 'react-chartjs-2'
-import TreeSelect from '../../components/TreeSelect'
-import TreeSelectCustom from '../../components/TreeSelect'
+import TreeSelect from '../../components/TreeSelectCustom'
+import TreeSelectCustom from '../../components/TreeSelectCustom'
 import TableBanners from '../../components/TableBanners/index'
 import TableCol from '../../components/popup/TableColsPopUp/index'
 import StatusAccDropDown from '../../components/StatusAccDropDown/index'

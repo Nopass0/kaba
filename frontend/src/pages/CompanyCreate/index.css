@@ -56,8 +56,34 @@
 	width: 100%;
 	position: absolute;
 	opacity: 1;
+	
 }
 
 .p-tree-toggler-icon {
 
+    content: url('../../assets/xChips.svg') !important;
+}
+
+
+.p-chips-token {
+    display: flex;
+    align-items: center;
+}
+
+.p-chips-token-icon {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 !important;
+
+}
+
+.p-chips-token-icon::before{
+    content: url('../../assets/xChips.svg') !important;
+    display: flex;
+    align-items: center;
+    width: 16px;
+    height: 16px;
 }

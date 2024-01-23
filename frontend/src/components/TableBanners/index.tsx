@@ -20,9 +20,10 @@ import Label from '../Label'
 import WhiteLabel from '../WhiteLabel'
 import {IContentBanner} from '../ContentBanner'
 import PopUpWrapper from '../PopUpWrapper'
-import ContentBanner from '../ContentBanner/index'
 import TableCol from '../popup/TableColsPopUp/index'
 import TableLineFooter from '../TableLineFooter'
+import ContentBanner from '../contentBanner/index'
+import ContentBannerDetails, { IContentBannerDetails } from '../ContentBannerDetails/index';
 
 const list = [
 	{
@@ -186,7 +187,11 @@ enum CurrentPopup {
 	None,
 	Details,
 	Cols,
+	Content,
 }
+
+
+
 
 const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 	const data = {nodes: list}
@@ -225,6 +230,77 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 		bloger_ooo: 'OOO',
 		bloger_link: 'https://example.com',
 	}
+
+	const bannerContentDetails: IContentBannerDetails = {
+		className: 'banner-detail-class',
+
+		// Course
+		course_svg: (
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				strokeWidth="2"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				className="feather feather-book">
+				<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+			</svg>
+		),
+		course_title: 'Course Title',
+		course_id: '12345',
+		course_ooo: 'OOO',
+		course_link: 'https://example.com',
+
+		// Statistics
+		stat_toEnd: 'To End',
+		stat_budget: '$1000',
+		stat_income: '$500',
+		stat_targetAct: '100',
+		stat_maxPrice: '$200',
+		stat_Price: '$150',
+		stat_incomeUndo: '$300',
+		stat_AbPay: '$100',
+
+		// Target
+		target_1_title: 'Target 1',
+		target_1_value: 'Value 1',
+		target_1_id: '1',
+		target_2_title: 'Target 2',
+		target_2_value: 'Value 2',
+		target_2_id: '2',
+
+		// ForBidden
+		forBidden_1: 'Forbidden 1',
+		forBidden_2: 'Forbidden 2',
+		forBidden_3: 'Forbidden 3',
+
+		// MainData Second Grid
+		sg_clicks: '100',
+		sg_conversion: '10%',
+		sg_expenses: '$200',
+		sg_ads: '50',
+		sg_income_all: '$500',
+
+		// Array
+		arrayCategory: ['Category 1', 'Category 2'],
+		arrayGeo: ['Geo 1', 'Geo 2'],
+		arrayGender: [
+			{Gender: 'Male', AgeFrom: 18, AgeTo: 24},
+			{Gender: 'Female', AgeFrom: 25, AgeTo: 30},
+		],
+		arrayDevice: ['Device 1', 'Device 2'],
+		arrayInteres: ['Interest 1', 'Interest 2'],
+
+		// Exit
+		onExit: () => {
+			// Exit logic here
+			setCurrentPopup(CurrentPopup.None)
+		},
+	}
+
 	const [downMenu, setDownMenu] = useState(false)
 
 	const [company, setCompany] = useState<number>(0)
@@ -616,7 +692,9 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 																/>
 															</svg>
 														</button>
-														<button className={s.ButtonSVG}>
+														<button onClick={() => {
+															setCurrentPopup(CurrentPopup.Content)
+														}} className={s.ButtonSVG}>
 															<svg
 																xmlns="http://www.w3.org/2000/svg"
 																width="24"
@@ -729,6 +807,47 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 					/>
 				</PopUpWrapper>
 			) : null}
+
+			{currentPopup === CurrentPopup.Content && (
+				<PopUpWrapper onExit={bannerContentDetails.onExit}>
+					<ContentBannerDetails
+						className={bannerContentDetails.className}
+						course_svg={bannerContentDetails.course_svg}
+						course_title={bannerContentDetails.course_title}
+						course_id={bannerContentDetails.course_id}
+						course_ooo={bannerContentDetails.course_ooo}
+						course_link={bannerContentDetails.course_link}
+						stat_toEnd={bannerContentDetails.stat_toEnd}
+						stat_budget={bannerContentDetails.stat_budget}
+						stat_income={bannerContentDetails.stat_income}
+						stat_targetAct={bannerContentDetails.stat_targetAct}
+						stat_maxPrice={bannerContentDetails.stat_maxPrice}
+						stat_Price={bannerContentDetails.stat_Price}
+						stat_incomeUndo={bannerContentDetails.stat_incomeUndo}
+						stat_AbPay={bannerContentDetails.stat_AbPay}
+						target_1_title={bannerContentDetails.target_1_title}
+						target_1_value={bannerContentDetails.target_1_value}
+						target_1_id={bannerContentDetails.target_1_id}
+						target_2_title={bannerContentDetails.target_2_title}
+						target_2_value={bannerContentDetails.target_2_value}
+						target_2_id={bannerContentDetails.target_2_id}
+						forBidden_1={bannerContentDetails.forBidden_1}
+						forBidden_2={bannerContentDetails.forBidden_2}
+						forBidden_3={bannerContentDetails.forBidden_3}
+						sg_clicks={bannerContentDetails.sg_clicks}
+						sg_conversion={bannerContentDetails.sg_conversion}
+						sg_expenses={bannerContentDetails.sg_expenses}
+						sg_ads={bannerContentDetails.sg_ads}
+						sg_income_all={bannerContentDetails.sg_income_all}
+						arrayCategory={bannerContentDetails.arrayCategory}
+						arrayGeo={bannerContentDetails.arrayGeo}
+						arrayGender={bannerContentDetails.arrayGender}
+						arrayDevice={bannerContentDetails.arrayDevice}
+						arrayInteres={bannerContentDetails.arrayInteres}
+						onExit={bannerContentDetails.onExit}
+					/>
+				</PopUpWrapper>
+			)}
 		</>
 	)
 }

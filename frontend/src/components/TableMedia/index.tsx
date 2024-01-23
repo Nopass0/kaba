@@ -53,7 +53,7 @@ for (let i = 2; i <= 51; i++) {
 
 const THEME = {
 	Table: `
-  --data-table-library_grid-template-columns:  30px 30% 18% 20% 20% repeat(1, minmax(0, 1fr)) ;
+  --data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) ; // 30px 30% 18% 20% 20% repeat(1, minmax(0, 1fr))
   max-height: 810px;
   width: 100%;
   
@@ -381,14 +381,14 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 										</Row>
 									</tl.HeaderCell>
 
-									<tl.HeaderCell
+									{/* <tl.HeaderCell
 										style={{fontWeight: '400', fill: '#808080'}}
 										className={s.headerCellSort_Sort}
 										sortKey="Status">
 										<p className={s.sortText}>Доступ</p>
-									</tl.HeaderCell>
+									</tl.HeaderCell> */}
 
-									<tl.HeaderCell
+									{/* <tl.HeaderCell
 										style={{fontWeight: '400', fill: '#808080'}}
 										className={s.headerCellSort_Sort}
 										sortKey="Status">
@@ -428,7 +428,7 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 												</svg>
 											</div>
 										</button>
-									</tl.HeaderCell>
+									</tl.HeaderCell> */}
 
 									<tl.HeaderCell
 										style={{fontWeight: '400', fill: '#808080'}}
@@ -580,7 +580,7 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 											</Row>
 										</tl.Cell>
 
-										<tl.Cell>
+										{/* <tl.Cell>
 											<Row width="auto">
 												<WhiteLabel text={item.company.access} />
 											</Row>
@@ -600,7 +600,7 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 												}>
 												{item.company.status_text}
 											</p>
-										</tl.Cell>
+										</tl.Cell> */}
 
 										<tl.Cell>
 											{/* <p id={item.companyPRC.charAt(0) === '2' ? 'green' : ''}> */}

@@ -135,7 +135,7 @@ const ContentBanner: React.FC<IContentBanner> = ({
 						</div>
 					</Row>
 				</Col>
-				<Col width="528px" className={s.variantVideo}>
+				{/* <Col width="528px" className={s.variantVideo}>
 					<NavLabel text="Варианты видео" className={s.navLabel} />
 					<Row width="528px">
 						<iframe
@@ -155,7 +155,7 @@ const ContentBanner: React.FC<IContentBanner> = ({
 							allowFullScreen
 							className={s.videoPlayers}></iframe>
 					</Row>
-				</Col>
+				</Col> */}
 				<Col width="528px" className={s.variantImg}>
 					<NavLabel text="Варианты изображений" className={s.navLabel} />
 					<Row width="528px">
@@ -176,9 +176,9 @@ const ContentBanner: React.FC<IContentBanner> = ({
 						/>
 					</Row>
 				</Col>
-				<Col width="528px" className={s.variantAudio}>
+				{/* <Col width="528px" className={s.variantAudio}>
 					<NavLabel text="Варианты аудио" className={s.navLabel} />
-				</Col>
+				</Col> */}
 			</Col>
 		</div>
 	)

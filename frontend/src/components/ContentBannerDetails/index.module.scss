@@ -1,5 +1,4 @@
 .wrapper {
-
 	width: 560px;
 	max-height: 900px;
 	overflow-y: scroll;
@@ -77,9 +76,17 @@
 	}
 
 	.GridStat {
+		// display: grid;
+		// grid-template-columns: repeat(3, 166px);
+		// grid-template-rows: repeat(3, 36px);
+		// grid-column-gap: 15px;
+		// grid-row-gap: 28px;
+
+		// New Without 3 block's
+
 		display: grid;
 		grid-template-columns: repeat(3, 166px);
-		grid-template-rows: repeat(3, 36px);
+		grid-template-rows: repeat(2, 36px);
 		grid-column-gap: 15px;
 		grid-row-gap: 28px;
 
@@ -150,10 +157,17 @@
 	}
 
 	.SecondGrid {
+		// display: grid;
+		// grid-template-columns: repeat(3, 166px);
+		// grid-template-rows: repeat(2, 36px);
+		// grid-column-gap: 16px;
+		// grid-row-gap: 28px;
+		
+		// New without 3 block's
 		display: grid;
 		grid-template-columns: repeat(3, 166px);
-		grid-template-rows: repeat(2, 36px);
-		grid-column-gap: 16px;
+		grid-template-rows: 36px;
+		grid-column-gap: 15px;
 		grid-row-gap: 28px;
 	}
 

@@ -930,7 +930,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 															target="_blank"
 															rel="noopener noreferrer"
 															className={s.AdSiteUrl}
-															href={item.site.domain}>
+															href={`https://${item.site.domain}`}>
 															{item.site.domain}
 														</a>
 													</Col>

@@ -305,37 +305,42 @@ const LeftCompanyMenu: React.FC = () => {
 							) : (
 								<></>
 							)}
-							<Link
-								to={`/${!isBlogger ? 'statistics' : 'statisticBlogger'}`}
-								onClick={() => setCurrentUrl('statistics')}>
-								<div
-									className={`${s.statics} ${s.companyPage} ${
-										location.pathname === '/statistics' ||
-										location.pathname === '/statisticBlogger'
-											? s.active
-											: ''
-									}`}>
-									<div className={s.companyPageLeft}>
-										<img src={StatisticIcon} alt="Statistic" srcSet="" />
-										<span className={s.companyPageText}>Статистика</span>
+							
+							{isBlogger ? <></> : 
+							<>
+								<Link
+									to={`/${!isBlogger ? 'statistics' : 'statisticBlogger'}`} 
+									onClick={() => setCurrentUrl('statistics')}>
+									<div
+										className={`${s.statics} ${s.companyPage} ${
+											location.pathname === '/statistics' ||
+											location.pathname === '/statisticBlogger'
+												? s.active
+												: ''
+										}`}>
+										<div className={s.companyPageLeft}>
+											<img src={StatisticIcon} alt="Statistic" srcSet="" />
+											<span className={s.companyPageText}>Статистика</span>
+										</div>
+										{/* <svg
+											ref={statisticButtonRef}
+											onClick={() => setStatisticDropDown(!statisticDropDown)}
+											xmlns="http://www.w3.org/2000/svg"
+											width="16"
+											height="16"
+											viewBox="0 0 16 16"
+											fill="none">
+											<path
+												fillRule="evenodd"
+												clipRule="evenodd"
+												d="M7 4C7 3.44772 7.44772 3 8 3C8.55228 3 9 3.44772 9 4C9 4.55228 8.55228 5 8 5C7.44772 5 7 4.55228 7 4ZM7 12C7 11.4477 7.44772 11 8 11C8.55228 11 9 11.4477 9 12C9 12.5523 8.55228 13 8 13C7.44772 13 7 12.5523 7 12ZM8 7C7.44772 7 7 7.44772 7 8C7 8.55228 7.44772 9 8 9C8.55228 9 9 8.55228 9 8C9 7.44772 8.55228 7 8 7Z"
+												fill="#808080"
+											/>
+										</svg> */}
 									</div>
-									{/* <svg
-										ref={statisticButtonRef}
-										onClick={() => setStatisticDropDown(!statisticDropDown)}
-										xmlns="http://www.w3.org/2000/svg"
-										width="16"
-										height="16"
-										viewBox="0 0 16 16"
-										fill="none">
-										<path
-											fillRule="evenodd"
-											clipRule="evenodd"
-											d="M7 4C7 3.44772 7.44772 3 8 3C8.55228 3 9 3.44772 9 4C9 4.55228 8.55228 5 8 5C7.44772 5 7 4.55228 7 4ZM7 12C7 11.4477 7.44772 11 8 11C8.55228 11 9 11.4477 9 12C9 12.5523 8.55228 13 8 13C7.44772 13 7 12.5523 7 12ZM8 7C7.44772 7 7 7.44772 7 8C7 8.55228 7.44772 9 8 9C8.55228 9 9 8.55228 9 8C9 7.44772 8.55228 7 8 7Z"
-											fill="#808080"
-										/>
-									</svg> */}
-								</div>
-							</Link>
+								</Link>
+							
+							</>}
 							{isBlogger ? (
 								<></>
 							) : (

@@ -198,7 +198,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 						<WhiteLabel text={`~ ${stat_income} ₽`} />
 					</Col>
 
-					<Col width="auto">
+					{/* <Col width="auto">
 						<Row className={s.StatRowTitle} width="auto">
 							<Label text="Целевое действие" />
 							<ToolTip text="info" top="15px">
@@ -218,7 +218,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 							</ToolTip>
 						</Row>
 						<WhiteLabel text={`${stat_targetAct}`} />
-					</Col>
+					</Col> */}
 
 					<Col width="auto">
 						<Row className={s.StatRowTitle} width="auto">
@@ -264,7 +264,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 						<WhiteLabel text={`До ${stat_Price}₽`} />
 					</Col>
 
-					<Col width="auto">
+					{/* <Col width="auto">
 						<Row className={s.StatRowTitle} width="auto">
 							<Label text="Доход с перехода" />
 							<ToolTip text="info" top="15px">
@@ -284,18 +284,18 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 							</ToolTip>
 						</Row>
 						<WhiteLabel text={`До ${stat_incomeUndo}₽`} />
-					</Col>
+					</Col> */}
 
-					<Col width="auto">
+					{/* <Col width="auto">
 						<Row className={s.StatRowTitle} width="auto">
 							<Label text="Платежеспособность" />
 						</Row>
 						<WhiteLabel text={`Топ ${stat_AbPay}%`} />
-					</Col>
+					</Col> */}
 				</div>
 
 				{/* Target */}
-				<Col width="528px" className={s.Target}>
+				{/* <Col width="528px" className={s.Target}>
 					<Row className={s.RowTitle} width="auto">
 						<Label text="Цели" />
 						<ToolTip text="info" top="15px">
@@ -349,7 +349,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 							</Row>
 						</Col>
 					</Col>
-				</Col>
+				</Col> */}
 
 				{/* Forbidden */}
 
@@ -408,7 +408,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 							fill="#808080"
 						/>
 					</svg>
-					<svg
+					{/* <svg
 						xmlns="http://www.w3.org/2000/svg"
 						width="20"
 						height="20"
@@ -420,7 +420,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 							d="M10 17.5C11.0245 17.5 11.989 17.3039 12.8934 16.9118C13.7978 16.5196 14.5956 15.9779 15.2868 15.2868C15.9779 14.5956 16.5196 13.7978 16.9118 12.8934C17.3039 11.989 17.5 11.0245 17.5 10C17.5 8.97549 17.3039 8.01103 16.9118 7.10662C16.5196 6.20221 15.9779 5.40441 15.2868 4.71324C14.5956 4.02206 13.7966 3.48039 12.8897 3.08824C11.9828 2.69608 11.0172 2.5 9.99265 2.5C8.96814 2.5 8.00368 2.69608 7.09926 3.08824C6.19485 3.48039 5.39828 4.02206 4.70956 4.71324C4.02083 5.40441 3.48039 6.20221 3.08824 7.10662C2.69608 8.01103 2.5 8.97549 2.5 10C2.5 11.0245 2.69608 11.989 3.08824 12.8934C3.48039 13.7978 4.02206 14.5956 4.71324 15.2868C5.40441 15.9779 6.20221 16.5196 7.10662 16.9118C8.01103 17.3039 8.97549 17.5 10 17.5ZM10 16.25C9.13235 16.25 8.32108 16.0882 7.56618 15.7647C6.81127 15.4412 6.14828 14.9939 5.57721 14.4228C5.00613 13.8517 4.56005 13.1887 4.23897 12.4338C3.91789 11.6789 3.75735 10.8676 3.75735 10C3.75735 9.13235 3.91789 8.32108 4.23897 7.56618C4.56005 6.81127 5.0049 6.14706 5.57353 5.57353C6.14216 5 6.80392 4.5527 7.55882 4.23162C8.31373 3.91054 9.125 3.75 9.99265 3.75C10.8603 3.75 11.6716 3.91054 12.4265 4.23162C13.1814 4.5527 13.8456 5 14.4191 5.57353C14.9926 6.14706 15.4412 6.81127 15.7647 7.56618C16.0882 8.32108 16.25 9.13235 16.25 10C16.25 10.8676 16.0895 11.6789 15.7684 12.4338C15.4473 13.1887 15.0012 13.8517 14.4301 14.4228C13.8591 14.9939 13.1949 15.4412 12.4375 15.7647C11.6801 16.0882 10.8676 16.25 10 16.25ZM12.8162 10.4044L8.625 12.875C8.45343 12.9779 8.28799 12.9963 8.12868 12.9301C7.96936 12.864 7.88971 12.7402 7.88971 12.5588V7.44853C7.88971 7.27206 7.97304 7.15196 8.13971 7.08824C8.30637 7.02451 8.46814 7.03922 8.625 7.13235L12.8162 9.61765C12.9632 9.70588 13.038 9.83578 13.0404 10.0074C13.0429 10.1789 12.9681 10.3113 12.8162 10.4044Z"
 							fill="#808080"
 						/>
-					</svg>
+					</svg> */}
 				</Row>
 
 				<Row className={s.RowTitle} width="auto">
@@ -528,29 +528,29 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 						<Row className={s.RowTitle} width="auto">
 							<Label text="Конверсия" />
 						</Row>
-						<WhiteLabel text={`${sg_conversion}%`} />
+						<WhiteLabel text={`${sg_conversion}`} />
 					</Col>
 
-					<Col width="auto">
+					{/* <Col width="auto">
 						<Row className={s.RowTitle} width="auto">
 							<Label text="Расходы" />
 						</Row>
 						<WhiteLabel text={`${sg_expenses}₽`} />
-					</Col>
+					</Col> */}
 
-					<Col width="auto">
+					{/* <Col width="auto">
 						<Row className={s.RowTitle} width="auto">
 							<Label text="Доля рекламных комп" />
 						</Row>
 						<WhiteLabel text={`${sg_ads}%`} />
-					</Col>
+					</Col> */}
 
-					<Col width="auto">
+					{/* <Col width="auto">
 						<Row className={s.RowTitle} width="auto">
 							<Label text="Доходы: Все цели" />
 						</Row>
 						<WhiteLabel text={`${sg_income_all}₽`} />
-					</Col>
+					</Col> */}
 				</div>
 
 				<Line width="560px" className={s.Line} />
@@ -570,7 +570,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 							fill="#808080"
 						/>
 					</svg>
-					<svg
+					{/* <svg
 						xmlns="http://www.w3.org/2000/svg"
 						width="20"
 						height="20"
@@ -582,7 +582,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 							d="M10 17.5C11.0245 17.5 11.989 17.3039 12.8934 16.9118C13.7978 16.5196 14.5956 15.9779 15.2868 15.2868C15.9779 14.5956 16.5196 13.7978 16.9118 12.8934C17.3039 11.989 17.5 11.0245 17.5 10C17.5 8.97549 17.3039 8.01103 16.9118 7.10662C16.5196 6.20221 15.9779 5.40441 15.2868 4.71324C14.5956 4.02206 13.7966 3.48039 12.8897 3.08824C11.9828 2.69608 11.0172 2.5 9.99265 2.5C8.96814 2.5 8.00368 2.69608 7.09926 3.08824C6.19485 3.48039 5.39828 4.02206 4.70956 4.71324C4.02083 5.40441 3.48039 6.20221 3.08824 7.10662C2.69608 8.01103 2.5 8.97549 2.5 10C2.5 11.0245 2.69608 11.989 3.08824 12.8934C3.48039 13.7978 4.02206 14.5956 4.71324 15.2868C5.40441 15.9779 6.20221 16.5196 7.10662 16.9118C8.01103 17.3039 8.97549 17.5 10 17.5ZM10 16.25C9.13235 16.25 8.32108 16.0882 7.56618 15.7647C6.81127 15.4412 6.14828 14.9939 5.57721 14.4228C5.00613 13.8517 4.56005 13.1887 4.23897 12.4338C3.91789 11.6789 3.75735 10.8676 3.75735 10C3.75735 9.13235 3.91789 8.32108 4.23897 7.56618C4.56005 6.81127 5.0049 6.14706 5.57353 5.57353C6.14216 5 6.80392 4.5527 7.55882 4.23162C8.31373 3.91054 9.125 3.75 9.99265 3.75C10.8603 3.75 11.6716 3.91054 12.4265 4.23162C13.1814 4.5527 13.8456 5 14.4191 5.57353C14.9926 6.14706 15.4412 6.81127 15.7647 7.56618C16.0882 8.32108 16.25 9.13235 16.25 10C16.25 10.8676 16.0895 11.6789 15.7684 12.4338C15.4473 13.1887 15.0012 13.8517 14.4301 14.4228C13.8591 14.9939 13.1949 15.4412 12.4375 15.7647C11.6801 16.0882 10.8676 16.25 10 16.25ZM12.8162 10.4044L8.625 12.875C8.45343 12.9779 8.28799 12.9963 8.12868 12.9301C7.96936 12.864 7.88971 12.7402 7.88971 12.5588V7.44853C7.88971 7.27206 7.97304 7.15196 8.13971 7.08824C8.30637 7.02451 8.46814 7.03922 8.625 7.13235L12.8162 9.61765C12.9632 9.70588 13.038 9.83578 13.0404 10.0074C13.0429 10.1789 12.9681 10.3113 12.8162 10.4044Z"
 							fill="#808080"
 						/>
-					</svg>
+					</svg> */}
 				</Row>
 
 				<Col className={s.variantTextCol} width="528px">
@@ -700,7 +700,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 						</div>
 					</Row>
 				</Col>
-				<Col width="528px" className={s.variantVideo}>
+				{/* <Col width="528px" className={s.variantVideo}>
 					<Label text="Варианты видео" className={s.Label} />
 					<Row width="528px">
 						<iframe
@@ -720,7 +720,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 							allowFullScreen
 							className={s.videoPlayers}></iframe>
 					</Row>
-				</Col>
+				</Col> */}
 				<Col width="528px" className={s.variantImg}>
 					<Label text="Варианты изображений" className={s.Label} />
 					<Row width="528px">
@@ -741,9 +741,9 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 						/>
 					</Row>
 				</Col>
-				<Col width="528px" className={s.variantAudio}>
+				{/* <Col width="528px" className={s.variantAudio}>
 					<Label text="Варианты аудио" className={s.Label} />
-				</Col>
+				</Col> */}
 			</Col>
 		</div>
 	)
