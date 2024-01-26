@@ -9,6 +9,8 @@ export type Option = {
 	subOptions?: Option[]
 	expand?: boolean // Optional, if you want to control the initial expand state from the options data
 	isChecked?: boolean
+	background?: boolean
+	className?: string
 }
 
 export type TreeSelectCustomProps = {
@@ -19,6 +21,8 @@ export type TreeSelectCustomProps = {
 export const TreeSelectCustom: React.FC<TreeSelectCustomProps> = ({
 	options,
 	onChange,
+	background262626,
+	className,
 }) => {
 	const [selectedValues, setSelectedValues] = useState<string[]>(['', '', ''])
 	const [checkedValues, setCheckedValues] = useState<{[key: string]: boolean}>(
@@ -65,76 +69,88 @@ export const TreeSelectCustom: React.FC<TreeSelectCustomProps> = ({
 	}
 
 	const renderOptions = (options: Option[], depth: number = 0) => (
-		<ul className={s.ul} style={{paddingLeft: depth > 0 ? depth * 20 : '16px'}}>
-			{options.map((option) => (
-				<li className={s.li} key={option.value}>
-					<div
-						style={{color: checkedValues[option.value] ? '#f2f2f2' : '#808080'}}
-						className={s.optionWrapper}>
-						<label className={s.optionLabel}>
-							<input
-								className={s.optionInput}
-								type="checkbox"
-								checked={checkedValues[option.value] || false}
-								onChange={(e) => handleCheckboxChange(option, e.target.checked)}
-								ref={(el) => {
-									if (el)
-										el.indeterminate = checkedValues[option.value] === undefined
-								}}
-							/>
-              <div className="ml-8">
-							  {option.label}
-              </div>
-						</label>
-						{option.subOptions && (
-							<button onClick={() => toggleExpand(option)}>
-								{expandedValues[option.value] ? (
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="16"
-										height="16"
-										viewBox="0 0 16 16"
-										fill="none">
-										<path
-											d="M3 10L8 5L13 10"
-											stroke="CurrentColor"
-											stroke-width="1.4"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-										/>
-									</svg>
-								) : (
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="16"
-										height="16"
-										viewBox="0 0 16 16"
-										fill="none">
-										<path
-											d="M3 6L8 11L13 6"
-											stroke="CurrentColor"
-											stroke-width="1.4"
-											stroke-linecap="round"
-											stroke-linejoin="round"
-										/>
-									</svg>
-								)}
-							</button>
-						)}
-					</div>
-						<Line width={'528px'} className={s.OptionsLine} />
-					{option.subOptions &&
-						expandedValues[option.value] &&
-						renderOptions(option.subOptions, depth + 1)}
-				</li>
-			))}
-		</ul>
+		<>
+			<ul
+				className={s.ul}
+				style={{paddingLeft: depth > 0 ? depth * 20 : '16px'}}>
+				{options.map((option) => (
+					<li className={s.li} key={option.value}>
+						<div
+							style={{
+								color: checkedValues[option.value] ? '#f2f2f2' : '#808080',
+							}}
+							className={s.optionWrapper}>
+							<label className={s.optionLabel}>
+								<input
+									className={background262626 ? s.optionInput26 : s.optionInput}
+									type="checkbox"
+									checked={checkedValues[option.value] || false}
+									onChange={(e) =>
+										handleCheckboxChange(option, e.target.checked)
+									}
+									ref={(el) => {
+										if (el)
+											el.indeterminate =
+												checkedValues[option.value] === undefined
+									}}
+								/>
+								<div className="ml-8">{option.label}</div>
+							</label>
+							{option.subOptions && (
+								<button onClick={() => toggleExpand(option)}>
+									{expandedValues[option.value] ? (
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="16"
+											height="16"
+											viewBox="0 0 16 16"
+											fill="none">
+											<path
+												d="M3 10L8 5L13 10"
+												stroke="CurrentColor"
+												stroke-width="1.4"
+												stroke-linecap="round"
+												stroke-linejoin="round"
+											/>
+										</svg>
+									) : (
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="16"
+											height="16"
+											viewBox="0 0 16 16"
+											fill="none">
+											<path
+												d="M3 6L8 11L13 6"
+												stroke="CurrentColor"
+												stroke-width="1.4"
+												stroke-linecap="round"
+												stroke-linejoin="round"
+											/>
+										</svg>
+									)}
+								</button>
+							)}
+						</div>
+						<Line
+							width={'527px'}
+							className={background262626 ? s.OptionsLine26 : s.OptionsLine}
+						/>
+						{option.subOptions &&
+							expandedValues[option.value] &&
+							renderOptions(option.subOptions, depth + 1)}
+					</li>
+				))}
+			</ul>
+			
+		</>
 	)
 
 	return (
-		<div>
+		<div className={`${className}` }>
 			<mui.Select
-				className={s.muiSelect}
+				style={{backgroundColor: background262626 && '#333'}}
+				className={`${s.muiSelect}`}
 				multiple={true}
 				renderValue={(option: mui.SelectOption<number> | null) => {
 					if (option == null || option.value === null) {
@@ -144,7 +160,9 @@ export const TreeSelectCustom: React.FC<TreeSelectCustomProps> = ({
 									{Object.entries(checkedValues)
 										.filter(([_, checked]) => checked)
 										.map(([value, _]) => (
-											<div key={value} className={s.chip}>
+											<div
+												key={value}
+												className={background262626 ? s.chip26 : s.chip}>
 												<span>{value}</span>
 												<button onClick={() => handleRemoveChip(value)}>
 													<img src={ChipsX} alt="ChipsX" />
@@ -161,7 +179,9 @@ export const TreeSelectCustom: React.FC<TreeSelectCustomProps> = ({
 								{Object.entries(checkedValues)
 									.filter(([_, checked]) => checked)
 									.map(([value, _]) => (
-										<div key={value} className={s.chip}>
+										<div
+											key={value}
+											className={background262626 ? s.chip26 : s.chip}>
 											<span>{value}</span>
 											<button onClick={() => handleRemoveChip(value)}>
 												<img src={ChipsX} alt="ChipsX" />
@@ -174,11 +194,12 @@ export const TreeSelectCustom: React.FC<TreeSelectCustomProps> = ({
 				}}>
 				<mui.Option
 					value={1}
-					className={`${s.muiOption} cursor-pointer z-10 mt-1`}>
+					style={{backgroundColor: background262626 && '#333'}}
+					className={`${s.muiOption} cursor-pointer mt-1`}>
 					{renderOptions(options)}
 				</mui.Option>
 			</mui.Select>
-			{/* {renderOptions(options)} */}
+			
 		</div>
 	)
 }

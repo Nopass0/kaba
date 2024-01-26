@@ -13,10 +13,12 @@ import ContentBannerDetails, {
 	IContentBannerDetails,
 } from '../../components/ContentBannerDetails'
 import moment from 'moment'
+import FiltersBanners from '../../components/FiltersBanners/index';
 
 enum CurrentPopup {
 	None,
 	Content,
+	Filter,
 }
 
 const Bloggers: React.FC = () => {
@@ -37,6 +39,16 @@ const Bloggers: React.FC = () => {
 	}, [])
 
 	const [currentItem, setCurrentItem] = React.useState<object>({})
+	const DiffrentDate = (item) => {
+		const dateStart = new Date(item.date_start)
+		const dateFinish = new Date(item.date_finish)
+
+		const differenceInTime = dateFinish.getTime() - dateStart.getTime()
+		const differenceInDays = differenceInTime / (1000 * 3600 * 24)
+		console.log(differenceInDays, 'differenceInDays', item.date_start), '123'
+
+		return differenceInDays
+	}
 
 	const bannerContent: IContentBannerDetails = {
 		className: 'banner-class',
@@ -193,6 +205,29 @@ const Bloggers: React.FC = () => {
 						</svg>
 					</label>
 					<div className={s.sortTableButtons}>
+						<button
+						onClick={() => {
+							setCurrentPopup(CurrentPopup.Filter)
+						}}
+						className={s.filterTableButton}>
+							<div className={s.filterTableButtonWrapper}>
+								<p className={s.filterTableButtonText}>Фильтры</p>
+								<p></p>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 16 16"
+									fill="none">
+									<path
+										fill-rule="evenodd"
+										clip-rule="evenodd"
+										d="M7 4C7 3.44772 7.44772 3 8 3C8.55228 3 9 3.44772 9 4C9 4.55228 8.55228 5 8 5C7.44772 5 7 4.55228 7 4ZM7 12C7 11.4477 7.44772 11 8 11C8.55228 11 9 11.4477 9 12C9 12.5523 8.55228 13 8 13C7.44772 13 7 12.5523 7 12ZM8 7C7.44772 7 7 7.44772 7 8C7 8.55228 7.44772 9 8 9C8.55228 9 9 8.55228 9 8C9 7.44772 8.55228 7 8 7Z"
+										fill="#808080"
+									/>
+								</svg>
+							</div>
+						</button>
 						<button className={s.sortTableButton}>
 							<div className={s.sortTableButtonWrapper}>
 								<p className={s.sortTableButtonTextGray}>Сортировать:</p>
@@ -256,6 +291,8 @@ const Bloggers: React.FC = () => {
 							onDetails={() => {
 								setCurrentItem(item)
 								setCurrentPopup(CurrentPopup.Content)
+								DiffrentDate(item)
+								console.log(currentItem.audiences[0].category, 'ITEM')
 							}}
 						/>
 					))}
@@ -266,43 +303,47 @@ const Bloggers: React.FC = () => {
 			</div>
 			{currentPopup === CurrentPopup.Content && (
 				<PopUpWrapper onExit={bannerContent.onExit}>
-
 					<ContentBannerDetails
 						className={bannerContent.className}
-						course_svg={bannerContent.course_svg}
+						course_svg={bannerContent.course_svg} // TO DO
 						course_title={currentItem.name}
 						course_id={currentItem.id}
-						course_ooo={bannerContent.course_ooo}
-						course_link={bannerContent.course_link}
-						stat_toEnd={bannerContent.stat_toEnd}
-						stat_budget={bannerContent.stat_budget}
-						stat_income={bannerContent.stat_income}
-						stat_targetAct={bannerContent.stat_targetAct}
-						stat_maxPrice={bannerContent.stat_maxPrice}
-						stat_Price={bannerContent.stat_Price}
-						stat_incomeUndo={bannerContent.stat_incomeUndo}
-						stat_AbPay={bannerContent.stat_AbPay}
-						target_1_title={bannerContent.target_1_title}
-						target_1_value={bannerContent.target_1_value}
-						target_1_id={bannerContent.target_1_id}
-						target_2_title={bannerContent.target_2_title}
-						target_2_value={bannerContent.target_2_value}
-						target_2_id={bannerContent.target_2_id}
-						forBidden_1={bannerContent.forBidden_1}
-						forBidden_2={bannerContent.forBidden_2}
-						forBidden_3={bannerContent.forBidden_3}
-						sg_clicks={bannerContent.sg_clicks}
+						// course_ooo={bannerContent.course_ooo} //To DO
+						course_link={currentItem.site.domain}
+						stat_toEnd={DiffrentDate(currentItem)}
+						stat_budget={currentItem.budget_week}
+						stat_income={bannerContent.stat_income} // TO DO
+						stat_targetAct={bannerContent.stat_targetAct} // TO DO
+						stat_maxPrice={bannerContent.stat_maxPrice} // TO DO
+						stat_Price={bannerContent.stat_Price} // TO DO
+						stat_incomeUndo={bannerContent.stat_incomeUndo} // TO DO
+						stat_AbPay={bannerContent.stat_AbPay} // TO DO
+						target_1_title={bannerContent.target_1_title} // TO DO
+						target_1_value={bannerContent.target_1_value} // TO DO
+						target_1_id={bannerContent.target_1_id} // TO DO
+						target_2_title={bannerContent.target_2_title} // TO DO
+						target_2_value={bannerContent.target_2_value} // TO DO
+						target_2_id={bannerContent.target_2_id} // TO DO
+						forBidden_1={bannerContent.forBidden_1} // TO DO
+						forBidden_2={bannerContent.forBidden_2} // TO DO
+						forBidden_3={bannerContent.forBidden_3} // TO DO
+						sg_clicks={bannerContent.sg_clicks} // TO DO
 						sg_conversion={bannerContent.sg_conversion}
 						sg_expenses={bannerContent.sg_expenses}
 						sg_ads={bannerContent.sg_ads}
 						sg_income_all={bannerContent.sg_income_all}
-						arrayCategory={bannerContent.arrayCategory}
-						arrayGeo={bannerContent.arrayGeo}
-						arrayGender={bannerContent.arrayGender}
-						arrayDevice={bannerContent.arrayDevice}
-						arrayInteres={bannerContent.arrayInteres}
+						arrayCategory={currentItem.audiences[0].category}
+						arrayGeo={currentItem.audiences[0].geography}
+						arrayGender={currentItem.audiences[0].gender_age}
+						arrayDevice={currentItem.audiences[0].device}
+						arrayInteres={currentItem.audiences[0].interest}
 						onExit={bannerContent.onExit}
 					/>
+				</PopUpWrapper>
+			)}
+			{currentPopup === CurrentPopup.Filter && (
+				<PopUpWrapper onExit={bannerContent.onExit}>
+						<FiltersBanners/>
 				</PopUpWrapper>
 			)}
 		</div>

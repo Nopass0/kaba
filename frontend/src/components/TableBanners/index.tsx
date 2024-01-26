@@ -26,6 +26,7 @@ import ContentBanner from '../contentBanner/index'
 import ContentBannerDetails, { IContentBannerDetails } from '../ContentBannerDetails/index';
 import { useSelector } from 'react-redux';
 import { getCompanyBloggersAPI } from '../../api/data.api'
+import StatisticPageMini from '../popup/StatisticPageMini/index';
 
 const list = [
 	{
@@ -190,6 +191,7 @@ enum CurrentPopup {
 	Details,
 	Cols,
 	Content,
+	Statistic,
 }
 
 
@@ -730,7 +732,10 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 																/>
 															</svg>
 														</button>
-														<button className={s.ButtonSVG}>
+														<button className={s.ButtonSVG} onClick={() => {
+															// setCurrentPopup(CurrentPopup.Statistic) // TO DO ERROR WITH CHART JS INSIDE POPUP 
+														}}	>
+														
 															<svg
 																xmlns="http://www.w3.org/2000/svg"
 																width="24"
@@ -861,6 +866,16 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 					/>
 				</PopUpWrapper>
 			)}
+
+			{currentPopup === CurrentPopup.Statistic && (
+				<PopUpWrapper
+				onExit={() => {
+					setCurrentPopup(CurrentPopup.None)
+				}}>
+					<StatisticPageMini
+					/>
+			</PopUpWrapper>
+			 )}
 		</>
 	)
 }

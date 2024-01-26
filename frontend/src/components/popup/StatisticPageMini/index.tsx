@@ -349,7 +349,7 @@ const StatisticPageMini: React.FC<IStatisticPageMini> = ({
 
 				<Line width="1164px" className={s.Line} />
 
-				<HeaderSubTitle textHeader="Эффективность продвижения" />
+				{/* <HeaderSubTitle textHeader="Эффективность продвижения" />
 				<Row width="auto" className={s.RowButtonsGraph}>
 					<div className={s.extendedLink}>
 						<Button
@@ -554,8 +554,8 @@ const StatisticPageMini: React.FC<IStatisticPageMini> = ({
 						</Row>
 						<NavLabel text="121,414.39₽" />
 					</Col>
-				</Row>
-				<div style={graphChange === 1 ? {display: 'block'} : {display: 'none'}}>
+				</Row> */}
+				{/* <div style={graphChange === 1 ? {display: 'block'} : {display: 'none'}}>
 					<Bubble data={dataBubble} options={optionsBubble} />
 				</div>
 				<div style={graphChange === 2 ? {display: 'block'} : {display: 'none'}}>
@@ -563,7 +563,7 @@ const StatisticPageMini: React.FC<IStatisticPageMini> = ({
 				</div>
 				<div style={graphChange === 3 ? {display: 'block'} : {display: 'none'}}>
 					<LineChart data={dataArea} options={optionsBubble} />
-				</div>
+				</div> */}
 			</Col>
 		</div>
 	)
