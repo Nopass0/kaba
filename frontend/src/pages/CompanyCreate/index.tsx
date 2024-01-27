@@ -28,7 +28,7 @@ import {eachHourOfInterval} from 'date-fns'
 // import {TreeSelect, TreeSelectChangeEvent} from 'primereact/treeselect'
 // import {TreeNode} from 'primereact/treenode'
 // import 'primereact/resources/themes/md-light-indigo/theme.css'
-import './index.css'
+// import './index.css'
 // import { NodeService } from './service/NodeService';
 import {TreeSelectCustom, Option} from '../../components/TreeSelectCustom/index'
 import Calendar from '../../components/Calendar'
@@ -90,46 +90,7 @@ const CompanyCreate: React.FC = () => {
 	// Array DOM Element's
 	const [banShowArray, setBanShowArray] = useState<HTMLElement[]>([])
 
-	// Tree Select
-	const [nodes, setNodes] = useState<TreeNode[] | null>([
-		{
-			key: '0',
-			label: 'Название, ID',
-			data: 'NameID',
-			children: [
-				{
-					key: '0-0',
-					label: 'Статус. комп.',
-					data: 'StatusComp',
-					children: [
-						{
-							key: '0-0-0',
-							label: 'Expenses.doc',
-							data: 'Expenses Document',
-						},
-						{
-							key: '0-0-1',
-							label: 'Resume.doc',
-							data: 'Resume Document',
-						},
-					],
-				},
-				{
-					key: '0-1',
-					label: 'Home',
-					data: 'Home Folder',
-					children: [
-						{
-							key: '0-1-0',
-							label: 'Invoices.txt',
-							data: 'Invoices for this month',
-						},
-					],
-				},
-			],
-		},
-	])
-	const [selectedNodeKeys, setSelectedNodeKeys] = useState<string[]>(null)
+
 
 	// useEffect(() => {
 	//     NodeService.getTreeNodes().then((data) => setNodes(data));
@@ -1514,159 +1475,9 @@ const CompanyCreate: React.FC = () => {
 								/>
 							</svg>
 						</Row>
-						{/* <Input
-							width="100%"
-							placeholder="Введите название..."
-							className={`${s.inputText}`}
-						/> */}
+						
 						<TreeSelectCustom options={op} />
-						{/* <TreeSelect
-							value={selectedNodeKeys}
-							onChange={(e: TreeSelectChangeEvent) =>
-								setSelectedNodeKeys(e.value)
-							}
-							options={nodes}
-							metaKeySelection={false}
-							className="md:w-20rem w-full"
-							selectionMode="checkbox"
-							
-							// togglerTemplate={togglerTemplate}
-							// collapseIcon={}
-							expandedKeys={(e) => {
-								console.log(e,'KETS');
-							}}
-							onExpand={(e) => {
-								console.log(e,'onExpand');
-							}}
-							onNodeExpand={(e) => {console.log(e.originalEvent.target, 'EXPANDAGDOSGK');
-							}}
-							onNodeCollapse={(e) => {console.log(e.originalEvent.target, 'fdagadg');
-							} }
-							// togglerTemplate={(node,event,context) => {
-								
-							// // 	event.props.collapseIcon = `<svg
-							// // 	xmlns="http://www.w3.org/2000/svg"
-							// // 	width="16"
-							// // 	height="16"
-							// // 	viewBox="0 0 16 16"
-							// // 	fill="none">
-							// // 	<path
-							// // 		d="M3 10L8 5L13 10"
-							// // 		stroke="#808080"
-							// // 		strokeWidth="1.4"
-							// // 		strokeLinecap="round"
-							// // 		strokeLinejoin="round"
-							// // 	/>
-							// // </svg>`
-							// // 	event.props.expandIcon = `<svg
-							// // 	xmlns="http://www.w3.org/2000/svg"
-							// // 	width="16"
-							// // 	height="16"
-							// // 	viewBox="0 0 16 16"
-							// // 	fill="none">
-							// // 	<path
-							// // 		d="M3 6L8 11L13 6"
-							// // 		stroke="#808080"
-							// // 		stroke-width="1.4"
-							// // 		stroke-linecap="round"
-							// // 		stroke-linejoin="round"
-							// // 	/>
-							// // </svg>`
-							// console.log(node,event,context, 'TESTESTET');
-								
-							// 	const onToggle = (node, event) => {
-					
-							// 		console.log(event, 'event', node, 'node')
-							// 		if (node.expanded) {
-							// 			node.collapseNode({originalEvent: event, node})
-							// 		} else {
-							// 			node.expandNode({originalEvent: event, node})
-							// 		}
-							// 	}
 
-							// 	return (
-							// 		<div>
-							// 			{node.children && (
-							// 				<div className="w-full absolute left-0">
-							// 					{node.expanded ? (
-							// 						<button
-							// 							onClick={(node,event) => {
-							// 								onToggle(node, event) 
-														
-							// 							}}
-							// 							type="button"
-							// 							tabindex="-1"
-							// 							aria-label="Collapse"
-							// 							data-pc-section="toggler">
-							// 							<svg
-							// 								xmlns="http://www.w3.org/2000/svg"
-							// 								width="16"
-							// 								height="16"
-							// 								viewBox="0 0 16 16"
-							// 								fill="none">
-							// 								<path
-							// 									d="M3 10L8 5L13 10"
-							// 									stroke="CurrentColor"
-							// 									strokeWidth="1.4"
-							// 									strokeLinecap="round"
-							// 									strokeLinejoin="round"
-							// 								/>
-							// 							</svg>
-							// 						</button>
-							// 					) : (
-							// 						<button
-							// 							onClick={(event) => onToggle(node, event)}
-							// 							type="button"
-							// 							tabindex="-1"
-							// 							aria-label="Expand"
-							// 							data-pc-section="toggler">
-							// 							<svg
-							// 								xmlns="http://www.w3.org/2000/svg"
-							// 								width="16"
-							// 								height="16"
-							// 								viewBox="0 0 16 16"
-							// 								fill="none">
-							// 								<path
-							// 									d="M3 6L8 11L13 6"
-							// 									stroke="CurrentColor"
-							// 									stroke-width="1.4"
-							// 									stroke-linecap="round"
-							// 									stroke-linejoin="round"
-							// 								/>
-							// 							</svg>
-							// 						</button>
-							// 					)}
-							// 				</div>
-							// 			)}
-							// 		</div>
-							// 	)
-							// }}
-							display="chip"
-							placeholder="Выбор категории"
-							pt={{
-								root: {
-									className:
-										'bg-[#262626] rounded-[10px] h-[36px] outline-none ',
-								},
-								labelContainer: {className: 'h-[36px]'},
-								label: {
-									className:
-										'h-[36px] py-[5.5px] pl-[16px] text-[#808080] text-[14px]',
-								},
-								token: {className: 'bg-[#333] rounded-[12px] h-[24px] '},
-								tokenLabel: {className: 'text-[#f2f2f2]'},
-								trigger: {className: 'hidden'},
-								closeIcon: {className: 'hidden'},
-								header: {className: 'hidden p-0 m-0'},
-								panel: {className: 'bg-[#262626] rounded-[10px] '},
-								wrapper: {className: 'bg-[#262626] rounded-[10px] '},
-								tree: {
-									content: ({context}) => ({
-										className: context.expanded ? '' : '',
-										
-									}),
-								},
-							}}></TreeSelect> */}
 
 						<Line width="528px" className={s.Line} />
 

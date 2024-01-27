@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import s from './index.module.scss'
 
 import {useTheme} from '@table-library/react-table-library/theme'
@@ -24,6 +24,9 @@ import TableCol from '../popup/TableColsPopUp/index'
 import TableLineFooter from '../TableLineFooter'
 import ContentBanner from '../contentBanner/index'
 import ContentBannerDetails, { IContentBannerDetails } from '../ContentBannerDetails/index';
+import { useSelector } from 'react-redux';
+import { getCompanyBloggersAPI } from '../../api/data.api'
+import StatisticPageMini from '../popup/StatisticPageMini/index';
 
 const list = [
 	{
@@ -188,14 +191,26 @@ enum CurrentPopup {
 	Details,
 	Cols,
 	Content,
+	Statistic,
 }
 
 
 
 
 const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
-	const data = {nodes: list}
+	const [dataTable, setDataTable] = React.useState<object>({})
+	const user = useSelector((state: any) => state.user)
+	const token = user.token
+	useEffect(() => {
+		const getData = async () => {
+			const res = await getCompanyBloggersAPI(token)
+			console.log(res.data, 'RES DATA');	
+			setDataTable(res.data)
+		}
+		getData() 
+	},[])
 
+	const data = {nodes: list}
 	const [search, setSearch] = useState('')
 	const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setSearch(event.target.value)
@@ -476,7 +491,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 														sortKey: 'Status',
 													})
 												}>
-												<p className={s.sortText}>Статус</p>
+												<p className={s.sortText}>Бюджет на неделю</p>
 												<div>
 													<svg
 														id="svg-icon-chevron-single-up-down"
@@ -717,7 +732,10 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 																/>
 															</svg>
 														</button>
-														<button className={s.ButtonSVG}>
+														<button className={s.ButtonSVG} onClick={() => {
+															// setCurrentPopup(CurrentPopup.Statistic) // TO DO ERROR WITH CHART JS INSIDE POPUP 
+														}}	>
+														
 															<svg
 																xmlns="http://www.w3.org/2000/svg"
 																width="24"
@@ -848,6 +866,16 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 					/>
 				</PopUpWrapper>
 			)}
+
+			{currentPopup === CurrentPopup.Statistic && (
+				<PopUpWrapper
+				onExit={() => {
+					setCurrentPopup(CurrentPopup.None)
+				}}>
+					<StatisticPageMini
+					/>
+			</PopUpWrapper>
+			 )}
 		</>
 	)
 }

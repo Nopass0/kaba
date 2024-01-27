@@ -95,4 +95,55 @@
 	&:not(:last-child) {
 		border-bottom: 1px solid #262626;
 	}
+
+	
+}.CopyNClearWrapper {
+	width: 151px;
+	height: 73px;
+	flex-shrink: 0;
+
+	display: flex;
+	flex-direction: column;
+
+	border-radius: 10px;
+	border: 1px solid #474747;
+	background: #333;
+	box-shadow: 0px 0px 50px 0px rgba(0, 0, 0, 0.1);
+
+	.CopyAll, .Clear {
+		padding: 10px 16px;
+		cursor: pointer;
+		&:hover {
+			background-color: #474747;
+		}
+	}
+
+	.CopyAll {
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;
+	}
+
+	.Clear {
+		height: 35px;
+		border-bottom-left-radius: 10px;
+		border-bottom-right-radius: 10px;
+	}
+
+	p {
+		color: #fff;
+		font-family: Inter;
+		font-size: 14px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: 16px; /* 114.286% */
+		
+		cursor: pointer;
+
+		white-space: nowrap;
+	}
+	
+	.CopyNClearLine {
+		margin: 0;
+		background: #474747;
+	}
 }
