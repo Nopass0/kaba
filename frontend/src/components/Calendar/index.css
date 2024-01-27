@@ -19,14 +19,40 @@ div.rmdp-disabled {
 }
 
 .rmdp-range {
-	background-color: #4169e1b7 !important;
-	box-shadow: none;
-	border-radius: 18px;
+	background: #314171 !important;
+	box-shadow: none !important;
+}
+.rmdp-range.start span,
+.rmdp-range.end span {
+	background: #4169e1 !important;
+	border-radius: 50%;
 }
 
 .rmdp-week {
 	margin-bottom: 4px;
-	border-radius: 180px;
+	border-radius: 50%;
+
+	.rmdp-range:first-child {
+		border-bottom-left-radius: 50%;
+		border-top-left-radius: 50%;
+	}
+
+	.rmdp-range:last-child {
+		border-bottom-right-radius: 50%;
+		border-top-right-radius: 50%;
+	}
+}
+
+.rmdp-day.rmdp-today span {
+	background: none !important;
+}
+
+@media (hover: hover) {
+	.rmdp-day:not(.rmdp-disabled, .rmdp-day-hidden, .rmdp-range, .start, .end)
+		span:hover {
+		background: none !important;
+		border: 1px solid #474747;
+	}
 }
 
 /* AB Range Slider */

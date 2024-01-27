@@ -15,7 +15,7 @@ import {CrosshairPlugin, Interpolate} from 'chartjs-plugin-crosshair'
 
 //chartjs
 // import { Chart } from "chart.js";
-import 'chart.js/auto'
+// import 'chart.js/auto'
 import {Line} from 'react-chartjs-2'
 import GraphTooltip from '../GraphTooltip/index'
 import { min } from 'moment'

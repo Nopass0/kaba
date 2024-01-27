@@ -75,6 +75,8 @@ const CompanyCreate: React.FC = () => {
 	const [aDevice, setADevice] = useState<string[]>([])
 	const [aGenderNAge, setAGenderNAge] = useState<TGenderNAge[]>([])
 
+	const [GenderNAgeObject, setGenderNAgeObject] = useState<object[]>([])
+
 	// Banner's Company (B)
 
 	const [bName, setBName] = useState<string>('')
@@ -88,9 +90,7 @@ const CompanyCreate: React.FC = () => {
 	const [bUnvirfied, setBUnvirfied] = useState<boolean>(false)
 
 	// Array DOM Element's
-	const [banShowArray, setBanShowArray] = useState<HTMLElement[]>([])
-
-
+	const [banShowArray, setBanShowArray] = useState<object[]>([])
 
 	// useEffect(() => {
 	//     NodeService.getTreeNodes().then((data) => setNodes(data));
@@ -359,8 +359,6 @@ const CompanyCreate: React.FC = () => {
 			<div className={` ${s.rightMenu}`}>
 				<HeaderCompanyCreate />
 
-				<Calendar />
-
 				<div
 					id="page-1"
 					style={switchPage === 1 ? {display: 'block'} : {display: 'none'}}>
@@ -423,15 +421,6 @@ const CompanyCreate: React.FC = () => {
 										)
 									}
 								}}
-								// onKeyDown={(e) => {
-								// 	if (e.key === 'Enter' && !e.repeat && !e.shiftKey) {
-								// 		e.preventDefault
-								// 		console.log('ENTER PRESS')
-								// 		let link_target = document.getElementById('link_target')
-
-								// 		e.target.value = ''
-								// 	}
-								// }}
 								id="urlInput"
 								width="528px"
 								placeholder="Введите ссылку..."
@@ -469,29 +458,32 @@ const CompanyCreate: React.FC = () => {
 								</svg>
 							</div>
 						</Row>
-						<Col
-							iD="link_target"
-							width="528px"
-							className={`mt-[8px] w-[528px] min-h-[48px] flex flex-col flex-wrap overflow-y-scroll rounded-[10px] border border-[#262626]`}>
-							<Row
-								className={`ml-[16px] mt-[4px] max-w-[528px] flex flex-wrap items-center`}>
-								<img
-									src={getFaviconUrl(cLink)}
-									alt={cLink}
-									className="mr-1 w-[16px] h-[16px]"
+
+						{cLink.length > 0 && (
+							<Col
+								iD="link_target"
+								width="528px"
+								className={`mt-[8px] w-[528px] min-h-[48px] flex flex-col flex-wrap overflow-y-scroll rounded-[10px] border border-[#262626]`}>
+								<Row
+									className={`ml-[16px] mt-[4px] max-w-[528px] flex flex-wrap items-center`}>
+									<img
+										src={getFaviconUrl(cLink)}
+										alt={cLink}
+										className="mr-1 w-[16px] h-[16px]"
+									/>
+									<WhiteLabel
+										text={getNameFromDomain(
+											cLink.length <= 40 ? cLink : cLink.slice(0, 70) + '...',
+										)}
+									/>
+								</Row>
+								<Label
+									className={`ml-[16px] mb-[8px] flex-wrap`}
+									text={cLink.length <= 40 ? cLink : cLink.slice(0, 70) + '...'}
+									isMini={true}
 								/>
-								<WhiteLabel
-									text={getNameFromDomain(
-										cLink.length <= 40 ? cLink : cLink.slice(0, 70) + '...',
-									)}
-								/>
-							</Row>
-							<Label
-								className={`ml-[16px] mb-[8px] flex-wrap`}
-								text={cLink.length <= 40 ? cLink : cLink.slice(0, 70) + '...'}
-								isMini={true}
-							/>
-						</Col>
+							</Col>
+						)}
 						<Line width="528px" className={s.Line} />
 
 						{/* <Col width="528px" className={`mt-[32px] w-[528px]`}>
@@ -536,6 +528,7 @@ const CompanyCreate: React.FC = () => {
 										className={`mr-[18px] my-[5px]`}
 										text="08.11.2023"
 									/>
+
 									{/* <div className={s.DatePicker}>
 										<DatePicker
 											weekDays={weekDays}
@@ -555,10 +548,34 @@ const CompanyCreate: React.FC = () => {
 								<div
 									className={`border rounded-[10px] flex justify-between border-[#262626] h-[36px] w-[260px]`}>
 									<Label className={`my-[5px] ml-[16px]`} text="Окончание:" />
-									<BlueLabel
-										className={`mr-[18px] my-[5px] font-[400px]`}
-										text="Указать"
-									/>
+									<mui.Select
+										multiple={true}
+										className="z-10 cursor-pointer"
+										renderValue={(option: mui.SelectOption<number> | null) => {
+											if (option == null || option.value === null) {
+												return (
+													<>
+														<BlueLabel
+															className={`mr-[18px] my-[5px] font-[400px]`}
+															text="Указать"
+														/>
+													</>
+												)
+											}
+											return (
+												<>
+													<BlueLabel
+														className={`mr-[18px] my-[5px] font-[400px]`}
+														text="Указать"
+													/>
+												</>
+											)
+										}}>
+										<mui.Option
+											value={1}
+											className={`cursor-pointer z-10 mt-1`}></mui.Option>
+										<Calendar />
+									</mui.Select>
 								</div>
 							</Row>
 						</Col>
@@ -1138,74 +1155,69 @@ const CompanyCreate: React.FC = () => {
 									width="528px"
 									placeholder="https://test.ru/test/testik"
 									onKeyDown={(e) => {
-										if (e.key === 'Enter' && !e.repeat && !e.shiftKey) {
+										if (
+											e.key === 'Enter' &&
+											!e.repeat &&
+											!e.shiftKey &&
+											e.target.value.length > 0
+										) {
 											e.preventDefault
 											console.log('ENTER PRESS')
 											// Hooks
 											setBanShowArray((prevArray) => [
 												...prevArray,
-												<>
-													<Row
-														width="528px"
-														className={`items-center pl-[16px] pb-[5px] my-[5px] justify-between ${s.list}`}>
-														<div className="w-[500px] flex justify-between items-center text-[#808080] hover:text-[#f2f2f2] transition-all">
-															<WhiteLabel
-																className={`w-[200px]`}
-																size="14px"
-																text={e.target.value}
-															/>
-															<svg
-																className="cursor-pointer"
-																width="16"
-																height="16"
-																viewBox="0 0 16 16"
-																fill="none"
-																xmlns="http://www.w3.org/2000/svg">
-																<path
-																	d="M4.13179 11.8681C4.19232 11.9253 4.26125 11.964 4.33859 11.9842C4.41592 12.0044 4.49326 12.0044 4.5706 11.9842C4.64794 11.964 4.71519 11.9253 4.77235 11.8681L8.00033 8.63863L11.2283 11.8681C11.2855 11.9253 11.3527 11.964 11.4301 11.9842C11.5074 12.0044 11.5856 12.0052 11.6646 11.9867C11.7436 11.9682 11.8117 11.9287 11.8689 11.8681C11.926 11.811 11.9639 11.7437 11.9823 11.6663C12.0008 11.5889 12.0008 11.5116 11.9823 11.4342C11.9639 11.3568 11.926 11.2895 11.8689 11.2323L8.64088 7.99778L11.8689 4.76827C11.926 4.71108 11.9647 4.6438 11.9849 4.56643C12.005 4.48905 12.005 4.41168 11.9849 4.3343C11.9647 4.25693 11.926 4.18965 11.8689 4.13246C11.8083 4.07191 11.7394 4.03238 11.6621 4.01388C11.5847 3.99537 11.5074 3.99537 11.4301 4.01388C11.3527 4.03238 11.2855 4.07191 11.2283 4.13246L8.00033 7.36197L4.77235 4.13246C4.71519 4.07191 4.64709 4.03238 4.56808 4.01388C4.48906 3.99537 4.41088 3.99537 4.33354 4.01388C4.25621 4.03238 4.18896 4.07191 4.13179 4.13246C4.07463 4.18965 4.0368 4.25693 4.01831 4.3343C3.99982 4.41168 3.99982 4.48905 4.01831 4.56643C4.0368 4.6438 4.07463 4.71108 4.13179 4.76827L7.35978 7.99778L4.13179 11.2323C4.07463 11.2895 4.03596 11.3568 4.01579 11.4342C3.99561 11.5116 3.99477 11.5889 4.01327 11.6663C4.03176 11.7437 4.07127 11.811 4.13179 11.8681Z"
-																	fill="CurrentColor"
-																/>
-															</svg>
-														</div>
-													</Row>
-												</>,
+												{
+													id: `BanArray-${generateUniqueId()}`,
+													text: e.target.value,
+												},
 											])
 											e.target.value = ''
 										}
+										console.log(banShowArray)
 									}}
 								/>
 							</Row>
 						</Col>
-						<Col
-							iD="banShow"
-							width="528px"
-							className={`mt-[8px] border border-[#262626] rounded-[10px]`}>
-							<Row
-								width="528px"
-								className={`items-center pl-[16px] pb-[5px] my-[5px] justify-between ${s.list}`}>
-								<div className="w-[500px] flex justify-between items-center text-[#808080] hover:text-[#f2f2f2] transition-all">
-									<WhiteLabel
-										className={`w-[200px]`}
-										size="14px"
-										text="https://test.ru"
-									/>
-									<svg
-										className="cursor-pointer"
-										width="16"
-										height="16"
-										viewBox="0 0 16 16"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg">
-										<path
-											d="M4.13179 11.8681C4.19232 11.9253 4.26125 11.964 4.33859 11.9842C4.41592 12.0044 4.49326 12.0044 4.5706 11.9842C4.64794 11.964 4.71519 11.9253 4.77235 11.8681L8.00033 8.63863L11.2283 11.8681C11.2855 11.9253 11.3527 11.964 11.4301 11.9842C11.5074 12.0044 11.5856 12.0052 11.6646 11.9867C11.7436 11.9682 11.8117 11.9287 11.8689 11.8681C11.926 11.811 11.9639 11.7437 11.9823 11.6663C12.0008 11.5889 12.0008 11.5116 11.9823 11.4342C11.9639 11.3568 11.926 11.2895 11.8689 11.2323L8.64088 7.99778L11.8689 4.76827C11.926 4.71108 11.9647 4.6438 11.9849 4.56643C12.005 4.48905 12.005 4.41168 11.9849 4.3343C11.9647 4.25693 11.926 4.18965 11.8689 4.13246C11.8083 4.07191 11.7394 4.03238 11.6621 4.01388C11.5847 3.99537 11.5074 3.99537 11.4301 4.01388C11.3527 4.03238 11.2855 4.07191 11.2283 4.13246L8.00033 7.36197L4.77235 4.13246C4.71519 4.07191 4.64709 4.03238 4.56808 4.01388C4.48906 3.99537 4.41088 3.99537 4.33354 4.01388C4.25621 4.03238 4.18896 4.07191 4.13179 4.13246C4.07463 4.18965 4.0368 4.25693 4.01831 4.3343C3.99982 4.41168 3.99982 4.48905 4.01831 4.56643C4.0368 4.6438 4.07463 4.71108 4.13179 4.76827L7.35978 7.99778L4.13179 11.2323C4.07463 11.2895 4.03596 11.3568 4.01579 11.4342C3.99561 11.5116 3.99477 11.5889 4.01327 11.6663C4.03176 11.7437 4.07127 11.811 4.13179 11.8681Z"
-											fill="CurrentColor"
-										/>
-									</svg>
-								</div>
-							</Row>
-
-							{banShowArray}
-						</Col>
+						{banShowArray.length > 0 && (
+							<>
+								<Col
+									iD="banShow"
+									width="528px"
+									className={`mt-[8px] border border-[#262626] rounded-[10px]`}>
+									{banShowArray.map((file, index) => (
+										<Row
+											key={index}
+											width="528px"
+											className={`items-center pl-[16px] pb-[5px] my-[5px] justify-between ${s.list}`}>
+											<div className="w-[500px] flex justify-between items-center ">
+												<WhiteLabel
+													className={`w-[200px]`}
+													size="14px"
+													text={file.text}
+												/>
+												<svg
+													onClick={() => {
+														setBanShowArray(
+															banShowArray.filter((obj) => obj.id !== file.id),
+														)
+													}}
+													className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
+													width="16"
+													height="16"
+													viewBox="0 0 16 16"
+													fill="none"
+													xmlns="http://www.w3.org/2000/svg">
+													<path
+														d="M4.13179 11.8681C4.19232 11.9253 4.26125 11.964 4.33859 11.9842C4.41592 12.0044 4.49326 12.0044 4.5706 11.9842C4.64794 11.964 4.71519 11.9253 4.77235 11.8681L8.00033 8.63863L11.2283 11.8681C11.2855 11.9253 11.3527 11.964 11.4301 11.9842C11.5074 12.0044 11.5856 12.0052 11.6646 11.9867C11.7436 11.9682 11.8117 11.9287 11.8689 11.8681C11.926 11.811 11.9639 11.7437 11.9823 11.6663C12.0008 11.5889 12.0008 11.5116 11.9823 11.4342C11.9639 11.3568 11.926 11.2895 11.8689 11.2323L8.64088 7.99778L11.8689 4.76827C11.926 4.71108 11.9647 4.6438 11.9849 4.56643C12.005 4.48905 12.005 4.41168 11.9849 4.3343C11.9647 4.25693 11.926 4.18965 11.8689 4.13246C11.8083 4.07191 11.7394 4.03238 11.6621 4.01388C11.5847 3.99537 11.5074 3.99537 11.4301 4.01388C11.3527 4.03238 11.2855 4.07191 11.2283 4.13246L8.00033 7.36197L4.77235 4.13246C4.71519 4.07191 4.64709 4.03238 4.56808 4.01388C4.48906 3.99537 4.41088 3.99537 4.33354 4.01388C4.25621 4.03238 4.18896 4.07191 4.13179 4.13246C4.07463 4.18965 4.0368 4.25693 4.01831 4.3343C3.99982 4.41168 3.99982 4.48905 4.01831 4.56643C4.0368 4.6438 4.07463 4.71108 4.13179 4.76827L7.35978 7.99778L4.13179 11.2323C4.07463 11.2895 4.03596 11.3568 4.01579 11.4342C3.99561 11.5116 3.99477 11.5889 4.01327 11.6663C4.03176 11.7437 4.07127 11.811 4.13179 11.8681Z"
+														fill="CurrentColor"
+													/>
+												</svg>
+											</div>
+										</Row>
+									))}
+								</Col>
+							</>
+						)}
 						<Line width="528px" className={s.Line} />
 
 						<div className={`mb-[32px] w-[528px] float-right `}>
@@ -1475,9 +1487,8 @@ const CompanyCreate: React.FC = () => {
 								/>
 							</svg>
 						</Row>
-						
-						<TreeSelectCustom options={op} />
 
+						<TreeSelectCustom options={op} />
 
 						<Line width="528px" className={s.Line} />
 
@@ -1805,7 +1816,19 @@ const CompanyCreate: React.FC = () => {
 											/>
 										</span>
 									</Row>
-									<div className="h-[36px] ml-[8px] bg-[#4169E1] rounded-[10px] w-[36px] flex justify-center items-center cursor-pointer">
+									<div
+										className="h-[36px] ml-[8px] bg-[#4169E1] rounded-[10px] w-[36px] flex justify-center items-center cursor-pointer"
+										onClick={() =>
+											setGenderNAgeObject((prevArray) => [
+												...prevArray,
+												{
+													id: `GenderAge-${generateUniqueId()}`,
+													male: Gender ? 'Мужской' : 'Женский',
+													from: AgeFrom,
+													to: AgeTo,
+												},
+											])
+										}>
 										<svg
 											width="24"
 											height="24"
@@ -1832,58 +1855,39 @@ const CompanyCreate: React.FC = () => {
 							</Col>
 						</Row>
 
-						<Col
-							width="528px"
-							className={`max-h-[110px] overflow-y-scroll border border-[#262626] rounded-[10px] overflow-x-hidden`}>
-							<Row
+						{GenderNAgeObject.length > 0 && (	
+							<Col
 								width="528px"
-								className={`justify-between items-center px-[16px] py-[10px] border-b border-[#262626]`}>
-								<WhiteLabel text="Мужчины, 18 - 34" />
-								<svg
-									width="16"
-									height="16"
-									viewBox="0 0 16 16"
-									fill="none"
-									xmlns="http://www.w3.org/2000/svg">
-									<path
-										d="M4.13179 11.8681C4.19232 11.9253 4.26125 11.964 4.33859 11.9842C4.41592 12.0044 4.49326 12.0044 4.5706 11.9842C4.64794 11.964 4.71519 11.9253 4.77235 11.8681L8.00033 8.63863L11.2283 11.8681C11.2855 11.9253 11.3527 11.964 11.4301 11.9842C11.5074 12.0044 11.5856 12.0052 11.6646 11.9867C11.7436 11.9682 11.8117 11.9287 11.8689 11.8681C11.926 11.811 11.9639 11.7437 11.9823 11.6663C12.0008 11.5889 12.0008 11.5116 11.9823 11.4342C11.9639 11.3568 11.926 11.2895 11.8689 11.2323L8.64088 7.99778L11.8689 4.76827C11.926 4.71108 11.9647 4.6438 11.9849 4.56643C12.005 4.48905 12.005 4.41168 11.9849 4.3343C11.9647 4.25693 11.926 4.18965 11.8689 4.13246C11.8083 4.07191 11.7394 4.03238 11.6621 4.01388C11.5847 3.99537 11.5074 3.99537 11.4301 4.01388C11.3527 4.03238 11.2855 4.07191 11.2283 4.13246L8.00033 7.36197L4.77235 4.13246C4.71519 4.07191 4.64709 4.03238 4.56808 4.01388C4.48906 3.99537 4.41088 3.99537 4.33354 4.01388C4.25621 4.03238 4.18896 4.07191 4.13179 4.13246C4.07463 4.18965 4.0368 4.25693 4.01831 4.3343C3.99982 4.41168 3.99982 4.48905 4.01831 4.56643C4.0368 4.6438 4.07463 4.71108 4.13179 4.76827L7.35978 7.99778L4.13179 11.2323C4.07463 11.2895 4.03596 11.3568 4.01579 11.4342C3.99561 11.5116 3.99477 11.5889 4.01327 11.6663C4.03176 11.7437 4.07127 11.811 4.13179 11.8681Z"
-										fill="#808080"
-									/>
-								</svg>
-							</Row>
-							<Row
-								width="528px"
-								className={`justify-between items-center px-[16px] py-[10px] border-b border-[#262626]`}>
-								<WhiteLabel text="Мужчины, 18 - 34" />
-								<svg
-									width="16"
-									height="16"
-									viewBox="0 0 16 16"
-									fill="none"
-									xmlns="http://www.w3.org/2000/svg">
-									<path
-										d="M4.13179 11.8681C4.19232 11.9253 4.26125 11.964 4.33859 11.9842C4.41592 12.0044 4.49326 12.0044 4.5706 11.9842C4.64794 11.964 4.71519 11.9253 4.77235 11.8681L8.00033 8.63863L11.2283 11.8681C11.2855 11.9253 11.3527 11.964 11.4301 11.9842C11.5074 12.0044 11.5856 12.0052 11.6646 11.9867C11.7436 11.9682 11.8117 11.9287 11.8689 11.8681C11.926 11.811 11.9639 11.7437 11.9823 11.6663C12.0008 11.5889 12.0008 11.5116 11.9823 11.4342C11.9639 11.3568 11.926 11.2895 11.8689 11.2323L8.64088 7.99778L11.8689 4.76827C11.926 4.71108 11.9647 4.6438 11.9849 4.56643C12.005 4.48905 12.005 4.41168 11.9849 4.3343C11.9647 4.25693 11.926 4.18965 11.8689 4.13246C11.8083 4.07191 11.7394 4.03238 11.6621 4.01388C11.5847 3.99537 11.5074 3.99537 11.4301 4.01388C11.3527 4.03238 11.2855 4.07191 11.2283 4.13246L8.00033 7.36197L4.77235 4.13246C4.71519 4.07191 4.64709 4.03238 4.56808 4.01388C4.48906 3.99537 4.41088 3.99537 4.33354 4.01388C4.25621 4.03238 4.18896 4.07191 4.13179 4.13246C4.07463 4.18965 4.0368 4.25693 4.01831 4.3343C3.99982 4.41168 3.99982 4.48905 4.01831 4.56643C4.0368 4.6438 4.07463 4.71108 4.13179 4.76827L7.35978 7.99778L4.13179 11.2323C4.07463 11.2895 4.03596 11.3568 4.01579 11.4342C3.99561 11.5116 3.99477 11.5889 4.01327 11.6663C4.03176 11.7437 4.07127 11.811 4.13179 11.8681Z"
-										fill="#808080"
-									/>
-								</svg>
-							</Row>
-							<Row
-								width="528px"
-								className={`justify-between items-center px-[16px] py-[10px] border-b border-[#262626]`}>
-								<WhiteLabel text="Мужчины, 18 - 34" />
-								<svg
-									width="16"
-									height="16"
-									viewBox="0 0 16 16"
-									fill="none"
-									xmlns="http://www.w3.org/2000/svg">
-									<path
-										d="M4.13179 11.8681C4.19232 11.9253 4.26125 11.964 4.33859 11.9842C4.41592 12.0044 4.49326 12.0044 4.5706 11.9842C4.64794 11.964 4.71519 11.9253 4.77235 11.8681L8.00033 8.63863L11.2283 11.8681C11.2855 11.9253 11.3527 11.964 11.4301 11.9842C11.5074 12.0044 11.5856 12.0052 11.6646 11.9867C11.7436 11.9682 11.8117 11.9287 11.8689 11.8681C11.926 11.811 11.9639 11.7437 11.9823 11.6663C12.0008 11.5889 12.0008 11.5116 11.9823 11.4342C11.9639 11.3568 11.926 11.2895 11.8689 11.2323L8.64088 7.99778L11.8689 4.76827C11.926 4.71108 11.9647 4.6438 11.9849 4.56643C12.005 4.48905 12.005 4.41168 11.9849 4.3343C11.9647 4.25693 11.926 4.18965 11.8689 4.13246C11.8083 4.07191 11.7394 4.03238 11.6621 4.01388C11.5847 3.99537 11.5074 3.99537 11.4301 4.01388C11.3527 4.03238 11.2855 4.07191 11.2283 4.13246L8.00033 7.36197L4.77235 4.13246C4.71519 4.07191 4.64709 4.03238 4.56808 4.01388C4.48906 3.99537 4.41088 3.99537 4.33354 4.01388C4.25621 4.03238 4.18896 4.07191 4.13179 4.13246C4.07463 4.18965 4.0368 4.25693 4.01831 4.3343C3.99982 4.41168 3.99982 4.48905 4.01831 4.56643C4.0368 4.6438 4.07463 4.71108 4.13179 4.76827L7.35978 7.99778L4.13179 11.2323C4.07463 11.2895 4.03596 11.3568 4.01579 11.4342C3.99561 11.5116 3.99477 11.5889 4.01327 11.6663C4.03176 11.7437 4.07127 11.811 4.13179 11.8681Z"
-										fill="#808080"
-									/>
-								</svg>
-							</Row>
-						</Col>
+								className={`border border-[#262626] rounded-[10px] overflow-x-hidden`}> {/* max-h-[110px] overflow-y-scroll */}
+								{GenderNAgeObject.map((file, index) => (
+									<Row
+										key={index}
+										width="528px"
+										className={`justify-between items-center px-[16px] py-[10px] border-b border-[#262626]`}>
+										<WhiteLabel
+											text={`${file.male}, ${file.from} - ${file.to}`}
+										/>
+										<svg
+											className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
+											onClick={() => {
+												setGenderNAgeObject(
+													GenderNAgeObject.filter((obj) => obj.id !== file.id),
+												)
+											}}
+											width="16"
+											height="16"
+											viewBox="0 0 16 16"
+											fill="none"
+											xmlns="http://www.w3.org/2000/svg">
+											<path
+												d="M4.13179 11.8681C4.19232 11.9253 4.26125 11.964 4.33859 11.9842C4.41592 12.0044 4.49326 12.0044 4.5706 11.9842C4.64794 11.964 4.71519 11.9253 4.77235 11.8681L8.00033 8.63863L11.2283 11.8681C11.2855 11.9253 11.3527 11.964 11.4301 11.9842C11.5074 12.0044 11.5856 12.0052 11.6646 11.9867C11.7436 11.9682 11.8117 11.9287 11.8689 11.8681C11.926 11.811 11.9639 11.7437 11.9823 11.6663C12.0008 11.5889 12.0008 11.5116 11.9823 11.4342C11.9639 11.3568 11.926 11.2895 11.8689 11.2323L8.64088 7.99778L11.8689 4.76827C11.926 4.71108 11.9647 4.6438 11.9849 4.56643C12.005 4.48905 12.005 4.41168 11.9849 4.3343C11.9647 4.25693 11.926 4.18965 11.8689 4.13246C11.8083 4.07191 11.7394 4.03238 11.6621 4.01388C11.5847 3.99537 11.5074 3.99537 11.4301 4.01388C11.3527 4.03238 11.2855 4.07191 11.2283 4.13246L8.00033 7.36197L4.77235 4.13246C4.71519 4.07191 4.64709 4.03238 4.56808 4.01388C4.48906 3.99537 4.41088 3.99537 4.33354 4.01388C4.25621 4.03238 4.18896 4.07191 4.13179 4.13246C4.07463 4.18965 4.0368 4.25693 4.01831 4.3343C3.99982 4.41168 3.99982 4.48905 4.01831 4.56643C4.0368 4.6438 4.07463 4.71108 4.13179 4.76827L7.35978 7.99778L4.13179 11.2323C4.07463 11.2895 4.03596 11.3568 4.01579 11.4342C3.99561 11.5116 3.99477 11.5889 4.01327 11.6663C4.03176 11.7437 4.07127 11.811 4.13179 11.8681Z"
+												fill="#808080"
+											/>
+										</svg>
+									</Row>
+								))}
+							</Col>
+						)}
 						<div className={`my-[32px] w-[528px] float-right `}>
 							<Row width="auto" className={`items-center float-right`}>
 								<BlueLabel

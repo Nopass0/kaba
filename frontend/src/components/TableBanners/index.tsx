@@ -733,7 +733,8 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 															</svg>
 														</button>
 														<button className={s.ButtonSVG} onClick={() => {
-															// setCurrentPopup(CurrentPopup.Statistic) // TO DO ERROR WITH CHART JS INSIDE POPUP 
+															// TO DO ERROR WITH CHART JS INSIDE POPUP 
+															setCurrentPopup(CurrentPopup.Statistic) 
 														}}	>
 														
 															<svg

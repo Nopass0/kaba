@@ -16,6 +16,7 @@ interface ICalendar {}
 const Calendar: React.FC<ICalendar> = ({}: ICalendar) => {
 	const [date, setDate] = useState(null)
 	const inputStart = useRef()
+	const inputEnd = useRef()
 	const [inputStartValue, setInputStartValue] = useState('')
 
 	var dateInputMask = function dateInputMask(elm) {
@@ -86,8 +87,8 @@ const Calendar: React.FC<ICalendar> = ({}: ICalendar) => {
 					rangeSlideDisabled={true}
 				/>
 
-				<div className="absolute w-[440px] top-[130px] ">
-					<div className="mx-8 w-full relative flex justify-between ">
+				<div className="text-[#f2f2f2] w-[440px] top-[130px] ">
+					<div className="mx-8 w-full relative bottom-[20px] flex justify-between ">
 						{years.map((year, index) => (
 							<span className="text-[10px]" key={year}>
 								{year}
@@ -100,6 +101,8 @@ const Calendar: React.FC<ICalendar> = ({}: ICalendar) => {
 				value={date}
 				onChange={(e) => setDate(e.value)}
 				numberOfMonths={2}
+				disableMonthPicker={true}
+				disableYearPicker={true}
 				months={monthNames}
 				weekDays={weekDays}
 				range
@@ -119,7 +122,6 @@ const Calendar: React.FC<ICalendar> = ({}: ICalendar) => {
 						props.style = {
 							...props.style,
 							color: '#4169E1',
-							backgroundColor: '#262626',
 						}
 
 					if (isSameDate(date, selectedDate))
@@ -191,6 +193,7 @@ const Calendar: React.FC<ICalendar> = ({}: ICalendar) => {
 							onChange={(e) => {
 								dateInputMask(inputStart.current)
 							}}
+							disabled
 							ref={inputStart}
 							className="w-[100px]
 						border-none
@@ -217,9 +220,10 @@ const Calendar: React.FC<ICalendar> = ({}: ICalendar) => {
 						<input
 							maxLength={10}
 							onChange={(e) => {
-								dateInputMask(inputStart.current)
+								dateInputMask(inputEnd.current)
 							}}
-							ref={inputStart}
+							ref={inputEnd}
+							disabled
 							className="w-[100px]
 						border-none
 						outline-none
@@ -231,9 +235,13 @@ const Calendar: React.FC<ICalendar> = ({}: ICalendar) => {
 				<Row
 					className="mt-6 mb-4 ml-8 justify-between items-center"
 					width="456px">
-					<Label text="Отмена" />
+					<Label className="cursor-pointer" text="Отмена" />
 					<div className="flex items-center flex-row">
-						<BlueLabel className="mr-6" text="Сбросить" onClick={() => {}} />
+						<BlueLabel
+							className="mr-6 cursor-pointer"
+							text="Сбросить"
+							onClick={() => {}}
+						/>
 						<BlueButton width="120px" text="Применить" onClick={() => {}} />
 					</div>
 				</Row>
