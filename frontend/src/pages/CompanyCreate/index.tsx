@@ -31,6 +31,7 @@ import {eachHourOfInterval} from 'date-fns'
 import './index.css'
 // import { NodeService } from './service/NodeService';
 import {TreeSelectCustom, Option} from '../../components/TreeSelectCustom/index'
+import Calendar from '../../components/Calendar'
 
 const CompanyCreate: React.FC = () => {
 	// const [value, setValue] = React.useState<any>()
@@ -396,6 +397,8 @@ const CompanyCreate: React.FC = () => {
 			</div>
 			<div className={` ${s.rightMenu}`}>
 				<HeaderCompanyCreate />
+
+				<Calendar />
 
 				<div
 					id="page-1"
