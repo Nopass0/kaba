@@ -171,14 +171,14 @@ const THEME = {
   `,
 }
 
-interface ITable {
+interface ITableBannerCompany {
 	width?: string
 	count?: number
 	emptyChange?: () => void
 	empty?: boolean
 }
 
-const Table: React.FC<ITable> = ({emptyChange, empty = true}: ITable) => {
+const TableBannerCompany: React.FC<ITableBannerCompany> = ({emptyChange, empty = true}: ITableBannerCompany) => {
 	const getFaviconUrl = (url: string) => {
 		try {
 			let favico = `https://s2.googleusercontent.com/s2/favicons?domain=${url}&sz=16`
@@ -895,4 +895,4 @@ const Table: React.FC<ITable> = ({emptyChange, empty = true}: ITable) => {
 	)
 }
 
-export default Table
+export default TableBannerCompany

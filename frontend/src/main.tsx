@@ -106,6 +106,7 @@ let defaultState = {
 	CurrentURL: '',
 
 	SwitchCreatePage: 1,
+	SwitchTableCompany: 1,
 }
 
 // let isLocalStorage:boolean = localStorage.length === 1
@@ -193,6 +194,8 @@ const reducer = (state = defaultState, action: any) => {
 
 		case 'setSwitchCreatePage':
 			return {...state, SwitchCreatePage: action.SwitchCreatePage}
+		case 'setSwitchTableCompany':
+			return {...state, SwitchTableCompany: action.SwitchTableCompany}
 		default:
 			return state
 	}

@@ -528,7 +528,7 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 					</div>
 				</div>
 				<GraphsMenuCheckBox topPopUp='550px' />
-				<div style={{width: '100%', overflowX: 'scroll', height: '370px'}}>
+				<div style={{width: '100%', overflowX: 'scroll', height: '420px', marginTop: '16px', marginBottom: '50px'}}>
 						<LineGraph data={data} />
 				</div>
 

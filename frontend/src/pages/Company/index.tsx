@@ -10,6 +10,10 @@ import {useSelector} from 'react-redux'
 import {useNavigate} from 'react-router-dom'
 import AuditorNBanners from '../../components/AuditorNBanners/index'
 import {Calendar} from 'primereact/calendar'
+import Col from '../../components/Col/index';
+import NavLabel from '../../components/NavLabel/index';
+import Label from '../../components/Label/index';
+import BlueButton from '../../components/BlueButton/index';
 
 const Company: React.FC = () => {
 	const user = useSelector((state: any) => state.user)
@@ -32,41 +36,21 @@ const Company: React.FC = () => {
 				{/* <Calendar/> */}
 				{/* COMPANY */}
 				{/* <HeaderCompany textHeader="Компании" needDownMenu={true} /> */}
+
 				<Table />
-				{/* <PopUpWrapper>
-					<StatisticPageMini/>
-				</PopUpWrapper> */}
-				{/* <TableLineFooter className={s.TableLineFooter} /> */}
 
 				{/* NO COMPANY CONTENT */}
-				{/* <Col width='360px' className={s.noCompany}>
-              <NavLabel className={s.noCompanyTitle} text='Нет кампаний'/>
-              <Label className={s.noCompanyLabel} width='360px' isMini={true} text='У вас нет ни одной кампании соответствующей заданным параметрам'/>
-              <BlueButton width='180px' text='Создать'/>
-            </Col> */}
+				{/* <Col width="360px" className={s.noCompany}>
+					<NavLabel className={s.noCompanyTitle} text="Нет кампаний" />
+					<Label
+						className={s.noCompanyLabel}
+						width="360px"
+						isMini={true}
+						text="У вас нет ни одной кампании соответствующей заданным параметрам"
+					/>
+					<BlueButton width="180px" text="Создать" />
+				</Col> */}
 
-				{/* FINANCY */}
-				{/* <HeaderFinancy connect={true}/> */}
-
-				{/* No Trans FINANCY */}
-				{/* <Col width='360px' className={s.noTransFinancy}>
-              <NavLabel className={s.noTransFinancyTitle} text='Нет операций'/>
-              <Label className={s.noTransFinancyLabel} width='360px' isMini={true} text='История отобразится после того, как будет совершена хотя бы одна транзакция'/>
-            </Col> */}
-				{/* <TableFinancy/> */}
-
-				{/* SITES */}
-				{/* <HeaderCompany textHeader='Компании'/>
-            <TableSites/> */}
-
-				{/* Statistic */}
-				{/* <HeaderCompany textHeader='Статистика'/>  */}
-				{/* <StatisticPage/> */}
-				{/* <Col width='360px' className={s.noCompany}>
-              <NavLabel className={s.noCompanyTitle} text='Нет кампаний'/>
-              <Label className={s.noCompanyLabel} width='360px' isMini={true} text='У вас нет ни одной кампании соответствующей заданным параметрам'/>
-              <BlueButton width='180px' text='Создать'/>
-            </Col> */}
 			</div>
 		</div>
 	)

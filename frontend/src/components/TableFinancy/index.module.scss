@@ -240,3 +240,24 @@
 .extendedButton:focus {
 	background: #262626;
 }
+
+.noCompany {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+
+	margin: 128px auto 0 auto;
+
+	.noCompanyTitle {
+		font-size: 14px;
+
+		margin-bottom: 8px;
+	}
+
+	.noCompanyLabel {
+		font-size: 14px;
+
+		margin-bottom: 16px;
+	}
+}

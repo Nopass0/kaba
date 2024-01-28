@@ -25,6 +25,8 @@ import LineGraph from '../../LineGraph'
 import CheckBox from '../../CheckBox'
 import moment from 'moment'
 import InputIcon from 'react-multi-date-picker/components/input_icon'
+import * as mui from '@mui/base'
+import Calendar from '../../Calendar/index';
 
 ChartJS.register(
 	CategoryScale,
@@ -328,24 +330,73 @@ const StatisticPageMini: React.FC<IStatisticPageMini> = ({
 						<Button width="89px" className={s.extendedButton} text="Месяцы" />
 					</div>
 					<div className={s.DatePicker}>
-						<DatePicker
-							range
-							weekDays={weekDays}
-							months={months}
-							numberOfMonths={2}
-							fixMainPosition={true}
-							arrow={false}
-							highlightToday={false}
-							// animations={[
-							//     opacity({ from: 0.1, to: 1, duration: 400 })
-
-							// ]}
-							render={<InputIcon />}
-						/>
+						<mui.Select
+						multiple
+							className={`${s.sortTableButtonCalendar}  text-[#808080] cursor-pointer hover:text-[#f2f2f2] transition-all`}
+							renderValue={(option: mui.SelectOption<number> | null) => {
+								if (option == null || option.value === null) {
+									return (
+										<>
+											<div className={`${s.sortTableButtonWrapper}  text-[#808080] cursor-pointer hover:text-[#f2f2f2] transition-all`}>
+												<p className={s.sortTableButtonTextGray}>Дата:</p>
+												{/* Date */}
+												<p></p> 
+												<svg
+												className=' text-[#808080] cursor-pointer hover:text-[#f2f2f2] transition-all'
+													xmlns="http://www.w3.org/2000/svg"
+													width="16"
+													height="16"
+													viewBox="0 0 16 16"
+													fill="none">
+													<path
+														d="M3 6L8 11L13 6"
+														stroke="CurrentColor"
+														stroke-width="1.4"
+														stroke-linecap="round"
+														stroke-linejoin="round"
+													/>
+												</svg>
+											</div>
+										</>
+									)
+								}
+								return (
+									<>
+										<div className={`${s.sortTableButtonWrapper} text-[#808080] cursor-pointer hover:text-[#f2f2f2] transition-all`}>
+											<p className={s.sortTableButtonTextGray}>Дата:</p>
+											{/* Date */}
+											<p></p>
+											<svg
+											className='text-[#808080] cursor-pointer hover:text-[#f2f2f2] transition-all'
+												xmlns="http://www.w3.org/2000/svg"
+												width="16"
+												height="16"
+												viewBox="0 0 16 16"
+												fill="none">
+												<path
+													d="M3 6L8 11L13 6"
+													stroke="CurrentColor"
+													stroke-width="1.4"
+													stroke-linecap="round"
+													stroke-linejoin="round"
+												/>
+											</svg>
+										</div>
+									</>
+								)
+							}}>
+							<mui.Option
+								value={1}
+								className={`cursor-pointer z-10 mt-1`}>
+									<Calendar/>
+								</mui.Option>
+						</mui.Select>
 					</div>
 				</div>
 				<GraphsMenuCheckBox />
-				<LineGraph data={data} />
+				<div className="w-[1164px] h-[394px] mt-[16px]">
+					<LineGraph data={data} />
+				</div>
 
 				<Line width="1164px" className={s.Line} />
 
