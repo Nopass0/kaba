@@ -519,9 +519,17 @@ class getCompaniesAPIViews(APIView):
             company["site"]["id"] = site.id
             company["site"]["domain"] = site.domain
             company["site"]["date_creation"] = site.date_creation
+            company["site"]["shows"] = site.shows
+            company["site"]["masked_domain"] = site.masked_domain
             
             # ad_statusModel and ad_companyModel many-to-many relation. Get all ad_statusModel objects for this company
             company["ad_status"] = list(ad_statusModel.objects.filter(companies=company["id"]).values())
+            
+            # ad_audienceModel and ad_companyModel many-to-many relation. Get all ad_audienceModel objects for this company
+            company["ad_audience"] = list(ad_audienceModel.objects.filter(ad_company=company["id"]).values())
+            
+            # ad_bannerModel and ad_companyModel many-to-many relation. Get all ad_bannerModel objects for this company
+            company["ad_banner"] = list(ad_bannerModel.objects.filter(ad_company=company["id"]).values())
         
             # print(companies, user, site)
         return Response(companies, status=status.HTTP_200_OK)
@@ -968,7 +976,9 @@ class getAllActiveCompanies(APIView):
                 'site': {
                     'id': company.site.id if company.site else None,
                     'domain': company.site.domain if company.site else '',
-                    'date_creation': company.site.date_creation if company.site else None
+                    'date_creation': company.site.date_creation if company.site else None,
+                    'masked_domain': company.site.masked_domain if company.site else '',
+                    'shows': company.site.shows if company.site else 0,
                 },
                 'banners': [
                     {

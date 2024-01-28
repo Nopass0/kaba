@@ -1,4 +1,4 @@
-import React, {ReactNode, useRef, useState} from 'react'
+import React, {ReactNode, useEffect, useRef, useState} from 'react'
 import s from './index.module.scss'
 import * as pr from 'react-multi-date-picker'
 import './index.css'
@@ -11,13 +11,34 @@ import RangeSlider from 'react-range-slider-input'
 import 'react-range-slider-input/dist/style.css'
 import {min} from 'moment'
 
-interface ICalendar {}
+interface ICalendar {
+	startDate?: string
+	endDate?: string
+}
 
-const Calendar: React.FC<ICalendar> = ({}: ICalendar) => {
-	const [date, setDate] = useState(null)
+const Calendar: React.FC<ICalendar> = ({startDate, endDate}: ICalendar) => {
+	const [date, setDate] = useState()
 	const inputStart = useRef()
 	const inputEnd = useRef()
-	const [inputStartValue, setInputStartValue] = useState('')
+
+	const [sDate, setSDate] = useState('')
+	const [eDate, setEDate] = useState('')
+
+	useEffect(() => {
+		if (Array.isArray(date)) {
+			console.log(
+				new Date(date[0]).toLocaleDateString(),
+				'date0',
+				new Date(date[1]).toLocaleDateString(),
+				'date1',
+			)
+			setSDate(new Date(date[0]).toLocaleDateString())
+			setEDate(new Date(date[1]).toLocaleDateString())
+
+			inputStart.current.value = sDate || ''
+			inputEnd.current.value = eDate || ''
+		}
+	}, [date, sDate, eDate])
 
 	var dateInputMask = function dateInputMask(elm) {
 		elm.addEventListener('keypress', function (e) {
@@ -86,7 +107,7 @@ const Calendar: React.FC<ICalendar> = ({}: ICalendar) => {
 					step={null}
 					rangeSlideDisabled={true}
 				/>
-
+				{value?.toDate?.().toString()}
 				<div className="text-[#f2f2f2] w-[440px] top-[130px] ">
 					<div className="mx-8 w-full relative bottom-[20px] flex justify-between ">
 						{years.map((year, index) => (
@@ -99,7 +120,9 @@ const Calendar: React.FC<ICalendar> = ({}: ICalendar) => {
 			</Col>
 			<pr.Calendar
 				value={date}
-				onChange={(e) => setDate(e.value)}
+				onChange={(dateObject) => {
+					setDate(dateObject)
+				}}
 				numberOfMonths={2}
 				disableMonthPicker={true}
 				disableYearPicker={true}
@@ -186,6 +209,8 @@ const Calendar: React.FC<ICalendar> = ({}: ICalendar) => {
 						items-center
 						justify-between
 						px-4
+						text-[#f2f2f2]
+						text-sm
 						mx-2">
 						<Label text="Начало:" />
 						<input
@@ -215,6 +240,9 @@ const Calendar: React.FC<ICalendar> = ({}: ICalendar) => {
 					   items-center
 					   justify-between
 					   px-4
+					   text-[#f2f2f2]
+						text-sm
+
 					   mx-2">
 						<Label text="Окончание:" />
 						<input
@@ -240,9 +268,19 @@ const Calendar: React.FC<ICalendar> = ({}: ICalendar) => {
 						<BlueLabel
 							className="mr-6 cursor-pointer"
 							text="Сбросить"
-							onClick={() => {}}
+							onClick={() => {
+								setDate([null, null])
+							}}
 						/>
-						<BlueButton width="120px" text="Применить" onClick={() => {}} />
+						<BlueButton
+							width="120px"
+							text="Применить"
+							onClick={() => {
+								if (sDate !== 'Invalid date' && eDate !== 'Invalid date')
+									(startDate = sDate), (endDate = eDate)
+								console.log('date append')
+							}}
+						/>
 					</div>
 				</Row>
 			</Col>

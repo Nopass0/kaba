@@ -10,11 +10,15 @@ import AuditorNBannersComponent from '../AudNBanComponent/index'
 interface IAuditorNBanners {
 	className?: string // Added className prop
 	style?: React.CSSProperties
+	auditories?: any
+	banners?: any
 }
 
 const AuditorNBanners: React.FC<IAuditorNBanners> = ({
 	style,
 	className,
+	auditories,
+	banners,
 }: IAuditorNBanners) => {
 	return (
 		<div className={s.wrapper + ' ' + className} style={style}>
@@ -27,17 +31,24 @@ const AuditorNBanners: React.FC<IAuditorNBanners> = ({
 						</a>
 					</Row>
 					<Line width="560px" className={s.Line} />
-					<Col width="248px">
-						<NavLabel className={s.navLabel} text="курсы английского языка" />
-						<Label className={s.Label} isMini={true} text="ID 5748296013" />
-					</Col>
-					<Line width="280px" className={s.Line_Aud_1} />
-					<Line width="280px" className={s.Line_AfterAud_1} />
-					<Col width="248px">
-						<NavLabel className={s.navLabel} text="курсы английского языка" />
-						<Label className={s.Label} isMini={true} text="ID 5748296013" />
-					</Col>
-					<Line width="280px" className={s.Line_Aud_2} />
+					{auditories.map((item, index) => (
+						<>
+							{index !== 0 ? (
+								<Line width="560px" className={s.Line_Aud} />
+							) : null}
+							<Col width="248px">
+								<NavLabel className={s.navLabel} text={`${item.name}`} />
+								<Label
+									className={s.Label}
+									isMini={true}
+									text={`ID${item.id} `}
+								/>
+							</Col>
+							{auditories.length - 1 !== index ? (
+								<Line width="560px" className={s.Line_Aud} />
+							) : null}
+						</>
+					))}
 				</Col>
 
 				{/* Banners */}
@@ -49,45 +60,20 @@ const AuditorNBanners: React.FC<IAuditorNBanners> = ({
 						</a>
 					</Row>
 					{/* <Col className={s.RightCol} width="248px"> */}
-						<Line width="0px" className={s.Line} />
-						<Col width="248px">
-							<NavLabel
-								className={s.navLabel}
-								text="семинар по ведению блога…"
-							/>
-							<Label className={s.Label} isMini={true} text="ID 5748296013" />
-						</Col>
-						<Line width="280px" className={s.Line_Ban} />
-						<AuditorNBannersComponent
-							title="семинар по ведению блога…"
-							id="5748296013"
-						/>
-						<Line width="280px" className={s.Line_Ban} />
-						<AuditorNBannersComponent
-							title="семинар по ведению блога…"
-							id="5748296013"
-						/>
-						<Line width="280px" className={s.Line_Ban} />
-						<AuditorNBannersComponent
-							title="семинар по ведению блога…"
-							id="5748296013"
-						/>
-						<Line width="280px" className={s.Line_Ban} />
-						<AuditorNBannersComponent
-							title="семинар по ведению блога…"
-							id="5748296013"
-						/>
+					<Line width="0px" className={s.Line} />
 
-						<Line width="280px" className={s.Line_Ban} />
-						<AuditorNBannersComponent
-							title="семинар по ведению блога…"
-							id="5748296013"
-						/>
-						<Line width="280px" className={s.Line_Ban} />
-						<AuditorNBannersComponent
-							title="семинар по ведению блога…"
-							id="5748296013"
-						/>
+					{banners.map((item, index) => (
+						<>
+							{index !== 0 ? (
+								<Line width="280px" className={s.Line_Ban} />
+							) : null}
+							<AuditorNBannersComponent title={item.name} id={`ID${item.id}`} />
+							{banners.length - 1 !== index ? (
+								<Line width="280px" className={s.Line_Ban} />
+							) : null}
+						</>
+					))}
+
 					{/* </Col> */}
 				</Col>
 			</Row>

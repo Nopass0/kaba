@@ -30,7 +30,7 @@ import {useSelector} from 'react-redux'
 import axios from 'axios'
 import BlueButton from '../BlueButton/index'
 import NavLabel from '../NavLabel/index'
-import { Link, Navigate, redirect } from 'react-router-dom'
+import {Link, Navigate, redirect} from 'react-router-dom'
 
 enum CurrentPopup {
 	None,
@@ -226,7 +226,6 @@ const Table: React.FC<ITable> = ({emptyChange, empty = true}: ITable) => {
 	const token = user.token
 	const [companies, setCompanies] = useState([])
 
-	
 	const data = {nodes: companies}
 
 	useEffect(() => {
@@ -237,7 +236,6 @@ const Table: React.FC<ITable> = ({emptyChange, empty = true}: ITable) => {
 			return res.data
 		}
 		getCompanies(token)
-		
 	}, [])
 
 	const select = useRowSelect(
@@ -747,9 +745,11 @@ const Table: React.FC<ITable> = ({emptyChange, empty = true}: ITable) => {
 																		return (
 																			<>
 																				<div className={s.audiotoriaNBanners}>
-																					<WhiteLabel text="3" />
 																					<WhiteLabel
-																						text={` и 23`}
+																						text={item.ad_audience.length}
+																					/>
+																					<WhiteLabel
+																						text={` и ${item.ad_banner.length}`}
 																						className="ml-1"
 																					/>
 																				</div>
@@ -759,9 +759,11 @@ const Table: React.FC<ITable> = ({emptyChange, empty = true}: ITable) => {
 																	return (
 																		<>
 																			<div className={s.audiotoriaNBanners}>
-																				<WhiteLabel text="4" />
 																				<WhiteLabel
-																					text={` и 24`}
+																					text={item.ad_audience.length}
+																				/>
+																				<WhiteLabel
+																					text={` и ${item.ad_banner.length}`}
 																					className="ml-1"
 																				/>
 																			</div>
@@ -771,7 +773,10 @@ const Table: React.FC<ITable> = ({emptyChange, empty = true}: ITable) => {
 																<mui.Option
 																	value={1}
 																	className={`cursor-pointer z-10 mt-1`}>
-																	<AuditorNBanners />
+																	<AuditorNBanners
+																		auditories={item.ad_audience}
+																		banners={item.ad_banner}
+																	/>
 																</mui.Option>
 															</mui.Select>
 														</tl.Cell>
@@ -858,7 +863,7 @@ const Table: React.FC<ITable> = ({emptyChange, empty = true}: ITable) => {
 															</p>
 														</tl.Cell>
 														<tl.Cell>
-															<p>{item.views}</p>
+															<p>{item.site.shows}</p>
 														</tl.Cell>
 													</tl.Row>
 												))}
