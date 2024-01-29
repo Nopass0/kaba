@@ -16,22 +16,43 @@ export const getCompaniesAPI = async (token: string) => {
 
 export const addCompanyAPI = async (
 	token: string,
-	Company: object,
-	Auditor: object,
-	Banner: object,
+	Company: Object,
+	Auditor: Object,
+	Banner: Object,
+	bannerImageFiles: Object[], // Expect an array of File objects for the banner images
 ) => {
+	// Create an instance of FormData
 	const formData = new FormData()
+
+	// Append the textual data
 	formData.append('token', token)
 	formData.append('Company', JSON.stringify(Company))
 	formData.append('Auditor', JSON.stringify(Auditor))
 	formData.append('Banner', JSON.stringify(Banner))
 
+	// Append each image file to the formData
+	bannerImageFiles.forEach((item: Object, index: number) => {
+		console.log(item, index)
+
+		formData.append(`bImages`, item.file, item.file.name) // 'bImages' corresponds to the key expected on the server side
+	})
+	console.log(formData)
+
 	try {
-		const response = await axios.post(getApiUrl('addCompany'), formData)
-		return response
+		// Make a POST request with the formData
+		const response = await axios.post(getApiUrl('addCompany'), formData, {
+			headers: {
+				// The browser will automatically set the correct Content-Type for multipart/form-data
+				'Content-Type': 'multipart/form-data',
+			},
+		})
+
+		// Return the response from the server
+		return response.data // or just return response to get the full response object
 	} catch (error) {
 		console.error('Error during addCompany:', error)
-		return {status: 'error'}
+		// Handle the error as appropriate for your application
+		return {status: 'error', message: error.message}
 	}
 }
 
@@ -131,6 +152,18 @@ export const getCompanyBloggersAPI = async (token: string) => {
 		return response
 	} catch (error) {
 		console.error('Error during getCompanyBloggers:', error)
+		return {status: 'error'}
+	}
+}
+
+export const transitAPI = async (domain: string) => {
+	const formData = new FormData()
+	formData.append('masked_domain', domain)
+	try {
+		const response = await axios.post(getApiUrl('checkTransition'), formData)
+		return response
+	} catch (error) {
+		console.error('Error during transit:', error)
 		return {status: 'error'}
 	}
 }

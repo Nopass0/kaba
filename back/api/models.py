@@ -24,3 +24,4 @@ class tokenModel(models.Model):
     class Meta:
         verbose_name = 'Токен'
         verbose_name_plural = 'Токены'
+        

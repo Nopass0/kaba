@@ -1,25 +1,30 @@
 import React from 'react'
 import s from './index.module.scss'
 import NavLabel from '../NavLabel/index'
-import DeleteCompany from '../DeleteCompany/index';
-import PopUpWrapper from '../PopUpWrapper';
+import DeleteCompany from '../DeleteCompany/index'
+import PopUpWrapper from '../PopUpWrapper'
+import {useNavigate} from 'react-router-dom'
 
-interface IHeaderCompanyCreate {}
+interface IHeaderCompanyCreate {
+	exitFunc?: () => void
+}
 
 enum CurrentPopup {
 	None,
-	Delete
+	Delete,
 }
 
-const HeaderCompanyCreate: React.FC<
-	IHeaderCompanyCreate
-> = ({}: IHeaderCompanyCreate) => {
+const HeaderCompanyCreate: React.FC<IHeaderCompanyCreate> = ({
+	exitFunc,
+}: IHeaderCompanyCreate) => {
 	const [currentPopup, setCurrentPopup] = React.useState(CurrentPopup.None)
 
 	const onExit = () => {
 		// Exit logic here
+
 		setCurrentPopup(CurrentPopup.None)
 	}
+	const navigate = useNavigate()
 
 	return (
 		<>
@@ -28,7 +33,7 @@ const HeaderCompanyCreate: React.FC<
 					<NavLabel text="Создание компании" />
 					<svg
 						onClick={() => setCurrentPopup(CurrentPopup.Delete)}
-						className='cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all'
+						className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
 						width="10"
 						height="10"
 						viewBox="0 0 10 10"
@@ -55,11 +60,17 @@ const HeaderCompanyCreate: React.FC<
 				</div> */}
 			</div>
 			{currentPopup === CurrentPopup.Delete && (
-			<PopUpWrapper onExit={onExit}>
-				<DeleteCompany 
-				onExit={onExit}
-				CreateCompany={true}/>
-			</PopUpWrapper>	
+				<PopUpWrapper onExit={onExit}>
+					<DeleteCompany
+						onExit={onExit}
+						CreateCompany={true}
+						saveFunc={exitFunc}
+						resetFunc={() => {
+							window.localStorage.removeItem('create_temp')
+							navigate('/create')
+						}}
+					/>
+				</PopUpWrapper>
 			)}
 		</>
 	)

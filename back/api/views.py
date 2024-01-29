@@ -1,5 +1,6 @@
 import base64
 import json
+import string
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
@@ -10,7 +11,7 @@ import requests
 
 from ad_advertiser.models.site.site import siteModel
 from ad_advertiser.models.ad.ad_audience import ad_audienceModel
-from ad_advertiser.models.ad.ad_banner import ad_bannerModel
+from ad_advertiser.models.ad.ad_banner import BannderImage, ad_bannerModel
 
 from datetime import datetime, timedelta
 import random
@@ -26,7 +27,7 @@ from .serializers import *
 from a_setting.settings.base import *
 
 from account.models.action import actionModel
-from account.models.account import accountModel, walletModel, walletOperationsModel
+from account.models.account import accountModel, jumpToADPage, jumpsToMaskedLink, walletModel, walletOperationsModel
 from account.models.social_network import social_networkModel
 from account.models.verification import verificationModel
 from account.models.social_network import social_networkModel
@@ -570,105 +571,117 @@ class getWalletOperationsAPIViews(APIView):
         operations = list(walletOperationsModel.objects.filter(wallet=wallet).values())
         return Response(operations, status=status.HTTP_200_OK)
 
+from django.db import transaction
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework import status
+import json
+from datetime import datetime, timedelta
+import random
+from django.utils.dateparse import parse_datetime
+
 class AddCompany(APIView):
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
 
-    def post(self, request):
-        # Debug mode
-        debug = True
+    def post(self, request, *args, **kwargs):
+        with transaction.atomic():
+            # Token validation
+            token = request.data.get('token', '')
+            if not token:
+                return Response({'error': 'Token is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Debug data
-        debug_data = {
-            'company_name': ['Test Company 1', 'Test Company 2'],
-            'site_domain': ['google.com', 'yandex.ru'],
-            'phrase_plus': ['keyword1', 'keyword2'],
-            'phrase_minus': ['phrase1', 'phrase2'],
-            'auditor_name': ['Auditoria 1', 'Auditoria 2'],
-            'geography': ['Russia', 'USA'],
-            'device': ['mobile', 'PC'],
-            'banner_name': ['Banner 1', 'Banner 2'],
-            'banner_link': ['http://example.com', 'http://example2.com'],
-        }
+            current_token = tokenModel.objects.filter(token=token).select_related('account')
+            if not current_token.exists():
+                return Response({'error': 'Token is invalid.'}, status=status.HTTP_400_BAD_REQUEST)
+            account = current_token.first().account
 
-        # Get user by token
-        token = request.data.get('token', '')
-        if not token:
-            return Response({'error': 'Token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+            # Parsing data
+            try:
+                company_data = json.loads(request.data.get('Company', '{}'))
+                auditor_data = json.loads(request.data.get('Auditor', '{}'))
+                banner_data = json.loads(request.data.get('Banner', '{}'))
+            except json.JSONDecodeError:
+                return Response({'error': 'Invalid JSON data.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        current_token = tokenModel.objects.filter(token=token)
-        if not current_token.exists():
-            return Response({'error': 'Token is invalid.'}, status=status.HTTP_400_BAD_REQUEST)
+            # Retrieve or create the site
+            domain = company_data.get('cLink', '')
+            site, _ = siteModel.objects.get_or_create(domain=domain)
 
-        # Extracting and parsing data from request
-        try:
-            company_data = json.loads(request.data.get('Company', '{}'))
-            auditor_data = json.loads(request.data.get('Auditor', '{}'))
-            banner_data = json.loads(request.data.get('Banner', '{}'))
-        except json.JSONDecodeError:
-            return Response({'error': 'Invalid JSON data.'}, status=status.HTTP_400_BAD_REQUEST)
+            print("1-----------------------------------------------------------------------------------------------")
 
-        # Retrieve or create the site
-        site, _ = siteModel.objects.get_or_create(
-            domain=company_data.get('cLink', random.choice(debug_data['site_domain']) if debug else '')
-        )
-        
-        #Create random data_start
+            # Create ad_company
+            company = ad_companyModel.objects.create(
+                name=company_data.get('cName', ''),
+                site=site,
+                # date_start=parse_datetime(company_data.get('cDateStart', '')) if company_data.get('cDateStart', '') else None,
+                # date_finish=parse_datetime(company_data.get('cDateEnd', '')) if company_data.get('cDateEnd', '') else None,
+                date_start=datetime.strptime(company_data.get('cDateStart', ''), '%d.%m.%Y') if company_data.get('cDateStart', '') else None,
+                date_finish=datetime.strptime(company_data.get('cDateEnd', ''), '%d.%m.%Y') if company_data.get('cDateEnd', '') else None,
+                budget_week=int(company_data.get('cWeekBudget', 0)),
+                channel_taboo=company_data.get('cSettingsLink', []) if company_data.get('cSettingsLink', []) else [],
+                phrase_plus=company_data.get('cKeyWord', []) if company_data.get('cKeyWord', []) else [],
+                phrase_minus=company_data.get('cKeyWordDel', []) if company_data.get('cKeyWordDel', []) else [],
+                status_text='На модерации',
+                views=0,
+                account=account,
+            )
+            
+            print("2-----------------------------------------------------------------------------------------------")
+            
 
-        # Generate random data_start
-        data_start_temp = datetime.now() - timedelta(days=random.randint(1, 30))
-        
-        # Generate random data_end
-        data_end_temp = data_start_temp + timedelta(days=random.randint(1, 30))
-        
-        #status text random variants
-        status_text_temp = ["Активная", "На модерации", "Отклонена", "Завершена"]
+            # Create ad_audience
+            audience = ad_audienceModel.objects.create(
+                name=auditor_data.get('aName', ''),
+                site=site,
+                ad_company=company,
+                geography=auditor_data.get('aGeography', []),
+                category=auditor_data.get('aFavor', []),
+                interest=[],
+                gender_age=auditor_data.get('aGenderNAge', []),
+                device=auditor_data.get('aDevice', []),
+                solvency=[],
+                account=account,
+            )
 
-        # Create ad_company
-        company = ad_companyModel.objects.create(
-            name=company_data.get('cName', random.choice(debug_data['company_name']) if debug else ''),
-            site=site,
-            date_start=parse_datetime(company_data.get('cDateStart', '')) if company_data.get('cDateStart', '') else data_start_temp,
-            date_finish=parse_datetime(company_data.get('cDateEnd', '')) if company_data.get('cDateEnd', '') else data_end_temp,
-            budget_week=int(company_data.get('cWeekBudget', 0)),
-            channel_taboo=company_data.get('cSettingsLink', []),
-            phrase_plus=company_data.get('cKeyWord', []),
-            phrase_minus=company_data.get('cKeyWordDel', []),
-            status_text=random.choice(status_text_temp),  # Assuming a default or empty status text
-            views=0,  # Assuming default views count
-            account=current_token.first().account,  # Assuming account is linked with token
-        )
+            print("3-----------------------------------------------------------------------------------------------")
 
-        # Create ad_audience
-        audience = ad_audienceModel.objects.create(
-            name=auditor_data.get('aName', random.choice(debug_data['auditor_name']) if debug else ''),
-            site=site,
-            ad_company=company,
-            geography=auditor_data.get('aGeography', []),
-            category=auditor_data.get('aFavor', []),
-            interest=[],
-            gender_age=auditor_data.get('aGenderNAge', []),
-            device=auditor_data.get('aDevice', []),
-            solvency=[],
-            account=current_token.first().account,  # Assuming account is linked with token
-        )
 
-        # Create ad_banner
-        banner = ad_bannerModel.objects.create(
-            account=current_token.first().account,  # Assuming account is linked with token
-            site=site,
-            ad_company=company,
-            ad_audience=audience,
-            name=banner_data.get('bName', random.choice(debug_data['banner_name']) if debug else ''),
-            link=banner_data.get('bLink', random.choice(debug_data['banner_link']) if debug else ''),
-            title_option=[],  # Assuming title options are not provided in your data
-            description_option=banner_data.get('bOptionDescText', []),
-            image_option=[],
-            video_option=[],
-            audio_option=[],
-            channel_private_bool=banner_data.get('bUnvirfied', True if debug else False)
-        )
+            # Create ad_banner
+            banner = ad_bannerModel.objects.create(
+                account=account,
+                site=site,
+                ad_company=company,
+                ad_audience=audience,
+                name=banner_data.get('bName', ''),
+                link=banner_data.get('bLink', ''),
+                # title_option=banner_data.get('bOptionTitle', []),
+                description_option=banner_data.get('bOptionDescText', []),
+                video_option=[],
+                audio_option=[],
+                channel_private_bool=banner_data.get('bUnvirfied', True)
+            )
 
-        return Response({'message': 'Company, Auditor, and Banner created successfully!'}, status=status.HTTP_201_CREATED)
-    
+            print("4-----------------------------------------------------------------------------------------------")
+
+
+            # Handling multiple file (Image) uploads for Banner
+            files = request.FILES.getlist('bImages')  # Get the list of files
+            for file in files:
+                file_name = default_storage.save(f'banner_images/{file.name}', ContentFile(file.read()))
+                file_url = default_storage.url(file_name)
+                
+                # Create BannerImage instance for each image
+                BannderImage.objects.create(
+                    banner=banner,
+                    image=file_url
+                )
+
+            return Response({'message': 'Company, Auditor, Banner, and Banner Images created successfully!'}, status=status.HTTP_201_CREATED)
+
+
 class GetAudience(APIView):
 
     def get(self, request):
@@ -960,11 +973,14 @@ class getAllActiveCompanies(APIView):
         ).select_related(
             'site'  # Relationship from company to site
         )
+        
+        
 
         # Construct the response data
         companies_data = []
         for company in active_companies:
             # ad_bloggerCompanyModel.objects.filter
+            #ДОБАВИТЬ КАРТИНОК!!!!!!!!!!!!!
             company_info = {
                 'id': company.id,
                 'name': company.name,
@@ -1054,10 +1070,73 @@ class getCompanyBloggers(APIView):
             return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
         bloggers = ad_bloggerCompanyModel.objects.filter(account=user).values()
-        
+        #ПОФИКСИТЬ!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         #get companies
         for blogger in bloggers:
             company = ad_companyModel.objects.filter(id=blogger["company_id"]).values()
             blogger["company"] = company
       
         return Response({'bloggers': list(bloggers)}, status=status.HTTP_200_OK)
+    
+    
+# class jumpToADPage(models.Model):
+#     date_creation = models.DateTimeField('Дата и время создания', auto_now_add=True)
+#     account = models.ForeignKey('accountModel', on_delete=models.CASCADE)
+#     site = models.ForeignKey('siteModel', on_delete=models.CASCADE)
+    
+#     shows = models.IntegerField('Показы', default=0)
+    
+#     masked_url = models.CharField('Маскированный URL', max_length=512)
+
+#     def __str__(self):
+#         return str(self.pk) + ', ' + str(self.isJump)
+    
+# class jumpsToMaskedLink(models.Model):
+#     date_creation = models.DateTimeField('Дата и время создания', auto_now_add=True)
+
+#     def __str__(self):
+#         return str(self.pk) + ', ' + str(self.isJump)
+
+class generateMaskedURL(APIView):
+    def post(self, request):
+        token = request.data.get('token', '')
+        if not token:
+            return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        current_token = tokenModel.objects.filter(token=token)
+        user = current_token.first().account
+        if user is None:
+            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        domain = request.data.get('domain', '')
+        if not domain:
+            return Response({'error': 'domain is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        #generate random string (64 chars) unique and create jumpToADPage model
+        masked_domain = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(64))
+        jumpToADPage.objects.create(account=user, site=siteModel.objects.get(domain=domain), masked_url=masked_domain)
+
+        return Response({'masked_domain': masked_domain}, status=status.HTTP_200_OK)
+    
+class checkTransition(APIView):
+    def post(self, request):
+        masked_domain = request.data.get('masked_domain', '')
+        print(masked_domain)
+        if not masked_domain:
+            return Response({'error': 'masked_domain is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        jump = jumpToADPage.objects.filter(masked_url=masked_domain).first()
+        if not jump:
+            return Response({'error': 'jump not found.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        #add to jumpToADPage shows +1
+        jump.shows += 1
+        jump.save()
+
+        #create jumpsToMaskedLink
+        jumpsToMaskedLink.objects.create(jump=jump)
+        
+        normal_url = jump.site.domain
+        
+        #return normal_url
+        return Response({'normal_url': normal_url}, status=status.HTTP_200_OK)

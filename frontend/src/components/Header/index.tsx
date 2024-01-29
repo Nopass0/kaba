@@ -26,7 +26,8 @@ const Header: React.FC = () => {
 	const [isNotificationOpen, setIsNotificationOpen] = React.useState(false)
 	const [isStatAcc, setIsStatAcc] = React.useState(false)
 	const [isRateOpen, setisRateOpen] = React.useState(false)
-	const [switchPage, setSwitchPage] = React.useState<number>(1)
+
+	const switchPage = useSelector((state: any) => state.SwitchCreatePage)
 
 	let switchPageSelector = useSelector((state: any) => state.SwitchCreatePage)
 
@@ -106,21 +107,14 @@ const Header: React.FC = () => {
 		)
 	}
 
-	console.log(isBlogger, 'isBlogger');
-	
+	console.log(isBlogger, 'isBlogger')
 
 	return (
 		<>
-			{![
-				'login',
-				'register',
-				'choose',
-				'acceptCode',
-				'',
-				'sites',
-			].includes(location.pathname.split('/')[1]) || (isBlogger && ![
-				'login',
-			].includes(location.pathname.split('/')[1])) ? (
+			{!['login', 'register', 'choose', 'acceptCode', '', 'sites'].includes(
+				location.pathname.split('/')[1],
+			) ||
+			(isBlogger && !['login'].includes(location.pathname.split('/')[1])) ? (
 				<>
 					{['create'].includes(location.pathname.split('/')[1]) ? (
 						<>
@@ -133,7 +127,12 @@ const Header: React.FC = () => {
 								</div>
 								<div className={s.down}>
 									<button
-										onClick={() => SwitcherPages(1)}
+										onClick={() =>
+											dispatch({
+												type: 'setSwitchCreatePage',
+												SwitchCreatePage: 1,
+											})
+										}
 										className={`${s.companiesMenu} ${
 											switchPage === 1 ? s.companiesMenuActive : ''
 										}`}>
@@ -141,7 +140,12 @@ const Header: React.FC = () => {
 										{/* <span className={s.companiesNum}>0</span> */}
 									</button>
 									<button
-										onClick={() => SwitcherPages(2)}
+										onClick={() =>
+											dispatch({
+												type: 'setSwitchCreatePage',
+												SwitchCreatePage: 2,
+											})
+										}
 										className={`${s.companiesMenu} ${
 											switchPage === 2 ? s.companiesMenuActive : ''
 										}`}>
@@ -149,7 +153,12 @@ const Header: React.FC = () => {
 										{/* <span className={s.companiesNum}>0</span> */}
 									</button>
 									<button
-										onClick={() => SwitcherPages(3)}
+										onClick={() =>
+											dispatch({
+												type: 'setSwitchCreatePage',
+												SwitchCreatePage: 3,
+											})
+										}
 										className={`${s.companiesMenu} ${
 											switchPage === 3 ? s.companiesMenuActive : ''
 										}`}>
@@ -310,9 +319,7 @@ const Header: React.FC = () => {
 						</div>
 					)}
 				</>
-			) : ['', 'sites'].includes(
-					location.pathname.split('/')[1],
-			  ) ? (
+			) : ['', 'sites'].includes(location.pathname.split('/')[1]) ? (
 				<>
 					<div
 						style={maxWidth}

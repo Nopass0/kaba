@@ -42,6 +42,11 @@ urlpatterns = [
     #getCompanyBloggers
     path('getCompanyBloggers', getCompanyBloggers.as_view()),
     
+    #generateMaskedURL
+    path('generateMaskedURL', generateMaskedURL.as_view()),
+    #checkTransition
+    path('checkTransition', checkTransition.as_view()),
+    
     # AddCompany
     path('addCompany', AddCompany.as_view()),
 

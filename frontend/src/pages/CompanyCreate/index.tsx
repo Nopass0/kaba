@@ -32,6 +32,7 @@ import {eachHourOfInterval} from 'date-fns'
 // import { NodeService } from './service/NodeService';
 import {TreeSelectCustom, Option} from '../../components/TreeSelectCustom/index'
 import Calendar from '../../components/Calendar'
+import {useNavigate} from 'react-router-dom'
 
 const CompanyCreate: React.FC = () => {
 	// const [value, setValue] = React.useState<any>()
@@ -119,6 +120,13 @@ const CompanyCreate: React.FC = () => {
 		setOpen_settings(!open_settings)
 	}
 
+	const setDate = (start: string, end: string) => {
+		setCDateStart(start)
+		setCDateEnd(end)
+
+		console.log(start, end, 'Date')
+	}
+
 	let op: Option[] = [
 		{
 			value: '1',
@@ -160,12 +168,11 @@ const CompanyCreate: React.FC = () => {
 		setChecked(event.target.checked)
 	}
 
-	const [images, setImages] = React.useState<string[]>([
+	const [images, setImages] = React.useState<File[]>([
 		// 'https://placehold.co/166x166',
 		// 'https://placehold.co/166x166',
 		// 'https://placehold.co/166x166',
 	])
-
 	// const textArea = document.getElementById('desc')
 
 	// textArea?.addEventListener('keyup', (e) => {
@@ -183,10 +190,8 @@ const CompanyCreate: React.FC = () => {
 
 	const handleAddImage = (file: File) => {
 		//add path to image
-		setImages([
-			...images,
-			{id: generateUniqueId(), file: URL.createObjectURL(file)},
-		])
+		setImages([...images, {id: generateUniqueId(), file: file}])
+		console.log(file)
 	}
 
 	function generateUniqueId() {
@@ -351,13 +356,137 @@ const CompanyCreate: React.FC = () => {
 			/>
 		</svg>
 	)
+
+	useEffect(() => {
+		let temp = JSON.parse(localStorage.getItem('create_temp')!)
+
+		if (temp && (temp !== null || temp !== undefined)) {
+			// Parse data to variables
+			setCName(temp[0].cName)
+			setCLink(temp[0].cLink)
+			setCSettingsLink(temp[0].cSettingsLink)
+			setCDateStart(temp[0].cDateStart)
+			setCDateEnd(temp[0].cDateEnd)
+			setCTarget(temp[0].cTarget)
+			setCWeekBudget(temp[0].cWeekBudget)
+			setCKeyWord(temp[0].cKeyWord)
+			setCKeyWordDel(temp[0].cKeyWordDel)
+			setCBanShow(temp[0].cBanShow)
+
+			setAName(temp[1].aName)
+			setAGeography(temp[1].aGeography)
+			setAFavor(temp[1].aFavor)
+			setADevice(temp[1].aDevice)
+			setAGenderNAge(temp[1].aGenderNAge)
+
+			setBName(temp[2].bName)
+			setBLink(temp[2].bLink)
+			setBOptionTitle(temp[2].bOptionTitle)
+			setBOptionDescription(temp[2].bOptionDescription)
+			setBOptionDescText(temp[2].bOptionDescText)
+			setBVideo(temp[2].bVideo)
+			setBAudio(temp[2].bAudio)
+			setBUnvirfied(temp[2].bUnvirfied)
+
+			// setImages(temp[3].images)
+		}
+
+		console.log(temp)
+	}, [])
+
+	const navigate = useNavigate()
+	const sendData = () => {
+		addCompanyAPI(
+			token,
+			{
+				cName: cName,
+				cLink: cLink,
+				cSettingsLink: cSettingsLink,
+				cDateStart: cDateStart,
+				cDateEnd: cDateEnd,
+				cTarget: cTarget,
+				cWeekBudget: cWeekBudget,
+				cKeyWord: cKeyWord,
+				cKeyWordDel: cKeyWordDel,
+				cBabShow: cBanShow,
+			},
+
+			{
+				aName: aName,
+				aGeography: aGeography,
+				aFavor: aFavor,
+				aDevice: aDevice,
+				aGenderNAge: aGenderNAge,
+			},
+
+			{
+				bName: bName,
+				bLink: bLink,
+				bOptionTitle: bOptionTitle,
+				bOptionDescription: bOptionDescription,
+				bOptionDescText: bOptionDescText,
+				bVideo: bVideo,
+				bAudio: bAudio,
+				// bImg: images,
+				bUnvirfied: bUnvirfied,
+			},
+			images,
+		)
+		window.localStorage.removeItem('create_temp')
+		navigate('/')
+	}
+
 	return (
 		<div className={s.wrapper}>
 			<div className={s.stepsMenu}>
 				<StepsInfo steps={StepSwitch()} />
 			</div>
 			<div className={` ${s.rightMenu}`}>
-				<HeaderCompanyCreate />
+				<HeaderCompanyCreate
+					exitFunc={() => {
+						;() => {
+							window.localStorage.setItem(
+								'create_temp',
+								JSON.stringify([
+									{
+										cName: cName,
+										cLink: cLink,
+										cSettingsLink: cSettingsLink,
+										cDateStart: cDateStart,
+										cDateEnd: cDateEnd,
+										cTarget: cTarget,
+										cWeekBudget: cWeekBudget,
+										cKeyWord: cKeyWord,
+										cKeyWordDel: cKeyWordDel,
+										cBabShow: cBanShow,
+									},
+									{
+										aName: aName,
+										aGeography: aGeography,
+										aFavor: aFavor,
+										aDevice: aDevice,
+										aGenderNAge: aGenderNAge,
+									},
+									{
+										bName: bName,
+										bLink: bLink,
+										bOptionTitle: bOptionTitle,
+										bOptionDescription: bOptionDescription,
+										bOptionDescText: bOptionDescText,
+										bVideo: bVideo,
+										bAudio: bAudio,
+										bImg: images,
+										bUnvirfied: bUnvirfied,
+									},
+									{
+										images: images,
+									},
+								]),
+							)
+							navigate('/')
+						}
+					}}
+				/>
 
 				<div
 					id="page-1"
@@ -526,7 +655,12 @@ const CompanyCreate: React.FC = () => {
 									<Label className={`my-[5px] ml-[16px]`} text="Начало:" />
 									<WhiteLabel
 										className={`mr-[18px] my-[5px]`}
-										text="08.11.2023"
+										text={
+											(cDateStart !== 'Invalid Date'
+												? cDateStart
+												: new Date(Date.now()).toLocaleDateString()) ||
+											new Date(Date.now()).toLocaleDateString()
+										}
 									/>
 
 									{/* <div className={s.DatePicker}>
@@ -557,7 +691,11 @@ const CompanyCreate: React.FC = () => {
 													<>
 														<BlueLabel
 															className={`mr-[18px] my-[5px] font-[400px]`}
-															text="Указать"
+															text={
+																(cDateEnd !== 'Invalid Date'
+																	? cDateEnd
+																	: 'Указать') || 'Указать'
+															}
 														/>
 													</>
 												)
@@ -566,7 +704,11 @@ const CompanyCreate: React.FC = () => {
 												<>
 													<BlueLabel
 														className={`mr-[18px] my-[5px] font-[400px]`}
-														text="Указать"
+														text={
+															(cDateEnd !== 'Invalid Date'
+																? cDateEnd
+																: 'Указать') || 'Указать'
+														}
 													/>
 												</>
 											)
@@ -574,7 +716,7 @@ const CompanyCreate: React.FC = () => {
 										<mui.Option
 											value={1}
 											className={`cursor-pointer z-10 mt-1`}></mui.Option>
-										<Calendar />
+										<Calendar setDateOutside={setDate} />
 									</mui.Select>
 								</div>
 							</Row>
@@ -582,8 +724,7 @@ const CompanyCreate: React.FC = () => {
 						<Line width="528px" className={s.Line} />
 
 						<Col width="528px" className={``}>
-							<Row
-								className={`flex items-center`}>
+							<Row className={`flex items-center`}>
 								<WhiteLabel className={`mr-[4px]`} text="Цель*" size="16px" />
 								<svg
 									className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
@@ -1227,40 +1368,45 @@ const CompanyCreate: React.FC = () => {
 									text="Сохранить и выйти"
 									onClick={
 										() => {
-											addCompanyAPI(
-												token,
-												{
-													cName: cName,
-													cLink: cLink,
-													cSettingsLink: cSettingsLink,
-													cDateStart: cDateStart,
-													cDateEnd: cDateEnd,
-													cTarget: cTarget,
-													cWeekBudget: cWeekBudget,
-													cKeyWord: cKeyWord,
-													cKeyWordDel: cKeyWordDel,
-													cBabShow: cBanShow,
-												},
-												{
-													aName: aName,
-													aGeography: aGeography,
-													aFavor: aFavor,
-													aDevice: aDevice,
-													aGenderNAge: aGenderNAge,
-												},
-												{
-													bName: bName,
-													bLink: bLink,
-													bOptionTitle: bOptionTitle,
-													bOptionDescription: bOptionDescription,
-													bOptionDescText: bOptionDescText,
-													bVideo: bVideo,
-													bAudio: bAudio,
-													bImg: images,
-													bUnvirfied: bUnvirfied,
-												},
+											window.localStorage.setItem(
+												'create_temp',
+												JSON.stringify([
+													{
+														cName: cName,
+														cLink: cLink,
+														cSettingsLink: cSettingsLink,
+														cDateStart: cDateStart,
+														cDateEnd: cDateEnd,
+														cTarget: cTarget,
+														cWeekBudget: cWeekBudget,
+														cKeyWord: cKeyWord,
+														cKeyWordDel: cKeyWordDel,
+														cBabShow: cBanShow,
+													},
+													{
+														aName: aName,
+														aGeography: aGeography,
+														aFavor: aFavor,
+														aDevice: aDevice,
+														aGenderNAge: aGenderNAge,
+													},
+													{
+														bName: bName,
+														bLink: bLink,
+														bOptionTitle: bOptionTitle,
+														bOptionDescription: bOptionDescription,
+														bOptionDescText: bOptionDescText,
+														bVideo: bVideo,
+														bAudio: bAudio,
+														bImg: images,
+														bUnvirfied: bUnvirfied,
+													},
+													{
+														images: images,
+													},
+												]),
 											)
-											
+											navigate('/')
 										}
 										// 	setGlobalState({
 										// Company: {
@@ -1300,6 +1446,9 @@ const CompanyCreate: React.FC = () => {
 									}
 								/>
 								<BlueButton
+									onClick={() =>
+										dispatch({type: 'setSwitchCreatePage', SwitchCreatePage: 2})
+									}
 									width="120px"
 									className={`float-right h-[36px] w-[120px]`}
 									text="Далее"
@@ -1896,42 +2045,47 @@ const CompanyCreate: React.FC = () => {
 								<BlueLabel
 									className={`float-right mr-[24px]`}
 									text="Сохранить и выйти"
-									onClick={() =>
-										setGlobalState({
-											Company: {
-												cName: cName,
-												cLink: cLink,
-												cSettingsLink: cSettingsLink,
-												cDateStart: cDateStart,
-												cDateEnd: cDateEnd,
-												cTarget: cTarget,
-												cWeekBudget: cWeekBudget,
-												cKeyWord: cKeyWord,
-												cKeyWordDel: cKeyWordDel,
-												cBabShow: cBanShow,
-											},
-
-											Auditor: {
-												aName: aName,
-												aGeography: aGeography,
-												aFavor: aFavor,
-												aDevice: aDevice,
-												aGenderNAge: aGenderNAge,
-											},
-
-											Banner: {
-												bName: bName,
-												bLink: bLink,
-												bOptionTitle: bOptionTitle,
-												bOptionDescription: bOptionDescription,
-												bOptionDescText: bOptionDescText,
-												bVideo: bVideo,
-												bAudio: bAudio,
-												bImg: images,
-												bUnvirfied: bUnvirfied,
-											},
-										})
-									}
+									onClick={() => () => {
+										window.localStorage.setItem(
+											'create_temp',
+											JSON.stringify([
+												{
+													cName: cName,
+													cLink: cLink,
+													cSettingsLink: cSettingsLink,
+													cDateStart: cDateStart,
+													cDateEnd: cDateEnd,
+													cTarget: cTarget,
+													cWeekBudget: cWeekBudget,
+													cKeyWord: cKeyWord,
+													cKeyWordDel: cKeyWordDel,
+													cBabShow: cBanShow,
+												},
+												{
+													aName: aName,
+													aGeography: aGeography,
+													aFavor: aFavor,
+													aDevice: aDevice,
+													aGenderNAge: aGenderNAge,
+												},
+												{
+													bName: bName,
+													bLink: bLink,
+													bOptionTitle: bOptionTitle,
+													bOptionDescription: bOptionDescription,
+													bOptionDescText: bOptionDescText,
+													bVideo: bVideo,
+													bAudio: bAudio,
+													bImg: images,
+													bUnvirfied: bUnvirfied,
+												},
+												{
+													images: images,
+												},
+											]),
+										)
+										navigate('/')
+									}}
 								/>
 								<BlueButton
 									width="120px"
@@ -2133,7 +2287,7 @@ const CompanyCreate: React.FC = () => {
 										])
 										console.log(e.target.value, 'AFTER')
 										e.target.value = ''
-										setTextAreaValue('')	
+										setTextAreaValue('')
 										console.log(e.target.value, 'DO')
 									}
 								}}
@@ -2147,17 +2301,20 @@ const CompanyCreate: React.FC = () => {
 									iD="textAreaDesc"
 									width="528px"
 									className={s.ColAfterTextArea}>
-									{descrArray.map((file, index) => (	
+									{descrArray.map((file, index) => (
 										<>
 											<div key={index} className={s.BlockAfterTextArea}>
-												<p className={s.TextBlockAfter}>
-													{file.text}
-												</p>
+												<p className={s.TextBlockAfter}>{file.text}</p>
 												<button
-												className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all" 
-												onClick={() => setDescrArray(descrArray.filter((obj) => obj.id !== file.id))} className={s.ButtonAfterExit}>
+													className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
+													onClick={() =>
+														setDescrArray(
+															descrArray.filter((obj) => obj.id !== file.id),
+														)
+													}
+													className={s.ButtonAfterExit}>
 													<svg
-													className='cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all'
+														className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
 														xmlns="http://www.w3.org/2000/svg"
 														width="16"
 														height="16"
@@ -2173,8 +2330,6 @@ const CompanyCreate: React.FC = () => {
 											<Line width="528px" className={s.Line} />
 										</>
 									))}
-
-									
 								</Col>
 							)}
 						</div>
@@ -2283,7 +2438,11 @@ const CompanyCreate: React.FC = () => {
 
 						<Row width="600px" className={s.DropImageRow}>
 							{images.map((image) => (
-								<Image onClose={onClose} id={image.id} src={image.file} />
+								<Image
+									onClose={onClose}
+									id={image.id}
+									src={URL.createObjectURL(image.file)}
+								/>
 							))}
 							<Upload propFunction={handleAddImage} />
 						</Row>
@@ -2349,43 +2508,7 @@ const CompanyCreate: React.FC = () => {
 									// 	bImg,
 									// 	bUnvirfied,
 									// })}
-									onClick={() =>
-										addCompanyAPI(
-											token,
-											{
-												cName: cName,
-												cLink: cLink,
-												cSettingsLink: cSettingsLink,
-												cDateStart: cDateStart,
-												cDateEnd: cDateEnd,
-												cTarget: cTarget,
-												cWeekBudget: cWeekBudget,
-												cKeyWord: cKeyWord,
-												cKeyWordDel: cKeyWordDel,
-												cBabShow: cBanShow,
-											},
-
-											{
-												aName: aName,
-												aGeography: aGeography,
-												aFavor: aFavor,
-												aDevice: aDevice,
-												aGenderNAge: aGenderNAge,
-											},
-
-											{
-												bName: bName,
-												bLink: bLink,
-												bOptionTitle: bOptionTitle,
-												bOptionDescription: bOptionDescription,
-												bOptionDescText: bOptionDescText,
-												bVideo: bVideo,
-												bAudio: bAudio,
-												bImg: images,
-												bUnvirfied: bUnvirfied,
-											},
-										)
-									}
+									onClick={() => sendData()}
 								/>
 								{/* <BlueButton
 									width="120px"

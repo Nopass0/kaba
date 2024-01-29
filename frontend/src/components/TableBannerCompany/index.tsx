@@ -430,7 +430,9 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 																	sortKey: 'Status',
 																})
 															}>
-															<p className={s.sortText}>Дата и время создания</p>
+															<p className={s.sortText}>
+																Дата и время создания
+															</p>
 															<div>
 																<svg
 																	id="svg-icon-chevron-single-up-down"
@@ -548,7 +550,6 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 													</div>
 												</button>
 											</tl.HeaderCell> */}
-													
 												</tl.HeaderRow>
 											</tl.Header>
 
@@ -668,7 +669,7 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 																<mui.Option
 																	value={1}
 																	className={`cursor-pointer z-10 mt-1`}>
-																	<AuditorNBanners />
+																	{/* <AuditorNBanners /> */}
 																</mui.Option>
 															</mui.Select>
 														</tl.Cell>

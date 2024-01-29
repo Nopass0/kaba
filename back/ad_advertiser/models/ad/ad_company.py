@@ -59,4 +59,4 @@ class ad_statusModel(models.Model):
     
 class ad_bloggerCompanyModel(models.Model):
     company = models.ForeignKey(ad_companyModel, related_name='ad_bloggerCompanyModel_company', on_delete=models.CASCADE)
-    account = models.ForeignKey(accountModel, related_name='ad_bloggerCompanyModel_account', on_delete=models.CASCADE)
+

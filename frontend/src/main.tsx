@@ -27,6 +27,7 @@ import CompanyCreate from './pages/CompanyCreate/index'
 import ErrorPage from './pages/ErrorPage'
 import {Navigate} from 'react-router-dom'
 import {depositApply} from './api/payment.api'
+import TransitPage from './pages/TransitPage'
 
 let defaultState = {
 	// user: {
@@ -283,6 +284,10 @@ const PageBase = [
 	{
 		path: '/login',
 		element: getWHeader(<MainPage />, false),
+	},
+	{
+		path: '/go',
+		element: getWHeader(<TransitPage />, false),
 	},
 	// {
 	// 	path: 'choose',

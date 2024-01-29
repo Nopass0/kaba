@@ -12,11 +12,10 @@ import 'react-range-slider-input/dist/style.css'
 import {min} from 'moment'
 
 interface ICalendar {
-	startDate?: string
-	endDate?: string
+	setDateOutside: (start: string, end: string) => void
 }
 
-const Calendar: React.FC<ICalendar> = ({startDate, endDate}: ICalendar) => {
+const Calendar: React.FC<ICalendar> = ({setDateOutside}: ICalendar) => {
 	const [date, setDate] = useState()
 	const inputStart = useRef()
 	const inputEnd = useRef()
@@ -269,7 +268,7 @@ const Calendar: React.FC<ICalendar> = ({startDate, endDate}: ICalendar) => {
 							className="mr-6 cursor-pointer"
 							text="Сбросить"
 							onClick={() => {
-								setDate([null, null])
+								setDate([undefined, undefined])
 							}}
 						/>
 						<BlueButton
@@ -277,7 +276,7 @@ const Calendar: React.FC<ICalendar> = ({startDate, endDate}: ICalendar) => {
 							text="Применить"
 							onClick={() => {
 								if (sDate !== 'Invalid date' && eDate !== 'Invalid date')
-									(startDate = sDate), (endDate = eDate)
+									setDateOutside(sDate, eDate)
 								console.log('date append')
 							}}
 						/>

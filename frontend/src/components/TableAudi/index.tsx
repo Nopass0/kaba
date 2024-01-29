@@ -176,9 +176,7 @@ interface ITableAudi {
 	count?: number
 }
 
-const TableAudi: React.FC<ITableAudi> = ({
-
-}: ITableAudi) => {
+const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 	const getFaviconUrl = (url: string) => {
 		try {
 			let favico = `https://s2.googleusercontent.com/s2/favicons?domain=${url}&sz=16`
@@ -427,7 +425,9 @@ const TableAudi: React.FC<ITableAudi> = ({
 																	sortKey: 'Status',
 																})
 															}>
-															<p className={s.sortText}>Дата и время создания</p>
+															<p className={s.sortText}>
+																Дата и время создания
+															</p>
 															<div>
 																<svg
 																	id="svg-icon-chevron-single-up-down"
@@ -540,7 +540,6 @@ const TableAudi: React.FC<ITableAudi> = ({
 													</div>
 												</button>
 											</tl.HeaderCell> */}
-													
 												</tl.HeaderRow>
 											</tl.Header>
 
@@ -660,7 +659,7 @@ const TableAudi: React.FC<ITableAudi> = ({
 																<mui.Option
 																	value={1}
 																	className={`cursor-pointer z-10 mt-1`}>
-																	<AuditorNBanners />
+																	{/* <AuditorNBanners /> */}
 																</mui.Option>
 															</mui.Select>
 														</tl.Cell>

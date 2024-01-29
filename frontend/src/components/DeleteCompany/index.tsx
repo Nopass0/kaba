@@ -12,13 +12,16 @@ interface IDeleteCompany {
 	// text_course_table?: string
 	onExit?: () => void
 	CreateCompany?: boolean
+	saveFunc?: () => void
+	resetFunc?: () => void
 }
 
 const DeleteCompany: React.FC<IDeleteCompany> = ({
 	onExit,
 	CreateCompany, // className,
-	// text_id_table,
-} // text_course_table,
+	saveFunc, // text_course_table,
+	resetFunc, // text_id_table,
+} // text_id_table,
 : IDeleteCompany) => {
 	// const DeleteCompanyClassName = `DeleteCompany ${className}`; // Combine className with "DeleteCompany" class using s[className]
 
@@ -47,8 +50,13 @@ const DeleteCompany: React.FC<IDeleteCompany> = ({
 				</Row>
 
 				<div className={s.TableButtons}>
-					<Button width="120px" text="Сбросить" className={s.ButtonEmpty} />
-					<BlueButton width="120px" text="Сохранить" />
+					<Button
+						width="120px"
+						text="Сбросить"
+						className={s.ButtonEmpty}
+						onClick={resetFunc}
+					/>
+					<BlueButton width="120px" text="Сохранить" onClick={saveFunc} />
 				</div>
 			</Col>
 		</div>

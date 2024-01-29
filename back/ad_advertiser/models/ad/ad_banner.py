@@ -7,8 +7,10 @@ from ad_advertiser.models.ad.ad_company import ad_companyModel
 from ad_advertiser.models.ad.ad_audience import ad_audienceModel
 from account.models.account import accountModel
 
+class BannderImage(models.Model):
+    banner = models.ForeignKey('ad_bannerModel', related_name='banner_image', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='banner_images/', null=True, blank=True)  # Adjust the 'upload_to' parameter as needed
 
-# 
 class ad_bannerModel(models.Model):
 
     # Профиль
@@ -24,6 +26,8 @@ class ad_bannerModel(models.Model):
 
     date_creation = models.DateTimeField('Дата и время создания', auto_now_add=True)
     name = models.CharField('Название', max_length=255)
+    
+    image_file = models.ImageField(upload_to='banner_images/', null=True, blank=True)  # Adjust the 'upload_to' parameter as needed
 
     link = models.URLField('Ссылка на рекламируемую страницу')
     # варианты заголовков
