@@ -740,9 +740,11 @@ const Table: React.FC<ITable> = ({emptyChange, empty = true}: ITable) => {
 																		return (
 																			<>
 																				<div className={s.audiotoriaNBanners}>
-																					<WhiteLabel text="3" />
 																					<WhiteLabel
-																						text={` и 23`}
+																						text={item.ad_audience.length}
+																					/>
+																					<WhiteLabel
+																						text={` и ${item.ad_banner.length}`}
 																						className="ml-1"
 																					/>
 																				</div>
@@ -752,9 +754,11 @@ const Table: React.FC<ITable> = ({emptyChange, empty = true}: ITable) => {
 																	return (
 																		<>
 																			<div className={s.audiotoriaNBanners}>
-																				<WhiteLabel text="4" />
 																				<WhiteLabel
-																					text={` и 24`}
+																					text={item.ad_audience.length}
+																				/>
+																				<WhiteLabel
+																					text={` и ${item.ad_banner.length}`}
 																					className="ml-1"
 																				/>
 																			</div>
@@ -764,7 +768,10 @@ const Table: React.FC<ITable> = ({emptyChange, empty = true}: ITable) => {
 																<mui.Option
 																	value={1}
 																	className={`cursor-pointer z-10 mt-1`}>
-																	<AuditorNBanners />
+																	<AuditorNBanners
+																		auditories={item.ad_audience}
+																		banners={item.ad_banner}
+																	/>
 																</mui.Option>
 															</mui.Select>
 														</tl.Cell>
@@ -851,7 +858,7 @@ const Table: React.FC<ITable> = ({emptyChange, empty = true}: ITable) => {
 															</p>
 														</tl.Cell>
 														<tl.Cell>
-															<p>{item.views}</p>
+															<p>{item.site.shows}</p>
 														</tl.Cell>
 													</tl.Row>
 												))}

@@ -15,7 +15,7 @@ export type Option = {
 
 export type TreeSelectCustomProps = {
 	options: Option[]
-	onChange: (selectedValues: string[]) => void
+	onChange?: (selectedValues: string[]) => void
 }
 
 export const TreeSelectCustom: React.FC<TreeSelectCustomProps> = ({
@@ -142,12 +142,11 @@ export const TreeSelectCustom: React.FC<TreeSelectCustomProps> = ({
 					</li>
 				))}
 			</ul>
-			
 		</>
 	)
 
 	return (
-		<div className={`${className}` }>
+		<div className={`${className}`}>
 			<mui.Select
 				style={{backgroundColor: background262626 && '#333'}}
 				className={`${s.muiSelect}`}
@@ -199,7 +198,6 @@ export const TreeSelectCustom: React.FC<TreeSelectCustomProps> = ({
 					{renderOptions(options)}
 				</mui.Option>
 			</mui.Select>
-			
 		</div>
 	)
 }
