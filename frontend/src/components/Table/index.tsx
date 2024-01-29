@@ -174,11 +174,9 @@ const THEME = {
 interface ITable {
 	width?: string
 	count?: number
-	emptyChange?: () => void
-	empty?: boolean
 }
 
-const Table: React.FC<ITable> = ({emptyChange, empty = true}: ITable) => {
+const Table: React.FC<ITable> = ({}: ITable) => {
 	const getFaviconUrl = (url: string) => {
 		try {
 			let favico = `https://s2.googleusercontent.com/s2/favicons?domain=${url}&sz=16`

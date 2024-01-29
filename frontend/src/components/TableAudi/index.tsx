@@ -174,13 +174,10 @@ const THEME = {
 interface ITableAudi {
 	width?: string
 	count?: number
-	emptyChange?: () => void
-	empty?: boolean
 }
 
 const TableAudi: React.FC<ITableAudi> = ({
-	emptyChange,
-	empty = true,
+
 }: ITableAudi) => {
 	const getFaviconUrl = (url: string) => {
 		try {
