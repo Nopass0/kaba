@@ -14,11 +14,13 @@ import Col from '../../components/Col/index';
 import NavLabel from '../../components/NavLabel/index';
 import Label from '../../components/Label/index';
 import BlueButton from '../../components/BlueButton/index';
+import TableAudi from '../../components/TableAudi/index';
+import TableBannerCompany from '../../components/TableBannerCompany'
 
 const Company: React.FC = () => {
 	const user = useSelector((state: any) => state.user)
 	const navigate = useNavigate()
-
+	const switchTable = useSelector((state: any) => state.SwitchTableCompany)
 	useEffect(() => {
 		console.log(user)
 
@@ -36,9 +38,9 @@ const Company: React.FC = () => {
 				{/* <Calendar/> */}
 				{/* COMPANY */}
 				{/* <HeaderCompany textHeader="Компании" needDownMenu={true} /> */}
-
-				<Table />
-
+				{switchTable === 1 && <Table />}
+				{switchTable === 2 && <TableAudi/>}
+				{switchTable === 3 && <TableBannerCompany />}
 				{/* NO COMPANY CONTENT */}
 				{/* <Col width="360px" className={s.noCompany}>
 					<NavLabel className={s.noCompanyTitle} text="Нет кампаний" />

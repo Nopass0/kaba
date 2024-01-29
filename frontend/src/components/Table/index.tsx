@@ -30,7 +30,7 @@ import {useSelector} from 'react-redux'
 import axios from 'axios'
 import BlueButton from '../BlueButton/index'
 import NavLabel from '../NavLabel/index'
-import { Link, Navigate, redirect } from 'react-router-dom'
+import {Link, Navigate, redirect} from 'react-router-dom'
 
 enum CurrentPopup {
 	None,
@@ -226,7 +226,6 @@ const Table: React.FC<ITable> = ({emptyChange, empty = true}: ITable) => {
 	const token = user.token
 	const [companies, setCompanies] = useState([])
 
-	
 	const data = {nodes: companies}
 
 	useEffect(() => {
@@ -237,7 +236,6 @@ const Table: React.FC<ITable> = ({emptyChange, empty = true}: ITable) => {
 			return res.data
 		}
 		getCompanies(token)
-		
 	}, [])
 
 	const select = useRowSelect(
@@ -405,16 +403,11 @@ const Table: React.FC<ITable> = ({emptyChange, empty = true}: ITable) => {
 														className={`CheckBox` + ' ' + s.headerCellSort}
 													/>
 													<tl.HeaderCell
-														className={s.headerCellSort_Sort}
+														className={s.HeaderCell}
 														style={{fontWeight: '400'}}>
-														<Row width="auto">
-															<Col width="auto">
-																<p
-																	onLoad={() => console.log(tableList, 'list')}>
-																	Название, ID
-																</p>
-															</Col>
-														</Row>
+														<p onLoad={() => console.log(tableList, 'list')}>
+															Название, ID
+														</p>
 													</tl.HeaderCell>
 													{/* <tl.HeaderCell
 												style={{fontWeight: '400', fill: '#808080'}}
