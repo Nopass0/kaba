@@ -123,7 +123,24 @@ const CompanyCreate: React.FC = () => {
 	const setDate = (start: string, end: string) => {
 		setCDateStart(start)
 		setCDateEnd(end)
-
+		if (end !== 'Invalid Date' && end !== 'Указать') {
+			setStepCompany((prevStepCompany) =>
+				prevStepCompany.map((step) =>
+					step.title === 'Начало и окончание компании*'
+						? {...step, isDone: true}
+						: step,
+				),
+			)	
+		}
+		else {
+			setStepCompany((prevStepCompany) =>
+			prevStepCompany.map((step) =>
+				step.title === 'Начало и окончание компании*'
+					? {...step, isDone: false}
+					: step,
+			),
+			)
+		}
 		console.log(start, end, 'Date')
 	}
 
@@ -458,7 +475,7 @@ const CompanyCreate: React.FC = () => {
 										cWeekBudget: cWeekBudget,
 										cKeyWord: cKeyWord,
 										cKeyWordDel: cKeyWordDel,
-										cBabShow: cBanShow,
+										cBanShow: cBanShow,
 									},
 									{
 										aName: aName,
@@ -518,6 +535,7 @@ const CompanyCreate: React.FC = () => {
 									)
 								}
 							}}
+							value={cName}
 							width="100%"
 							placeholder="Введите название..."
 							className={`${s.inputText}`}
@@ -550,6 +568,7 @@ const CompanyCreate: React.FC = () => {
 										)
 									}
 								}}
+								value={cLink}
 								id="urlInput"
 								width="528px"
 								placeholder="Введите ссылку..."
@@ -1314,8 +1333,9 @@ const CompanyCreate: React.FC = () => {
 											])
 											e.target.value = ''
 										}
-										console.log(banShowArray)
+										console.log(banShowArray, cBanShow)
 									}}
+									value={cBanShow}
 								/>
 							</Row>
 						</Col>
@@ -1381,7 +1401,7 @@ const CompanyCreate: React.FC = () => {
 														cWeekBudget: cWeekBudget,
 														cKeyWord: cKeyWord,
 														cKeyWordDel: cKeyWordDel,
-														cBabShow: cBanShow,
+														cBanShow: cBanShow,
 													},
 													{
 														aName: aName,
@@ -2059,7 +2079,7 @@ const CompanyCreate: React.FC = () => {
 													cWeekBudget: cWeekBudget,
 													cKeyWord: cKeyWord,
 													cKeyWordDel: cKeyWordDel,
-													cBabShow: cBanShow,
+													cBanShow: cBanShow,
 												},
 												{
 													aName: aName,
