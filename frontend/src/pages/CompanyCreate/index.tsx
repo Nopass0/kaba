@@ -45,12 +45,17 @@ const CompanyCreate: React.FC = () => {
 
 	const [checked, setChecked] = React.useState(false)
 	const [checked_1, setChecked_1] = React.useState(false)
+	const [checkedTitle, setCheckedTitle] = React.useState(false)
 
 	const [Gender, setGender] = useState<boolean>(true)
 	const [AgeTo, setAgeTo] = useState<number>()
 	const [AgeFrom, setAgeFrom] = useState<number>()
 
+
+	// Banner's textArea
 	const [textAreaValue, setTextAreaValue] = useState<string>('')
+	const [textAreaTitle, setTextAreaTitle] = useState<string>('')
+
 
 	const [open_settings, setOpen_settings] = React.useState(false)
 
@@ -93,6 +98,7 @@ const CompanyCreate: React.FC = () => {
 	// Array DOM Element's
 	const [banShowArray, setBanShowArray] = useState<object[]>([])
 	const [descrArray, setDescrArray] = useState<object[]>([])
+	const [titleArray, setTitleArray] = useState<object[]>([])
 	// useEffect(() => {
 	//     NodeService.getTreeNodes().then((data) => setNodes(data));
 	// }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -1507,6 +1513,7 @@ const CompanyCreate: React.FC = () => {
 									)
 								}
 							}}
+							value={aName}
 							width="100%"
 							placeholder="Введите название..."
 							className={`${s.inputText}`}
@@ -2060,12 +2067,16 @@ const CompanyCreate: React.FC = () => {
 								))}
 							</Col>
 						)}
-						<div className={`my-[32px] w-[528px] float-right `}>
+						
+						<Line width="528px" className={s.Line} />
+						<div className={`mb-[32px] w-[528px] float-right `}>
 							<Row width="auto" className={`items-center float-right`}>
 								<BlueLabel
-									className={`float-right mr-[24px]`}
+									className={`float-right mr-[24px] cursor-pointer`}
 									text="Сохранить и выйти"
-									onClick={() => () => {
+									onClick={() => {
+										console.log('oADJGSKDFBJKSFBKSFHMskf');
+										
 										window.localStorage.setItem(
 											'create_temp',
 											JSON.stringify([
@@ -2153,6 +2164,7 @@ const CompanyCreate: React.FC = () => {
 									)
 								}
 							}}
+							value={bName}
 							width="100%"
 							placeholder="Введите название..."
 							className={`${s.inputText}`}
@@ -2248,11 +2260,109 @@ const CompanyCreate: React.FC = () => {
 								<NavLabel className={s.navLabel} text="Варианты заголовка" />
 							</Row>
 							<Switch
-								checked={checked}
-								onChange={handleChange}
+								checked={checkedTitle}
+								onChange={() => setCheckedTitle(!checkedTitle)}
 								className={s.SwitchButton}
 							/>
 						</Row>
+						<div
+							style={checkedTitle ? {display: 'flex'} : {display: 'none'}}
+							className={s.DescBlock}>
+							<textarea
+								onChange={(e) => {
+									setTextAreaTitle(e.target.value)
+									if (e.target.value.length > 0) {
+										setStepBanner((prevStepBanner) =>
+											prevStepBanner.map((step) =>
+												step.title === 'Варианты заголовка'
+													? {...step, isDone: true}
+													: step,
+											),
+										)
+									} else {
+										setStepBanner((prevStepBanner) =>
+											prevStepBanner.map((step) =>
+												step.title === 'Варианты заголовка'
+													? {...step, isDone: false}
+													: step,
+											),
+										)
+									}
+								}}
+								onKeyDown={(e) => {
+									if (
+										e.key === 'Enter' &&
+										!e.repeat &&
+										!e.shiftKey &&
+										e.target.value.length > 0
+									) {
+										e.preventDefault()
+										setTitleArray((prevArray) => [
+											...prevArray,
+											{
+												id: `VariantTitle-${generateUniqueId()}`,
+												text: e.target.value,
+											},
+										])
+										console.log(e.target.value, 'AFTER')
+										e.target.value = ''
+										setTextAreaTitle('')
+										console.log(e.target.value, 'DO')
+									}
+								}}
+								value={textAreaTitle}
+								name="VariantTitle"
+								id="VariantTitle"
+								className={s.textAreaDesc}
+								placeholder="Добавить..."></textarea>
+							{titleArray.length > 0 && (
+								<Col
+									iD="textAreaDesc"
+									width="528px"
+									className={s.ColAfterTextArea}>
+									{titleArray.map((file, index) => (
+										<>
+											<div key={index} className={s.BlockAfterTextArea}>
+												<p className={s.TextBlockAfter}>{file.text}</p>
+												<button
+													className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
+													onClick={() =>
+														{setTitleArray(
+															titleArray.filter((obj) => obj.id !== file.id),
+														)
+														if (titleArray.length === 1) {
+															setStepBanner((prevStepBanner) =>
+																prevStepBanner.map((step) =>
+																	step.title === 'Варианты заголовка'
+																		? {...step, isDone: false}
+																		: step,
+																),
+															)
+														}
+														
+													}
+													}
+													className={s.ButtonAfterExit}>
+													<svg
+														className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
+														xmlns="http://www.w3.org/2000/svg"
+														width="16"
+														height="16"
+														viewBox="0 0 16 16"
+														fill="none">
+														<path
+															d="M4.13179 11.8681C4.19232 11.9253 4.26125 11.964 4.33859 11.9842C4.41592 12.0044 4.49326 12.0044 4.5706 11.9842C4.64794 11.964 4.71519 11.9253 4.77235 11.8681L8.00033 8.63863L11.2283 11.8681C11.2855 11.9253 11.3527 11.964 11.4301 11.9842C11.5074 12.0044 11.5856 12.0052 11.6646 11.9867C11.7436 11.9682 11.8117 11.9287 11.8689 11.8681C11.926 11.811 11.9639 11.7437 11.9823 11.6663C12.0008 11.5889 12.0008 11.5116 11.9823 11.4342C11.9639 11.3568 11.926 11.2895 11.8689 11.2323L8.64088 7.99778L11.8689 4.76827C11.926 4.71108 11.9647 4.6438 11.9849 4.56643C12.005 4.48905 12.005 4.41168 11.9849 4.3343C11.9647 4.25693 11.926 4.18965 11.8689 4.13246C11.8083 4.07191 11.7394 4.03238 11.6621 4.01388C11.5847 3.99537 11.5074 3.99537 11.4301 4.01388C11.3527 4.03238 11.2855 4.07191 11.2283 4.13246L8.00033 7.36197L4.77235 4.13246C4.71519 4.07191 4.64709 4.03238 4.56808 4.01388C4.48906 3.99537 4.41088 3.99537 4.33354 4.01388C4.25621 4.03238 4.18896 4.07191 4.13179 4.13246C4.07463 4.18965 4.0368 4.25693 4.01831 4.3343C3.99982 4.41168 3.99982 4.48905 4.01831 4.56643C4.0368 4.6438 4.07463 4.71108 4.13179 4.76827L7.35978 7.99778L4.13179 11.2323C4.07463 11.2895 4.03596 11.3568 4.01579 11.4342C3.99561 11.5116 3.99477 11.5889 4.01327 11.6663C4.03176 11.7437 4.07127 11.811 4.13179 11.8681Z"
+															fill="CurrentColor"
+														/>
+													</svg>
+												</button>
+											</div>
+											<Line width="528px" className={s.Line} />
+										</>
+									))}
+								</Col>
+							)}
+						</div>
 
 						<Line width="528px" className={s.Line} />
 
@@ -2328,9 +2438,19 @@ const CompanyCreate: React.FC = () => {
 												<button
 													className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
 													onClick={() =>
-														setDescrArray(
+														{setDescrArray(
 															descrArray.filter((obj) => obj.id !== file.id),
 														)
+														if (descrArray.length === 1) {
+															setStepBanner((prevStepBanner) =>
+																prevStepBanner.map((step) =>
+																	step.title === 'Варианты описаний'
+																		? {...step, isDone: false}
+																		: step,
+																),
+															)
+														}
+													}
 													}
 													className={s.ButtonAfterExit}>
 													<svg
