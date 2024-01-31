@@ -608,6 +608,8 @@ class AddCompany(APIView):
 
             # Retrieve or create the site
             domain = company_data.get('cLink', '')
+            price_target = company_data.get('cTarget', 0)
+            ban_show = company_data.get('cBanShow', []) if company_data.get('cBanShow', []) else []
             site, _ = siteModel.objects.get_or_create(domain=domain)
 
             print("1-----------------------------------------------------------------------------------------------")
@@ -620,6 +622,8 @@ class AddCompany(APIView):
                 # date_finish=parse_datetime(company_data.get('cDateEnd', '')) if company_data.get('cDateEnd', '') else None,
                 date_start=datetime.strptime(company_data.get('cDateStart', ''), '%d.%m.%Y') if company_data.get('cDateStart', '') else None,
                 date_finish=datetime.strptime(company_data.get('cDateEnd', ''), '%d.%m.%Y') if company_data.get('cDateEnd', '') else None,
+                price_target = price_target,
+                ban_show = ban_show,
                 budget_week=int(company_data.get('cWeekBudget', 0)),
                 channel_taboo=company_data.get('cSettingsLink', []) if company_data.get('cSettingsLink', []) else [],
                 phrase_plus=company_data.get('cKeyWord', []) if company_data.get('cKeyWord', []) else [],
@@ -1081,23 +1085,92 @@ class addCompanyToBlogger(APIView):
     
 class getCompanyBloggers(APIView):
     def post(self, request):
-        token = request.data.get('token', '')
-        if not token:
-            return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        token = request.GET.get('token', '')
+        user = None
+        if token:
+            try:
+                user = tokenModel.objects.get(token=token).account
+            except tokenModel.DoesNotExist:
+                # If token is provided but invalid, return an error
+                return Response({'error': 'Invalid token.'}, status=status.HTTP_404_NOT_FOUND)
 
-        current_token = tokenModel.objects.filter(token=token)
-        user = current_token.first().account
-        if user is None:
-            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+        # Fetch all active companies, filter by user if user is not None
+        if user:
+            # user_companies = ad_companyModel.objects.filter(account=user).values_list('id', flat=True)
+            active_companies = ad_companyModel.objects.all()
+        else:
+            active_companies = ad_companyModel.objects.all()
 
-        bloggers = ad_bloggerCompanyModel.objects.filter(account=user).values()
-        #ПОФИКСИТЬ!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        #get companies
-        for blogger in bloggers:
-            company = ad_companyModel.objects.filter(id=blogger["company_id"]).values()
-            blogger["company"] = company
-      
-        return Response({'bloggers': list(bloggers)}, status=status.HTTP_200_OK)
+        active_companies = active_companies.filter(
+            status_text='Активная'
+        ).prefetch_related(
+            Prefetch('ad_bannerModel_ad_companyModel', queryset=ad_bannerModel.objects.prefetch_related('banner_image')),
+            'ad_audienceModel_ad_companyModel',
+            'ad_statusModel_companies',
+        ).select_related('site')
+        #active_companies = active_companies.select_related('site')
+        
+        
+        
+        # Construct the response data
+        companies_data = []
+        for company in active_companies:
+            if not ad_bloggerCompanyModel.objects.filter(company=company).exists():
+                continue
+            company_info = {
+                'id': company.id,
+                'name': company.name,
+                'date_start': company.date_start,
+                'date_finish': company.date_finish,
+                'status_text': company.status_text,
+                'budget_week': company.budget_week,
+                'views': company.views,
+                'price_target': company.price_target,
+                'ban_show': company.ban_show,
+                'site': {
+                    'id': company.site.id if company.site else None,
+                    'domain': company.site.domain if company.site else '',
+                    'date_creation': company.site.date_creation if company.site else None,
+                    'masked_domain': company.site.masked_domain if company.site else '',
+                    'shows': company.site.shows if company.site else 0,
+                },
+                'banners': [
+                    {
+                        'id': banner.id,
+                        'name': banner.name,
+                        'link': banner.link,
+                        'title_option': banner.title_option,
+                        'description_option': banner.description_option,
+                        'image_option': banner.image_option,
+                        'video_option': banner.video_option,
+                        'audio_option': banner.audio_option,
+                        'channel_private_bool': banner.channel_private_bool,
+                        'images': [image.image.url for image in banner.banner_image.all()]  # Don't work
+                    } for banner in company.ad_bannerModel_ad_companyModel.all()
+                ],
+                'audiences': [
+                    {
+                        'id': audience.id,
+                        'name': audience.name,
+                        'geography': audience.geography,
+                        'category': audience.category,
+                        'interest': audience.interest,
+                        'gender_age': audience.gender_age,
+                        'device': audience.device,
+                        'solvency': audience.solvency,
+                    } for audience in company.ad_audienceModel_ad_companyModel.all()
+                ],
+                'statuses': [
+                    {
+                        'id': status.id,
+                        'status': status.status,
+                        'text': status.text,
+                    } for status in company.ad_statusModel_companies.all()
+                ]
+            }
+            companies_data.append(company_info)
+
+        return Response({'companies': companies_data}, status=status.HTTP_200_OK)
     
     
 # class jumpToADPage(models.Model):

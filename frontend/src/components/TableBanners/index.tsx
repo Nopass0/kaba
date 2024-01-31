@@ -27,6 +27,7 @@ import ContentBannerDetails, { IContentBannerDetails } from '../ContentBannerDet
 import { useSelector } from 'react-redux';
 import { getCompanyBloggersAPI } from '../../api/data.api'
 import StatisticPageMini from '../popup/StatisticPageMini/index';
+import moment from 'moment'
 
 const list = [
 	{
@@ -198,19 +199,21 @@ enum CurrentPopup {
 
 
 const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
-	const [dataTable, setDataTable] = React.useState<object>({})
+	const [dataTable, setDataTable] = React.useState([])
 	const user = useSelector((state: any) => state.user)
 	const token = user.token
 	useEffect(() => {
 		const getData = async () => {
 			const res = await getCompanyBloggersAPI(token)
-			console.log(res.data, 'RES DATA');	
-			setDataTable(res.data)
+			console.log(res.data.companies, 'RES DATA');	
+			setDataTable(res.data.companies)
 		}
 		getData() 
 	},[])
 
-	const data = {nodes: list}
+	// console.log(dataTable, 'DATA TABLE');
+	
+	const data = {nodes: dataTable}
 	const [search, setSearch] = useState('')
 	const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setSearch(event.target.value)
@@ -218,6 +221,8 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 	// const sort = useSort(data);
 
 	const [currentPopup, setCurrentPopup] = useState(CurrentPopup.None)
+	const [currentObject, setCurrentObject] = useState<object>({})
+
 
 	const bannerContent: IContentBanner = {
 		className: 'banner-class',
@@ -314,6 +319,17 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 			// Exit logic here
 			setCurrentPopup(CurrentPopup.None)
 		},
+	}
+
+	const getEndDate = (endDate: string) => {
+		const now = moment()
+		const end = moment(endDate, 'YYYY-MM-DD')
+
+		//get the difference in days
+		const difference = end.diff(now, 'days')
+
+		const translateDate = difference
+		return translateDate
 	}
 
 	const [downMenu, setDownMenu] = useState(false)
@@ -642,8 +658,8 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 													<Col width="auto">
 														<Row width="auto">
 															<img
-																src={item.nameImg}
-																alt={item.name}
+																// src={item.nameImg}
+																// alt={item.name}
 																className="mr-2"
 															/>
 															<label htmlFor="checkbox_1">{item.name}</label>
@@ -682,6 +698,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 													<Row width="auto" className={s.ButtonsSVG}>
 														<button
 															onClick={() => {
+																setCurrentObject(item)
 																setCurrentPopup(CurrentPopup.Details)
 															}}
 															className={s.ButtonSVG}>
@@ -708,6 +725,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 															</svg>
 														</button>
 														<button onClick={() => {
+																setCurrentObject(item)
 															setCurrentPopup(CurrentPopup.Content)
 														}} className={s.ButtonSVG}>
 															<svg
@@ -733,6 +751,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 															</svg>
 														</button>
 														<button className={s.ButtonSVG} onClick={() => {
+																setCurrentObject(item)
 															// TO DO ERROR WITH CHART JS INSIDE POPUP 
 															setCurrentPopup(CurrentPopup.Statistic) 
 														}}	>
@@ -764,20 +783,20 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 											</tl.Cell>
 
 											<tl.Cell>
-												<p>{item.toEnd} дней</p>
+												<p>{getEndDate(item.date_finish) <= 0 ? 'Завершена'  : `${getEndDate(item.date_finish)} дней`}</p>
 											</tl.Cell>
 											<tl.Cell>
-												<p>{item.budget}₽</p>
+												<p>{item.budget_week}₽</p>
 											</tl.Cell>
 
 											<tl.Cell>
-												<p id={item.PRC.charAt(0) === '2' ? 'green' : ''}>
-													{item.PRC}
+												<p id={String(item.views).charAt(0) === '2' ? 'green' : ''}>
+													{item.views}
 												</p>
 											</tl.Cell>
 
 											<tl.Cell>
-												<p className={s.DetailsCell}>{item.shows}</p>
+												<p className={s.DetailsCell}>{item.views}</p>
 											</tl.Cell>
 										</tl.Row>
 									))}
@@ -831,38 +850,46 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 				<PopUpWrapper onExit={bannerContentDetails.onExit}>
 					<ContentBannerDetails
 						className={bannerContentDetails.className}
-						course_svg={bannerContentDetails.course_svg}
-						course_title={bannerContentDetails.course_title}
-						course_id={bannerContentDetails.course_id}
-						course_ooo={bannerContentDetails.course_ooo}
-						course_link={bannerContentDetails.course_link}
-						stat_toEnd={bannerContentDetails.stat_toEnd}
-						stat_budget={bannerContentDetails.stat_budget}
-						stat_income={bannerContentDetails.stat_income}
-						stat_targetAct={bannerContentDetails.stat_targetAct}
-						stat_maxPrice={bannerContentDetails.stat_maxPrice}
-						stat_Price={bannerContentDetails.stat_Price}
-						stat_incomeUndo={bannerContentDetails.stat_incomeUndo}
-						stat_AbPay={bannerContentDetails.stat_AbPay}
-						target_1_title={bannerContentDetails.target_1_title}
-						target_1_value={bannerContentDetails.target_1_value}
-						target_1_id={bannerContentDetails.target_1_id}
-						target_2_title={bannerContentDetails.target_2_title}
-						target_2_value={bannerContentDetails.target_2_value}
-						target_2_id={bannerContentDetails.target_2_id}
-						forBidden_1={bannerContentDetails.forBidden_1}
-						forBidden_2={bannerContentDetails.forBidden_2}
-						forBidden_3={bannerContentDetails.forBidden_3}
-						sg_clicks={bannerContentDetails.sg_clicks}
+						
+						course_svg={bannerContentDetails.course_svg} // TO DO
+						
+						course_title={currentObject.name}
+						course_id={currentObject.id}
+						
+						// course_ooo={bannerContentDetails.course_ooo} //To DO
+						
+						course_link={currentObject.site.domain}
+						stat_toEnd={getEndDate(currentObject.date_finish) <= 0 ? 'Завершена'  : `${getEndDate(currentObject.date_finish)}`}
+						stat_budget={currentObject.budget_week}
+						stat_income={currentObject.price_target} 
+						
+						// stat_targetAct={bannerContentDetails.stat_targetAct} // TO DO
+						
+						// stat_maxPrice={bannerContentDetails.stat_maxPrice} // TO DO
+						// stat_Price={bannerContentDetails.stat_Price} // TO DO
+						
+						// stat_incomeUndo={bannerContentDetails.stat_incomeUndo} // TO DO
+						// stat_AbPay={bannerContentDetails.stat_AbPay} // TO DO
+						// target_1_title={bannerContentDetails.target_1_title} // TO DO
+						// target_1_value={bannerContentDetails.target_1_value} // TO DO
+						// target_1_id={bannerContentDetails.target_1_id} // TO DO
+						// target_2_title={bannerContentDetails.target_2_title} // TO DO
+						// target_2_value={bannerContentDetails.target_2_value} // TO DO
+						// target_2_id={bannerContentDetails.target_2_id} // TO DO
+						forBidden_1={bannerContentDetails.forBidden_1} // TO DO
+						forBidden_2={bannerContentDetails.forBidden_2} // TO DO
+						forBidden_3={bannerContentDetails.forBidden_3} // TO DO
+						sg_clicks={bannerContentDetails.sg_clicks} // TO DO
+						
 						sg_conversion={bannerContentDetails.sg_conversion}
 						sg_expenses={bannerContentDetails.sg_expenses}
 						sg_ads={bannerContentDetails.sg_ads}
 						sg_income_all={bannerContentDetails.sg_income_all}
-						arrayCategory={bannerContentDetails.arrayCategory}
-						arrayGeo={bannerContentDetails.arrayGeo}
-						arrayGender={bannerContentDetails.arrayGender}
-						arrayDevice={bannerContentDetails.arrayDevice}
-						arrayInteres={bannerContentDetails.arrayInteres}
+						arrayCategory={currentObject.audiences[0].category}
+						arrayGeo={currentObject.audiences[0].geography}
+						arrayGender={currentObject.audiences[0].gender_age}
+						arrayDevice={currentObject.audiences[0].device}
+						arrayInteres={currentObject.audiences[0].interest}
 						onExit={bannerContentDetails.onExit}
 					/>
 				</PopUpWrapper>

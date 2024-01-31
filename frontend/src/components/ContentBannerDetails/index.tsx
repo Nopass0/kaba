@@ -373,6 +373,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 						</ToolTip>
 					</Row>
 					<Col width="528px" className={s.ForBiddenWrapper}>
+						
 						<Col width="528px" className={s.ForBiddenBlock}>
 							<WhiteLabel text={forBidden_1} />
 						</Col>

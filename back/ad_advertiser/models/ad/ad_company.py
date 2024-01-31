@@ -42,6 +42,8 @@ class ad_companyModel(models.Model):
     site = models.ForeignKey(siteModel, related_name='ad_companyModel_siteModel', blank=True, on_delete=models.CASCADE)
     date_creation = models.DateTimeField('Дата и время создания', auto_now_add=True)
     name = models.CharField('Название', max_length=255, blank=True)
+    ban_show = ArrayField(models.CharField(max_length=255), blank=True, size=500, null = True)
+    price_target = models.PositiveIntegerField('Цена перехода', blank=True, null = True, default=0)
     date_start = models.DateTimeField('Дата начала', blank=True)
     date_finish = models.DateTimeField('Дата завершения', blank=True)
     budget_week = models.PositiveIntegerField('Недельный бюджет', default=0)

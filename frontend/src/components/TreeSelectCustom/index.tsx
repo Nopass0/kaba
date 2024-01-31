@@ -16,6 +16,7 @@ export type Option = {
 export type TreeSelectCustomProps = {
 	options: Option[]
 	onChange?: (selectedValues: string[]) => void
+	setValueFunction?: (value: string[]) => void
 }
 
 export const TreeSelectCustom: React.FC<TreeSelectCustomProps> = ({
@@ -23,6 +24,7 @@ export const TreeSelectCustom: React.FC<TreeSelectCustomProps> = ({
 	onChange,
 	background262626,
 	className,
+	setValueFunction,
 }) => {
 	const [selectedValues, setSelectedValues] = useState<string[]>(['', '', ''])
 	const [checkedValues, setCheckedValues] = useState<{[key: string]: boolean}>(
@@ -55,6 +57,10 @@ export const TreeSelectCustom: React.FC<TreeSelectCustomProps> = ({
 		setCheckedRecursively(option, isChecked)
 
 		setCheckedValues(newCheckedValues)
+		setValueFunction(newCheckedValues)
+		console.log(newCheckedValues);
+		
+		
 	}
 
 	const toggleExpand = (option: Option) => {

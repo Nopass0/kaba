@@ -51,11 +51,9 @@ const CompanyCreate: React.FC = () => {
 	const [AgeTo, setAgeTo] = useState<number>()
 	const [AgeFrom, setAgeFrom] = useState<number>()
 
-
 	// Banner's textArea
 	const [textAreaValue, setTextAreaValue] = useState<string>('')
 	const [textAreaTitle, setTextAreaTitle] = useState<string>('')
-
 
 	const [open_settings, setOpen_settings] = React.useState(false)
 
@@ -88,7 +86,7 @@ const CompanyCreate: React.FC = () => {
 	const [bName, setBName] = useState<string>('')
 	const [bLink, setBLink] = useState<string>('')
 	const [bOptionTitle, setBOptionTitle] = useState<boolean>(false)
-	const [bOptionDescription, setBOptionDescription] = useState<boolean>(false)
+	// const [bOptionDescription, setBOptionDescription] = useState<boolean>(false)
 	const [bOptionDescText, setBOptionDescText] = useState<string[]>([])
 	const [bVideo, setBVideo] = useState<File>()
 	const [bAudio, setBAudio] = useState<File>()
@@ -99,6 +97,8 @@ const CompanyCreate: React.FC = () => {
 	const [banShowArray, setBanShowArray] = useState<object[]>([])
 	const [descrArray, setDescrArray] = useState<object[]>([])
 	const [titleArray, setTitleArray] = useState<object[]>([])
+	const [categories, setCategories] = useState<object>({})
+
 	// useEffect(() => {
 	//     NodeService.getTreeNodes().then((data) => setNodes(data));
 	// }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -136,15 +136,14 @@ const CompanyCreate: React.FC = () => {
 						? {...step, isDone: true}
 						: step,
 				),
-			)	
-		}
-		else {
+			)
+		} else {
 			setStepCompany((prevStepCompany) =>
-			prevStepCompany.map((step) =>
-				step.title === 'Начало и окончание компании*'
-					? {...step, isDone: false}
-					: step,
-			),
+				prevStepCompany.map((step) =>
+					step.title === 'Начало и окончание компании*'
+						? {...step, isDone: false}
+						: step,
+				),
 			)
 		}
 		console.log(start, end, 'Date')
@@ -394,19 +393,19 @@ const CompanyCreate: React.FC = () => {
 			setCWeekBudget(temp[0].cWeekBudget)
 			setCKeyWord(temp[0].cKeyWord)
 			setCKeyWordDel(temp[0].cKeyWordDel)
-			setCBanShow(temp[0].cBanShow)
+			setBanShowArray(temp[0].banShowArray)
 
 			setAName(temp[1].aName)
 			setAGeography(temp[1].aGeography)
 			setAFavor(temp[1].aFavor)
 			setADevice(temp[1].aDevice)
-			setAGenderNAge(temp[1].aGenderNAge)
+			setGenderNAgeObject(temp[1].GenderNAgeObject)
 
 			setBName(temp[2].bName)
 			setBLink(temp[2].bLink)
-			setBOptionTitle(temp[2].bOptionTitle)
-			setBOptionDescription(temp[2].bOptionDescription)
-			setBOptionDescText(temp[2].bOptionDescText)
+			setTitleArray(temp[2].titleArray)
+			// setBOptionDescription(temp[2].bOptionDescription)
+			setDescrArray(temp[2].descrArray)
 			setBVideo(temp[2].bVideo)
 			setBAudio(temp[2].bAudio)
 			setBUnvirfied(temp[2].bUnvirfied)
@@ -431,7 +430,7 @@ const CompanyCreate: React.FC = () => {
 				cWeekBudget: cWeekBudget,
 				cKeyWord: cKeyWord,
 				cKeyWordDel: cKeyWordDel,
-				cBabShow: cBanShow,
+				cBanShow: banShowArray,
 			},
 
 			{
@@ -439,15 +438,16 @@ const CompanyCreate: React.FC = () => {
 				aGeography: aGeography,
 				aFavor: aFavor,
 				aDevice: aDevice,
-				aGenderNAge: aGenderNAge,
+				aGenderNAge: GenderNAgeObject,
+				aCategories: categories,
 			},
 
 			{
 				bName: bName,
 				bLink: bLink,
-				bOptionTitle: bOptionTitle,
-				bOptionDescription: bOptionDescription,
-				bOptionDescText: bOptionDescText,
+				// bOptionDescription: bOptionDescription,
+				titleArray: titleArray,
+				descrArray: descrArray,
 				bVideo: bVideo,
 				bAudio: bAudio,
 				// bImg: images,
@@ -481,21 +481,21 @@ const CompanyCreate: React.FC = () => {
 										cWeekBudget: cWeekBudget,
 										cKeyWord: cKeyWord,
 										cKeyWordDel: cKeyWordDel,
-										cBanShow: cBanShow,
+										banShowArray: banShowArray,
 									},
 									{
 										aName: aName,
 										aGeography: aGeography,
 										aFavor: aFavor,
 										aDevice: aDevice,
-										aGenderNAge: aGenderNAge,
+										GenderNAgeObject: GenderNAgeObject,
 									},
 									{
 										bName: bName,
 										bLink: bLink,
-										bOptionTitle: bOptionTitle,
-										bOptionDescription: bOptionDescription,
-										bOptionDescText: bOptionDescText,
+										// bOptionDescription: bOptionDescription,
+										titleArray: titleArray,
+										descrArray: descrArray,
 										bVideo: bVideo,
 										bAudio: bAudio,
 										bImg: images,
@@ -1337,6 +1337,7 @@ const CompanyCreate: React.FC = () => {
 													text: e.target.value,
 												},
 											])
+											setCBanShow('')
 											e.target.value = ''
 										}
 										console.log(banShowArray, cBanShow)
@@ -1407,21 +1408,21 @@ const CompanyCreate: React.FC = () => {
 														cWeekBudget: cWeekBudget,
 														cKeyWord: cKeyWord,
 														cKeyWordDel: cKeyWordDel,
-														cBanShow: cBanShow,
+														banShowArray: banShowArray,
 													},
 													{
 														aName: aName,
 														aGeography: aGeography,
 														aFavor: aFavor,
 														aDevice: aDevice,
-														aGenderNAge: aGenderNAge,
+														GenderNAgeObject: GenderNAgeObject,
 													},
 													{
 														bName: bName,
 														bLink: bLink,
-														bOptionTitle: bOptionTitle,
-														bOptionDescription: bOptionDescription,
-														bOptionDescText: bOptionDescText,
+														// bOptionDescription: bOptionDescription,
+														titleArray: titleArray,
+														descrArray: descrArray,
 														bVideo: bVideo,
 														bAudio: bAudio,
 														bImg: images,
@@ -1665,7 +1666,7 @@ const CompanyCreate: React.FC = () => {
 							</svg>
 						</Row>
 
-						<TreeSelectCustom options={op} />
+						<TreeSelectCustom setValueFunction={setCategories} options={op} />
 
 						<Line width="528px" className={s.Line} />
 
@@ -2067,7 +2068,7 @@ const CompanyCreate: React.FC = () => {
 								))}
 							</Col>
 						)}
-						
+
 						<Line width="528px" className={s.Line} />
 						<div className={`mb-[32px] w-[528px] float-right `}>
 							<Row width="auto" className={`items-center float-right`}>
@@ -2075,8 +2076,8 @@ const CompanyCreate: React.FC = () => {
 									className={`float-right mr-[24px] cursor-pointer`}
 									text="Сохранить и выйти"
 									onClick={() => {
-										console.log('oADJGSKDFBJKSFBKSFHMskf');
-										
+										console.log('oADJGSKDFBJKSFBKSFHMskf')
+
 										window.localStorage.setItem(
 											'create_temp',
 											JSON.stringify([
@@ -2090,21 +2091,21 @@ const CompanyCreate: React.FC = () => {
 													cWeekBudget: cWeekBudget,
 													cKeyWord: cKeyWord,
 													cKeyWordDel: cKeyWordDel,
-													cBanShow: cBanShow,
+													banShowArray: banShowArray,
 												},
 												{
 													aName: aName,
 													aGeography: aGeography,
 													aFavor: aFavor,
 													aDevice: aDevice,
-													aGenderNAge: aGenderNAge,
+													GenderNAgeObject: GenderNAgeObject,
 												},
 												{
 													bName: bName,
 													bLink: bLink,
-													bOptionTitle: bOptionTitle,
-													bOptionDescription: bOptionDescription,
-													bOptionDescText: bOptionDescText,
+													// bOptionDescription: bOptionDescription,
+													titleArray: titleArray,
+													descrArray: descrArray,
 													bVideo: bVideo,
 													bAudio: bAudio,
 													bImg: images,
@@ -2326,8 +2327,8 @@ const CompanyCreate: React.FC = () => {
 												<p className={s.TextBlockAfter}>{file.text}</p>
 												<button
 													className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
-													onClick={() =>
-														{setTitleArray(
+													onClick={() => {
+														setTitleArray(
 															titleArray.filter((obj) => obj.id !== file.id),
 														)
 														if (titleArray.length === 1) {
@@ -2339,9 +2340,7 @@ const CompanyCreate: React.FC = () => {
 																),
 															)
 														}
-														
-													}
-													}
+													}}
 													className={s.ButtonAfterExit}>
 													<svg
 														className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
@@ -2437,8 +2436,8 @@ const CompanyCreate: React.FC = () => {
 												<p className={s.TextBlockAfter}>{file.text}</p>
 												<button
 													className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
-													onClick={() =>
-														{setDescrArray(
+													onClick={() => {
+														setDescrArray(
 															descrArray.filter((obj) => obj.id !== file.id),
 														)
 														if (descrArray.length === 1) {
@@ -2450,8 +2449,7 @@ const CompanyCreate: React.FC = () => {
 																),
 															)
 														}
-													}
-													}
+													}}
 													className={s.ButtonAfterExit}>
 													<svg
 														className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
