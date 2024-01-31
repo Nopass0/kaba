@@ -13,7 +13,8 @@ import ContentBannerDetails, {
 	IContentBannerDetails,
 } from '../../components/ContentBannerDetails'
 import moment from 'moment'
-import FiltersBanners from '../../components/FiltersBanners/index';
+import FiltersBanners from '../../components/FiltersBanners/index'
+import {useSelector} from 'react-redux'
 
 enum CurrentPopup {
 	None,
@@ -26,11 +27,13 @@ const Bloggers: React.FC = () => {
 		CurrentPopup.None,
 	)
 
+	const user = useSelector((state: any) => state.user)
+	const token = user?.token
 	const [info, setInfo] = React.useState([])
 
 	useEffect(() => {
 		const getInfo = async () => {
-			let res = await getAllActiveCompaniesAPI()
+			let res = await getAllActiveCompaniesAPI(token)
 			console.log(res.data.companies)
 
 			setInfo(res.data.companies)
@@ -206,10 +209,10 @@ const Bloggers: React.FC = () => {
 					</label>
 					<div className={s.sortTableButtons}>
 						<button
-						onClick={() => {
-							setCurrentPopup(CurrentPopup.Filter)
-						}}
-						className={s.filterTableButton}>
+							onClick={() => {
+								setCurrentPopup(CurrentPopup.Filter)
+							}}
+							className={s.filterTableButton}>
 							<div className={s.filterTableButtonWrapper}>
 								<p className={s.filterTableButtonText}>Фильтры</p>
 								<p></p>
@@ -343,7 +346,7 @@ const Bloggers: React.FC = () => {
 			)}
 			{currentPopup === CurrentPopup.Filter && (
 				<PopUpWrapper onExit={bannerContent.onExit}>
-						<FiltersBanners/>
+					<FiltersBanners />
 				</PopUpWrapper>
 			)}
 		</div>

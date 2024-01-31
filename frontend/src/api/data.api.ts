@@ -113,9 +113,13 @@ export const getBalanceAPI = async (token: string) => {
 	}
 }
 
-export const getAllActiveCompaniesAPI = async () => {
+export const getAllActiveCompaniesAPI = async (token: string) => {
 	try {
-		const response = await axios.get(getApiUrl('getAllActiveCompanies'))
+		const response = await axios.get(getApiUrl('getAllActiveCompanies'), {
+			params: {
+				token,
+			},
+		})
 		return response
 	} catch (error) {
 		console.error('Error during getAllActiveCompanies:', error)

@@ -963,24 +963,37 @@ class WalletOperationsView(APIView):
 class getAllActiveCompanies(APIView):
 
     def get(self, request):
-        # Fetch all active companies
-        active_companies = ad_companyModel.objects.filter(
-            status_text='Активная'  # Assuming 'Active' is the status for active companies
-        ).prefetch_related(
-            'ad_bannerModel_ad_companyModel',  # Relationship from company to banners
-            'ad_audienceModel_ad_companyModel',  # Relationship from company to audiences
-            'ad_statusModel_companies',  # Relationship from company to statuses
-        ).select_related(
-            'site'  # Relationship from company to site
-        )
-        
-        
+        # Get the token from the request
+        token = request.GET.get('token', '')
+        user = None
+        if token:
+            try:
+                user = tokenModel.objects.get(token=token).account
+            except tokenModel.DoesNotExist:
+                # If token is provided but invalid, return an error
+                return Response({'error': 'Invalid token.'}, status=status.HTTP_404_NOT_FOUND)
 
+        # Fetch all active companies, filter by user if user is not None
+        if user:
+            user_companies = ad_companyModel.objects.filter(account=user).values_list('id', flat=True)
+            active_companies = ad_companyModel.objects.exclude(id__in=user_companies)
+        else:
+            active_companies = ad_companyModel.objects.all()
+
+        active_companies = active_companies.filter(
+            status_text='Активная'
+        ).prefetch_related(
+            Prefetch('ad_bannerModel_ad_companyModel', queryset=ad_bannerModel.objects.prefetch_related('banner_image')),
+            'ad_audienceModel_ad_companyModel',
+            'ad_statusModel_companies',
+        ).select_related('site')
+        #active_companies = active_companies.select_related('site')
+        
+        
+        
         # Construct the response data
         companies_data = []
         for company in active_companies:
-            # ad_bloggerCompanyModel.objects.filter
-            #ДОБАВИТЬ КАРТИНОК!!!!!!!!!!!!!
             company_info = {
                 'id': company.id,
                 'name': company.name,
@@ -1001,20 +1014,19 @@ class getAllActiveCompanies(APIView):
                         'id': banner.id,
                         'name': banner.name,
                         'link': banner.link,
-                        # Add more banner fields as needed
                         'title_option': banner.title_option,
                         'description_option': banner.description_option,
                         'image_option': banner.image_option,
                         'video_option': banner.video_option,
                         'audio_option': banner.audio_option,
                         'channel_private_bool': banner.channel_private_bool,
+                        'images': [image.image.url for image in banner.banner_image.all()]  # Don't work
                     } for banner in company.ad_bannerModel_ad_companyModel.all()
                 ],
                 'audiences': [
                     {
                         'id': audience.id,
                         'name': audience.name,
-                        # Add more audience fields as needed
                         'geography': audience.geography,
                         'category': audience.category,
                         'interest': audience.interest,
@@ -1035,28 +1047,37 @@ class getAllActiveCompanies(APIView):
 
         return Response({'companies': companies_data}, status=status.HTTP_200_OK)
 
+
 class addCompanyToBlogger(APIView):
     def post(self, request):
         token = request.data.get('token', '')
         if not token:
             return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        current_token = tokenModel.objects.filter(token=token)
-        user = current_token.first().account
-        if user is None:
-            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            user = tokenModel.objects.get(token=token).account
+        except tokenModel.DoesNotExist:
+            return Response({'error': 'Invalid token.'}, status=status.HTTP_404_NOT_FOUND)
 
         company_id = request.data.get('company_id', '')
         if not company_id:
             return Response({'error': 'company_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        company = ad_companyModel.objects.filter(id=company_id).first()
-        if company is None:
+        try:
+            company = ad_companyModel.objects.get(id=company_id)
+        except ad_companyModel.DoesNotExist:
             return Response({'error': 'Company not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-        ad_bloggerCompanyModel.objects.get_or_create(account=user, company=company)
+        # Check if the company is already associated with the user
+        if company.account != user:
+            return Response({'error': 'The company is not associated with the user.'}, status=status.HTTP_403_FORBIDDEN)
+
+        # If you need to perform any action when a user selects a company, do it here
+        # For example, you might want to mark the company as selected by the user in some way
 
         return Response({'status': 'ok'}, status=status.HTTP_200_OK)
+
+
     
 class getCompanyBloggers(APIView):
     def post(self, request):
