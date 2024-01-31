@@ -97,7 +97,7 @@ const Upload: React.FC<IUpload> = ({
 			onDragOver={handleDragOver}
 			onDrop={handleDrop}
 			draggable>
-			<input type="file" name="" id="" hidden />
+			<input type="file" name="" id="" accept="image/*" multiple hidden />
 			<Col width="auto" className={s.overlay}>
 				<WhiteLabel
 					className="w-full cursor-pointer"
