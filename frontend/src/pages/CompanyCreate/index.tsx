@@ -212,7 +212,7 @@ const CompanyCreate: React.FC = () => {
 
 	const handleAddImage = (file: File) => {
 		//add path to image
-		setImages([...images, {id: generateUniqueId(), file: file}])
+		if (file) setImages([...images, {id: generateUniqueId(), file: file}])
 		console.log(file)
 	}
 
@@ -430,7 +430,7 @@ const CompanyCreate: React.FC = () => {
 				cWeekBudget: cWeekBudget,
 				cKeyWord: cKeyWord,
 				cKeyWordDel: cKeyWordDel,
-				cBanShow: banShowArray,
+				cBanShow: banShowArray.map((item: any) => item.text),
 			},
 
 			{
@@ -439,7 +439,7 @@ const CompanyCreate: React.FC = () => {
 				aFavor: aFavor,
 				aDevice: aDevice,
 				aGenderNAge: GenderNAgeObject,
-				aCategories: categories,
+				aCategories: Object.keys(categories),
 			},
 
 			{

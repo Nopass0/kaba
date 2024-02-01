@@ -32,6 +32,7 @@ from account.models.social_network import social_networkModel
 from account.models.verification import verificationModel
 from account.models.social_network import social_networkModel
 from ad_advertiser.models.ad.ad_company import ad_bloggerCompanyModel, ad_companyModel, ad_statusModel
+from ad_advertiser.models.ad.ad_banner import BannderImage
 from ad_advertiser.models.profile.profile import profileModel
 from .models import tokenModel
 
@@ -512,7 +513,17 @@ class getCompaniesAPIViews(APIView):
             site = siteModel.objects.filter(id=company["site_id"])
             if not site.exists():
                 return Response({'error': 'site not found.'}, status=status.HTTP_400_BAD_REQUEST)
-
+            
+            #get images from BannerImage model from ad_bannerModel from company
+            
+            images = []
+            for banner in ad_bannerModel.objects.filter(ad_company=company["id"]):
+                for image in BannderImage.objects.filter(banner=banner):
+                    #get full url
+                    full_url = request.build_absolute_uri(image.image.url).replace("a_media/a_media", "a_media")
+                    images.append(full_url)
+            print(images)
+            company["images"] = images
             site = site.first()
             
             #JSON serialization
@@ -523,6 +534,8 @@ class getCompaniesAPIViews(APIView):
             company["site"]["shows"] = site.shows
             company["site"]["masked_domain"] = site.masked_domain
             
+            print("1-------------------------------------------------------------")
+            
             # ad_statusModel and ad_companyModel many-to-many relation. Get all ad_statusModel objects for this company
             company["ad_status"] = list(ad_statusModel.objects.filter(companies=company["id"]).values())
             
@@ -531,7 +544,9 @@ class getCompaniesAPIViews(APIView):
             
             # ad_bannerModel and ad_companyModel many-to-many relation. Get all ad_bannerModel objects for this company
             company["ad_banner"] = list(ad_bannerModel.objects.filter(ad_company=company["id"]).values())
-        
+
+            
+
             # print(companies, user, site)
         return Response(companies, status=status.HTTP_200_OK)
     
@@ -642,7 +657,7 @@ class AddCompany(APIView):
                 site=site,
                 ad_company=company,
                 geography=auditor_data.get('aGeography', []),
-                category=auditor_data.get('aFavor', []),
+                category=auditor_data.get('aCategories', []),
                 interest=[],
                 gender_age=auditor_data.get('aGenderNAge', []),
                 device=auditor_data.get('aDevice', []),
@@ -661,8 +676,8 @@ class AddCompany(APIView):
                 ad_audience=audience,
                 name=banner_data.get('bName', ''),
                 link=banner_data.get('bLink', ''),
-                # title_option=banner_data.get('bOptionTitle', []),
-                description_option=banner_data.get('bOptionDescText', []),
+                title_option=banner_data.get('titleArray', []),
+                description_option=banner_data.get('descrArray', []),
                 video_option=[],
                 audio_option=[],
                 channel_private_bool=banner_data.get('bUnvirfied', True)
@@ -670,7 +685,7 @@ class AddCompany(APIView):
 
             print("4-----------------------------------------------------------------------------------------------")
 
-
+            imgs = []
             # Handling multiple file (Image) uploads for Banner
             files = request.FILES.getlist('bImages')  # Get the list of files
             for file in files:
@@ -678,10 +693,14 @@ class AddCompany(APIView):
                 file_url = default_storage.url(file_name)
                 
                 # Create BannerImage instance for each image
-                BannderImage.objects.create(
+                image = BannderImage.objects.create(
                     banner=banner,
                     image=file_url
                 )
+                
+                imgs.append(image)
+            banner.images = imgs
+            banner.save()
 
             return Response({'message': 'Company, Auditor, Banner, and Banner Images created successfully!'}, status=status.HTTP_201_CREATED)
 
@@ -1006,6 +1025,7 @@ class getAllActiveCompanies(APIView):
                 'status_text': company.status_text,
                 'budget_week': company.budget_week,
                 'views': company.views,
+                'ban_show': company.ban_show,
                 'site': {
                     'id': company.site.id if company.site else None,
                     'domain': company.site.domain if company.site else '',
@@ -1022,9 +1042,10 @@ class getAllActiveCompanies(APIView):
                         'description_option': banner.description_option,
                         'image_option': banner.image_option,
                         'video_option': banner.video_option,
+                        
                         'audio_option': banner.audio_option,
                         'channel_private_bool': banner.channel_private_bool,
-                        'images': [image.image.url for image in banner.banner_image.all()]  # Don't work
+                        'images': BannderImage.objects.filter(banner=banner).values_list('image', flat=True),
                     } for banner in company.ad_bannerModel_ad_companyModel.all()
                 ],
                 'audiences': [

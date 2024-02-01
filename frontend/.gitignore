@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+a_media/banner_image
+a_settings/a_media/banner_image

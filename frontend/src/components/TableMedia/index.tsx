@@ -205,8 +205,8 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 	useEffect(() => {
 		const getCompanies = async () => {
 			let res = await getCompanyBloggersAPI(token)
-			setCompanies(res.data.bloggers)
-			console.log(res.data.bloggers)
+			console.log(res.data.companies, 'List of companies')
+			setCompanies(res.data.companies)
 		}
 		getCompanies()
 	}, [])
@@ -540,12 +540,10 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 														<img
 															// src={getFaviconUrl(item.companysite.domain)}
 															src={getFaviconUrl('google.com')}
-															alt={item.company.name}
+															alt={item.name}
 															className="mr-2"
 														/>
-														<label htmlFor="checkbox_1">
-															{item.company.name}
-														</label>
+														<label htmlFor="checkbox_1">{item.name}</label>
 													</Row>
 													<Row width="auto" className={s.rowIdCheckbox}>
 														{/* <svg
@@ -573,7 +571,7 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 														<Label
 															isMini={true}
 															forHtml="checkbox_1"
-															text={`${item.company.id}`}
+															text={`${item.id}`}
 														/>
 													</Row>
 												</Col>

@@ -31,11 +31,13 @@ class ad_bannerModel(models.Model):
 
     link = models.URLField('Ссылка на рекламируемую страницу')
     # варианты заголовков
-    title_option = ArrayField(models.CharField(max_length=60), blank=False, default=list, size=5)
+    title_option = ArrayField(models.CharField(max_length=1024), blank=False, default=list, size=100)
     # варианты описаний
-    description_option = ArrayField(models.CharField(max_length=100), blank=False, default=list, size=5)
+    description_option = ArrayField(models.CharField(max_length=1024), blank=False, default=list, size=100)
     # варианты изображений
-    image_option = ArrayField(models.CharField(max_length=255), blank=False, default=list, size=5)
+    image_option = ArrayField(models.CharField(max_length=255), blank=False, default=list, size=5) # Не работает
+    # ссылки на изображения (модель)
+    images = models.ManyToManyField(BannderImage, related_name='ad_bannerModel_images', blank=True)
     # варианты видео
     video_option = ArrayField(models.CharField(max_length=255), blank=False, default=list, size=5)
     # варианты аудио

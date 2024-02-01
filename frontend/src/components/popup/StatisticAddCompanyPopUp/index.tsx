@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import s from './index.module.scss'
 import NavLabel from '../../NavLabel/index'
 import Row from '../../Row'
@@ -9,53 +9,70 @@ import Line from '../../Line'
 
 interface IStatisticAddCompanyPopUp {
 	className?: string // Added className prop
+	companies?: any
+	setCurrentCompanies?: any
+	currentCompanies?: any
 }
 
 const StatisticAddCompanyPopUp: React.FC<IStatisticAddCompanyPopUp> = ({
 	className,
+	companies,
+	setCurrentCompanies,
+	currentCompanies,
 }: IStatisticAddCompanyPopUp) => {
+	useEffect(() => {
+		console.log(currentCompanies, 'currentCompanies')
+	}, [currentCompanies])
+
 	return (
 		<div className={s.wrapper + ' ' + className}>
 			<Col width="280px" className={s.ColWrapper}>
-				<label htmlFor='1' className={s.RowCourseWrapper}>
-					<div className={s.RowCourse}>
-						<CheckBox id="1" />
-						<Col width="200px" className='ml-[8px] whitespace-nowrap cursor-pointer'>
-							<label className={s.navLabel} htmlFor='1'>курсы английского языка</label>
-							<Label htmlFor='1' isMini={true} className='cursor-pointer' text="ID 5748296013" />
-						</Col>
-					</div>
-				</label>
-				<Line width="280px" className={s.Line} />
-				<label htmlFor='2' className={s.RowCourseWrapper}>
-					<div className={s.RowCourse}>
-						<CheckBox id="2" />
-						<Col width="200px" className='ml-[8px] whitespace-nowrap cursor-pointer'>
-							<label className={s.navLabel} htmlFor='2'>курсы английского языка</label>
-							<Label htmlFor='2' isMini={true} className='cursor-pointer' text="ID 5748296013" />
-						</Col>
-					</div>
-				</label>
-				<Line width="280px" className={s.Line} />
-				<label htmlFor='3' className={s.RowCourseWrapper}>
-					<div className={s.RowCourse}>
-						<CheckBox id="3" />
-						<Col width="200px" className='ml-[8px] whitespace-nowrap cursor-pointer'>
-							<label className={s.navLabel} htmlFor='3'>курсы английского языка</label>
-							<Label htmlFor='3' isMini={true} className='cursor-pointer' text="ID 5748296013" />
-						</Col>
-					</div>
-				</label>
-				<Line width="280px" className={s.Line} />
-				<label htmlFor='4' className={s.RowCourseWrapper}>
-					<div className={s.RowCourse}>
-						<CheckBox id="4" />
-						<Col width="200px" className='ml-[8px] whitespace-nowrap cursor-pointer'>
-							<label className={s.navLabel} htmlFor='4'>курсы английского языка</label>
-							<Label htmlFor='4' isMini={true} className='cursor-pointer' text="ID 5748296013" />
-						</Col>
-					</div>
-				</label>
+				{companies.map((company: any, index: number) => {
+					return (
+						<div>
+							<label htmlFor={company.id} className={s.RowCourseWrapper}>
+								<div className={s.RowCourse}>
+									<CheckBox
+										isOnChecked={
+											currentCompanies.find((c: any) => c.id === company.id)
+												? true
+												: false
+										}
+										id={company.id}
+										onChange={(checked) => {
+											console.log(checked)
+
+											//setCurrentCompanies is useState
+											setCurrentCompanies(
+												checked
+													? [...currentCompanies, company]
+													: currentCompanies.filter(
+															(c: any) => c.id !== company.id,
+													  ),
+											)
+										}}
+									/>
+									<Col
+										width="200px"
+										className="ml-[8px] whitespace-nowrap cursor-pointer">
+										<label className={s.navLabel} htmlFor={company.id}>
+											{company.name}
+										</label>
+										<Label
+											htmlFor={company.id}
+											isMini={true}
+											className="cursor-pointer"
+											text={`ID${company.id}`}
+										/>
+									</Col>
+								</div>
+							</label>
+							{index !== companies.length - 1 && (
+								<Line width="280px" className={s.Line} />
+							)}
+						</div>
+					)
+				})}
 			</Col>
 		</div>
 	)
