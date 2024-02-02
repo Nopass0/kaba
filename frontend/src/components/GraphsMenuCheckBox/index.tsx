@@ -100,12 +100,12 @@ const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
 			<Row width="1164px" className={s.MenuWrapper}>
 				<div
 					ref={StatisitcRefButton_1}
-					onClick={() => setStatisticDropDown_1(!StatisticDropDown_1)}
+					// onClick={() => setStatisticDropDown_1(!StatisticDropDown_1)}
 					className={s.MenuCol}>
 					<Row className={s.MenuHeaderRow} width="auto">
 						<CheckBox id="Blue" className={s.CheckBox} labelText="Клики" />
 						<svg
-							onClick={() => setStatisticDropDown_1(!StatisticDropDown_1)}
+							// onClick={() => setStatisticDropDown_1(!StatisticDropDown_1)}
 							xmlns="http://www.w3.org/2000/svg"
 							width="16"
 							height="16"
@@ -132,13 +132,13 @@ const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
 
 				<div
 					ref={StatisitcRefButton_2}
-					onClick={() => setStatisticDropDown_2(!StatisticDropDown_2)}
+					// onClick={() => setStatisticDropDown_2(!StatisticDropDown_2)}
 					className={s.MenuCol}>
 					<Row className={s.MenuHeaderRow} width="auto">
 						<CheckBox
 							id="Orange"
 							className={`${s.CheckBox} ${s.Orange}`}
-							labelText="Конверсия: Все цели"
+							labelText="СРС"
 						/>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -167,7 +167,7 @@ const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
 
 				<div
 					ref={StatisitcRefButton_3}
-					onClick={() => setStatisticDropDown_3(!StatisticDropDown_3)}
+					// onClick={() => setStatisticDropDown_3(!StatisticDropDown_3)}
 					className={s.MenuCol}>
 					<Row className={s.MenuHeaderRow} width="auto">
 						<CheckBox
@@ -200,7 +200,7 @@ const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
 					<NavLabel text="41,941.32₽" />
 				</div>
 
-				<div
+				{/* <div
 					ref={StatisitcRefButton_4}
 					onClick={() => setStatisticDropDown_4(!StatisticDropDown_4)}
 					className={s.MenuCol}>
@@ -268,7 +268,7 @@ const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
 						</svg>
 					</Row>
 					<NavLabel text="121,414.39₽" />
-				</div>
+				</div> */}
 			</Row>
 				{StatisticDropDown_1 && (
 					<div ref={StatisitcRef_1} className={`${s.StatisticDropDown_1} ${StatisticClassName}`}>
