@@ -15,12 +15,12 @@ interface ICourseForBlogger {
 	text_id_table?: string
 	width_block?: string
 	width_text?: string
-	NeedClicks: boolean
-	svg: React.ReactNode
-	title: string
-	id: string
+	NeedClicks?: boolean
+	svg?: React.ReactNode
+	title?: string
+	id?: string
 	ooo?: string
-	link: string
+	link?: string
 }
 
 const CourseForBlogger: React.FC<ICourseForBlogger> = ({
@@ -42,7 +42,7 @@ const CourseForBlogger: React.FC<ICourseForBlogger> = ({
 				<Row
 					width={`${width_block ? width_block : '528px'}`}
 					className={s.BlogerHeaderUp}>
-					{svg}
+					<img src={svg} alt={svg} className='w-[36px] h-[36px] mr-[16px]' />
 					<Col width={`${width_text ? width_text : '316px'}`} className="mr-4">
 						<WhiteLabel text={title} size="14px" />
 						<Row width="316px">

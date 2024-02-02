@@ -390,6 +390,17 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 		}
 	}
 
+	const getFaviconUrl36 = (url: string) => {
+		try {
+			let favico = `https://s2.googleusercontent.com/s2/favicons?domain=${url}&sz=1024`
+			console.log(favico, 'favico')
+
+			return favico // Fallback to default location
+		} catch (error) {
+			console.error('Error fetching or parsing URL:', error)
+			return ''
+		}
+	}
 	return (
 		<>
 			<div className={s.wrapper}>
@@ -820,14 +831,14 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 					}}>
 					<ContentBanner
 						className={bannerContent.className}
-						text_course_table={bannerContent.text_course_table}
-						text_id_table={bannerContent.text_id_table}
-						bloger={bannerContent.bloger}
-						bloger_svg={bannerContent.bloger_svg}
+						text_course_table={currentObject.name}
+						text_id_table={currentObject.id}
+						bloger={true}
+						bloger_svg={getFaviconUrl36(currentObject.site.domain)}
 						bloger_title={bannerContent.bloger_title}
 						bloger_id={bannerContent.bloger_id}
-						bloger_ooo={bannerContent.bloger_ooo}
-						bloger_link={bannerContent.bloger_link}
+						// bloger_ooo={bannerContent.bloger_ooo}
+						bloger_link={currentObject.site.domain}  // MASKED LINK
 						onExit={() => {
 							setCurrentPopup(CurrentPopup.None)
 						}}
@@ -851,14 +862,14 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 					<ContentBannerDetails
 						className={bannerContentDetails.className}
 						
-						course_svg={bannerContentDetails.course_svg} // TO DO
+						course_svg={getFaviconUrl36(currentObject.site.domain)} // TO DO
 						
 						course_title={currentObject.name}
 						course_id={currentObject.id}
 						
 						// course_ooo={bannerContentDetails.course_ooo} //To DO
 						
-						course_link={currentObject.site.domain}
+						course_link={currentObject.site.masked_domain}
 						stat_toEnd={getEndDate(currentObject.date_finish) <= 0 ? 'Завершена'  : `${getEndDate(currentObject.date_finish)}`}
 						stat_budget={currentObject.budget_week}
 						stat_income={currentObject.price_target} 
@@ -876,20 +887,24 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 						// target_2_title={bannerContentDetails.target_2_title} // TO DO
 						// target_2_value={bannerContentDetails.target_2_value} // TO DO
 						// target_2_id={bannerContentDetails.target_2_id} // TO DO
-						forBidden_1={bannerContentDetails.forBidden_1} // TO DO
-						forBidden_2={bannerContentDetails.forBidden_2} // TO DO
-						forBidden_3={bannerContentDetails.forBidden_3} // TO DO
+						// forBidden_1={bannerContentDetails.forBidden_1} // TO DO
+						// forBidden_2={bannerContentDetails.forBidden_2} // TO DO
+						// forBidden_3={bannerContentDetails.forBidden_3} // TO DO
 						sg_clicks={bannerContentDetails.sg_clicks} // TO DO
-						
 						sg_conversion={bannerContentDetails.sg_conversion}
 						sg_expenses={bannerContentDetails.sg_expenses}
 						sg_ads={bannerContentDetails.sg_ads}
 						sg_income_all={bannerContentDetails.sg_income_all}
+						
+						arrayForBidden={currentObject.ban_show}
 						arrayCategory={currentObject.audiences[0].category}
 						arrayGeo={currentObject.audiences[0].geography}
 						arrayGender={currentObject.audiences[0].gender_age}
 						arrayDevice={currentObject.audiences[0].device}
 						arrayInteres={currentObject.audiences[0].interest}
+						arrayVariantDesc={currentObject.banners[0].description_option}
+						arrayVariantTitle={currentObject.banners[0].title_option}
+
 						onExit={bannerContentDetails.onExit}
 					/>
 				</PopUpWrapper>
@@ -901,6 +916,10 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 					setCurrentPopup(CurrentPopup.None)
 				}}>
 					<StatisticPageMini
+					name_company={currentObject.name}
+					id_company={currentObject.id}
+					link_company={currentObject.site.masked_domain}
+					svg={getFaviconUrl36(currentObject.site.domain)}
 					/>
 			</PopUpWrapper>
 			 )}

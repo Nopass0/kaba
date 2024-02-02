@@ -5,9 +5,11 @@
 	//on center
 	display: flex;
 	flex-direction: row-reverse;
+	justify-content: flex-end;
 	color: white;
 
 	overflow-y: hidden;
+	overflow-x: scroll;
 }
 
 .leftMenu {
@@ -23,6 +25,7 @@
 	// margin: 0 auto;
 	display: flex;
 	flex-direction: column;
+	overflow-x: scroll;
 }
 // @media screen and (max-width: 1600px) {
 // 	.rightMenu {
@@ -33,8 +36,9 @@
 
 @media screen and (max-width: 1440px) {
 	.rightMenu {
-		margin-left: 180px;
-		width: 1164px;	
+		// margin-left: 180px;
+		width: 1164px;
+		overflow-x: scroll;	
 	}
 	
 }

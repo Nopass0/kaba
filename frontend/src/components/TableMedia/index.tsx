@@ -536,12 +536,12 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 										<tl.Cell className="bg-[#1A1A1A]">
 											<Row width="auto">
 												<Col width="auto">
-													<Row width="auto">
+													<Row width="auto" className='flex items-center'>
 														<img
 															// src={getFaviconUrl(item.companysite.domain)}
 															src={getFaviconUrl('google.com')}
 															alt={item.name}
-															className="mr-2"
+															className="mr-2 w-[16px] h-[16px]"
 														/>
 														<label htmlFor="checkbox_1">{item.name}</label>
 													</Row>

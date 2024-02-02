@@ -54,11 +54,14 @@ export interface IContentBannerDetails {
 	sg_income_all: string
 
 	// Array
+	arrayForBidden: string[]
 	arrayCategory: string[]
 	arrayGeo: string[]
 	arrayGender: TGenderNAge[]
 	arrayDevice: string[]
 	arrayInteres: string[]
+	arrayVariantDesc: string[]
+	arrayVariantTitle: string[]
 
 	//exit
 	onExit?: () => void
@@ -92,12 +95,14 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 	sg_conversion,
 	sg_expenses,
 	sg_ads,
+	arrayForBidden,
 	arrayCategory,
 	arrayGeo,
 	arrayGender,
 	arrayDevice,
 	arrayInteres,
-
+	arrayVariantDesc,
+	arrayVariantTitle,
 	sg_income_all,
 
 	onExit,
@@ -373,22 +378,21 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 						</ToolTip>
 					</Row>
 					<Col width="528px" className={s.ForBiddenWrapper}>
-						
 						<Col width="528px" className={s.ForBiddenBlock}>
 							<WhiteLabel text={forBidden_1} />
 						</Col>
-
-						<Line width="528px" className={s.LineInside} />
-
-						<Col width="528px" className={s.ForBiddenBlock}>
-							<WhiteLabel text={forBidden_2} />
-						</Col>
-
-						<Line width="528px" className={s.LineInside} />
-
-						<Col width="528px" className={s.ForBiddenBlock}>
-							<WhiteLabel text={forBidden_3} />
-						</Col>
+						{arrayForBidden && (
+							<>
+								{arrayForBidden.map((item, index) => (
+									<Col width="528px" key={index} className={s.ForBiddenBlock}>
+										<WhiteLabel text={item} />
+									</Col>
+								))}
+								{arrayForBidden.length > 0 && (
+									<Line width="528px" className={s.LineInside} />
+								)}
+							</>
+						)}
 					</Col>
 				</Col>
 
@@ -590,114 +594,73 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 					<Label text="Варианты текста" className={s.Label} />
 					<Row width="528px">
 						<div className={s.variantTextWrapperLeft}>
-							<Col width="256px">
-								<div className={s.variantTextBlock_UP_1}>
-									<Row width="auto" className={s.TitleHeaderInsideBlock}>
-										<Label isMini={true} text="Заголовок" />
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											width="24"
-											height="24"
-											viewBox="0 0 24 24"
-											fill="none">
-											<rect width="24" height="24" rx="7" fill="#262626" />
-											<rect
-												x="10.2002"
-												y="10.2031"
-												width="7.8"
-												height="7.8"
-												rx="1.2"
-												stroke="#F2F2F2"
-												strokeLinecap="round"
-												strokeLinejoin="round"
-											/>
-											<path
-												d="M7.8 13.8H7.2C6.53726 13.8 6 13.2627 6 12.6V7.2C6 6.53726 6.53726 6 7.2 6H12.6C13.2627 6 13.8 6.53726 13.8 7.2V7.8"
-												stroke="#F2F2F2"
-												strokeLinecap="round"
-												strokeLinejoin="round"
-											/>
-										</svg>
-									</Row>
-									<span className={s.variantTextSpan}>
-										Реклама мобильного приложения не окупается: что делать?
-									</span>
-								</div>
-								<div className={s.variantTextBlock_DOWN_1}>
-									<Row width="auto" className={s.TitleHeaderInsideBlock}>
-										<Label isMini={true} text="Описание" />
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											width="24"
-											height="24"
-											viewBox="0 0 24 24"
-											fill="none">
-											<rect width="24" height="24" rx="7" fill="#262626" />
-											<rect
-												x="10.2002"
-												y="10.2031"
-												width="7.8"
-												height="7.8"
-												rx="1.2"
-												stroke="#F2F2F2"
-												strokeLinecap="round"
-												strokeLinejoin="round"
-											/>
-											<path
-												d="M7.8 13.8H7.2C6.53726 13.8 6 13.2627 6 12.6V7.2C6 6.53726 6.53726 6 7.2 6H12.6C13.2627 6 13.8 6.53726 13.8 7.2V7.8"
-												stroke="#F2F2F2"
-												strokeLinecap="round"
-												strokeLinejoin="round"
-											/>
-										</svg>
-									</Row>
-									<span className={s.variantTextSpan}>
-										Для UA-менеджеров это означает, что оптимизация метаданных
-										становится ещё более важным аспектом успешной рекламной
-										кампании. А чтобы оптимизировать метаданные под алгоритмы
-										сторов, нужно заниматься App Store Optimization.
-									</span>
-								</div>
-							</Col>
-						</div>
-						<div className={s.variantTextWrapperRight}>
-							<div className={s.variantTextBlock_2}>
-								<Row width="auto" className={s.TitleHeaderInsideBlock}>
-									<Label isMini={true} text="Описание" />
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="24"
-										height="24"
-										viewBox="0 0 24 24"
-										fill="none">
-										<rect width="24" height="24" rx="7" fill="#262626" />
-										<rect
-											x="10.2002"
-											y="10.2031"
-											width="7.8"
-											height="7.8"
-											rx="1.2"
-											stroke="#F2F2F2"
-											strokeLinecap="round"
-											strokeLinejoin="round"
-										/>
-										<path
-											d="M7.8 13.8H7.2C6.53726 13.8 6 13.2627 6 12.6V7.2C6 6.53726 6.53726 6 7.2 6H12.6C13.2627 6 13.8 6.53726 13.8 7.2V7.8"
-											stroke="#F2F2F2"
-											strokeLinecap="round"
-											strokeLinejoin="round"
-										/>
-									</svg>
-								</Row>
-								<span className={s.variantTextSpan}>
-									Рекламные платформы, такие как Facebook, Google Ads или Apple
-									Search Ads, регулярно обновляют свои алгоритмы. Эти изменения
-									могут затронуть таргетинг, ставки, релевантность объявлений и
-									оптимизацию кампаний. Если вы не следите за обновлениями и не
-									адаптируете свою рекламу, она может стать менее эффективной и
-									не окупаться.
-								</span>
-							</div>
+							{arrayVariantDesc &&
+								arrayVariantDesc.map((item, index) => (
+									<div key={index} className={s.variantTextBlock}>
+										<Row width="auto" className={s.TitleHeaderInsideBlock}>
+											<Label isMini={true} text="Описание" />
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="24"
+												height="24"
+												viewBox="0 0 24 24"
+												fill="none">
+												<rect width="24" height="24" rx="7" fill="#262626" />
+												<rect
+													x="10.2002"
+													y="10.2031"
+													width="7.8"
+													height="7.8"
+													rx="1.2"
+													stroke="#F2F2F2"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												/>
+												<path
+													d="M7.8 13.8H7.2C6.53726 13.8 6 13.2627 6 12.6V7.2C6 6.53726 6.53726 6 7.2 6H12.6C13.2627 6 13.8 6.53726 13.8 7.2V7.8"
+													stroke="#F2F2F2"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												/>
+											</svg>
+										</Row>
+										<span className={s.variantTextSpan}>{item.text}</span>
+									</div>
+								))}
+
+							{arrayVariantTitle &&
+								arrayVariantTitle.map((item, index) => (
+									<div key={index} className={s.variantTextBlock}>
+										<Row width="auto" className={s.TitleHeaderInsideBlock}>
+											<Label isMini={true} text="Заголовок" />
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="24"
+												height="24"
+												viewBox="0 0 24 24"
+												fill="none">
+												<rect width="24" height="24" rx="7" fill="#262626" />
+												<rect
+													x="10.2002"
+													y="10.2031"
+													width="7.8"
+													height="7.8"
+													rx="1.2"
+													stroke="#F2F2F2"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												/>
+												<path
+													d="M7.8 13.8H7.2C6.53726 13.8 6 13.2627 6 12.6V7.2C6 6.53726 6.53726 6 7.2 6H12.6C13.2627 6 13.8 6.53726 13.8 7.2V7.8"
+													stroke="#F2F2F2"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												/>
+											</svg>
+										</Row>
+										<span className={s.variantTextSpan}>{item.text}</span>
+									</div>
+								))}
 						</div>
 					</Row>
 				</Col>
@@ -724,7 +687,17 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 				</Col> */}
 				<Col width="528px" className={s.variantImg}>
 					<Label text="Варианты изображений" className={s.Label} />
-					<Row width="528px">
+					<Row className={s.variantImgWrapper} width="528px">
+						<img
+							src="https://play-lh.googleusercontent.com/4cXfm9YG59lys9woio9JM5qR_bOpCrv0dgJ1XmowbzgRpIzDRyNQQ8vB8yXsz3NQJ9Q"
+							alt=""
+							className={s.imgPlayers}
+						/>
+						<img
+							src="https://play-lh.googleusercontent.com/4cXfm9YG59lys9woio9JM5qR_bOpCrv0dgJ1XmowbzgRpIzDRyNQQ8vB8yXsz3NQJ9Q"
+							alt=""
+							className={s.imgPlayers}
+						/>
 						<img
 							src="https://play-lh.googleusercontent.com/4cXfm9YG59lys9woio9JM5qR_bOpCrv0dgJ1XmowbzgRpIzDRyNQQ8vB8yXsz3NQJ9Q"
 							alt=""
