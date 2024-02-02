@@ -30,7 +30,7 @@ import {
 	LineElement,
 	CategoryScale,
 } from 'chart.js'
-import {getCompaniesAPI} from '../../api/data.api'
+import {getCompaniesAPI, getStatisticsAPI} from '../../api/data.api'
 
 ChartJS.register(
 	CategoryScale,
@@ -140,51 +140,7 @@ const endDate = '2022-12-31'
 const arrayOfDates = generateArrayOfDates(startDate, endDate)
 console.log(arrayOfDates)
 
-const data = {
-	labels: generateArrayOfDates('2022-01-01', '2022-03-30'),
-	datasets: [
-		{
-			label: 'Клики (цифрай)',
-			data: randomArray(120),
-			borderWidth: 1,
-			backgroundColor: '#4169E1',
-			borderColor: '#4169E1',
-			pointRadius: 0,
-		},
-		{
-			label: 'Конверсия: Все цели (%))',
-			data: randomArray(120),
-			borderWidth: 1,
-			backgroundColor: '#F3A63B',
-			borderColor: '#F3A63B',
-			pointRadius: 0,
-		},
-		{
-			label: 'Расходы (Рубли знак валюты)',
-			data: randomArray(120),
-			borderWidth: 1,
-			backgroundColor: '#6049B4',
-			borderColor: '#6049B4',
-			pointRadius: 0,
-		},
-		{
-			label: 'Доля рекламных расходов(%)',
-			data: randomArray(120),
-			borderWidth: 1,
-			backgroundColor: '#57BD53',
-			borderColor: '#57BD53',
-			pointRadius: 0,
-		},
-		{
-			label: 'Доходы: Все цели (Рубли знак валюты)',
-			data: randomArray(120),
-			borderWidth: 1,
-			backgroundColor: '#F3553E',
-			borderColor: '#F3553E',
-			pointRadius: 0,
-		},
-	],
-}
+// function to create data from "2023-02-03 17:29:39" to "2023-02-03"
 
 //End line chart
 
@@ -359,6 +315,18 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 	const token = user?.token
 	const [companies, setCompanies] = useState([])
 	const [currentCompanies, setCurrentCompanies] = useState([])
+	const [info, setInfo] = useState({})
+
+	useEffect(() => {
+		const getInfo = async () => {
+			const res = await getStatisticsAPI(token, [0, 1])
+			console.log(res)
+			setInfo(res)
+			console.log(info)
+		}
+		getInfo()
+		console.log(info)
+	}, [])
 
 	useEffect(() => {
 		const getInfo = async () => {
@@ -387,6 +355,47 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 			document.removeEventListener('click', handleClickOutside)
 		}
 	}, [addCompany])
+
+	let click: number[] = info.statistics?.click?.map((el) => el.value)
+	let cpc: number[] = info.statistics?.cpc?.map((el) => el.value)
+	let consumption: number[] = info.statistics?.consumption?.map(
+		(el) => el.value,
+	)
+
+	let clicks = info.click_sum
+	let cpc_sum = info.cpc_sum
+	let consumption_sum = info.consumption
+
+	const data = {
+		labels: generateArrayOfDates('2022-01-01', '2022-03-30'),
+		datasets: [
+			{
+				label: 'Клики (цифрай)',
+				data: click, //array of only value [{data: ..., value: ...}]
+				borderWidth: 1,
+				backgroundColor: '#4169E1',
+				borderColor: '#4169E1',
+				pointRadius: 0,
+			},
+			{
+				label: 'Конверсия: Все цели (%))',
+				data: cpc,
+				borderWidth: 1,
+				backgroundColor: '#F3A63B',
+				borderColor: '#F3A63B',
+				pointRadius: 0,
+			},
+			{
+				label: 'Расходы (Рубли знак валюты)',
+				data: consumption,
+				borderWidth: 1,
+				backgroundColor: '#6049B4',
+				borderColor: '#6049B4',
+				pointRadius: 0,
+			},
+		],
+	}
+
 	return (
 		<div className={s.wrapper + ' ' + className}>
 			<Col width="100%" className={s.ColStatistic}>
@@ -490,7 +499,12 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 						/>
 					</div>
 				</div>
-				<GraphsMenuCheckBox topPopUp="550px" />
+				<GraphsMenuCheckBox
+					clicks={clicks}
+					cpc_sum={cpc_sum}
+					consumption_sum={consumption_sum}
+					topPopUp="550px"
+				/>
 				<div
 					style={{
 						width: '100%',

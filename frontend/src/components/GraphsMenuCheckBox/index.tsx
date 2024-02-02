@@ -11,16 +11,19 @@ interface IGraphsMenuCheckBox {
 
 	topPopUp?: string
 	StatisticClassName?: string
+	clicks?: number
+	cpc_sum: number
+	consumption_sum: number
 }
 
 const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
 	className,
 	topPopUp,
 	StatisticClassName,
-
-
-} 
-: IGraphsMenuCheckBox) => {
+	clicks,
+	cpc_sum,
+	consumption_sum,
+}: IGraphsMenuCheckBox) => {
 	const [StatisticDropDown_1, setStatisticDropDown_1] = React.useState(false)
 	const [StatisticDropDown_2, setStatisticDropDown_2] = React.useState(false)
 	const [StatisticDropDown_3, setStatisticDropDown_3] = React.useState(false)
@@ -127,7 +130,7 @@ const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
 							/>
 						</svg>
 					</Row>
-					<NavLabel text="1,007,265" />
+					<NavLabel text={String(clicks)} />
 				</div>
 
 				<div
@@ -162,7 +165,7 @@ const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
 							/>
 						</svg>
 					</Row>
-					<NavLabel text="4.16%" />
+					<NavLabel text={String(cpc_sum).slice(0, 5)} />
 				</div>
 
 				<div
@@ -197,7 +200,7 @@ const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
 							/>
 						</svg>
 					</Row>
-					<NavLabel text="41,941.32₽" />
+					<NavLabel text={String(consumption_sum)} />
 				</div>
 
 				{/* <div
@@ -270,31 +273,41 @@ const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
 					<NavLabel text="121,414.39₽" />
 				</div> */}
 			</Row>
-				{StatisticDropDown_1 && (
-					<div ref={StatisitcRef_1} className={`${s.StatisticDropDown_1} ${StatisticClassName}`}>
-						<StatisticDropDownMenuGraphPopUp />
-					</div>
-				)}
-				{StatisticDropDown_2 && (
-					<div ref={StatisitcRef_2} className={`${s.StatisticDropDown_2} ${StatisticClassName}`}>
-						<StatisticDropDownMenuGraphPopUp />
-					</div>
-				)}
-				{StatisticDropDown_3 && (
-					<div ref={StatisitcRef_3} className={`${s.StatisticDropDown_3} ${StatisticClassName}`}>
-						<StatisticDropDownMenuGraphPopUp />
-					</div>
-				)}
-				{StatisticDropDown_4 && (
-					<div ref={StatisitcRef_4} className={`${s.StatisticDropDown_4} ${StatisticClassName}`}>
-						<StatisticDropDownMenuGraphPopUp />
-					</div>
-				)}
-				{StatisticDropDown_5 && (
-					<div ref={StatisitcRef_5} className={`${s.StatisticDropDown_5} ${StatisticClassName}`}>
-						<StatisticDropDownMenuGraphPopUp />
-					</div>
-				)}
+			{StatisticDropDown_1 && (
+				<div
+					ref={StatisitcRef_1}
+					className={`${s.StatisticDropDown_1} ${StatisticClassName}`}>
+					<StatisticDropDownMenuGraphPopUp />
+				</div>
+			)}
+			{StatisticDropDown_2 && (
+				<div
+					ref={StatisitcRef_2}
+					className={`${s.StatisticDropDown_2} ${StatisticClassName}`}>
+					<StatisticDropDownMenuGraphPopUp />
+				</div>
+			)}
+			{StatisticDropDown_3 && (
+				<div
+					ref={StatisitcRef_3}
+					className={`${s.StatisticDropDown_3} ${StatisticClassName}`}>
+					<StatisticDropDownMenuGraphPopUp />
+				</div>
+			)}
+			{StatisticDropDown_4 && (
+				<div
+					ref={StatisitcRef_4}
+					className={`${s.StatisticDropDown_4} ${StatisticClassName}`}>
+					<StatisticDropDownMenuGraphPopUp />
+				</div>
+			)}
+			{StatisticDropDown_5 && (
+				<div
+					ref={StatisitcRef_5}
+					className={`${s.StatisticDropDown_5} ${StatisticClassName}`}>
+					<StatisticDropDownMenuGraphPopUp />
+				</div>
+			)}
 		</div>
 	)
 }

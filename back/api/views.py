@@ -522,7 +522,7 @@ class getCompaniesAPIViews(APIView):
                     #get full url
                     full_url = request.build_absolute_uri(image.image.url).replace("a_media/a_media", "a_media")
                     images.append(full_url)
-            print(images)
+            # print(images)
             company["images"] = images
             site = site.first()
             
@@ -534,7 +534,7 @@ class getCompaniesAPIViews(APIView):
             company["site"]["shows"] = site.shows
             company["site"]["masked_domain"] = site.masked_domain
             
-            print("1-------------------------------------------------------------")
+            # print("1-------------------------------------------------------------")
             
             # ad_statusModel and ad_companyModel many-to-many relation. Get all ad_statusModel objects for this company
             company["ad_status"] = list(ad_statusModel.objects.filter(companies=company["id"]).values())
@@ -627,7 +627,7 @@ class AddCompany(APIView):
             ban_show = company_data.get('cBanShow', []) if company_data.get('cBanShow', []) else []
             site, _ = siteModel.objects.get_or_create(domain=domain)
 
-            print("1-----------------------------------------------------------------------------------------------")
+            # print("1-----------------------------------------------------------------------------------------------")
 
             # Create ad_company
             company = ad_companyModel.objects.create(
@@ -648,7 +648,7 @@ class AddCompany(APIView):
                 account=account,
             )
             
-            print("2-----------------------------------------------------------------------------------------------")
+            # print("2-----------------------------------------------------------------------------------------------")
             
 
             # Create ad_audience
@@ -665,7 +665,7 @@ class AddCompany(APIView):
                 account=account,
             )
 
-            print("3-----------------------------------------------------------------------------------------------")
+            # print("3-----------------------------------------------------------------------------------------------")
 
 
             # Create ad_banner
@@ -683,7 +683,7 @@ class AddCompany(APIView):
                 channel_private_bool=banner_data.get('bUnvirfied', True)
             )
 
-            print("4-----------------------------------------------------------------------------------------------")
+            # print("4-----------------------------------------------------------------------------------------------")
 
             imgs = []
             # Handling multiple file (Image) uploads for Banner
@@ -1255,3 +1255,138 @@ class checkTransition(APIView):
         
         #return normal_url
         return Response({'normal_url': normal_url}, status=status.HTTP_200_OK)
+    
+    
+from django.db.models import Sum, Avg
+from collections import defaultdict
+from django.db.models.functions import TruncDay
+
+class StatisticsAPIView(APIView):
+    DEBUG = True  # Переменная для режима отладки
+    TEST = True  # Переменная для тестового режима
+
+    def post(self, request, *args, **kwargs):
+        # Получение данных из запроса
+        company_ids = request.data.get('company_ids', [])
+        token = request.data.get('token', '')
+        
+        print("0-----------------------------------------------------------\nCompany IDs:", company_ids)
+        print("Token:", token)
+        print("Company IDs:", company_ids)
+        print("0end-----------------------------------------------------------")
+        # Валидация токена (Реализуйте функцию валидации токена)
+        if not self.validate_token(token):
+            return Response({'error': 'Invalid or expired token'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            # Получение статистики для указанных компаний
+            statistics = self.get_statistics(company_ids)
+
+            if self.DEBUG:
+                print("Statistics: ", statistics)
+
+            return Response(statistics, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def validate_token(self, token):
+        """
+        Функция для валидации токена пользователя.
+        """
+        return tokenModel.objects.filter(token=token).exists()
+
+    def get_statistics(self, company_ids):
+        """
+        Функция для получения статистики по указанным компаниям.
+        """
+        if self.TEST:
+            # Генерация случайных данных на 1 год, если включен тестовый режим
+            return self.generate_dummy_data()
+
+        # В реальном режиме здесь должна быть логика получения реальных данных
+        statistics = {
+            'click_sum': 0,
+            'cpc_sum': 0.0,
+            'consumption': 0,
+            'statistics': {
+                'click': [],
+                'cpc': [],
+                'consumption': [],
+            }
+        }
+        print("1--------------------------------------------------------------------------------")
+        # Обработка реальных данных
+        banners = ad_bannerModel.objects.filter(ad_company__id__in=company_ids)
+        statistics['click_sum'] = banners.aggregate(Sum('clicks'))['clicks__sum'] or 0
+        statistics['consumption'] = banners.aggregate(Sum('consumption'))['consumption__sum'] or 0
+        
+        print(banners, statistics['click_sum'], statistics['consumption'])
+        print("2--------------------------------------------------------------------------------")
+        
+        if statistics['click_sum'] > 0:
+            statistics['cpc_sum'] = statistics['consumption'] / statistics['click_sum']
+        
+        # Генерация статистики по дням
+        daily_stats = banners.annotate(date=TruncDay('date_creation')).values('date').annotate(
+            daily_clicks=Sum('clicks'),
+            daily_consumption=Sum('consumption')
+        ).order_by('date')
+        
+        print(daily_stats)
+        
+        print("3--------------------------------------------------------------------------------")
+        # Инициализация статистики для каждого дня в периоде
+        start_date = daily_stats.first()['date'] if daily_stats.exists() else datetime.now() - timedelta(days=364)
+        end_date = datetime.now()
+        
+        # Заполнение статистики нулями для каждого дня
+        daily_stats_dict = defaultdict(lambda: {'clicks': 0, 'consumption': 0})
+        for stat in daily_stats:
+            daily_stats_dict[stat['date']] = {
+                'clicks': stat['daily_clicks'],
+                'consumption': stat['daily_consumption']
+            }
+        
+        print(daily_stats_dict)
+        print("4--------------------------------------------------------------------------------")    
+        # Обновление статистики данными из daily_stats
+        date_cursor = start_date
+        while date_cursor <= end_date:
+            date_str = date_cursor.strftime('%Y-%m-%d %H:%M:%S')
+            daily_data = daily_stats_dict[date_cursor]
+            statistics['statistics']['click'].append({'datetime': date_str, 'value': daily_data['clicks']})
+            statistics['statistics']['consumption'].append({'datetime': date_str, 'value': daily_data['consumption']})
+            cpc_value = (daily_data['consumption'] / daily_data['clicks']) if daily_data['clicks'] > 0 else 0
+            statistics['statistics']['cpc'].append({'datetime': date_str, 'value': cpc_value})
+            date_cursor += timedelta(days=1)
+            
+        print(date_cursor)
+        print("5--------------------------------------------------------------------------------")
+
+        return statistics
+
+    def generate_dummy_data(self):
+        """
+        Функция для генерации тестовых данных.
+        """
+        data = {
+            'click_sum': random.randint(1000, 10000),
+            'cpc_sum': random.uniform(0.5, 5.0),
+            'consumption': random.randint(10000, 20000),
+            'statistics': {
+                'click': [],
+                'cpc': [],
+                'consumption': [],
+            }
+        }
+
+        # Создание статистики для каждого дня в периоде
+        date_cursor = datetime.now() - timedelta(days=364)  # Начало периода - 1 год назад
+        for i in range(365):
+            date_str = date_cursor.strftime('%Y-%m-%d %H:%M:%S')
+            data['statistics']['click'].append({'datetime': date_str, 'value': random.randint(0, 100)})
+            data['statistics']['cpc'].append({'datetime': date_str, 'value': random.uniform(0, 10)})
+            data['statistics']['consumption'].append({'datetime': date_str, 'value': random.randint(0, 1000)})
+            date_cursor += timedelta(days=1)
+
+        return data

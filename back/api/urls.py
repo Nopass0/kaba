@@ -49,7 +49,8 @@ urlpatterns = [
     
     # AddCompany
     path('addCompany', AddCompany.as_view()),
-
+    #StatisticsAPIView
+    path('getStatistics', StatisticsAPIView.as_view()),
     # # Пути для взаимодействия с БД. GET - получение записей, POST - добавление новой записи  
     # path('accountModel', accountModellListCreateView.as_view()),
     # path('actionModel', actionModellListCreateView.as_view()),

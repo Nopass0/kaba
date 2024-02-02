@@ -171,3 +171,28 @@ export const transitAPI = async (domain: string) => {
 		return {status: 'error'}
 	}
 }
+
+// Function to get statistics data
+export const getStatisticsAPI = async (token: string, companyIds: number[]) => {
+	// Создание экземпляра FormData
+	const formData = new FormData()
+	formData.append('token', token)
+	formData.append('company_ids', JSON.stringify(companyIds)) // Преобразование массива ID компаний в строку JSON
+
+	try {
+		// Отправка POST-запроса
+		const response = await axios.post(getApiUrl('getStatistics'), formData, {
+			headers: {
+				// Браузер автоматически установит правильный Content-Type
+				'Content-Type': 'multipart/form-data',
+			},
+		})
+
+		// Возвращение данных от сервера
+		return response.data // или просто return response, чтобы получить полный объект ответа
+	} catch (error: any) {
+		console.error('Error during getStatistics:', error)
+		// Обработка ошибки в соответствии с вашим приложением
+		return {status: 'error', message: error.message}
+	}
+}
