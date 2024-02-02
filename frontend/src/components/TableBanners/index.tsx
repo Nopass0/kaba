@@ -58,7 +58,7 @@ for (let i = 2; i <= 50; i++) {
 
 const THEME = {
 	Table: `
-  --data-table-library_grid-template-columns:  30px 30% 15% 15% 20% repeat(1, minmax(0, 1fr)) ;
+  --data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) ;
   width: 100%;
   max-height: 810px;
 
@@ -494,17 +494,26 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 											className={`CheckBox` + ' ' + s.headerCellSort}
 										/>
 										<tl.HeaderCell
-											className={s.headerCell}
+											className={s.HeaderCell}
 											style={{fontWeight: '400'}}>
 											<p>Баннер</p>
 										</tl.HeaderCell>
 
 										<tl.HeaderCell
 											style={{fontWeight: '400', fill: '#808080'}}
-											className={s.headerCell}
+											className={s.HeaderCell}
 											sortKey="Status">
 											<p className={s.sortText}>До завершения</p>
 										</tl.HeaderCell>
+
+										<tl.HeaderCell
+											style={{fontWeight: '400', fill: '#808080'}}
+											className={s.HeaderCell}
+											sortKey="Status">
+											<p className={s.sortText}>Категории</p>
+										</tl.HeaderCell>
+
+									
 
 										<tl.HeaderCell
 											style={{fontWeight: '400', fill: '#808080'}}
@@ -547,8 +556,29 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 												</div>
 											</button>
 										</tl.HeaderCell>
+										
+										<tl.HeaderCell
+											style={{fontWeight: '400', fill: '#808080'}}
+											className={s.HeaderCell}
+											sortKey="Status">
+											<p className={s.sortText}>Средняя цена клика</p>
+										</tl.HeaderCell>
 
 										<tl.HeaderCell
+											style={{fontWeight: '400', fill: '#808080'}}
+											className={s.HeaderCell}
+											sortKey="Status">
+											<p className={s.sortText}>Всего доход</p>
+										</tl.HeaderCell>
+
+										<tl.HeaderCell
+											style={{fontWeight: '400', fill: '#808080'}}
+											className={s.HeaderCell}
+											sortKey="Status">
+											<p className={s.sortText}>Всего кликов</p>
+										</tl.HeaderCell>
+
+										{/* <tl.HeaderCell
 											style={{fontWeight: '400', fill: '#808080'}}
 											className={s.headerCellSort_Sort}
 											sortKey="Status">
@@ -656,7 +686,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 													</svg>
 												</Row>
 											</button>
-										</tl.HeaderCell>
+										</tl.HeaderCell> */}
 									</tl.HeaderRow>
 								</tl.Header>
 
@@ -801,6 +831,22 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 											</tl.Cell>
 
 											<tl.Cell>
+												<p>{item.budget_week}₽</p>
+											</tl.Cell>
+
+											<tl.Cell>
+												<p>{item.budget_week}₽</p>
+											</tl.Cell>
+
+											<tl.Cell>
+												<p>{item.budget_week}₽</p>
+											</tl.Cell>
+
+											<tl.Cell>
+												<p>{item.budget_week}₽</p>
+											</tl.Cell>
+
+											{/* <tl.Cell>
 												<p id={String(item.views).charAt(0) === '2' ? 'green' : ''}>
 													{item.views}
 												</p>
@@ -808,7 +854,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 
 											<tl.Cell>
 												<p className={s.DetailsCell}>{item.views}</p>
-											</tl.Cell>
+											</tl.Cell> */}
 										</tl.Row>
 									))}
 								</tl.Body>

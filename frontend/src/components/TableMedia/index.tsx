@@ -53,7 +53,7 @@ for (let i = 2; i <= 51; i++) {
 
 const THEME = {
 	Table: `
-  --data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) ; // 30px 30% 18% 20% 20% repeat(1, minmax(0, 1fr))
+  --data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)); // 30px 30% 18% 20% 20% repeat(1, minmax(0, 1fr))
   max-height: 810px;
   width: 100%;
   
@@ -95,7 +95,7 @@ const THEME = {
       align-items: center;
     }
 
-	.th:first-child, .th:nth-child(2), .th:nth-child(3) {
+	.th:first-child, .th:nth-child(2) {
 		padding-left:8px;
 	}
 	.th:first-child {
@@ -381,6 +381,27 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 										</Row>
 									</tl.HeaderCell>
 
+									<tl.HeaderCell
+										style={{fontWeight: '400', fill: '#808080'}}
+										className={s.HeaderCell}
+										sortKey="Status">
+										<p className={s.sortText}>Средняя цена клика</p>
+									</tl.HeaderCell>
+
+									<tl.HeaderCell
+										style={{fontWeight: '400', fill: '#808080'}}
+										className={s.HeaderCell}
+										sortKey="Status">
+										<p className={s.sortText}>Всего доход</p>
+									</tl.HeaderCell>
+
+									<tl.HeaderCell
+										style={{fontWeight: '400', fill: '#808080'}}
+										className={s.HeaderCell}
+										sortKey="Status">
+										<p className={s.sortText}>Всего кликов</p>
+									</tl.HeaderCell>
+
 									{/* <tl.HeaderCell
 										style={{fontWeight: '400', fill: '#808080'}}
 										className={s.headerCellSort_Sort}
@@ -430,7 +451,7 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 										</button>
 									</tl.HeaderCell> */}
 
-									<tl.HeaderCell
+									{/* <tl.HeaderCell
 										style={{fontWeight: '400', fill: '#808080'}}
 										className={s.headerCellSort_Sort}
 										sortKey="Status">
@@ -525,7 +546,7 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 												</svg>
 											</div>
 										</button>
-									</tl.HeaderCell>
+									</tl.HeaderCell> */}
 								</tl.HeaderRow>
 							</tl.Header>
 
@@ -536,7 +557,7 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 										<tl.Cell className="bg-[#1A1A1A]">
 											<Row width="auto">
 												<Col width="auto">
-													<Row width="auto" className='flex items-center'>
+													<Row width="auto" className="flex items-center">
 														<img
 															// src={getFaviconUrl(item.companysite.domain)}
 															src={getFaviconUrl('google.com')}
@@ -609,6 +630,10 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 
 										<tl.Cell>
 											{/* <p>{item.companyshows}</p> */}
+											<p>200</p>
+										</tl.Cell>
+
+										<tl.Cell>
 											<p>200</p>
 										</tl.Cell>
 									</tl.Row>

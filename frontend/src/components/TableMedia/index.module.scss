@@ -34,9 +34,11 @@
 .check {
 	height: 16px;
 }
+
 .headerCellSort div:first-child{
 	margin-bottom: 2px;
 }
+
 .headerCellSort_Sort div:first-child {
 	width: 100%;
 	overflow: scroll;
@@ -64,6 +66,17 @@
 		.headerCellSort_SVG svg:first-child path {
 			stroke: #f2f2f2;
 		}
+	}
+}
+
+.HeaderCell div:first-child {
+	padding: 3px 8px;
+
+	border-radius: 6px;
+	&:hover {
+		transition: all 0.2s;
+		color: #f2f2f2;
+		background-color: #474747;
 	}
 }
 

@@ -40,8 +40,15 @@
 	height: 16px;
 }
 
-.headerCell div:first-child {
-	padding: 0 0 0 8px;
+.HeaderCell div:first-child {
+	padding: 3px 8px;
+
+	border-radius: 6px;
+	&:hover {
+		transition: all 0.2s;
+		color: #f2f2f2;
+		background-color: #474747;
+	}
 }
 
 .headerCellSort div:first-child{
