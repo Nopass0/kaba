@@ -23,12 +23,10 @@ import PopUpWrapper from '../PopUpWrapper'
 import TableCol from '../popup/TableColsPopUp/index'
 import TableLineFooter from '../TableLineFooter'
 import ContentBanner from '../contentBanner/index'
-import ContentBannerDetails, {
-	IContentBannerDetails,
-} from '../ContentBannerDetails/index'
-import {useSelector} from 'react-redux'
-import {getCompanyBloggersAPI} from '../../api/data.api'
-import StatisticPageMini from '../popup/StatisticPageMini/index'
+import ContentBannerDetails, { IContentBannerDetails } from '../ContentBannerDetails/index';
+import { useSelector } from 'react-redux';
+import { getCompanyBloggersAPI } from '../../api/data.api'
+import StatisticPageMini from '../popup/StatisticPageMini/index';
 import moment from 'moment'
 
 const list = [
@@ -197,6 +195,9 @@ enum CurrentPopup {
 	Statistic,
 }
 
+
+
+
 const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 	const [dataTable, setDataTable] = React.useState([])
 	const user = useSelector((state: any) => state.user)
@@ -204,14 +205,14 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 	useEffect(() => {
 		const getData = async () => {
 			const res = await getCompanyBloggersAPI(token)
-			console.log(res.data.companies, 'RES DATA')
+			console.log(res.data.companies, 'RES DATA');	
 			setDataTable(res.data.companies)
 		}
-		getData()
-	}, [])
+		getData() 
+	},[])
 
 	// console.log(dataTable, 'DATA TABLE');
-
+	
 	const data = {nodes: dataTable}
 	const [search, setSearch] = useState('')
 	const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -221,6 +222,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 
 	const [currentPopup, setCurrentPopup] = useState(CurrentPopup.None)
 	const [currentObject, setCurrentObject] = useState<object>({})
+
 
 	const bannerContent: IContentBanner = {
 		className: 'banner-class',
@@ -390,7 +392,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 
 	const getFaviconUrl36 = (url: string) => {
 		try {
-			let favico = `https://s2.googleusercontent.com/s2/favicons?domain=${url}&sz=32`
+			let favico = `https://s2.googleusercontent.com/s2/favicons?domain=${url}&sz=1024`
 			console.log(favico, 'favico')
 
 			return favico // Fallback to default location
@@ -511,6 +513,8 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 											<p className={s.sortText}>Категории</p>
 										</tl.HeaderCell>
 
+									
+
 										<tl.HeaderCell
 											style={{fontWeight: '400', fill: '#808080'}}
 											className={s.headerCellSort_Sort}
@@ -552,7 +556,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 												</div>
 											</button>
 										</tl.HeaderCell>
-
+										
 										<tl.HeaderCell
 											style={{fontWeight: '400', fill: '#808080'}}
 											className={s.HeaderCell}
@@ -761,12 +765,10 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 																/>
 															</svg>
 														</button>
-														<button
-															onClick={() => {
+														<button onClick={() => {
 																setCurrentObject(item)
-																setCurrentPopup(CurrentPopup.Content)
-															}}
-															className={s.ButtonSVG}>
+															setCurrentPopup(CurrentPopup.Content)
+														}} className={s.ButtonSVG}>
 															<svg
 																xmlns="http://www.w3.org/2000/svg"
 																width="24"
@@ -789,13 +791,12 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 																/>
 															</svg>
 														</button>
-														<button
-															className={s.ButtonSVG}
-															onClick={() => {
+														<button className={s.ButtonSVG} onClick={() => {
 																setCurrentObject(item)
-																// TO DO ERROR WITH CHART JS INSIDE POPUP
-																setCurrentPopup(CurrentPopup.Statistic)
-															}}>
+															// TO DO ERROR WITH CHART JS INSIDE POPUP 
+															setCurrentPopup(CurrentPopup.Statistic) 
+														}}	>
+														
 															<svg
 																xmlns="http://www.w3.org/2000/svg"
 																width="24"
@@ -823,11 +824,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 											</tl.Cell>
 
 											<tl.Cell>
-												<p>
-													{getEndDate(item.date_finish) <= 0
-														? 'Завершена'
-														: `${getEndDate(item.date_finish)} дней`}
-												</p>
+												<p>{getEndDate(item.date_finish) <= 0 ? 'Завершена'  : `${getEndDate(item.date_finish)} дней`}</p>
 											</tl.Cell>
 											<tl.Cell>
 												<p>{item.budget_week}₽</p>
@@ -885,9 +882,12 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 						bloger={true}
 						bloger_svg={getFaviconUrl36(currentObject.site.domain)}
 						bloger_title={bannerContent.bloger_title}
-						bloger_id={bannerContent.bloger_id}
+						// bloger_id={bannerContent.bloger_id}
 						// bloger_ooo={bannerContent.bloger_ooo}
-						bloger_link={currentObject.site.domain} // MASKED LINK
+						bloger_link={currentObject.site.masked_domain}  // MASKED LINK
+						arrayVariantDesc = {currentObject.banners[0].description_option}
+						arrayVariantTitle={currentObject.banners[0].title_option}
+						arrayVariatImg={currentObject.banners[0].images}
 						onExit={() => {
 							setCurrentPopup(CurrentPopup.None)
 						}}
@@ -910,24 +910,24 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 				<PopUpWrapper onExit={bannerContentDetails.onExit}>
 					<ContentBannerDetails
 						className={bannerContentDetails.className}
+						
 						course_svg={getFaviconUrl36(currentObject.site.domain)} // TO DO
+						
 						course_title={currentObject.name}
 						course_id={currentObject.id}
+						
 						// course_ooo={bannerContentDetails.course_ooo} //To DO
-
+						
 						course_link={currentObject.site.masked_domain}
-						stat_toEnd={
-							getEndDate(currentObject.date_finish) <= 0
-								? 'Завершена'
-								: `${getEndDate(currentObject.date_finish)}`
-						}
+						stat_toEnd={getEndDate(currentObject.date_finish) <= 0 ? 'Завершена'  : `${getEndDate(currentObject.date_finish)}`}
 						stat_budget={currentObject.budget_week}
-						stat_income={currentObject.price_target}
+						stat_income={currentObject.price_target} 
+						
 						// stat_targetAct={bannerContentDetails.stat_targetAct} // TO DO
-
+						
 						// stat_maxPrice={bannerContentDetails.stat_maxPrice} // TO DO
 						// stat_Price={bannerContentDetails.stat_Price} // TO DO
-
+						
 						// stat_incomeUndo={bannerContentDetails.stat_incomeUndo} // TO DO
 						// stat_AbPay={bannerContentDetails.stat_AbPay} // TO DO
 						// target_1_title={bannerContentDetails.target_1_title} // TO DO
@@ -944,6 +944,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 						sg_expenses={bannerContentDetails.sg_expenses}
 						sg_ads={bannerContentDetails.sg_ads}
 						sg_income_all={bannerContentDetails.sg_income_all}
+						
 						arrayForBidden={currentObject.ban_show}
 						arrayCategory={currentObject.audiences[0].category}
 						arrayGeo={currentObject.audiences[0].geography}
@@ -952,6 +953,8 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 						arrayInteres={currentObject.audiences[0].interest}
 						arrayVariantDesc={currentObject.banners[0].description_option}
 						arrayVariantTitle={currentObject.banners[0].title_option}
+						arrayVariatImg={currentObject.banners[0].images}
+
 						onExit={bannerContentDetails.onExit}
 					/>
 				</PopUpWrapper>
@@ -959,17 +962,17 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 
 			{currentPopup === CurrentPopup.Statistic && (
 				<PopUpWrapper
-					onExit={() => {
-						setCurrentPopup(CurrentPopup.None)
-					}}>
+				onExit={() => {
+					setCurrentPopup(CurrentPopup.None)
+				}}>
 					<StatisticPageMini
-						name_company={currentObject.name}
-						id_company={currentObject.id}
-						link_company={currentObject.site.masked_domain}
-						svg={getFaviconUrl36(currentObject.site.domain)}
+					name_company={currentObject.name}
+					id_company={currentObject.id}
+					link_company={currentObject.site.masked_domain}
+					svg={getFaviconUrl36(currentObject.site.domain)}
 					/>
-				</PopUpWrapper>
-			)}
+			</PopUpWrapper>
+			 )}
 		</>
 	)
 }

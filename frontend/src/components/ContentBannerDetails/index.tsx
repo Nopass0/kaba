@@ -17,51 +17,52 @@ export interface IContentBannerDetails {
 	className?: string // Added className prop
 
 	// Course
-	course_svg: React.ReactNode
-	course_title: string
-	course_id: string
-	course_ooo: string
-	course_link: string
+	course_svg?: React.ReactNode
+	course_title?: string
+	course_id?: string
+	course_ooo?: string
+	course_link?: string
 
 	// Statistics
-	stat_toEnd: string
-	stat_budget: string
-	stat_income: string
-	stat_targetAct: string
-	stat_maxPrice: string
-	stat_Price: string
-	stat_incomeUndo: string
-	stat_AbPay: string
+	stat_toEnd?: string
+	stat_budget?: string
+	stat_income?: string
+	stat_targetAct?: string
+	stat_maxPrice?: string
+	stat_Price?: string
+	stat_incomeUndo?: string
+	stat_AbPay?: string
 
 	// Target
-	target_1_title: string
-	target_1_value: string
-	target_1_id: string
-	target_2_title: string
-	target_2_value: string
-	target_2_id: string
+	target_1_title?: string
+	target_1_value?: string
+	target_1_id?: string
+	target_2_title?: string
+	target_2_value?: string
+	target_2_id?: string
 
 	// ForBidden
-	forBidden_1: string
-	forBidden_2: string
-	forBidden_3: string
+	forBidden_1?: string
+	forBidden_2?: string
+	forBidden_3?: string
 
 	// MainData Second Grid
-	sg_clicks: string
-	sg_conversion: string
-	sg_expenses: string
-	sg_ads: string
-	sg_income_all: string
+	sg_clicks?: string
+	sg_conversion?: string
+	sg_expenses?: string
+	sg_ads?: string
+	sg_income_all?: string
 
 	// Array
-	arrayForBidden: string[]
-	arrayCategory: string[]
-	arrayGeo: string[]
-	arrayGender: TGenderNAge[]
-	arrayDevice: string[]
-	arrayInteres: string[]
-	arrayVariantDesc: string[]
-	arrayVariantTitle: string[]
+	arrayForBidden?: string[]
+	arrayCategory?: string[]
+	arrayGeo?: string[]
+	arrayGender?: []
+	arrayDevice?: string[]
+	arrayInteres?: string[]
+	arrayVariantDesc?: string[]
+	arrayVariantTitle?: string[]
+	arrayVariatImg?: string[]
 
 	//exit
 	onExit?: () => void
@@ -104,6 +105,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 	arrayVariantDesc,
 	arrayVariantTitle,
 	sg_income_all,
+	arrayVariatImg,
 
 	onExit,
 }: IContentBannerDetails) => {
@@ -378,19 +380,21 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 						</ToolTip>
 					</Row>
 					<Col width="528px" className={s.ForBiddenWrapper}>
-						<Col width="528px" className={s.ForBiddenBlock}>
-							<WhiteLabel text={forBidden_1} />
-						</Col>
+						
 						{arrayForBidden && (
 							<>
 								{arrayForBidden.map((item, index) => (
-									<Col width="528px" key={index} className={s.ForBiddenBlock}>
-										<WhiteLabel text={item} />
-									</Col>
+									<>
+										<Col width="528px" key={index} className={s.ForBiddenBlock}>
+											<WhiteLabel text={item} />
+										</Col>
+										{index === arrayForBidden.length - 1 ? (
+											<></>
+										) : (
+											<Line width="528px" className={s.LineInside} />
+										)}
+									</>
 								))}
-								{arrayForBidden.length > 0 && (
-									<Line width="528px" className={s.LineInside} />
-								)}
 							</>
 						)}
 					</Col>
@@ -472,7 +476,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 						<>
 							<Row className={s.RowGenderNAge} width="auto" key={index}>
 								<WhiteLabel
-									text={`${item?.Gender}, ${item?.AgeFrom} - ${item?.AgeTo}`}
+									text={`${item?.male}, ${item?.from} - ${item?.to}`}
 								/>
 							</Row>
 							{index === arrayGender.length - 1 ? (
@@ -624,7 +628,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 												/>
 											</svg>
 										</Row>
-										<span className={s.variantTextSpan}>{item.text}</span>
+										<span className={s.variantTextSpan}>{item}</span>
 									</div>
 								))}
 
@@ -658,7 +662,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 												/>
 											</svg>
 										</Row>
-										<span className={s.variantTextSpan}>{item.text}</span>
+										<span className={s.variantTextSpan}>{item}</span>
 									</div>
 								))}
 						</div>
@@ -688,31 +692,15 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 				<Col width="528px" className={s.variantImg}>
 					<Label text="Варианты изображений" className={s.Label} />
 					<Row className={s.variantImgWrapper} width="528px">
-						<img
-							src="https://play-lh.googleusercontent.com/4cXfm9YG59lys9woio9JM5qR_bOpCrv0dgJ1XmowbzgRpIzDRyNQQ8vB8yXsz3NQJ9Q"
-							alt=""
-							className={s.imgPlayers}
-						/>
-						<img
-							src="https://play-lh.googleusercontent.com/4cXfm9YG59lys9woio9JM5qR_bOpCrv0dgJ1XmowbzgRpIzDRyNQQ8vB8yXsz3NQJ9Q"
-							alt=""
-							className={s.imgPlayers}
-						/>
-						<img
-							src="https://play-lh.googleusercontent.com/4cXfm9YG59lys9woio9JM5qR_bOpCrv0dgJ1XmowbzgRpIzDRyNQQ8vB8yXsz3NQJ9Q"
-							alt=""
-							className={s.imgPlayers}
-						/>
-						<img
-							src="https://play-lh.googleusercontent.com/4cXfm9YG59lys9woio9JM5qR_bOpCrv0dgJ1XmowbzgRpIzDRyNQQ8vB8yXsz3NQJ9Q"
-							alt=""
-							className={s.imgPlayers}
-						/>
-						<img
-							src="https://play-lh.googleusercontent.com/4cXfm9YG59lys9woio9JM5qR_bOpCrv0dgJ1XmowbzgRpIzDRyNQQ8vB8yXsz3NQJ9Q"
-							alt=""
-							className={s.imgPlayers}
-						/>
+						{arrayVariatImg &&
+							arrayVariatImg.map((item, index) => (
+								<img
+									key={index}
+									src={`http://localhost:5000${item}`}
+									alt={item}
+									className={s.imgPlayers}
+								/>
+							))}
 					</Row>
 				</Col>
 				{/* <Col width="528px" className={s.variantAudio}>
