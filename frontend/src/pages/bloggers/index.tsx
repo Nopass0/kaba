@@ -274,7 +274,7 @@ const Bloggers: React.FC = () => {
 							id={item.id}
 							link={item.site.domain}
 							// count="245"
-							categories="Статус. комп, Аудитории и Баннеры, Реклам. сайт, Стат… "
+							categories={item.audiences[0].category}
 							to_end={getEndDate(item.date_finish)}
 							budget={item.budget_week}
 							income="19.07"
@@ -343,6 +343,7 @@ const Bloggers: React.FC = () => {
 						arrayInteres={currentItem.audiences[0].interest}
 						arrayVariantDesc={currentItem.banners[0].description_option}
 						arrayVariantTitle={currentItem.banners[0].title_option}
+						arrayVariatImg={currentItem.banners[0].images}
 						onExit={bannerContent.onExit}
 					/>
 				</PopUpWrapper>
