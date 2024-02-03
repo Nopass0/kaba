@@ -173,11 +173,16 @@ export const transitAPI = async (domain: string) => {
 }
 
 // Function to get statistics data
-export const getStatisticsAPI = async (token: string, companyIds: number[]) => {
+export const getStatisticsAPI = async (
+	token: string,
+	companyIds: string[],
+	step: string,
+) => {
 	// Создание экземпляра FormData
 	const formData = new FormData()
 	formData.append('token', token)
-	formData.append('company_ids', JSON.stringify(companyIds)) // Преобразование массива ID компаний в строку JSON
+	formData.append('companies_ids', JSON.stringify(companyIds)) // Преобразование массива ID компаний в строку JSON
+	formData.append('step', step)
 
 	try {
 		// Отправка POST-запроса

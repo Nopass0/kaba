@@ -112,7 +112,7 @@
 
 		.AddCompanyDel:hover {
 			color: #f2f2f2;
-			transition: all .2s;
+			transition: all 0.2s;
 		}
 	}
 
@@ -175,6 +175,10 @@
 
 .extendedButton {
 	background: none;
+}
+
+.active {
+	background: #262626;
 }
 
 .extendedButton:hover,

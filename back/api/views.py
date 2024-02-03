@@ -1534,3 +1534,181 @@ class deleteCompany(APIView):
 
         company.delete()
         return Response({'status': 'ok'}, status=status.HTTP_200_OK)
+    
+    
+import datetime
+import random
+import json
+from django.http import JsonResponse
+from django.views import View
+from django.db.models import Avg, Sum
+from django.db.models.functions import TruncHour, TruncDay, TruncMonth, TruncYear
+from collections import defaultdict
+from django.utils.timezone import make_aware
+from datetime import timedelta
+from datetime import datetime as dt
+
+# Set DEBUG and TEST mode
+    
+class CompanyStatisticsAPI(APIView):
+    DEBUG = True
+    TEST = False
+    def post(self, request, *args, **kwargs):
+        # Extract and validate input data
+        try:
+            companies_ids = request.POST.get('companies_ids')  # Should be a list of company ids
+            token = request.POST.get('token')  # User token
+            step = request.POST.get('step')  # Step: hour/day/month/year
+            if not all([companies_ids, token, step]):
+                raise ValueError("Missing required fields: companies_ids, token, or step.")
+
+            companies_ids = json.loads(companies_ids)
+            
+            if not token:
+                return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                user = tokenModel.objects.get(token=token).account
+            except tokenModel.DoesNotExist:
+                return Response({'error': 'Invalid token.'}, status=status.HTTP_404_NOT_FOUND)
+            
+            print("---------------------------------------------\n")
+            print(f"User: {user}, Companies: {companies_ids}, Step: {step}")
+            print("---------------------------------------------\n")
+            # Debug logging
+            if self.DEBUG:
+                print(f"User: {user}, Companies: {companies_ids}, Step: {step}")
+            
+            # Validate step
+            if step not in ['hour', 'day', 'month', 'year']:
+                raise ValueError("Invalid step. Choose from 'hour', 'day', 'month', 'year'.")
+
+            # Generate or fetch data
+            if self.TEST:
+                # Generate mock data
+                data = self.generate_mock_data(companies_ids, step)
+            else:
+                # Fetch actual data from DB
+                data = self.fetch_data_from_db(companies_ids, step, user)
+
+            return JsonResponse(data, safe=False)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+
+
+
+    def fetch_data_from_db(self, companies_ids, step, user):
+        # Fetch related site IDs through ad_companyModel
+        related_sites = ad_companyModel.objects.filter(
+            id__in=companies_ids, 
+            account=user
+        ).values_list('site', flat=True)
+
+        # Fetch the jumpToADPage instances for those sites
+        jump_pages = jumpToADPage.objects.filter(site__id__in=related_sites).values_list('masked_url', flat=True)
+
+        # Fetch statistics for those masked_urls
+        stats = statisticModel.objects.filter(
+            masked_url__in=jump_pages
+        )
+        company_budgets = ad_companyModel.objects.filter(
+            id__in=companies_ids, 
+            account=user
+        ).values_list('id', 'budget_week', 'price_target')
+
+        # Process the data in Python
+        truncated_stats = defaultdict(lambda: {'total_clicks': 0, 'total_cpc': 0, 'total_consumption': 0, 'click_times': []})  # A default dictionary to store aggregated data
+
+        # Aggregate clicks
+        for stat in stats:
+            for click_time in stat.clicks:  # Assuming clicks is a list of datetime strings
+                # Truncate click_time based on step
+                if step == 'hour':
+                    truncated_date = make_aware(dt(click_time.year, click_time.month, click_time.day, click_time.hour))
+                elif step == 'day':
+                    truncated_date = make_aware(dt(click_time.year, click_time.month, click_time.day))
+                elif step == 'month':
+                    truncated_date = make_aware(dt(click_time.year, click_time.month, 1))
+                elif step == 'year':
+                    truncated_date = make_aware(dt(click_time.year, 1, 1))
+
+                truncated_stats[truncated_date]['total_clicks'] += 1
+                truncated_stats[truncated_date]['click_times'].append(click_time)
+
+        # Calculate CPC based on the aggregated data
+        for company_id, budget_week, price_target in company_budgets:
+            for truncated_date, data in truncated_stats.items():
+                click_count = data['total_clicks']
+                # Calculate CPC based on your provided logic
+                if (click_count * price_target) <= budget_week:
+                    cpc = price_target
+                else:
+                    cpc = budget_week / click_count if click_count > 0 else 0
+
+                data['total_cpc'] = cpc
+                data['total_consumption'] += cpc * click_count  # Update consumption based on CPC and click count
+
+        # Prepare response data
+        response_data = []
+        for truncated_date, data in truncated_stats.items():
+            response_data.append({
+                'truncated_date': truncated_date,
+                'total_clicks': data['total_clicks'],
+                'avg_cpc': data['total_cpc'],
+                'total_consumption': data['total_consumption'],
+                # ... include other fields you need
+            })
+
+        # Sort the response data by truncated_date
+        response_data.sort(key=lambda x: x['truncated_date'])
+
+        # Prepare data labels
+        datalabels = [data['truncated_date'].strftime("%d %B") if step in ['day', 'month', 'year'] else data['truncated_date'].strftime("%H:%M") for data in response_data]
+
+        # Prepare final response
+        response = {
+            'click_sum': sum(data['total_clicks'] for data in response_data),
+            'cpc_sum': sum(data['avg_cpc'] for data in response_data) / len(response_data) if response_data else 0,
+            'consumption': sum(data['total_consumption'] for data in response_data),
+            'datalabels': datalabels,
+            'statistics': response_data
+        }
+        return response
+
+
+
+
+
+
+
+    def generate_mock_data(self, companies_ids, step):
+        # Generate mock data
+        mock_data = []
+        start_date = datetime.datetime.now() - datetime.timedelta(days=365)
+        end_date = datetime.datetime.now()
+
+        # Generate mock data for each day/hour/month/year
+        while start_date <= end_date:
+            for company_id in companies_ids:
+                data_point = {
+                    'company_id': company_id,
+                    'datetime': start_date.strftime("%d %B %Y %H:%M") if step == 'hour' else start_date.strftime("%d %B %Y"),
+                    'clicks': random.randint(100, 500),
+                    'cpc': random.uniform(0.1, 2.0),
+                    'consumption': random.randint(1000, 5000)
+                }
+                mock_data.append(data_point)
+
+            # Increment date
+            if step == 'hour':
+                start_date += datetime.timedelta(hours=1)
+            elif step == 'day':
+                start_date += datetime.timedelta(days=1)
+            elif step == 'month':
+                start_date += datetime.timedelta(days=30)
+            elif step == 'year':
+                start_date += datetime.timedelta(days=365)
+
+        return mock_data

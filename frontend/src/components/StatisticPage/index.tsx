@@ -316,17 +316,11 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 	const [companies, setCompanies] = useState([])
 	const [currentCompanies, setCurrentCompanies] = useState([])
 	const [info, setInfo] = useState({})
+	const [step, setStep] = useState('hour')
 
-	useEffect(() => {
-		const getInfo = async () => {
-			const res = await getStatisticsAPI(token, [0, 1])
-			console.log(res)
-			setInfo(res)
-			console.log(info)
-		}
-		getInfo()
-		console.log(info)
-	}, [])
+	const [d_click, bool_click] = useState(true)
+	const [d_cpc, bool_cpc] = useState(true)
+	const [d_consumption, bool_consumption] = useState(true)
 
 	useEffect(() => {
 		const getInfo = async () => {
@@ -356,20 +350,41 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 		}
 	}, [addCompany])
 
-	let click: number[] = info.statistics?.click?.map((el) => el.value)
-	let cpc: number[] = info.statistics?.cpc?.map((el) => el.value)
-	let consumption: number[] = info.statistics?.consumption?.map(
-		(el) => el.value,
-	)
+	useEffect(() => {
+		//get current companies id's (string)
+		const ids: string[] = []
+
+		currentCompanies.forEach((el) => {
+			ids.push(String(el.id))
+		})
+
+		console.log(ids)
+
+		const getInfo = async () => {
+			const res = await getStatisticsAPI(token, ids, step)
+			console.log(res)
+			setInfo(res)
+			console.log(info)
+		}
+		getInfo()
+		console.log(info)
+	}, [currentCompanies, step])
+
+	// sum all total_clicks
+	let click = info.statistics?.map((el) => el.total_clicks)
+	let cpc: number[] = info.statistics?.map((el) => el.avg_cpc)
+	let consumption: number[] = info.statistics?.map((el) => el.total_consumption)
 
 	let clicks = info.click_sum
 	let cpc_sum = info.cpc_sum
 	let consumption_sum = info.consumption
+	console.log(info.datalabels)
 
 	const data = {
-		labels: generateArrayOfDates('2022-01-01', '2022-03-30'),
+		labels: info.datalabels,
 		datasets: [
 			{
+				hidden: d_click,
 				label: 'Клики (цифрай)',
 				data: click, //array of only value [{data: ..., value: ...}]
 				borderWidth: 1,
@@ -378,6 +393,7 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 				pointRadius: 0,
 			},
 			{
+				hidden: d_cpc,
 				label: 'Конверсия: Все цели (%))',
 				data: cpc,
 				borderWidth: 1,
@@ -386,6 +402,7 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 				pointRadius: 0,
 			},
 			{
+				hidden: d_consumption,
 				label: 'Расходы (Рубли знак валюты)',
 				data: consumption,
 				borderWidth: 1,
@@ -477,10 +494,30 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 				<HeaderSubTitle textHeader="Ключевые показатели" />
 				<div className={s.extendedBlock}>
 					<div className={s.extendedLink}>
-						<Button width="84px" className={s.extendedButton} text="Часы" />
-						<Button width="78px" className={s.extendedButton} text="Дни" />
-						<Button width="89px" className={s.extendedButton} text="Недели" />
-						<Button width="89px" className={s.extendedButton} text="Месяцы" />
+						<Button
+							onClick={() => setStep('hour')}
+							width="84px"
+							className={`${s.extendedButton} ${step === 'hour' && s.active}`}
+							text="Часы"
+						/>
+						<Button
+							onClick={() => setStep('day')}
+							width="78px"
+							className={`${s.extendedButton} ${step === 'day' && s.active}`}
+							text="Дни"
+						/>
+						<Button
+							onClick={() => setStep('month')}
+							width="89px"
+							className={`${s.extendedButton} ${step === 'month' && s.active}`}
+							text="Месяцы"
+						/>
+						<Button
+							onClick={() => setStep('years')}
+							width="89px"
+							className={`${s.extendedButton} ${step === 'years' && s.active}`}
+							text="Годы"
+						/>
 					</div>
 					<div className={s.DatePicker}>
 						<DatePicker
@@ -500,6 +537,9 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 					</div>
 				</div>
 				<GraphsMenuCheckBox
+					bool_click={bool_click}
+					bool_cpc={bool_cpc}
+					bool_consumption={bool_consumption}
 					clicks={clicks}
 					cpc_sum={cpc_sum}
 					consumption_sum={consumption_sum}

@@ -14,6 +14,9 @@ interface IGraphsMenuCheckBox {
 	clicks?: number
 	cpc_sum: number
 	consumption_sum: number
+	bool_click: (bool: boolean) => void
+	bool_cpc: (bool: boolean) => void
+	bool_consumption: (bool: boolean) => void
 }
 
 const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
@@ -23,6 +26,9 @@ const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
 	clicks,
 	cpc_sum,
 	consumption_sum,
+	bool_click,
+	bool_cpc,
+	bool_consumption,
 }: IGraphsMenuCheckBox) => {
 	const [StatisticDropDown_1, setStatisticDropDown_1] = React.useState(false)
 	const [StatisticDropDown_2, setStatisticDropDown_2] = React.useState(false)
@@ -106,9 +112,14 @@ const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
 					// onClick={() => setStatisticDropDown_1(!StatisticDropDown_1)}
 					className={s.MenuCol}>
 					<Row className={s.MenuHeaderRow} width="auto">
-						<CheckBox id="Blue" className={s.CheckBox} labelText="Клики" />
+						<CheckBox
+							id="Blue"
+							className={s.CheckBox}
+							onChange={(check) => bool_click(!check)}
+							labelText="Клики"
+						/>
 						<svg
-							// onClick={() => setStatisticDropDown_1(!StatisticDropDown_1)}
+							// onClick={() => bool_click(!clicks)}
 							xmlns="http://www.w3.org/2000/svg"
 							width="16"
 							height="16"
@@ -139,6 +150,7 @@ const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
 					className={s.MenuCol}>
 					<Row className={s.MenuHeaderRow} width="auto">
 						<CheckBox
+							onChange={(check) => bool_cpc(!check)}
 							id="Orange"
 							className={`${s.CheckBox} ${s.Orange}`}
 							labelText="СРС"
@@ -174,6 +186,7 @@ const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
 					className={s.MenuCol}>
 					<Row className={s.MenuHeaderRow} width="auto">
 						<CheckBox
+							onChange={(check) => bool_consumption(!check)}
 							id="Purple"
 							className={`${s.CheckBox} ${s.Purple}`}
 							labelText="Расходы"
