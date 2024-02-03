@@ -46,21 +46,3 @@ class accountModel(models.Model):
         verbose_name = 'Аккаунт'
         verbose_name_plural = 'Аккаунты'
         
-class jumpToADPage(models.Model):
-    date_creation = models.DateTimeField('Дата и время создания', auto_now_add=True)
-    site = models.ForeignKey(siteModel, on_delete=models.CASCADE)
-    account = models.ForeignKey(accountModel, on_delete=models.CASCADE, null=True, blank=True)
-    
-    shows = models.IntegerField('Показы', default=0)
-    
-    masked_url = models.CharField('Маскированный URL', max_length=512)
-
-    def __str__(self):
-        return str(self.pk) + ', ' + str(self.isJump)
-    
-class jumpsToMaskedLink(models.Model):
-    date_creation = models.DateTimeField('Дата и время создания', auto_now_add=True)
-    jump = models.ForeignKey('jumpToADPage', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return str(self.pk) + ', ' + str(self.isJump)

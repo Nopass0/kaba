@@ -56,6 +56,8 @@ const MenuBannersWCourse: React.FC<IMenuBannersWCourse> = ({
 	const user = useSelector((state: any) => state.user)
 	const token = user.token
 
+	const allRef = React.useRef()
+
 	const addCompany = async () => {
 		let res = await addCompanyToBloggerAPI(token, Number(id))
 		console.log(res)
@@ -65,7 +67,7 @@ const MenuBannersWCourse: React.FC<IMenuBannersWCourse> = ({
 	// 	setExpanded(!expanded)
 	// }
 	return (
-		<div className={s.wrapper + ' ' + className}>
+		<div ref={allRef} className={s.wrapper + ' ' + className}>
 			<Col width="248px">
 				<Col width="248px" className={s.BlogerHeader}>
 					<Row width="248px" className={s.BlogerHeaderUp}>
@@ -268,7 +270,10 @@ const MenuBannersWCourse: React.FC<IMenuBannersWCourse> = ({
 							className={s.ButtonAddRemove}
 							text="Добавить"
 							width="204px"
-							onClick={addCompany}
+							onClick={() => {
+								addCompany()
+								allRef.current.remove()
+							}}
 						/>
 					) : (
 						<ButtonSVG

@@ -38,9 +38,9 @@ urlpatterns = [
     #getAllActiveCompanies
     path('getAllActiveCompanies', getAllActiveCompanies.as_view()),
     #addCompanyToBlogger
-    path('addCompanyToBlogger', addCompanyToBlogger.as_view()),
+    path('addCompanyToBlogger', AddCompanyToBlogger.as_view()),
     #getCompanyBloggers
-    path('getCompanyBloggers', getCompanyBloggers.as_view()),
+    path('getCompanyBloggers', GetBloggerCompanies.as_view()),
     
     #generateMaskedURL
     path('generateMaskedURL', generateMaskedURL.as_view()),

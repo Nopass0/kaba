@@ -1,6 +1,7 @@
 import base64
 import json
 import string
+import uuid
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
@@ -27,13 +28,12 @@ from .serializers import *
 from a_setting.settings.base import *
 
 from account.models.action import actionModel
-from account.models.account import accountModel, jumpToADPage, jumpsToMaskedLink, walletModel, walletOperationsModel
+from account.models.account import accountModel, walletModel, walletOperationsModel
 from account.models.social_network import social_networkModel
 from account.models.verification import verificationModel
 from account.models.social_network import social_networkModel
-from ad_advertiser.models.ad.ad_company import ad_bloggerCompanyModel, ad_companyModel, ad_statusModel
+from ad_advertiser.models.ad.ad_company import BloggerCompany, ad_bloggerCompanyModel, ad_companyModel, ad_statusModel, statisticModel, jumpToADPage, jumpsToMaskedLink
 from ad_advertiser.models.ad.ad_banner import BannderImage
-from ad_advertiser.models.profile.profile import profileModel
 from .models import tokenModel
 
 from a_module.scripts.sigmasms_voice_api import send_smsDef
@@ -685,22 +685,29 @@ class AddCompany(APIView):
 
             # print("4-----------------------------------------------------------------------------------------------")
 
-            imgs = []
-            # Handling multiple file (Image) uploads for Banner
-            files = request.FILES.getlist('bImages')  # Get the list of files
+            files = request.FILES.getlist('bImages')  # Получение списка файлов
+
+            # Список экземпляров BannderImage, которые будут связаны с баннером
+            img_instances = []
+
             for file in files:
-                file_name = default_storage.save(f'banner_images/{file.name}', ContentFile(file.read()))
+                # Генерация уникального имени для файла
+                unique_file_name = f"{uuid.uuid4()}{file.name[file.name.rfind('.'):]}"
+                
+                # Сохранение файла в нужной директории и получение URL к файлу
+                file_name = default_storage.save(f'banner_images/{unique_file_name}', ContentFile(file.read()))
                 file_url = default_storage.url(file_name)
                 
-                # Create BannerImage instance for each image
+                # Создание экземпляра BannderImage для каждого изображения
                 image = BannderImage.objects.create(
-                    banner=banner,
+                    banner=banner,  # если поле 'banner' необязательно, это можно опустить
                     image=file_url
                 )
                 
-                imgs.append(image)
-            banner.images = imgs
-            banner.save()
+                img_instances.append(image)
+
+            # Для установления связи с новым набором изображений (заменит все существующие связи)
+            banner.images.set(img_instances)
 
             return Response({'message': 'Company, Auditor, Banner, and Banner Images created successfully!'}, status=status.HTTP_201_CREATED)
 
@@ -986,32 +993,30 @@ class WalletOperationsView(APIView):
 class getAllActiveCompanies(APIView):
 
     def get(self, request):
-        # Get the token from the request
         token = request.GET.get('token', '')
-        user = None
-        if token:
-            try:
-                user = tokenModel.objects.get(token=token).account
-            except tokenModel.DoesNotExist:
-                # If token is provided but invalid, return an error
-                return Response({'error': 'Invalid token.'}, status=status.HTTP_404_NOT_FOUND)
 
-        # Fetch all active companies, filter by user if user is not None
-        if user:
-            user_companies = ad_companyModel.objects.filter(account=user).values_list('id', flat=True)
-            active_companies = ad_companyModel.objects.exclude(id__in=user_companies)
-        else:
-            active_companies = ad_companyModel.objects.all()
+        if not token:
+            return Response({'error': 'Token is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        active_companies = active_companies.filter(
+        # Проверка наличия пользователя и его токена
+        try:
+            current_token = tokenModel.objects.get(token=token)
+        except tokenModel.DoesNotExist:
+            return Response({'error': 'Invalid token.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        user = current_token.account
+
+        # Получаем ID компаний, которые уже добавлены пользователем
+        added_company_ids = BloggerCompany.objects.filter(account=user).values_list('company', flat=True)
+
+        # Получаем список активных компаний, исключая добавленные
+        active_companies = ad_companyModel.objects.exclude(id__in=added_company_ids).filter(
             status_text='Активная'
         ).prefetch_related(
             Prefetch('ad_bannerModel_ad_companyModel', queryset=ad_bannerModel.objects.prefetch_related('banner_image')),
             'ad_audienceModel_ad_companyModel',
             'ad_statusModel_companies',
         ).select_related('site')
-        #active_companies = active_companies.select_related('site')
-        
         
         
         # Construct the response data
@@ -1073,34 +1078,126 @@ class getAllActiveCompanies(APIView):
         return Response({'companies': companies_data}, status=status.HTTP_200_OK)
 
 
-class addCompanyToBlogger(APIView):
+class GetBloggerCompanies(APIView):
+
     def post(self, request):
-        token = request.data.get('token', '')
+        # Получение и валидация токена
+        token = request.POST.get('token', '')
         if not token:
-            return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Token is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            user = tokenModel.objects.get(token=token).account
+            current_token = tokenModel.objects.get(token=token)
         except tokenModel.DoesNotExist:
             return Response({'error': 'Invalid token.'}, status=status.HTTP_404_NOT_FOUND)
 
-        company_id = request.data.get('company_id', '')
-        if not company_id:
-            return Response({'error': 'company_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        user = current_token.account
 
-        try:
-            company = ad_companyModel.objects.get(id=company_id)
-        except ad_companyModel.DoesNotExist:
-            return Response({'error': 'Company not found.'}, status=status.HTTP_404_NOT_FOUND)
+        # Получение списка компаний, добавленных блогером
+        blogger_companies = BloggerCompany.objects.filter(account=user).select_related('company').all()
 
-        # Check if the company is already associated with the user
-        if company.account != user:
-            return Response({'error': 'The company is not associated with the user.'}, status=status.HTTP_403_FORBIDDEN)
+        # Сериализация данных
+        companies_data = []
+        for blogger_company in blogger_companies:
+            company = blogger_company.company
+            company_data = {
+                'id': company.id,
+                'name': company.name,
+                'date_start': company.date_start,
+                'date_finish': company.date_finish,
+                'status_text': company.status_text,
+                'budget_week': company.budget_week,
+                'views': company.views,
+                'ban_show': company.ban_show,
+                'site': {
+                    'id': company.site.id if company.site else None,
+                    'domain': company.site.domain if company.site else '',
+                    'date_creation': company.site.date_creation if company.site else None,
+                    'masked_domain': company.site.masked_domain if company.site else '',
+                    'shows': company.site.shows if company.site else 0,
+                },
+                'banners': [
+                    {
+                        'id': banner.id,
+                        'name': banner.name,
+                        'link': banner.link,
+                        'title_option': banner.title_option,
+                        'description_option': banner.description_option,
+                        'image_option': banner.image_option,
+                        'video_option': banner.video_option,
+                        
+                        'audio_option': banner.audio_option,
+                        'channel_private_bool': banner.channel_private_bool,
+                        'images': BannderImage.objects.filter(banner=banner).values_list('image', flat=True),
+                    } for banner in company.ad_bannerModel_ad_companyModel.all()
+                ],
+                'audiences': [
+                    {
+                        'id': audience.id,
+                        'name': audience.name,
+                        'geography': audience.geography,
+                        'category': audience.category,
+                        'interest': audience.interest,
+                        'gender_age': audience.gender_age,
+                        'device': audience.device,
+                        'solvency': audience.solvency,
+                    } for audience in company.ad_audienceModel_ad_companyModel.all()
+                ],
+                'statuses': [
+                    {
+                        'id': status.id,
+                        'status': status.status,
+                        'text': status.text,
+                    } for status in company.ad_statusModel_companies.all()
+                ]
+            }
+            companies_data.append(company_data)
 
-        # If you need to perform any action when a user selects a company, do it here
-        # For example, you might want to mark the company as selected by the user in some way
+        return Response({'companies': companies_data}, status=status.HTTP_200_OK)
 
-        return Response({'status': 'ok'}, status=status.HTTP_200_OK)
+
+class AddCompanyToBlogger(APIView):
+    def post(self, request):
+        with transaction.atomic():  # Используем транзакцию для обеспечения целостности данных
+            token = request.data.get('token', '')
+            if not token:
+                return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            current_token = tokenModel.objects.filter(token=token)
+            if not current_token.exists():
+                return Response({'error': 'Invalid token.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            user = current_token.first().account
+
+            company_id = request.data.get('company_id', '')
+            if not company_id:
+                return Response({'error': 'company_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                company = ad_companyModel.objects.get(id=company_id)
+            except ad_companyModel.DoesNotExist:
+                return Response({'error': 'Company not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+            # Проверяем, не добавлена ли уже эта компания блогером
+            if BloggerCompany.objects.filter(company=company, account=user).exists():
+                return Response({'error': 'The company is already added by the user.'}, status=status.HTTP_409_CONFLICT)
+
+            # Создаем запись в модели BloggerCompany
+            BloggerCompany.objects.create(company=company, account=user)
+
+            # Генерация маскированного URL
+            masked_domain = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(64))
+            site = company.site  # Предполагаем, что у компании уже есть связанный сайт
+
+            # Создаем запись в модели jumpToADPage
+            jumpToADPage.objects.create(account=user, site=site, masked_url=masked_domain)
+
+            return Response({
+                'status': 'ok',
+                'message': 'Company added successfully to blogger.',
+                'masked_domain': masked_domain  # Возвращаем маскированный URL в ответе
+            }, status=status.HTTP_201_CREATED)
+
 
 
     
@@ -1233,6 +1330,8 @@ class generateMaskedURL(APIView):
 
         return Response({'masked_domain': masked_domain}, status=status.HTTP_200_OK)
     
+    
+from django.utils import timezone
 class checkTransition(APIView):
     def post(self, request):
         masked_domain = request.data.get('masked_domain', '')
@@ -1244,23 +1343,52 @@ class checkTransition(APIView):
         if not jump:
             return Response({'error': 'jump not found.'}, status=status.HTTP_404_NOT_FOUND)
         
-        #add to jumpToADPage shows +1
+        # Добавляем к показам jumpToADPage +1
         jump.shows += 1
         jump.save()
 
-        #create jumpsToMaskedLink
+        # Создаем запись в jumpsToMaskedLink
         jumpsToMaskedLink.objects.create(jump=jump)
+        
+        # Обновляем статистику для компании
+        self.update_statistics(jump.masked_url, timezone.now())
         
         normal_url = jump.site.domain
         
-        #return normal_url
+        # Возвращаем обычный URL
         return Response({'normal_url': normal_url}, status=status.HTTP_200_OK)
+
+    def update_statistics(self, masked_url, click_time):
+        # Получаем или создаем объект статистики для компании
+        stats, created = statisticModel.objects.get_or_create(
+            masked_url=masked_url,
+            defaults={
+                'clicks_sum': 0,
+                'clicks': [],
+                'first_click': click_time,
+                'last_click': click_time
+            }
+        )
+        
+        # Обновляем данные статистики
+        stats.clicks_sum += 1
+        stats.last_click = click_time
+        if created or not stats.first_click:
+            stats.first_click = click_time
+
+        # Обновляем массив кликов
+        stats.clicks.append(click_time)
+        
+        # Сохраняем обновленные данные
+        stats.save()
     
     
 from django.db.models import Sum, Avg
 from collections import defaultdict
 from django.db.models.functions import TruncDay
+from django.db.models.functions import TruncWeek
 
+#TODO
 class StatisticsAPIView(APIView):
     DEBUG = True  # Переменная для режима отладки
     TEST = True  # Переменная для тестового режима
@@ -1296,74 +1424,63 @@ class StatisticsAPIView(APIView):
         return tokenModel.objects.filter(token=token).exists()
 
     def get_statistics(self, company_ids):
-        """
-        Функция для получения статистики по указанным компаниям.
-        """
-        if self.TEST:
-            # Генерация случайных данных на 1 год, если включен тестовый режим
-            return self.generate_dummy_data()
+            """
+            Функция для получения статистики по указанным компаниям.
+            """
+            if self.TEST:
+                return self.generate_dummy_data()
 
-        # В реальном режиме здесь должна быть логика получения реальных данных
-        statistics = {
-            'click_sum': 0,
-            'cpc_sum': 0.0,
-            'consumption': 0,
-            'statistics': {
-                'click': [],
-                'cpc': [],
-                'consumption': [],
+            statistics = {
+                'click_sum': 0,
+                'cpc_sum': 0.0,
+                'total_spent': 0.0,
+                'statistics': {
+                    'click': [],
+                    'spent': [],
+                    'cpc': [],
+                }
             }
-        }
-        print("1--------------------------------------------------------------------------------")
-        # Обработка реальных данных
-        banners = ad_bannerModel.objects.filter(ad_company__id__in=company_ids)
-        statistics['click_sum'] = banners.aggregate(Sum('clicks'))['clicks__sum'] or 0
-        statistics['consumption'] = banners.aggregate(Sum('consumption'))['consumption__sum'] or 0
-        
-        print(banners, statistics['click_sum'], statistics['consumption'])
-        print("2--------------------------------------------------------------------------------")
-        
-        if statistics['click_sum'] > 0:
-            statistics['cpc_sum'] = statistics['consumption'] / statistics['click_sum']
-        
-        # Генерация статистики по дням
-        daily_stats = banners.annotate(date=TruncDay('date_creation')).values('date').annotate(
-            daily_clicks=Sum('clicks'),
-            daily_consumption=Sum('consumption')
-        ).order_by('date')
-        
-        print(daily_stats)
-        
-        print("3--------------------------------------------------------------------------------")
-        # Инициализация статистики для каждого дня в периоде
-        start_date = daily_stats.first()['date'] if daily_stats.exists() else datetime.now() - timedelta(days=364)
-        end_date = datetime.now()
-        
-        # Заполнение статистики нулями для каждого дня
-        daily_stats_dict = defaultdict(lambda: {'clicks': 0, 'consumption': 0})
-        for stat in daily_stats:
-            daily_stats_dict[stat['date']] = {
-                'clicks': stat['daily_clicks'],
-                'consumption': stat['daily_consumption']
-            }
-        
-        print(daily_stats_dict)
-        print("4--------------------------------------------------------------------------------")    
-        # Обновление статистики данными из daily_stats
-        date_cursor = start_date
-        while date_cursor <= end_date:
-            date_str = date_cursor.strftime('%Y-%m-%d %H:%M:%S')
-            daily_data = daily_stats_dict[date_cursor]
-            statistics['statistics']['click'].append({'datetime': date_str, 'value': daily_data['clicks']})
-            statistics['statistics']['consumption'].append({'datetime': date_str, 'value': daily_data['consumption']})
-            cpc_value = (daily_data['consumption'] / daily_data['clicks']) if daily_data['clicks'] > 0 else 0
-            statistics['statistics']['cpc'].append({'datetime': date_str, 'value': cpc_value})
-            date_cursor += timedelta(days=1)
+
+            # Обработка реальных данных
+            jumpToADPage.objects.filter(company=company_ids)
+            stats = statisticModel.objects.filter(company__id__in=company_ids)
+            statistics['click_sum'] = stats.aggregate(Sum('clicks_sum'))['clicks_sum__sum'] or 0
             
-        print(date_cursor)
-        print("5--------------------------------------------------------------------------------")
+            # Расчет расходов и средней цены за клик
+            weekly_stats = stats.annotate(week=TruncWeek('last_click')).values('week', 'company').annotate(
+                weekly_clicks=Sum('clicks_sum')
+            ).order_by('week')
 
-        return statistics
+            for week_stat in weekly_stats:
+                company = week_stat['company']
+                weekly_clicks = week_stat['weekly_clicks']
+                weekly_budget = company.budget_week
+                price_per_click = company.price_target
+                
+                # Расчет фактической средней цены за клик
+                if weekly_clicks * price_per_click <= weekly_budget:
+                    actual_price_per_click = price_per_click
+                else:
+                    actual_price_per_click = weekly_budget / weekly_clicks
+
+                # Расчет расходов за неделю
+                weekly_spent = weekly_clicks * actual_price_per_click
+                statistics['total_spent'] += weekly_spent
+                
+                # Сохранение данных о расходах и кликах по неделям
+                statistics['statistics']['spent'].append({
+                    'week': week_stat['week'].strftime('%Y-%m-%d'),
+                    'spent': weekly_spent,
+                    'clicks': weekly_clicks
+                })
+                statistics['statistics']['cpc'].append({
+                    'week': week_stat['week'].strftime('%Y-%m-%d'),
+                    'cpc': actual_price_per_click
+                })
+            
+            statistics['cpc_sum'] = statistics['total_spent'] / statistics['click_sum'] if statistics['click_sum'] > 0 else 0
+
+            return statistics
 
     def generate_dummy_data(self):
         """
@@ -1390,3 +1507,30 @@ class StatisticsAPIView(APIView):
             date_cursor += timedelta(days=1)
 
         return data
+    
+#delete company
+class deleteCompany(APIView):
+    def post(self, request):
+        token = request.data.get('token', '')
+        if not token:
+            return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = tokenModel.objects.get(token=token).account
+        except tokenModel.DoesNotExist:
+            return Response({'error': 'Invalid token.'}, status=status.HTTP_404_NOT_FOUND)
+
+        company_id = request.data.get('company_id', '')
+        if not company_id:
+            return Response({'error': 'company_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            company = ad_companyModel.objects.get(id=company_id)
+        except ad_companyModel.DoesNotExist:
+            return Response({'error': 'Company not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        if company.account != user:
+            return Response({'error': 'The company is not associated with the user.'}, status=status.HTTP_403_FORBIDDEN)
+
+        company.delete()
+        return Response({'status': 'ok'}, status=status.HTTP_200_OK)

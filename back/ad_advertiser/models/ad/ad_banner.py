@@ -8,7 +8,7 @@ from ad_advertiser.models.ad.ad_audience import ad_audienceModel
 from account.models.account import accountModel
 
 class BannderImage(models.Model):
-    banner = models.ForeignKey('ad_bannerModel', related_name='banner_image', on_delete=models.CASCADE)
+    banner = models.ForeignKey('ad_bannerModel', related_name='banner_image', on_delete=models.CASCADE, null=True, blank=True)
     image = models.ImageField(upload_to='banner_images/', null=True, blank=True)  # Adjust the 'upload_to' parameter as needed
 
 class ad_bannerModel(models.Model):
