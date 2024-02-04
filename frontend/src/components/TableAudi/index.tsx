@@ -39,7 +39,7 @@ enum CurrentPopup {
 
 const THEME = {
 	Table: `
-	--data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.2fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.2fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr));
+	--data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.2fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.2fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr));
   width: 100%;
   min-width: 1164px;
   max-height: 810px;
@@ -411,7 +411,7 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 														style={{fontWeight: '400', fill: '#808080'}}
 														className={s.HeaderCell}
 														sortKey="Status">
-														<p className={s.sortText}>Сайт</p>
+														<p className={s.sortText}>Компания</p>
 													</tl.HeaderCell>
 													<tl.HeaderCell
 														style={{fontWeight: '400', fill: '#808080'}}
@@ -426,7 +426,7 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 																})
 															}>
 															<p className={s.sortText}>
-																Дата и время создания
+																Статус
 															</p>
 															<div>
 																<svg
@@ -485,6 +485,31 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 														className={s.HeaderCell}
 														style={{fontWeight: '400', fill: '#808080'}}>
 														Платежеспособность
+													</tl.HeaderCell>
+													<tl.HeaderCell
+														className={s.HeaderCell}
+														style={{fontWeight: '400', fill: '#808080'}}>
+														Ключевые фразы
+													</tl.HeaderCell>
+													<tl.HeaderCell
+														className={s.HeaderCell}
+														style={{fontWeight: '400', fill: '#808080'}}>
+														Минус фразы
+													</tl.HeaderCell>
+													<tl.HeaderCell
+														className={s.HeaderCell}
+														style={{fontWeight: '400', fill: '#808080'}}>
+														Расход
+													</tl.HeaderCell>
+													<tl.HeaderCell
+														className={s.HeaderCell}
+														style={{fontWeight: '400', fill: '#808080'}}>
+														Расход с НДС
+													</tl.HeaderCell>
+													<tl.HeaderCell
+														className={s.HeaderCell}
+														style={{fontWeight: '400', fill: '#808080'}}>
+														Средняя цена клика
 													</tl.HeaderCell>
 													{/* <tl.HeaderCell
 												style={{fontWeight: '400', fill: '#808080'}}
@@ -760,6 +785,22 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 														<tl.Cell>
 															<p>9</p>
 														</tl.Cell>
+														<tl.Cell>
+															<p>10</p>
+														</tl.Cell>
+														<tl.Cell>
+															<p>11</p>
+														</tl.Cell>
+														<tl.Cell>
+															<p>12</p>
+														</tl.Cell>
+														<tl.Cell>
+															<p>13</p>
+														</tl.Cell>
+														<tl.Cell>
+															<p>14</p>
+														</tl.Cell>
+
 													</tl.Row>
 												))}
 											</tl.Body>

@@ -73,7 +73,7 @@ const HeaderFinancy: React.FC<IHeaderFinancy> = ({
 					/>
 				</svg> */}
 			</div>
-			<Row width="100%">
+			<Row width="50%">
 				<div className={s.blockLeft}>
 					<Row width="auto" className={s.blockHeader}>
 						<div className={s.headerLeft}>
@@ -103,7 +103,7 @@ const HeaderFinancy: React.FC<IHeaderFinancy> = ({
 					<NavLabel className={s.NavLabel} text={`${balance}₽`} />
 					<Label isMini={true} text={`${Number(balance) * 1.2}₽ с НДС`} />
 				</div>
-				<div className={s.blockRight}>
+				{/* <div className={s.blockRight}>
 					<Row width="auto" className={s.blockHeader}>
 						<div className={s.headerRight}>
 							<Label isMini={true} text="Автопополнение" />
@@ -133,7 +133,7 @@ const HeaderFinancy: React.FC<IHeaderFinancy> = ({
 						isMini={true}
 						text="При остатке 100₽ пополнять на 1,000₽ (1,200₽ с НДС) через Сбербанк с карты **** 5673"
 					/>
-				</div>
+				</div> */}
 			</Row>
 			<Line className={s.Line} width="100%" />
 			<Row width="217px" className={s.historyTrans}>
@@ -155,7 +155,9 @@ const HeaderFinancy: React.FC<IHeaderFinancy> = ({
 				</ToolTip>
 			</Row>
 			{currentPopup === CurrentPopup.Deposite ? (
-				<PopUpWrapper>
+				<PopUpWrapper onExit={() => {
+					setCurrentPopup(CurrentPopup.None)
+				}}>
 					<Deposite
 						onExit={() => {
 							setCurrentPopup(CurrentPopup.None)

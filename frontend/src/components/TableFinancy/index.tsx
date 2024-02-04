@@ -348,20 +348,7 @@ const TableFinancy: React.FC<ITableFinancy> = ({}: ITableFinancy) => {
 	return (
 		<>
 			{!(data.nodes.length > 0) ? (
-				<>
-					<Col width="360px" className={s.noCompany}>
-						<NavLabel className={s.noCompanyTitle} text="Нет кампаний" />
-						<Label
-							className={s.noCompanyLabel}
-							width="360px"
-							isMini={true}
-							text="У вас нет ни одной кампании соответствующей заданным параметрам"
-						/>
-						<Link to={'/create'}>
-							<BlueButton width="180px" text="Создать" />
-						</Link>
-					</Col>
-				</>
+				<></>
 			) : ( 
 				<Col width="100%" className={s.Table}>
 					<div className={s.extendedBlock}>

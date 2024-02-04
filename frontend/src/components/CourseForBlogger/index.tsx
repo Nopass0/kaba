@@ -21,6 +21,7 @@ interface ICourseForBlogger {
 	id?: string
 	ooo?: string
 	link?: string
+	see_link?:string
 }
 
 const CourseForBlogger: React.FC<ICourseForBlogger> = ({
@@ -33,6 +34,7 @@ const CourseForBlogger: React.FC<ICourseForBlogger> = ({
 	id,
 	ooo,
 	link,
+	see_link,
 }: ICourseForBlogger) => {
 	return (
 		<div className={s.wrapper + ' ' + className}>
@@ -54,7 +56,7 @@ const CourseForBlogger: React.FC<ICourseForBlogger> = ({
 							)}
 						</Row>
 					</Col>
-					<Row width="auto" className={s.BlogerButtons}>
+					{/* <Row width="auto" className={s.BlogerButtons}>
 						<ButtonSVG text="Удалить" className="mr-2" />
 						<button>
 							<svg
@@ -70,11 +72,9 @@ const CourseForBlogger: React.FC<ICourseForBlogger> = ({
 								/>
 							</svg>
 						</button>
-					</Row>
+					</Row> */}
 				</Row>
-				<a href="#!" className={s.blueLink}>
-					{link}
-				</a>
+				<a href={link} className={s.blueLink}>{see_link.length > 32 ? `${see_link.substring(0, 32)}...` : see_link}</a>
 			</Col>
 		</div>
 	)

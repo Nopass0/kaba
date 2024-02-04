@@ -23,6 +23,7 @@ export interface IContentBanner {
 	arrayVariantDesc?: string[]
 	arrayVariantTitle?: string[]
 	arrayVariatImg?: string[]
+	see_link?: string
 }
 
 const ContentBanner: React.FC<IContentBanner> = ({
@@ -36,6 +37,7 @@ const ContentBanner: React.FC<IContentBanner> = ({
 	arrayVariantDesc,
 	arrayVariantTitle,
 	arrayVariatImg,
+	see_link,
 }: IContentBanner) => {
 	return (
 		<div className={s.wrapper}>
@@ -64,6 +66,7 @@ const ContentBanner: React.FC<IContentBanner> = ({
 						id={text_id_table}
 						// ooo="ООО “Название компании…”"
 						link={bloger_link}
+						see_link={see_link}
 					/>
 				) : (
 					<div className={s.TableContainer}>
@@ -86,9 +89,18 @@ const ContentBanner: React.FC<IContentBanner> = ({
 										<Row width="auto" className={s.TitleHeaderInsideBlock}>
 											<Label isMini={true} text="Описание" />
 											<svg
-												onClick={() => {
-													console.log(item)
-												}}
+												onClick={() =>
+													navigator.clipboard.writeText(
+														item
+															.slice(item.indexOf("'text':"), item.length - 1)
+															.replace("'text': ", '')
+															.replace("'", '')
+															.replace("'", '')
+															.replace('"', '')
+															.replace('"', ''),
+													)
+												}
+												className="cursor-pointer"
 												xmlns="http://www.w3.org/2000/svg"
 												width="24"
 												height="24"
@@ -113,7 +125,15 @@ const ContentBanner: React.FC<IContentBanner> = ({
 												/>
 											</svg>
 										</Row>
-										<span className={s.variantTextSpan}>{item}</span>
+										<span className={s.variantTextSpan}>
+											{item
+												.slice(item.indexOf("'text':"), item.length - 1)
+												.replace("'text': ", '')
+												.replace("'", '')
+												.replace("'", '')
+												.replace('"', '')
+												.replace('"', '')}
+										</span>
 									</div>
 								))}
 
@@ -123,9 +143,18 @@ const ContentBanner: React.FC<IContentBanner> = ({
 										<Row width="auto" className={s.TitleHeaderInsideBlock}>
 											<Label isMini={true} text="Заголовок" />
 											<svg
-												onClick={() => {
-													console.log(item)
-												}}
+												onClick={() =>
+													navigator.clipboard.writeText(
+														item
+															.slice(item.indexOf("'text':"), item.length - 1)
+															.replace("'text': ", '')
+															.replace("'", '')
+															.replace("'", '')
+															.replace('"', '')
+															.replace('"', ''),
+													)
+												}
+												className="cursor-pointer"
 												xmlns="http://www.w3.org/2000/svg"
 												width="24"
 												height="24"
@@ -150,7 +179,15 @@ const ContentBanner: React.FC<IContentBanner> = ({
 												/>
 											</svg>
 										</Row>
-										<span className={s.variantTextSpan}>{item}</span>
+										<span className={s.variantTextSpan}>
+											{item
+												.slice(item.indexOf("'text':"), item.length - 1)
+												.replace("'text': ", '')
+												.replace("'", '')
+												.replace("'", '')
+												.replace('"', '')
+												.replace('"', '')}
+										</span>
 									</div>
 								))}
 						</div>

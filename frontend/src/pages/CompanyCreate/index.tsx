@@ -157,6 +157,15 @@ const CompanyCreate: React.FC = () => {
 				{
 					value: '1.1',
 					label: 'Option 1.1',
+					subOptions: [{
+						value: '1.1.1',
+						label: 'Option 1.1.1',
+						subOptions: [{
+							value: '1.1.1.1',
+							label: 'Option 1.1.1.1',
+						}]
+					}
+					]
 				},
 				{
 					value: '1.2',

@@ -39,7 +39,7 @@ enum CurrentPopup {
 
 const THEME = {
 	Table: `
-	--data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.4fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.2fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr));
+	--data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.4fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.2fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr));
   width: 100%;
   min-width: 1164px;
   max-height: 810px;
@@ -416,7 +416,7 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 														style={{fontWeight: '400', fill: '#808080'}}
 														className={s.HeaderCell}
 														sortKey="Status">
-														<p className={s.sortText}>Сайт</p>
+														<p className={s.sortText}>Компания</p>
 													</tl.HeaderCell>
 													<tl.HeaderCell
 														style={{fontWeight: '400', fill: '#808080'}}
@@ -431,7 +431,7 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 																})
 															}>
 															<p className={s.sortText}>
-																Дата и время создания
+																Статус
 															</p>
 															<div>
 																<svg
@@ -464,38 +464,34 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 													<tl.HeaderCell
 														className={s.HeaderCell}
 														style={{fontWeight: '400', fill: '#808080'}}>
+														Аудитория
+													</tl.HeaderCell>
+													<tl.HeaderCell
+														className={s.HeaderCell}
+														style={{fontWeight: '400', fill: '#808080'}}>
 														Ссылка на рекламируемую страницу
 													</tl.HeaderCell>
 													<tl.HeaderCell
 														className={s.HeaderCell}
 														style={{fontWeight: '400', fill: '#808080'}}>
-														Варианты заголовков
+														Показ на непроверенных медиаресурсах
 													</tl.HeaderCell>
 													<tl.HeaderCell
 														className={s.HeaderCell}
 														style={{fontWeight: '400', fill: '#808080'}}>
-														Варианты описаний
+														Расход
 													</tl.HeaderCell>
 													<tl.HeaderCell
 														className={s.HeaderCell}
 														style={{fontWeight: '400', fill: '#808080'}}>
-														Варианты изображений
+														Расход с НДС
 													</tl.HeaderCell>
 													<tl.HeaderCell
 														className={s.HeaderCell}
 														style={{fontWeight: '400', fill: '#808080'}}>
-														Варианты видео
+														Средняя цена клика
 													</tl.HeaderCell>
-													<tl.HeaderCell
-														className={s.HeaderCell}
-														style={{fontWeight: '400', fill: '#808080'}}>
-														Варианты аудио
-													</tl.HeaderCell>
-													<tl.HeaderCell
-														className={s.HeaderCell}
-														style={{fontWeight: '400', fill: '#808080'}}>
-														Показ на закрытых медиаресурсах?
-													</tl.HeaderCell>
+													
 													{/* <tl.HeaderCell
 												style={{fontWeight: '400', fill: '#808080'}}
 												className={s.headerCellSort_Sort}
@@ -674,6 +670,22 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 															</mui.Select>
 														</tl.Cell>
 														<tl.Cell>
+															<p
+																id={
+																	item.status_text === 'Активная'
+																		? 'green'
+																		: item.status_text === 'Отклонена'
+																		  ? 'red'
+																		  : item.status_text === 'Завершена'
+																		    ? 'gray'
+																		    : item.status_text === 'На модерации'
+																		      ? 'yellow'
+																		      : 'gray'
+																}>
+																{item.status_text}
+															</p>
+														</tl.Cell>
+														<tl.Cell>
 															<Col width="auto">
 																<Row width="auto" className="flex items-center">
 																	<img
@@ -739,22 +751,7 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 														</mui.Option>
 													</mui.Select>
 												</tl.Cell> */}
-														<tl.Cell>
-															<p
-																id={
-																	item.status_text === 'Активная'
-																		? 'green'
-																		: item.status_text === 'Отклонена'
-																		  ? 'red'
-																		  : item.status_text === 'Завершена'
-																		    ? 'gray'
-																		    : item.status_text === 'На модерации'
-																		      ? 'yellow'
-																		      : 'gray'
-																}>
-																{item.status_text}
-															</p>
-														</tl.Cell>
+														
 														<tl.Cell>
 															<p>{item.views}</p>
 														</tl.Cell>
@@ -770,9 +767,7 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 														<tl.Cell>
 															<p>9</p>
 														</tl.Cell>
-														<tl.Cell>
-															<p>10</p>
-														</tl.Cell>
+														
 													</tl.Row>
 												))}
 											</tl.Body>
