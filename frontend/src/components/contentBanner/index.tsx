@@ -20,6 +20,9 @@ export interface IContentBanner {
 	bloger_ooo?: string
 	bloger_link?: string
 	onExit?: () => void
+	arrayVariantDesc?: string[]
+	arrayVariantTitle?: string[]
+	arrayVariatImg?: string[]
 }
 
 const ContentBanner: React.FC<IContentBanner> = ({
@@ -30,6 +33,9 @@ const ContentBanner: React.FC<IContentBanner> = ({
 	onExit,
 	bloger_link,
 	bloger_svg,
+	arrayVariantDesc,
+	arrayVariantTitle,
+	arrayVariatImg,
 }: IContentBanner) => {
 	return (
 		<div className={s.wrapper}>
@@ -63,52 +69,90 @@ const ContentBanner: React.FC<IContentBanner> = ({
 					<div className={s.TableContainer}>
 						<Row width="528px" className={s.TableMenu}>
 							<Col width="178px" className={s.TableText}>
-								<p>
-									{text_course_table}
-								</p>
-								<Label
-									isMini={true}
-									text={text_id_table}
-								/>
+								<p>{text_course_table}</p>
+								<Label isMini={true} text={text_id_table} />
 							</Col>
 							<Clicks count={`+${245}`} />
 						</Row>
 					</div>
 				)}
 				<Col className={s.variantTextCol} width="528px">
-					<NavLabel text="Варианты текста" className={s.navLabel} />
+					<Label text="Варианты текста" className={s.Label} />
 					<Row width="528px">
 						<div className={s.variantTextWrapperLeft}>
-							<Col width="256px">
-								<div className={s.variantTextBlock_UP_1}>
-									<Label isMini={true} text="Заголовок" />
-									<span className={s.variantTextSpan}>
-										Реклама мобильного приложения не окупается: что делать?
-									</span>
-								</div>
-								<div className={s.variantTextBlock_DOWN_1}>
-									<Label isMini={true} text="Описание" />
-									<span className={s.variantTextSpan}>
-										Для UA-менеджеров это означает, что оптимизация метаданных
-										становится ещё более важным аспектом успешной рекламной
-										кампании. А чтобы оптимизировать метаданные под алгоритмы
-										сторов, нужно заниматься App Store Optimization.
-									</span>
-								</div>
-							</Col>
-						</div>
-						<div className={s.variantTextWrapperRight}>
-							<div className={s.variantTextBlock_2}>
-								<Label isMini={true} text="Описание" />
-								<span className={s.variantTextSpan}>
-									Рекламные платформы, такие как Facebook, Google Ads или Apple
-									Search Ads, регулярно обновляют свои алгоритмы. Эти изменения
-									могут затронуть таргетинг, ставки, релевантность объявлений и
-									оптимизацию кампаний. Если вы не следите за обновлениями и не
-									адаптируете свою рекламу, она может стать менее эффективной и
-									не окупаться.
-								</span>
-							</div>
+							{arrayVariantDesc &&
+								arrayVariantDesc.map((item, index) => (
+									<div key={index} className={s.variantTextBlock}>
+										<Row width="auto" className={s.TitleHeaderInsideBlock}>
+											<Label isMini={true} text="Описание" />
+											<svg
+												onClick={() => {
+													console.log(item)
+												}}
+												xmlns="http://www.w3.org/2000/svg"
+												width="24"
+												height="24"
+												viewBox="0 0 24 24"
+												fill="none">
+												<rect width="24" height="24" rx="7" fill="#262626" />
+												<rect
+													x="10.2002"
+													y="10.2031"
+													width="7.8"
+													height="7.8"
+													rx="1.2"
+													stroke="#F2F2F2"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												/>
+												<path
+													d="M7.8 13.8H7.2C6.53726 13.8 6 13.2627 6 12.6V7.2C6 6.53726 6.53726 6 7.2 6H12.6C13.2627 6 13.8 6.53726 13.8 7.2V7.8"
+													stroke="#F2F2F2"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												/>
+											</svg>
+										</Row>
+										<span className={s.variantTextSpan}>{item}</span>
+									</div>
+								))}
+
+							{arrayVariantTitle &&
+								arrayVariantTitle.map((item, index) => (
+									<div key={index} className={s.variantTextBlock}>
+										<Row width="auto" className={s.TitleHeaderInsideBlock}>
+											<Label isMini={true} text="Заголовок" />
+											<svg
+												onClick={() => {
+													console.log(item)
+												}}
+												xmlns="http://www.w3.org/2000/svg"
+												width="24"
+												height="24"
+												viewBox="0 0 24 24"
+												fill="none">
+												<rect width="24" height="24" rx="7" fill="#262626" />
+												<rect
+													x="10.2002"
+													y="10.2031"
+													width="7.8"
+													height="7.8"
+													rx="1.2"
+													stroke="#F2F2F2"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												/>
+												<path
+													d="M7.8 13.8H7.2C6.53726 13.8 6 13.2627 6 12.6V7.2C6 6.53726 6.53726 6 7.2 6H12.6C13.2627 6 13.8 6.53726 13.8 7.2V7.8"
+													stroke="#F2F2F2"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												/>
+											</svg>
+										</Row>
+										<span className={s.variantTextSpan}>{item}</span>
+									</div>
+								))}
 						</div>
 					</Row>
 				</Col>
@@ -134,23 +178,17 @@ const ContentBanner: React.FC<IContentBanner> = ({
 					</Row>
 				</Col> */}
 				<Col width="528px" className={s.variantImg}>
-					<NavLabel text="Варианты изображений" className={s.navLabel} />
-					<Row width="528px">
-						<img
-							src="https://play-lh.googleusercontent.com/4cXfm9YG59lys9woio9JM5qR_bOpCrv0dgJ1XmowbzgRpIzDRyNQQ8vB8yXsz3NQJ9Q"
-							alt=""
-							className={s.imgPlayers}
-						/>
-						<img
-							src="https://play-lh.googleusercontent.com/4cXfm9YG59lys9woio9JM5qR_bOpCrv0dgJ1XmowbzgRpIzDRyNQQ8vB8yXsz3NQJ9Q"
-							alt=""
-							className={s.imgPlayers}
-						/>
-						<img
-							src="https://play-lh.googleusercontent.com/4cXfm9YG59lys9woio9JM5qR_bOpCrv0dgJ1XmowbzgRpIzDRyNQQ8vB8yXsz3NQJ9Q"
-							alt=""
-							className={s.imgPlayers}
-						/>
+					<Label text="Варианты изображений" className={s.Label} />
+					<Row className={s.variantImgWrapper} width="528px">
+						{arrayVariatImg &&
+							arrayVariatImg.map((item, index) => (
+								<img
+									key={index}
+									src={`http://localhost:5000${item}`}
+									alt={item}
+									className={s.imgPlayers}
+								/>
+							))}
 					</Row>
 				</Col>
 				{/* <Col width="528px" className={s.variantAudio}>

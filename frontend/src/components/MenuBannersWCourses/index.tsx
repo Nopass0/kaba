@@ -71,7 +71,7 @@ const MenuBannersWCourse: React.FC<IMenuBannersWCourse> = ({
 			<Col width="248px">
 				<Col width="248px" className={s.BlogerHeader}>
 					<Row width="248px" className={s.BlogerHeaderUp}>
-						{svg}
+						<img src={svg} alt={svg} className="w-[36px] h-[36px] mr-[16px]" />
 						<Col width="180px" className="">
 							<WhiteLabel text={title} size="14px" />
 							<Row width="180px">
@@ -96,7 +96,7 @@ const MenuBannersWCourse: React.FC<IMenuBannersWCourse> = ({
 						</Col>
 					</Row>
 					<a href="#!" className={s.blueLink}>
-						{link}
+						{link.length > 32 ? `${link.slice(0, 32)}...` : link}
 					</a>
 				</Col>
 
@@ -130,9 +130,9 @@ const MenuBannersWCourse: React.FC<IMenuBannersWCourse> = ({
 								</a>
 							)} */}
 							{categories}
-							<a href="#!" className={s.blueLink}>
+							{/* <a href="#!" className={s.blueLink}>
 								ещё
-							</a>
+							</a> */}
 						</span>
 					</Row>
 				</Col>
