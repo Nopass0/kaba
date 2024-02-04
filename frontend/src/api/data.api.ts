@@ -201,3 +201,33 @@ export const getStatisticsAPI = async (
 		return {status: 'error', message: error.message}
 	}
 }
+
+//getBloggerStatistics (token, mask_link, step)
+// Function to get blogger statistics
+export const getBloggerStatistics = async (
+	token: string,
+	masked_url: string,
+	step: string,
+) => {
+	const formData = new FormData()
+	formData.append('token', token)
+	formData.append('masked_url', masked_url)
+	formData.append('step', step)
+
+	try {
+		const response = await axios.post(
+			getApiUrl('getBloggerStatistics'),
+			formData,
+			{
+				headers: {
+					'Content-Type': 'multipart/form-data',
+				},
+			},
+		)
+
+		return response.data
+	} catch (error: any) {
+		console.error('Error during getBloggerStatistics:', error)
+		return {status: 'error', message: error.message}
+	}
+}

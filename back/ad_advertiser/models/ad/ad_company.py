@@ -15,6 +15,7 @@ class ad_companyModel(models.Model):
     date_start = models.DateTimeField('Дата начала', blank=True)
     date_finish = models.DateTimeField('Дата завершения', blank=True)
     budget_week = models.PositiveIntegerField('Недельный бюджет', default=0)
+    
     channel_taboo = ArrayField(models.CharField(max_length=255), blank=True, size=500)
     phrase_plus = ArrayField(models.CharField(max_length=60), blank=True, size=500)
     phrase_minus = ArrayField(models.CharField(max_length=60), blank=True, size=500)

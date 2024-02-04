@@ -1477,8 +1477,11 @@ class StatisticsAPIView(APIView):
                     'week': week_stat['week'].strftime('%Y-%m-%d'),
                     'cpc': actual_price_per_click
                 })
-            
+
+                
             statistics['cpc_sum'] = statistics['total_spent'] / statistics['click_sum'] if statistics['click_sum'] > 0 else 0
+
+
 
             return statistics
 
@@ -1710,5 +1713,150 @@ class CompanyStatisticsAPI(APIView):
                 start_date += datetime.timedelta(days=30)
             elif step == 'year':
                 start_date += datetime.timedelta(days=365)
+
+        return mock_data
+
+class BloggerStatisticsAPI(APIView):
+    DEBUG = True  # Set to False in production
+    TEST = False
+
+    def post(self, request, *args, **kwargs):
+        try:
+            masked_url = request.POST.get('masked_url')  # Should be the masked URL of the company
+            token = request.POST.get('token')  # User token
+            step = request.POST.get('step')  # Step: hour/day/month/year
+
+            if not all([masked_url, token, step]):
+                raise ValueError("Missing required fields: masked_url, token, or step.")
+
+            if not token:
+                return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                user = tokenModel.objects.get(token=token).account
+            except tokenModel.DoesNotExist:
+                return Response({'error': 'Invalid token.'}, status=status.HTTP_404_NOT_FOUND)
+
+            if self.DEBUG:
+                print(f"User: {user}, Masked URL: {masked_url}, Step: {step}")
+
+            # Validate step
+            if step not in ['hour', 'day', 'month', 'year']:
+                raise ValueError("Invalid step. Choose from 'hour', 'day', 'month', 'year'.")
+
+            # Generate or fetch data
+            if self.TEST:
+                # Generate mock data
+                data = self.generate_mock_data(masked_url, step)
+            else:
+                # Fetch actual data from DB
+                data = self.fetch_data_from_db(masked_url, step, user)
+
+            return JsonResponse(data, safe=False)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    def fetch_data_from_db(self, masked_url, step, user):
+        # Fetch the jumpToADPage instance for the masked_url
+        try:
+            jump_page = jumpToADPage.objects.get(masked_url=masked_url)
+        except jumpToADPage.DoesNotExist:
+            return JsonResponse({'error': 'Invalid masked_url.'}, status=404)
+
+        # Fetch the related company and its budget and price_target
+        try:
+            company = ad_companyModel.objects.get(site=jump_page.site, account=user)
+        except ad_companyModel.DoesNotExist:
+            return JsonResponse({'error': 'No company associated with the given masked_url and user.'}, status=404)
+
+        # Fetch statistics for the masked_url
+        stats = statisticModel.objects.filter(masked_url=masked_url)
+
+        # Process the data in Python
+        truncated_stats = defaultdict(lambda: {'total_clicks': 0, 'total_cpc': 0, 'total_consumption': 0, 'click_times': []})
+
+        # Aggregate clicks
+        for stat in stats:
+            for click_time in stat.clicks:  # Assuming clicks is a list of datetime strings
+                truncated_date = self.truncate_date(click_time, step)
+                data = truncated_stats[truncated_date]
+                data['total_clicks'] += 1
+                data['click_times'].append(click_time)
+                
+        # Calculate CPC based on the aggregated data
+        budget_week = company.budget_week
+        price_target = company.price_target
+        for truncated_date, data in truncated_stats.items():
+            click_count = data['total_clicks']
+            if click_count * price_target <= budget_week:
+                cpc = price_target
+            else:
+                cpc = budget_week / click_count if click_count > 0 else 0
+
+            data['total_cpc'] = cpc
+            data['total_consumption'] = cpc * click_count
+
+        # Prepare response data
+        response_data = []
+        for truncated_date, data in truncated_stats.items():
+            response_data.append({
+                'truncated_date': truncated_date.isoformat(),
+                'total_clicks': data['total_clicks'],
+                'avg_cpc': data['total_cpc'],
+                'total_consumption': data['total_consumption']
+            })
+
+        # Sort the response data by truncated_date
+        response_data.sort(key=lambda x: x['truncated_date'])
+
+        # Prepare final response
+        response = {
+            'click_sum': sum(data['total_clicks'] for data in response_data),
+            'cpc_sum': sum(data['avg_cpc'] for data in response_data) / len(response_data) if response_data else 0,
+            'consumption': sum(data['total_consumption'] for data in response_data),
+            'datalabels': [data['truncated_date'] for data in response_data],
+            'statistics': response_data
+        }
+        return response
+    
+    def truncate_date(self, click_time, step):
+        if step == 'hour':
+            return make_aware(dt(click_time.year, click_time.month, click_time.day, click_time.hour))
+        elif step == 'day':
+            return make_aware(dt(click_time.year, click_time.month, click_time.day))
+        elif step == 'month':
+            return make_aware(dt(click_time.year, click_time.month, 1))
+        elif step == 'year':
+            return make_aware(dt(click_time.year, 1, 1))
+        else:
+            raise ValueError(f"Invalid step: {step}")
+
+    def generate_mock_data(self, mask_link, step):
+        # Generate mock data
+        mock_data = []
+        start_date = dt.now() - timedelta(days=365)
+        end_date = dt.now()
+
+        # Generate mock data for each day/hour/month/year
+        while start_date <= end_date:
+            data_point = {
+                'mask_link': mask_link,
+                'datetime': start_date.strftime("%Y-%m-%d %H:%M") if step == 'hour' else start_date.strftime("%Y-%m-%d"),
+                'clicks': random.randint(100, 500),
+                'cpc': random.uniform(0.1, 2.0),
+                'consumption': random.randint(1000, 5000)
+            }
+            mock_data.append(data_point)
+
+            # Increment date
+            if step == 'hour':
+                start_date += timedelta(hours=1)
+            elif step == 'day':
+                start_date += timedelta(days=1)
+            elif step == 'month':
+                start_date += timedelta(days=30)
+            elif step == 'year':
+                start_date += timedelta(days=365)
 
         return mock_data
