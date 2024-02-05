@@ -519,7 +519,7 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 							text="Годы"
 						/>
 					</div>
-					<div className={s.DatePicker}>
+					{/* <div className={s.DatePicker}>
 						<DatePicker
 							range
 							weekDays={weekDays}
@@ -534,7 +534,7 @@ const StatisticPage: React.FC<IStatisticPage> = ({
 							// ]}
 							render={<InputIcon />}
 						/>
-					</div>
+					</div> */}
 				</div>
 				<GraphsMenuCheckBox
 					bool_click={bool_click}

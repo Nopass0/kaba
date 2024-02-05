@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import s from './index.module.scss'
 import NavLabel from '../../NavLabel/index'
 import Row from '../../Row'
@@ -26,7 +26,9 @@ import CheckBox from '../../CheckBox'
 import moment from 'moment'
 import InputIcon from 'react-multi-date-picker/components/input_icon'
 import * as mui from '@mui/base'
-import Calendar from '../../Calendar/index';
+import Calendar from '../../Calendar/index'
+import {getStatisticsAPI} from '../../../api/data.api'
+import {useSelector} from 'react-redux'
 
 ChartJS.register(
 	CategoryScale,
@@ -38,86 +40,8 @@ ChartJS.register(
 )
 ChartJS.defaults.borderColor = '#333333'
 
-//Line chart
-
-function randomArray(length: number) {
-	const arr = []
-	let prev = 0
-	for (let i = 0; i < length; i++) {
-		//generate random numbers but prev number should be +- 50
-		const num = Math.floor(Math.random() * 100) + prev - 50
-		prev = num
-		arr.push(num)
-	}
-	return arr
-}
 
 // //generate array of dates from start date to end date like ["1 January", "2 January", "3 January",..., "1 December","2 December", ..., "31 December"]
-
-function generateArrayOfDates(startDate: string, endDate: string): string[] {
-	const start = moment(startDate, 'YYYY-MM-DD')
-	const end = moment(endDate, 'YYYY-MM-DD')
-	const dates = []
-
-	while (start.isSameOrBefore(end)) {
-		dates.push(start.format('D MMMM'))
-		start.add(1, 'day')
-	}
-
-	return dates
-}
-
-// // Example usage
-const startDate = '2022-01-01'
-const endDate = '2022-12-31'
-const arrayOfDates = generateArrayOfDates(startDate, endDate)
-console.log(arrayOfDates)
-
-const data = {
-	labels: generateArrayOfDates('2022-01-01', '2022-03-30'),
-	datasets: [
-		{
-			label: 'Клики (цифрай)',
-			data: randomArray(120),
-			borderWidth: 1,
-			backgroundColor: '#4169E1',
-			borderColor: '#4169E1',
-			pointRadius: 0,
-		},
-		{
-			label: 'Конверсия: Все цели (%))',
-			data: randomArray(120),
-			borderWidth: 1,
-			backgroundColor: '#F3A63B',
-			borderColor: '#F3A63B',
-			pointRadius: 0,
-		},
-		{
-			label: 'Расходы (Рубли знак валюты)',
-			data: randomArray(120),
-			borderWidth: 1,
-			backgroundColor: '#6049B4',
-			borderColor: '#6049B4',
-			pointRadius: 0,
-		},
-		{
-			label: 'Доля рекламных расходов(%)',
-			data: randomArray(120),
-			borderWidth: 1,
-			backgroundColor: '#57BD53',
-			borderColor: '#57BD53',
-			pointRadius: 0,
-		},
-		{
-			label: 'Доходы: Все цели (Рубли знак валюты)',
-			data: randomArray(120),
-			borderWidth: 1,
-			backgroundColor: '#F3553E',
-			borderColor: '#F3553E',
-			pointRadius: 0,
-		},
-	],
-}
 
 //End line chart
 
@@ -252,9 +176,10 @@ interface IStatisticPageMini {
 	className?: string // Added className prop
 	svg?: React.ReactNode
 	name_company?: string
-	id_company?:string
-	link_company?:string
-	ooo_company?:string
+	id_company?: string
+	link_company?: string
+	ooo_company?: string
+	see_link?:string
 }
 
 const StatisticPageMini: React.FC<IStatisticPageMini> = ({
@@ -263,8 +188,8 @@ const StatisticPageMini: React.FC<IStatisticPageMini> = ({
 	name_company,
 	id_company,
 	link_company,
-	ooo_company
-
+	ooo_company,
+	see_link,
 }: IStatisticPageMini) => {
 	const weekDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
 	const months = [
@@ -281,8 +206,73 @@ const StatisticPageMini: React.FC<IStatisticPageMini> = ({
 		'Ноябрь',
 		'Декабрь',
 	]
-	const [graphChange, setGraphChange] = React.useState<number>(1)
 
+	const user = useSelector((state: any) => state.user)
+	const token = user?.token
+	const [graphChange, setGraphChange] = React.useState<number>(1)
+	const [info, setInfo] = useState({})
+	const [step, setStep] = useState('hour')
+
+	const [d_click, bool_click] = useState(true)
+	const [d_cpc, bool_cpc] = useState(true)
+	const [d_consumption, bool_consumption] = useState(true)
+
+	useEffect(() => {
+		console.log(id_company)
+
+		const getInfo = async () => {
+			const res = await getStatisticsAPI(token, [String(id_company)], step)
+			console.log(res)
+			setInfo(res)
+			console.log(info)
+		}
+		getInfo()
+		console.log(info)
+	}, [step])
+
+	// sum all total_clicks
+	let click = info.statistics?.map((el) => el.total_clicks)
+	let cpc: number[] = info.statistics?.map((el) => el.avg_cpc)
+	let consumption: number[] = info.statistics?.map((el) => el.total_consumption)
+
+	let clicks = info.click_sum
+	let cpc_sum = info.cpc_sum
+	let consumption_sum = info.consumption
+	console.log(info.datalabels)
+
+
+	const data = {
+		labels: info.datalabels,
+		datasets: [
+			{
+				hidden: d_click,
+				label: 'Клики (цифрай)',
+				data: click, //array of only value [{data: ..., value: ...}]
+				borderWidth: 1,
+				backgroundColor: '#4169E1',
+				borderColor: '#4169E1',
+				pointRadius: 0,
+			},
+			{
+				hidden: d_cpc,
+				label: 'Конверсия: Все цели (%))',
+				data: cpc,
+				borderWidth: 1,
+				backgroundColor: '#F3A63B',
+				borderColor: '#F3A63B',
+				pointRadius: 0,
+			},
+			{
+				hidden: d_consumption,
+				label: 'Расходы (Рубли знак валюты)',
+				data: consumption,
+				borderWidth: 1,
+				backgroundColor: '#6049B4',
+				borderColor: '#6049B4',
+				pointRadius: 0,
+			},
+		],
+	}
 	return (
 		<div className={s.wrapper}>
 			<Col width="1164px">
@@ -309,6 +299,7 @@ const StatisticPageMini: React.FC<IStatisticPageMini> = ({
 					id={id_company}
 					ooo={ooo_company}
 					title={name_company}
+					see_link={see_link}
 					width_block="1164px"
 					width_text="1164px"
 				/>
@@ -317,25 +308,46 @@ const StatisticPageMini: React.FC<IStatisticPageMini> = ({
 				<HeaderSubTitle textHeader="Ключевые показатели" />
 				<div className={s.extendedBlock}>
 					<div className={s.extendedLink}>
-						<Button width="84px" className={s.extendedButton} text="Часы" />
-						<Button width="78px" className={s.extendedButton} text="Дни" />
-						<Button width="89px" className={s.extendedButton} text="Недели" />
-						<Button width="89px" className={s.extendedButton} text="Месяцы" />
+					<Button
+							onClick={() => setStep('hour')}
+							width="84px"
+							className={`${s.extendedButton} ${step === 'hour' && s.active}`}
+							text="Часы"
+						/>
+						<Button
+							onClick={() => setStep('day')}
+							width="78px"
+							className={`${s.extendedButton} ${step === 'day' && s.active}`}
+							text="Дни"
+						/>
+						<Button
+							onClick={() => setStep('month')}
+							width="89px"
+							className={`${s.extendedButton} ${step === 'month' && s.active}`}
+							text="Месяцы"
+						/>
+						<Button
+							onClick={() => setStep('years')}
+							width="89px"
+							className={`${s.extendedButton} ${step === 'years' && s.active}`}
+							text="Годы"
+						/>
 					</div>
-					<div className={s.DatePicker}>
+					{/* <div className={s.DatePicker}>
 						<mui.Select
-						multiple
+							multiple
 							className={`${s.sortTableButtonCalendar}  text-[#808080] cursor-pointer hover:text-[#f2f2f2] transition-all`}
 							renderValue={(option: mui.SelectOption<number> | null) => {
 								if (option == null || option.value === null) {
 									return (
 										<>
-											<div className={`${s.sortTableButtonWrapper}  text-[#808080] cursor-pointer hover:text-[#f2f2f2] transition-all`}>
+											<div
+												className={`${s.sortTableButtonWrapper}  text-[#808080] cursor-pointer hover:text-[#f2f2f2] transition-all`}>
 												<p className={s.sortTableButtonTextGray}>Дата:</p>
-												{/* Date */}
-												<p></p> 
+								
+												<p></p>
 												<svg
-												className=' text-[#808080] cursor-pointer hover:text-[#f2f2f2] transition-all'
+													className=" text-[#808080] cursor-pointer hover:text-[#f2f2f2] transition-all"
 													xmlns="http://www.w3.org/2000/svg"
 													width="16"
 													height="16"
@@ -355,12 +367,13 @@ const StatisticPageMini: React.FC<IStatisticPageMini> = ({
 								}
 								return (
 									<>
-										<div className={`${s.sortTableButtonWrapper} text-[#808080] cursor-pointer hover:text-[#f2f2f2] transition-all`}>
+										<div
+											className={`${s.sortTableButtonWrapper} text-[#808080] cursor-pointer hover:text-[#f2f2f2] transition-all`}>
 											<p className={s.sortTableButtonTextGray}>Дата:</p>
-											{/* Date */}
+											
 											<p></p>
 											<svg
-											className='text-[#808080] cursor-pointer hover:text-[#f2f2f2] transition-all'
+												className="text-[#808080] cursor-pointer hover:text-[#f2f2f2] transition-all"
 												xmlns="http://www.w3.org/2000/svg"
 												width="16"
 												height="16"
@@ -378,15 +391,20 @@ const StatisticPageMini: React.FC<IStatisticPageMini> = ({
 									</>
 								)
 							}}>
-							<mui.Option
-								value={1}
-								className={`cursor-pointer z-10 mt-1`}>
-									<Calendar/>
-								</mui.Option>
+							<mui.Option value={1} className={`cursor-pointer z-10 mt-1`}>
+								<Calendar />
+							</mui.Option>
 						</mui.Select>
-					</div>
+					</div> */}
 				</div>
-				<GraphsMenuCheckBox />
+				<GraphsMenuCheckBox
+					bool_click={bool_click}
+					bool_cpc={bool_cpc}
+					bool_consumption={bool_consumption}
+					clicks={clicks}
+					cpc_sum={cpc_sum}
+					consumption_sum={consumption_sum}
+				/>
 				<div className="w-[1164px] h-[394px] mt-[16px]">
 					<LineGraph data={data} />
 				</div>

@@ -22,6 +22,7 @@ export interface IContentBannerDetails {
 	course_id?: string
 	course_ooo?: string
 	course_link?: string
+	see_link?:string
 
 	// Statistics
 	stat_toEnd?: string
@@ -106,6 +107,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 	arrayVariantTitle,
 	sg_income_all,
 	arrayVariatImg,
+	see_link,
 
 	onExit,
 }: IContentBannerDetails) => {
@@ -135,6 +137,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 					id={course_id}
 					ooo={course_ooo}
 					link={course_link}
+					see_link={see_link}
 				/>
 
 				{/* Statistic */}
@@ -183,7 +186,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 						<WhiteLabel text={`${stat_budget} ₽`} />
 					</Col>
 
-					<Col width="auto">
+					{/* <Col width="auto">
 						<Row className={s.StatRowTitle} width="auto">
 							<Label text="Доход с перехода" />
 							<ToolTip text="info" top="15px">
@@ -203,7 +206,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 							</ToolTip>
 						</Row>
 						<WhiteLabel text={`~ ${stat_income} ₽`} />
-					</Col>
+					</Col> */}
 
 					{/* <Col width="auto">
 						<Row className={s.StatRowTitle} width="auto">
@@ -249,7 +252,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 						<WhiteLabel text={`До ${stat_maxPrice}₽`} />
 					</Col>
 
-					<Col width="auto">
+					{/* <Col width="auto">
 						<Row className={s.StatRowTitle} width="auto">
 							<Label text="Цена сейчас" />
 							<ToolTip text="info" top="15px">
@@ -269,7 +272,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 							</ToolTip>
 						</Row>
 						<WhiteLabel text={`До ${stat_Price}₽`} />
-					</Col>
+					</Col> */}
 
 					{/* <Col width="auto">
 						<Row className={s.StatRowTitle} width="auto">
@@ -380,7 +383,6 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 						</ToolTip>
 					</Row>
 					<Col width="528px" className={s.ForBiddenWrapper}>
-						
 						{arrayForBidden && (
 							<>
 								{arrayForBidden.map((item, index) => (
@@ -533,12 +535,12 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 						<WhiteLabel text={`${sg_clicks}`} />
 					</Col>
 
-					<Col width="auto">
+					{/* <Col width="auto">
 						<Row className={s.RowTitle} width="auto">
 							<Label text="Конверсия" />
 						</Row>
 						<WhiteLabel text={`${sg_conversion}`} />
-					</Col>
+					</Col> */}
 
 					{/* <Col width="auto">
 						<Row className={s.RowTitle} width="auto">
@@ -604,6 +606,18 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 										<Row width="auto" className={s.TitleHeaderInsideBlock}>
 											<Label isMini={true} text="Описание" />
 											<svg
+												onClick={() =>
+													navigator.clipboard.writeText(
+														item
+															.slice(item.indexOf("'text':"), item.length - 1)
+															.replace("'text': ", '')
+															.replace("'", '')
+															.replace("'", '')
+															.replace('"', '')
+															.replace('"', ''),
+													)
+												}
+												className="cursor-pointer"
 												xmlns="http://www.w3.org/2000/svg"
 												width="24"
 												height="24"
@@ -628,7 +642,15 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 												/>
 											</svg>
 										</Row>
-										<span className={s.variantTextSpan}>{item}</span>
+										<span className={s.variantTextSpan}>
+											{item
+												.slice(item.indexOf("'text':"), item.length - 1)
+												.replace("'text': ", '')
+												.replace("'", '')
+												.replace("'", '')
+												.replace('"', '')
+												.replace('"', '')}
+										</span>
 									</div>
 								))}
 
@@ -638,6 +660,18 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 										<Row width="auto" className={s.TitleHeaderInsideBlock}>
 											<Label isMini={true} text="Заголовок" />
 											<svg
+												onClick={() =>
+													navigator.clipboard.writeText(
+														item
+															.slice(item.indexOf("'text':"), item.length - 1)
+															.replace("'text': ", '')
+															.replace("'", '')
+															.replace("'", '')
+															.replace('"', '')
+															.replace('"', ''),
+													)
+												}
+												className="cursor-pointer"
 												xmlns="http://www.w3.org/2000/svg"
 												width="24"
 												height="24"
@@ -662,7 +696,15 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 												/>
 											</svg>
 										</Row>
-										<span className={s.variantTextSpan}>{item}</span>
+										<span className={s.variantTextSpan}>
+											{item
+												.slice(item.indexOf("'text':"), item.length - 1)
+												.replace("'text': ", '')
+												.replace("'", '')
+												.replace("'", '')
+												.replace('"', '')
+												.replace('"', '')}
+										</span>
 									</div>
 								))}
 						</div>

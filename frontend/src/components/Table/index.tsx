@@ -25,7 +25,7 @@ import AuditorNBanners from '../AuditorNBanners'
 import StatusSitePopUp from '../popup/StatusSitePopUP/index'
 import * as mui from '@mui/base'
 import VerticalScroll from '../VerticalScroll'
-import {getCompaniesAPI} from '../../api/data.api'
+import {getCompaniesAPI, getStatisticsAPI} from '../../api/data.api'
 import {useSelector} from 'react-redux'
 import axios from 'axios'
 import BlueButton from '../BlueButton/index'
@@ -39,7 +39,7 @@ enum CurrentPopup {
 
 const THEME = {
 	Table: `
-	--data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) ;  // 30px 20% 15% 15% 15% 15% 10% repeat(1, minmax(0, 1fr));
+	--data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.3fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) ;  // 30px 20% 15% 15% 15% 15% 10% repeat(1, minmax(0, 1fr));
   width: 100%;
   min-width: 1164px;
   max-height: 810px;
@@ -223,18 +223,36 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 	const user = useSelector((state: any) => state.user)
 	const token = user.token
 	const [companies, setCompanies] = useState([])
+	const [statistic, setStatistic] = useState([])
 
 	const data = {nodes: companies}
 
 	useEffect(() => {
-		async function getCompanies(token: string) {
-			const res = await getCompaniesAPI(token)
-			console.log(res.data, 'List of companies')
-			setCompanies(res.data)
-			return res.data
+		async function getCompaniesAndStatistics(token: string) {
+			try {
+				const res = await getCompaniesAPI(token)
+				console.log(res.data, 'List of companies')
+
+				// Fetch statistics for each company and add it to the company object
+				const companiesWithStatistics = await Promise.all(
+					res.data.map(async (company: any) => {
+						const stata = await getStatisticsAPI(token, [company.id], 'hour')
+						console.log(stata, `Statistics for company ${company.id}`)
+
+						// Assuming stata is an array with a single statistic object for the company
+						return {...company, statistics: stata}
+					}),
+				)
+
+				setCompanies(companiesWithStatistics)
+			} catch (error) {
+				console.error('Error fetching companies and statistics:', error)
+			}
 		}
-		getCompanies(token)
-	}, [])
+
+		console.log(companies, 'companies');
+		getCompaniesAndStatistics(token)
+	}, [token]) // Added token as a dependency
 
 	const select = useRowSelect(
 		data,
@@ -603,45 +621,45 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 														</button>
 													</tl.HeaderCell>
 													<tl.HeaderCell
-														style={{fontWeight: '400', fill: '#808080'}}
-														className={s.headerCellSort_Sort}
-														sortKey="Status">
-														<button
-															className={s.headerCellSort_Sort}
-															style={{fontWeight: '400', fill: '#808080'}}
-															onClick={() =>
-																sort.fns.onToggleSort({
-																	sortKey: 'Status',
-																})
-															}>
-															<p className={s.sortText}>Показ</p>
-															<div>
-																<svg
-																	id="svg-icon-chevron-single-up-down"
-																	data-name="svg-icon-chevron-single-up-down"
-																	data-testid="svg-icon-chevron-single-up-down"
-																	xmlns="http://www.w3.org/2000/svg"
-																	width="16"
-																	height="16"
-																	viewBox="0 0 16 16"
-																	fill="none">
-																	<path
-																		d="M5 10L8 13L11 10"
-																		stroke="CurrentColor"
-																		strokeWidth="1.2"
-																		strokeLinecap="round"
-																		strokeLinejoin="round"
-																	/>
-																	<path
-																		d="M5 6L8 3L11 6"
-																		stroke="CurrentColor"
-																		strokeWidth="1.2"
-																		strokeLinecap="round"
-																		strokeLinejoin="round"
-																	/>
-																</svg>
-															</div>
-														</button>
+														className={s.HeaderCell}
+														style={{fontWeight: '400', fill: '#808080'}}>
+														Дата начала
+													</tl.HeaderCell>
+
+													<tl.HeaderCell
+														className={s.HeaderCell}
+														style={{fontWeight: '400', fill: '#808080'}}>
+														Дата завершения
+													</tl.HeaderCell>
+
+													<tl.HeaderCell
+														className={s.HeaderCell}
+														style={{fontWeight: '400', fill: '#808080'}}>
+														Недельный бюджет
+													</tl.HeaderCell>
+
+													<tl.HeaderCell
+														className={s.HeaderCell}
+														style={{fontWeight: '400', fill: '#808080'}}>
+														Расход
+													</tl.HeaderCell>
+
+													<tl.HeaderCell
+														className={s.HeaderCell}
+														style={{fontWeight: '400', fill: '#808080'}}>
+														Расход с НДС
+													</tl.HeaderCell>
+
+													<tl.HeaderCell
+														className={s.HeaderCell}
+														style={{fontWeight: '400', fill: '#808080'}}>
+														Средняя цена клика
+													</tl.HeaderCell>
+
+													<tl.HeaderCell
+														className={s.HeaderCell}
+														style={{fontWeight: '400', fill: '#808080'}}>
+														Запрещённые медиаресурсы
 													</tl.HeaderCell>
 												</tl.HeaderRow>
 											</tl.Header>
@@ -856,7 +874,40 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 															</p>
 														</tl.Cell>
 														<tl.Cell>
+															<p>
+																{new Date(item.date_start).toLocaleDateString(
+																	'ru-RU',
+																)}
+															</p>
+														</tl.Cell>
+														<tl.Cell>
+															<p>
+																{new Date(item.date_finish).toLocaleDateString(
+																	'ru-RU',
+																)}
+															</p>
+														</tl.Cell>
+														<tl.Cell>
+															<p
+																onClick={() => {
+																	console.log(companies,'COMPANIES')
+																}}>
+																123
+															</p>
+														</tl.Cell>
+														<tl.Cell>
 															<p>{item.site.shows}</p>
+														</tl.Cell>
+														<tl.Cell>
+															<p>{item.site.shows}</p>
+														</tl.Cell>
+														<tl.Cell>
+															<p>{item.site.shows}</p>
+														</tl.Cell>
+														<tl.Cell>
+															<p>
+																{item.ban_show !== [] ? item.ban_show : '0'}
+															</p>
 														</tl.Cell>
 													</tl.Row>
 												))}

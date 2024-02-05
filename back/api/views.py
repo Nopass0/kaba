@@ -598,6 +598,7 @@ from datetime import datetime as dt, timedelta
 import random
 from django.utils.dateparse import parse_datetime
 
+from datetime import datetime as dt, timedelta
 class AddCompany(APIView):
     parser_classes = (MultiPartParser, FormParser, JSONParser)
 
@@ -658,7 +659,7 @@ class AddCompany(APIView):
                 ad_company=company,
                 geography=auditor_data.get('aGeography', []),
                 category=auditor_data.get('aCategories', []),
-                interest=[],
+                interest=auditor_data.get('aFavor', []),
                 gender_age=auditor_data.get('aGenderNAge', []),
                 device=auditor_data.get('aDevice', []),
                 solvency=[],
@@ -1100,12 +1101,17 @@ class GetBloggerCompanies(APIView):
         companies_data = []
         for blogger_company in blogger_companies:
             company = blogger_company.company
+            modelMaskedDomain = jumpToADPage.objects.filter(site=company.site).first()
+            model_clicks = statisticModel.objects.filter(masked_url=modelMaskedDomain.masked_url).first()
+            # print(model_clicks)
             company_data = {
+                'clicks': model_clicks.clicks_sum if model_clicks else 0,
                 'id': company.id,
                 'name': company.name,
                 'date_start': company.date_start,
                 'date_finish': company.date_finish,
                 'status_text': company.status_text,
+                'price_target': company.price_target,
                 'budget_week': company.budget_week,
                 'views': company.views,
                 'ban_show': company.ban_show,
@@ -1113,7 +1119,7 @@ class GetBloggerCompanies(APIView):
                     'id': company.site.id if company.site else None,
                     'domain': company.site.domain if company.site else '',
                     'date_creation': company.site.date_creation if company.site else None,
-                    'masked_domain': company.site.masked_domain if company.site else '',
+                    'masked_domain': modelMaskedDomain.masked_url if modelMaskedDomain else '',
                     'shows': company.site.shows if company.site else 0,
                 },
                 'banners': [
@@ -1201,94 +1207,94 @@ class AddCompanyToBlogger(APIView):
 
 
     
-class getCompanyBloggers(APIView):
-    def post(self, request):
-        token = request.GET.get('token', '')
-        user = None
-        if token:
-            try:
-                user = tokenModel.objects.get(token=token).account
-            except tokenModel.DoesNotExist:
-                # If token is provided but invalid, return an error
-                return Response({'error': 'Invalid token.'}, status=status.HTTP_404_NOT_FOUND)
+# class getCompanyBloggers(APIView):
+#     def post(self, request):
+#         token = request.GET.get('token', '')
+#         user = None
+#         if token:
+#             try:
+#                 user = tokenModel.objects.get(token=token).account
+#             except tokenModel.DoesNotExist:
+#                 # If token is provided but invalid, return an error
+#                 return Response({'error': 'Invalid token.'}, status=status.HTTP_404_NOT_FOUND)
 
-        # Fetch all active companies, filter by user if user is not None
-        if user:
-            # user_companies = ad_companyModel.objects.filter(account=user).values_list('id', flat=True)
-            active_companies = ad_companyModel.objects.all()
-        else:
-            active_companies = ad_companyModel.objects.all()
+#         # Fetch all active companies, filter by user if user is not None
+#         if user:
+#             # user_companies = ad_companyModel.objects.filter(account=user).values_list('id', flat=True)
+#             active_companies = ad_companyModel.objects.all()
+#         else:
+#             active_companies = ad_companyModel.objects.all()
 
-        active_companies = active_companies.filter(
-            status_text='Активная'
-        ).prefetch_related(
-            Prefetch('ad_bannerModel_ad_companyModel', queryset=ad_bannerModel.objects.prefetch_related('banner_image')),
-            'ad_audienceModel_ad_companyModel',
-            'ad_statusModel_companies',
-        ).select_related('site')
-        #active_companies = active_companies.select_related('site')
+#         active_companies = active_companies.filter(
+#             status_text='Активная'
+#         ).prefetch_related(
+#             Prefetch('ad_bannerModel_ad_companyModel', queryset=ad_bannerModel.objects.prefetch_related('banner_image')),
+#             'ad_audienceModel_ad_companyModel',
+#             'ad_statusModel_companies',
+#         ).select_related('site')
+#         #active_companies = active_companies.select_related('site')
         
         
         
-        # Construct the response data
-        companies_data = []
-        for company in active_companies:
-            if not ad_bloggerCompanyModel.objects.filter(company=company).exists():
-                continue
-            company_info = {
-                'id': company.id,
-                'name': company.name,
-                'date_start': company.date_start,
-                'date_finish': company.date_finish,
-                'status_text': company.status_text,
-                'budget_week': company.budget_week,
-                'views': company.views,
-                'price_target': company.price_target,
-                'ban_show': company.ban_show,
-                'site': {
-                    'id': company.site.id if company.site else None,
-                    'domain': company.site.domain if company.site else '',
-                    'date_creation': company.site.date_creation if company.site else None,
-                    'masked_domain': company.site.masked_domain if company.site else '',
-                    'shows': company.site.shows if company.site else 0,
-                },
-                'banners': [
-                    {
-                        'id': banner.id,
-                        'name': banner.name,
-                        'link': banner.link,
-                        'title_option': banner.title_option,
-                        'description_option': banner.description_option,
-                        'image_option': banner.image_option,
-                        'video_option': banner.video_option,
-                        'audio_option': banner.audio_option,
-                        'channel_private_bool': banner.channel_private_bool,
-                        'images': [image.image.url for image in banner.banner_image.all()]  # Don't work
-                    } for banner in company.ad_bannerModel_ad_companyModel.all()
-                ],
-                'audiences': [
-                    {
-                        'id': audience.id,
-                        'name': audience.name,
-                        'geography': audience.geography,
-                        'category': audience.category,
-                        'interest': audience.interest,
-                        'gender_age': audience.gender_age,
-                        'device': audience.device,
-                        'solvency': audience.solvency,
-                    } for audience in company.ad_audienceModel_ad_companyModel.all()
-                ],
-                'statuses': [
-                    {
-                        'id': status.id,
-                        'status': status.status,
-                        'text': status.text,
-                    } for status in company.ad_statusModel_companies.all()
-                ]
-            }
-            companies_data.append(company_info)
+#         # Construct the response data
+#         companies_data = []
+#         for company in active_companies:
+#             if not ad_bloggerCompanyModel.objects.filter(company=company).exists():
+#                 continue
+#             company_info = {
+#                 'id': company.id,
+#                 'name': company.name,
+#                 'date_start': company.date_start,
+#                 'date_finish': company.date_finish,
+#                 'status_text': company.status_text,
+#                 'budget_week': company.budget_week,
+#                 'views': company.views,
+#                 'price_target': company.price_target,
+#                 'ban_show': company.ban_show,
+#                 'site': {
+#                     'id': company.site.id if company.site else None,
+#                     'domain': company.site.domain if company.site else '',
+#                     'date_creation': company.site.date_creation if company.site else None,
+#                     'masked_domain': company.site.masked_domain if company.site else '',
+#                     'shows': company.site.shows if company.site else 0,
+#                 },
+#                 'banners': [
+#                     {
+#                         'id': banner.id,
+#                         'name': banner.name,
+#                         'link': banner.link,
+#                         'title_option': banner.title_option,
+#                         'description_option': banner.description_option,
+#                         'image_option': banner.image_option,
+#                         'video_option': banner.video_option,
+#                         'audio_option': banner.audio_option,
+#                         'channel_private_bool': banner.channel_private_bool,
+#                         'images': [image.image.url for image in banner.banner_image.all()]  # Don't work
+#                     } for banner in company.ad_bannerModel_ad_companyModel.all()
+#                 ],
+#                 'audiences': [
+#                     {
+#                         'id': audience.id,
+#                         'name': audience.name,
+#                         'geography': audience.geography,
+#                         'category': audience.category,
+#                         'interest': audience.interest,
+#                         'gender_age': audience.gender_age,
+#                         'device': audience.device,
+#                         'solvency': audience.solvency,
+#                     } for audience in company.ad_audienceModel_ad_companyModel.all()
+#                 ],
+#                 'statuses': [
+#                     {
+#                         'id': status.id,
+#                         'status': status.status,
+#                         'text': status.text,
+#                     } for status in company.ad_statusModel_companies.all()
+#                 ]
+#             }
+#             companies_data.append(company_info)
 
-        return Response({'companies': companies_data}, status=status.HTTP_200_OK)
+#         return Response({'companies': companies_data}, status=status.HTTP_200_OK)
     
     
 # class jumpToADPage(models.Model):
