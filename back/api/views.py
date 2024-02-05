@@ -594,7 +594,7 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework import status
 import json
-from datetime import datetime, timedelta
+from datetime import datetime as dt, timedelta
 import random
 from django.utils.dateparse import parse_datetime
 
@@ -635,8 +635,8 @@ class AddCompany(APIView):
                 site=site,
                 # date_start=parse_datetime(company_data.get('cDateStart', '')) if company_data.get('cDateStart', '') else None,
                 # date_finish=parse_datetime(company_data.get('cDateEnd', '')) if company_data.get('cDateEnd', '') else None,
-                date_start=datetime.strptime(company_data.get('cDateStart', ''), '%d.%m.%Y') if company_data.get('cDateStart', '') else None,
-                date_finish=datetime.strptime(company_data.get('cDateEnd', ''), '%d.%m.%Y') if company_data.get('cDateEnd', '') else None,
+                date_start=dt.strptime(company_data.get('cDateStart', ''), '%d.%m.%Y') if company_data.get('cDateStart', '') else None,
+                date_finish=dt.strptime(company_data.get('cDateEnd', ''), '%d.%m.%Y') if company_data.get('cDateEnd', '') else None,
                 price_target = price_target,
                 ban_show = ban_show,
                 budget_week=int(company_data.get('cWeekBudget', 0)),
