@@ -25,7 +25,7 @@ import AuditorNBanners from '../AuditorNBanners'
 import StatusSitePopUp from '../popup/StatusSitePopUP/index'
 import * as mui from '@mui/base'
 import VerticalScroll from '../VerticalScroll'
-import {getCompaniesAPI} from '../../api/data.api'
+import {getCompaniesAPI, getStatisticsAPI} from '../../api/data.api'
 import {useSelector} from 'react-redux'
 import axios from 'axios'
 import BlueButton from '../BlueButton/index'
@@ -39,7 +39,7 @@ enum CurrentPopup {
 
 const THEME = {
 	Table: `
-	--data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.4fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.2fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr));
+	--data-table-library_grid-template-columns:  30px  repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.4fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.2fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr));
   width: 100%;
   min-width: 1164px;
   max-height: 810px;
@@ -232,14 +232,31 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 	const data = {nodes: companies}
 
 	useEffect(() => {
-		async function getCompanies(token: string) {
-			const res = await getCompaniesAPI(token)
-			console.log(res.data, 'List of companies')
-			setCompanies(res.data)
-			return res.data
+		async function getCompaniesAndStatistics(token: string) {
+			try {
+				const res = await getCompaniesAPI(token)
+				console.log(res.data, 'List of companies')
+
+				// Fetch statistics for each company and add it to the company object
+				const companiesWithStatistics = await Promise.all(
+					res.data.map(async (company: any) => {
+						const stata = await getStatisticsAPI(token, [company.id], 'hour')
+						console.log(stata, `Statistics for company ${company.id}`)
+
+						// Assuming stata is an array with a single statistic object for the company
+						return {...company, statistics: stata}
+					}),
+				)
+
+				setCompanies(companiesWithStatistics)
+			} catch (error) {
+				console.error('Error fetching companies and statistics:', error)
+			}
 		}
-		getCompanies(token)
-	}, [])
+
+		console.log(companies, 'companies')
+		getCompaniesAndStatistics(token)
+	}, [token]) // Added token as a dependency
 
 	const select = useRowSelect(
 		data,
@@ -343,7 +360,7 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 									</svg>
 								</label>
 								<div className={s.sortTableButtons}>
-									<button
+									{/* <button
 										onClick={() => {
 											setCurrentPopup(CurrentPopup.Cols)
 										}}
@@ -365,7 +382,7 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 												/>
 											</svg>
 										</div>
-									</button>
+									</button> */}
 									{/* <button className={s.sortTableButton}>
 							<div className={s.sortTableButtonWrapper}>
 								<div className={`absolute right-[0px] w-[139px]`}></div>
@@ -430,9 +447,7 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 																	sortKey: 'Status',
 																})
 															}>
-															<p className={s.sortText}>
-																Статус
-															</p>
+															<p className={s.sortText}>Статус</p>
 															<div>
 																<svg
 																	id="svg-icon-chevron-single-up-down"
@@ -471,11 +486,7 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 														style={{fontWeight: '400', fill: '#808080'}}>
 														Ссылка на рекламируемую страницу
 													</tl.HeaderCell>
-													<tl.HeaderCell
-														className={s.HeaderCell}
-														style={{fontWeight: '400', fill: '#808080'}}>
-														Показ на непроверенных медиаресурсах
-													</tl.HeaderCell>
+
 													<tl.HeaderCell
 														className={s.HeaderCell}
 														style={{fontWeight: '400', fill: '#808080'}}>
@@ -491,7 +502,7 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 														style={{fontWeight: '400', fill: '#808080'}}>
 														Средняя цена клика
 													</tl.HeaderCell>
-													
+
 													{/* <tl.HeaderCell
 												style={{fontWeight: '400', fill: '#808080'}}
 												className={s.headerCellSort_Sort}
@@ -556,7 +567,7 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 														<tl.Cell className="bg-[#1A1A1A]">
 															<Row width="auto">
 																<Col width="auto">
-																	<label>{item.name}</label>
+																	<label>{item.ad_banner[0].name}</label>
 																	<Row width="auto" className={s.rowIdCheckbox}>
 																		{/* <svg
 																className="mr-2"
@@ -580,7 +591,10 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 																	strokeLinejoin="round"
 																/>
 															</svg> */}
-																		<Label isMini={true} text={`ID${index}`} />
+																		<Label
+																			isMini={true}
+																			text={`ID${item.ad_banner[0].id}`}
+																		/>
 																		{/* Make by ID from server */}
 																	</Row>
 																</Col>
@@ -632,42 +646,7 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 													</mui.Select>
 												</tl.Cell> */}
 														<tl.Cell>
-															<mui.Select
-																className={s.muiSelectClicks}
-																renderValue={(
-																	option: mui.SelectOption<number> | null,
-																) => {
-																	if (option == null || option.value === null) {
-																		return (
-																			<>
-																				<div className={s.audiotoriaNBanners}>
-																					<WhiteLabel text="3" />
-																					<WhiteLabel
-																						text={` и 23`}
-																						className="ml-1"
-																					/>
-																				</div>
-																			</>
-																		)
-																	}
-																	return (
-																		<>
-																			<div className={s.audiotoriaNBanners}>
-																				<WhiteLabel text="4" />
-																				<WhiteLabel
-																					text={` и 24`}
-																					className="ml-1"
-																				/>
-																			</div>
-																		</>
-																	)
-																}}>
-																<mui.Option
-																	value={1}
-																	className={`cursor-pointer z-10 mt-1`}>
-																	{/* <AuditorNBanners /> */}
-																</mui.Option>
-															</mui.Select>
+															<p>{item.name}</p>
 														</tl.Cell>
 														<tl.Cell>
 															<p
@@ -686,25 +665,7 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 															</p>
 														</tl.Cell>
 														<tl.Cell>
-															<Col width="auto">
-																<Row width="auto" className="flex items-center">
-																	<img
-																		src={getFaviconUrl(item.site.domain)}
-																		alt={item.site.domain}
-																		className="mr-1 w-[16px] h-[16px]"
-																	/>
-																	<WhiteLabel
-																		text={getNameFromDomain(item.site.domain)}
-																	/>
-																</Row>
-																<a
-																	target="_blank"
-																	rel="noopener noreferrer"
-																	className={s.AdSiteUrl}
-																	href={`https://${item.site.domain}`}>
-																	{item.site.domain}
-																</a>
-															</Col>
+															<p>{item.ad_audience[0].name}</p>
 														</tl.Cell>
 														{/* <tl.Cell>
 													<mui.Select
@@ -751,23 +712,28 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 														</mui.Option>
 													</mui.Select>
 												</tl.Cell> */}
-														
+
 														<tl.Cell>
-															<p>{item.views}</p>
+															<a
+																target="_blank"
+																rel="noopener noreferrer"
+																className={s.blueLink}
+																href={`${item.site.domain}`}>
+																{item.site.domain}
+															</a>
+														</tl.Cell>
+
+														<tl.Cell>
+															<p>{item.statistics.consumption}</p>
 														</tl.Cell>
 														<tl.Cell>
-															<p>6</p>
+															<p>
+																{item.statistics.consumption > 0
+																	? (item.statistics.consumption * 20) / 120
+																	: item.statistics.consumption}
+															</p>
 														</tl.Cell>
-														<tl.Cell>
-															<p>7</p>
-														</tl.Cell>
-														<tl.Cell>
-															<p>8</p>
-														</tl.Cell>
-														<tl.Cell>
-															<p>9</p>
-														</tl.Cell>
-														
+														<tl.Cell>{item.statistics.cpc_sum}</tl.Cell>
 													</tl.Row>
 												))}
 											</tl.Body>

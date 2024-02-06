@@ -222,14 +222,16 @@
 
 .TableLineFooter {
 	position: fixed;
-	width: 1037px;
+	max-width: 1037px;
 	bottom: 40px;
-	left: clamp(0%, 28%, 100%);
+	// left: clamp(0%, 28%, 100%);
+	left: clamp(0%, 35%, 100%);
 }
 
 @media (max-width: 1440px) {
 	.TableLineFooter {
-		left: 20%
+		// left: 20%
+		left: 25%;
 	}
 }
 
@@ -302,4 +304,14 @@
 
 		margin-bottom: 16px;
 	}
+}
+
+
+.blueLink {
+
+	color: #4169e1;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 16px;
+	cursor: pointer;
 }

@@ -5,7 +5,7 @@ import MenuBannersWCourse from '../../components/MenuBannersWCourses'
 import Row from '../../components/Row'
 import PopUpWrapper from '../../components/PopUpWrapper'
 import HeaderCompany from '../../components/HeaderCompany/index'
-import {getAllActiveCompaniesAPI} from '../../api/data.api'
+import {getAllActiveCompaniesAPI, getCompaniesAPI, getStatisticsAPI} from '../../api/data.api'
 import ContentBanner, {
 	IContentBanner,
 } from '../../components/ContentBanner/index'
@@ -31,15 +31,42 @@ const Bloggers: React.FC = () => {
 	const token = user?.token
 	const [info, setInfo] = React.useState([])
 
-	useEffect(() => {
-		const getInfo = async () => {
-			let res = await getAllActiveCompaniesAPI(token)
-			console.log(res.data.companies)
+	// useEffect(() => {
+	// 	const getInfo = async () => {
+	// 		let res = await getAllActiveCompaniesAPI(token)
+	// 		console.log(res.data.companies)
 
-			setInfo(res.data.companies)
+	// 		setInfo(res.data.companies)
+	// 	}
+	// 	getInfo()
+	// }, [])
+
+	useEffect(() => {
+		async function getCompaniesAndStatistics(token: string) {
+			try {
+				const res = await getAllActiveCompaniesAPI(token)
+				console.log(res.data.companies, 'List of companies')
+
+				// Fetch statistics for each company and add it to the company object
+				const companiesWithStatistics = await Promise.all(
+					res.data.companies.map(async (company: any) => {
+						const stata = await getStatisticsAPI(token, [company.id], 'hour')
+						console.log(stata, `Statistics for company ${company.id}`)
+
+						// Assuming stata is an array with a single statistic object for the company
+						return {...company, statistics: stata}
+					}),
+				)
+
+				setInfo(companiesWithStatistics)
+			} catch (error) {
+				console.error('Error fetching companies and statistics:', error)
+			}
 		}
-		getInfo()
-	}, [])
+
+		console.log(info, 'companies')
+		getCompaniesAndStatistics(token)
+	}, [token]) // Added token as a dependency
 
 	const [currentItem, setCurrentItem] = React.useState<object>({})
 	const DiffrentDate = (item) => {
@@ -219,7 +246,7 @@ const Bloggers: React.FC = () => {
 							/>
 						</svg>
 					</label>
-					<div className={s.sortTableButtons}>
+					{/* <div className={s.sortTableButtons}>
 						<button
 							onClick={() => {
 								setCurrentPopup(CurrentPopup.Filter)
@@ -263,7 +290,7 @@ const Bloggers: React.FC = () => {
 								</svg>
 							</div>
 						</button>
-					</div>
+					</div> */}
 				</div>
 
 				<Row width="1200px" className={s.BloggersBannersWCourse}>
@@ -293,9 +320,9 @@ const Bloggers: React.FC = () => {
 						/>
 					))}
 				</Row>
-				<Row width="1164px" className={s.LoadMore}>
+				{/* <Row width="1164px" className={s.LoadMore}>
 					<span className={s.SpanLoadMore}>Загрузить ещё</span>
-				</Row>
+				</Row> */}
 			</div>
 			{currentPopup === CurrentPopup.Content && (
 				<PopUpWrapper onExit={bannerContent.onExit}>
@@ -305,8 +332,10 @@ const Bloggers: React.FC = () => {
 						course_title={currentItem.name}
 						course_id={currentItem.id}
 						// course_ooo={bannerContent.course_ooo} //To DO
-
-						course_link={currentItem.site.masked_domain}
+						see_link={currentItem.site.domain}
+						course_link={`${
+							String(window.location).split('/')[2]
+						}/go?masked_url=${currentItem.site.masked_domain}`}
 						stat_toEnd={
 							getEndDate(currentItem.date_finish) <= 0
 								? 'Завершена'
@@ -314,6 +343,7 @@ const Bloggers: React.FC = () => {
 						}
 						stat_budget={currentItem.budget_week}
 						stat_income={currentItem.price_target}
+						stat_maxPrice={currentItem.price_target}
 						// stat_targetAct={bannerContent.stat_targetAct} // TO DO
 
 						// stat_maxPrice={bannerContent.stat_maxPrice} // TO DO
@@ -330,7 +360,7 @@ const Bloggers: React.FC = () => {
 						// forBidden_1={bannerContent.forBidden_1} // TO DO
 						// forBidden_2={bannerContent.forBidden_2} // TO DO
 						// forBidden_3={bannerContent.forBidden_3} // TO DO
-						sg_clicks={bannerContent.sg_clicks} // TO DO
+						sg_clicks={currentItem.statistics.click_sum} // TO DO
 						sg_conversion={bannerContent.sg_conversion}
 						sg_expenses={bannerContent.sg_expenses}
 						sg_ads={bannerContent.sg_ads}

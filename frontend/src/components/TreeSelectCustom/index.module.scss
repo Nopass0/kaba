@@ -1,14 +1,14 @@
 .muiSelect {
 	width: 100%;
-	height: 36px;
+	min-height: 36px;
 	border-radius: 10px;
 	background: #262626;
 }
 
 .muiOption {
 	width: 528px;
-	// max-height: 320px;
-	min-height: 320px;
+	max-height: 320px;
+	// min-height: 320px;
 	flex-shrink: 0;
 
 	overflow-y: auto;
@@ -38,13 +38,16 @@
 	justify-content: space-between;
 }
 
+.optionLabel {
+	display: flex;
+	height: 16px;
+}
 .optionInput {
-	display: block;
 	width: 0px;
 	height: 0px;
 
 	cursor: pointer;
-	position: absolute;
+	// position: absolute;
 	border-radius: 5px;
 
 	&:checked {

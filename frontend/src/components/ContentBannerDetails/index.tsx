@@ -434,7 +434,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 					</svg> */}
 				</Row>
 
-				<Row className={s.RowTitle} width="auto">
+				{/* <Row className={s.RowTitle} width="auto">
 					<Label text="Категории" />
 					<ToolTip text="info" top="15px">
 						<svg
@@ -457,7 +457,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 						arrayCategory.map((item, index) => (
 							<ChipForBanners text={item} key={index} className={s.Chip} />
 						))}
-				</Row>
+				</Row> */}
 
 				<Row className={s.RowTitle} width="auto">
 					<Label text="География" />

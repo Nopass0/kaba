@@ -167,10 +167,10 @@
 }
 
 .DetailsCell {
-	border-radius: 50%;
+	border-radius: 100%;
 	border: 1px solid #333;
 
-	padding: 4px 10px;
+	padding: 4px 12px;
 
 	cursor: pointer;
 }
@@ -316,8 +316,17 @@
 
 .TableLineFooter {
 	position: fixed;
+	max-width: 1037px;
 	bottom: 40px;
-	left: 28%;
+	// left: clamp(0%, 28%, 100%);
+	left: clamp(0%, 35%, 100%);
+}
+
+@media (max-width: 1440px) {
+	.TableLineFooter {
+		// left: 20%
+		left: 25%;
+	}
 }
 
 .Clicks {

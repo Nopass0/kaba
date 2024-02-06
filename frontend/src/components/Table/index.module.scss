@@ -217,14 +217,16 @@
 
 .TableLineFooter {
 	position: fixed;
-	width: 1037px;
+	max-width: 1037px;
 	bottom: 40px;
-	left: clamp(0%, 28%, 100%);
+	// left: clamp(0%, 28%, 100%);
+	left: clamp(0%, 35%, 100%);
 }
 
 @media (max-width: 1440px) {
 	.TableLineFooter {
-		left: 20%;
+		// left: 20%
+		left: 25%;
 	}
 }
 
@@ -295,5 +297,23 @@
 		font-size: 14px;
 
 		margin-bottom: 16px;
+	}
+}
+
+
+.DetailsCell {
+	border-radius: 100%;
+	border: 1px solid #333;
+
+	padding: 4px 12px;
+
+	cursor: pointer;
+}
+
+.muiSelectDetails {
+	border-radius: 50%;
+	&:hover {
+		background-color: #333;
+		transition: all 0.2s;
 	}
 }

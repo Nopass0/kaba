@@ -21,7 +21,7 @@ import WhiteLabel from '../WhiteLabel'
 import PopUpWrapper from '../PopUpWrapper'
 import TableCol from '../popup/TableColsPopUp'
 import TableLineFooter from '../TableLineFooter'
-import {getCompanyBloggersAPI} from '../../api/data.api'
+import {getBloggerStatistics, getCompanyBloggersAPI} from '../../api/data.api'
 import {useSelector} from 'react-redux'
 
 const list = [
@@ -202,14 +202,45 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 
 	const [companies, setCompanies] = useState([])
 
+	// useEffect(() => {
+	// 	const getCompanies = async () => {
+	// 		let res = await getCompanyBloggersAPI(token)
+	// 		console.log(res.data.companies, 'List of companies')
+	// 		setCompanies(res.data.companies)
+	// 	}
+	// 	getCompanies()
+	// }, [])
+
 	useEffect(() => {
-		const getCompanies = async () => {
-			let res = await getCompanyBloggersAPI(token)
-			console.log(res.data.companies, 'List of companies')
-			setCompanies(res.data.companies)
+		async function getCompaniesAndStatistics(token: string) {
+			try {
+				const res = await getCompanyBloggersAPI(token)
+				console.log(res.data.companies, 'List of companies')
+
+				// Fetch statistics for each company and add it to the company object
+				const companiesWithStatistics = await Promise.all(
+					res.data.companies.map(async (company: any) => {
+						const stata = await getBloggerStatistics(
+							String(token),
+							String(company.site.masked_domain),
+							'hour',
+						)
+						console.log(stata, `Statistics for company ${company.id}`)
+
+						// Assuming stata is an array with a single statistic object for the company
+						return {...company, statistics: stata}
+					}),
+				)
+
+				setCompanies(companiesWithStatistics)
+			} catch (error) {
+				console.error('Error fetching companies and statistics:', error)
+			}
 		}
-		getCompanies()
-	}, [])
+
+		console.log(companies, 'companies123454566')
+		getCompaniesAndStatistics(token)
+	}, [token]) // Added token as a dependency
 
 	const data = {nodes: companies}
 
@@ -309,7 +340,7 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 						</svg>
 					</label>
 					<div className={s.sortTableButtons}>
-						<button
+						{/* <button
 							onClick={() => {
 								setCurrentPopup(CurrentPopup.Cols)
 							}}
@@ -331,7 +362,7 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 									/>
 								</svg>
 							</div>
-						</button>
+						</button> */}
 						{/* <button className={s.sortTableButton}>
 							<div className={s.sortTableButtonWrapper}>
 								<div className={`absolute right-[0px] w-[139px]`}></div>
@@ -622,19 +653,15 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 										</tl.Cell> */}
 
 										<tl.Cell>
-											{/* <p id={item.companyPRC.charAt(0) === '2' ? 'green' : ''}> */}
-											{/* {item.companyPRC} */}
-											<p>200</p>
-											{/* </p> */}
+											<p>{item.statistics.cpc_sum}₽</p>
 										</tl.Cell>
 
 										<tl.Cell>
-											{/* <p>{item.companyshows}</p> */}
-											<p>200</p>
+											<p>{item.statistics.consumption}₽</p>
 										</tl.Cell>
 
 										<tl.Cell>
-											<p>200</p>
+											<p>{item.clicks}</p>
 										</tl.Cell>
 									</tl.Row>
 								))}
@@ -657,6 +684,7 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 				<TableLineFooter
 					companies={`${String(company)}`}
 					className={s.TableLineFooter}
+					blogger={true}
 				/>
 			) : null}
 		</>

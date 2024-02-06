@@ -3,6 +3,7 @@ import s from './index.module.scss'
 import * as mui from '@mui/base'
 import ChipsX from '../../assets/xChips.svg'
 import Line from '../Line'
+import CheckBox from '../CheckBox/index'
 export type Option = {
 	value: string
 	label: string
@@ -58,9 +59,7 @@ export const TreeSelectCustom: React.FC<TreeSelectCustomProps> = ({
 
 		setCheckedValues(newCheckedValues)
 		setValueFunction(newCheckedValues)
-		console.log(newCheckedValues);
-		
-		
+		console.log(newCheckedValues)
 	}
 
 	const toggleExpand = (option: Option) => {

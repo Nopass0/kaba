@@ -31,6 +31,7 @@ import axios from 'axios'
 import BlueButton from '../BlueButton/index'
 import NavLabel from '../NavLabel/index'
 import {Link, Navigate, redirect} from 'react-router-dom'
+import CompaniesTablePopUp from '../popup/CompaniesTablePopUp'
 
 enum CurrentPopup {
 	None,
@@ -250,7 +251,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 			}
 		}
 
-		console.log(companies, 'companies');
+		console.log(companies, 'companies')
 		getCompaniesAndStatistics(token)
 	}, [token]) // Added token as a dependency
 
@@ -356,7 +357,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 									</svg>
 								</label>
 								<div className={s.sortTableButtons}>
-									<button
+									{/* <button
 										onClick={() => {
 											setCurrentPopup(CurrentPopup.Cols)
 										}}
@@ -378,7 +379,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 												/>
 											</svg>
 										</div>
-									</button>
+									</button> */}
 									{/* <button className={s.sortTableButton}>
 							<div className={s.sortTableButtonWrapper}>
 								<div className={`absolute right-[0px] w-[139px]`}></div>
@@ -890,24 +891,57 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 														<tl.Cell>
 															<p
 																onClick={() => {
-																	console.log(companies,'COMPANIES')
+																	console.log(item, 'COMPANIES')
 																}}>
 																123
 															</p>
 														</tl.Cell>
 														<tl.Cell>
-															<p>{item.site.shows}</p>
-														</tl.Cell>
-														<tl.Cell>
-															<p>{item.site.shows}</p>
-														</tl.Cell>
-														<tl.Cell>
-															<p>{item.site.shows}</p>
+															<p>{item.statistics.consumption}</p>
 														</tl.Cell>
 														<tl.Cell>
 															<p>
-																{item.ban_show !== [] ? item.ban_show : '0'}
+																{item.statistics.consumption > 0
+																	? (item.statistics.consumption * 20) / 120
+																	: item.statistics.consumption}
 															</p>
+														</tl.Cell>
+														<tl.Cell>
+															<p>{item.statistics.cpc_sum}</p>
+														</tl.Cell>
+														<tl.Cell>
+															<mui.Select
+																className={s.muiSelectDetails}
+																renderValue={(
+																	option: mui.SelectOption<number> | null,
+																) => {
+																	if (option == null || option.value === null) {
+																		return (
+																			<>
+																				<p className={s.DetailsCell}>
+																					{item.ban_show.length}
+																				</p>
+																			</>
+																		)
+																	}
+																	// return `${option.label}`
+																	return (
+																		<>
+																			<p className={s.DetailsCell}>
+																				{item.ban_show.length}
+																			</p>
+																		</>
+																	)
+																}}>
+																<mui.Option
+																	value={1}
+																	className={`cursor-pointer z-10 mt-1`}>
+																	<CompaniesTablePopUp
+																		companies={item.ban_show}
+																		needCompanies={false}
+																	/>
+																</mui.Option>
+															</mui.Select>
 														</tl.Cell>
 													</tl.Row>
 												))}

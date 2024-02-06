@@ -17,6 +17,7 @@ interface IGraphsMenuCheckBox {
 	bool_click: (bool: boolean) => void
 	bool_cpc: (bool: boolean) => void
 	bool_consumption: (bool: boolean) => void
+	BlogerStatistic?:boolean
 }
 
 const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
@@ -28,7 +29,8 @@ const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
 	consumption_sum,
 	bool_click,
 	bool_cpc,
-	bool_consumption,
+	bool_consumption = false,
+	BlogerStatistic,
 }: IGraphsMenuCheckBox) => {
 	const [StatisticDropDown_1, setStatisticDropDown_1] = React.useState(false)
 	const [StatisticDropDown_2, setStatisticDropDown_2] = React.useState(false)
@@ -189,7 +191,7 @@ const GraphsMenuCheckBox: React.FC<IGraphsMenuCheckBox> = ({
 							onChange={(check) => bool_consumption(!check)}
 							id="Purple"
 							className={`${s.CheckBox} ${s.Purple}`}
-							labelText="Расходы"
+							labelText={BlogerStatistic ? "Доходы" : "Расходы"}
 						/>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

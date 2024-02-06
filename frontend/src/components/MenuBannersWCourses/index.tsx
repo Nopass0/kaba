@@ -102,7 +102,7 @@ const MenuBannersWCourse: React.FC<IMenuBannersWCourse> = ({
 
 				<Line width="280px" className={s.Line} />
 
-				<Col width="248px" className={s.ContainerMainBlock}>
+				{/* <Col width="248px" className={s.ContainerMainBlock}>
 					<Row width="248px" className={s.TitleTooltip}>
 						<Label text="Категории" className={s.LabelMainBlock} />
 						<ToolTip className={s.ToolTip} text="Категории" top="15px">
@@ -122,20 +122,20 @@ const MenuBannersWCourse: React.FC<IMenuBannersWCourse> = ({
 						</ToolTip>
 					</Row>
 					<Row width="248px">
-						<span className={s.Span}>
+						<span className={s.Span}> */}
 							{/* {expanded ? categories : `${categories.slice(0, 53)}...`}{' '}
 							{categories.length >= 54 && (
 								<a href="#!" className={s.blueLink} onClick={handleClickMore}>
 									{expanded ? 'свернуть' : 'ещё'}
 								</a>
 							)} */}
-							{categories}
+							{/* {categories} */}
 							{/* <a href="#!" className={s.blueLink}>
 								ещё
 							</a> */}
-						</span>
+						{/* </span>
 					</Row>
-				</Col>
+				</Col> */}
 
 				<Col width="248px" className={s.ContainerMainBlock}>
 					<Row width="248px" className={s.TitleTooltip}>

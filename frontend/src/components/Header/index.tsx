@@ -111,7 +111,7 @@ const Header: React.FC = () => {
 
 	return (
 		<>
-			{!['login', 'register', 'choose', 'acceptCode', '', 'sites'].includes(
+			{!['login', 'register', 'choose', 'acceptCode', ''].includes(
 				location.pathname.split('/')[1],
 			) ||
 			(isBlogger && !['login'].includes(location.pathname.split('/')[1])) ? (
@@ -319,7 +319,7 @@ const Header: React.FC = () => {
 						</div>
 					)}
 				</>
-			) : ['', 'sites'].includes(location.pathname.split('/')[1]) ? (
+			) : [''].includes(location.pathname.split('/')[1]) ? (
 				<>
 					<div
 						style={maxWidth}

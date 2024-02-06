@@ -25,12 +25,13 @@ import AuditorNBanners from '../AuditorNBanners'
 import StatusSitePopUp from '../popup/StatusSitePopUP/index'
 import * as mui from '@mui/base'
 import VerticalScroll from '../VerticalScroll'
-import {getCompaniesAPI} from '../../api/data.api'
+import {getCompaniesAPI, getStatisticsAPI} from '../../api/data.api'
 import {useSelector} from 'react-redux'
 import axios from 'axios'
 import BlueButton from '../BlueButton/index'
 import NavLabel from '../NavLabel/index'
 import {Link, Navigate, redirect} from 'react-router-dom'
+import CompaniesTablePopUp from '../popup/CompaniesTablePopUp'
 
 enum CurrentPopup {
 	None,
@@ -39,7 +40,7 @@ enum CurrentPopup {
 
 const THEME = {
 	Table: `
-	--data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.2fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.2fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr));
+	--data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1.2fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.2fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr));
   width: 100%;
   min-width: 1164px;
   max-height: 810px;
@@ -227,14 +228,31 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 	const data = {nodes: companies}
 
 	useEffect(() => {
-		async function getCompanies(token: string) {
-			const res = await getCompaniesAPI(token)
-			console.log(res.data, 'List of companies')
-			setCompanies(res.data)
-			return res.data
+		async function getCompaniesAndStatistics(token: string) {
+			try {
+				const res = await getCompaniesAPI(token)
+				console.log(res.data, 'List of companies')
+
+				// Fetch statistics for each company and add it to the company object
+				const companiesWithStatistics = await Promise.all(
+					res.data.map(async (company: any) => {
+						const stata = await getStatisticsAPI(token, [company.id], 'hour')
+						console.log(stata, `Statistics for company ${company.id}`)
+
+						// Assuming stata is an array with a single statistic object for the company
+						return {...company, statistics: stata}
+					}),
+				)
+
+				setCompanies(companiesWithStatistics)
+			} catch (error) {
+				console.error('Error fetching companies and statistics:', error)
+			}
 		}
-		getCompanies(token)
-	}, [])
+
+		console.log(companies, 'companies')
+		getCompaniesAndStatistics(token)
+	}, [token]) // Added token as a dependency
 
 	const select = useRowSelect(
 		data,
@@ -338,7 +356,7 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 									</svg>
 								</label>
 								<div className={s.sortTableButtons}>
-									<button
+									{/* <button
 										onClick={() => {
 											setCurrentPopup(CurrentPopup.Cols)
 										}}
@@ -360,7 +378,7 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 												/>
 											</svg>
 										</div>
-									</button>
+									</button> */}
 									{/* <button className={s.sortTableButton}>
 							<div className={s.sortTableButtonWrapper}>
 								<div className={`absolute right-[0px] w-[139px]`}></div>
@@ -425,9 +443,7 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 																	sortKey: 'Status',
 																})
 															}>
-															<p className={s.sortText}>
-																Статус
-															</p>
+															<p className={s.sortText}>Статус</p>
 															<div>
 																<svg
 																	id="svg-icon-chevron-single-up-down"
@@ -461,11 +477,11 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 														style={{fontWeight: '400', fill: '#808080'}}>
 														География показов
 													</tl.HeaderCell>
-													<tl.HeaderCell
+													{/* <tl.HeaderCell
 														className={s.HeaderCell}
 														style={{fontWeight: '400', fill: '#808080'}}>
 														Категории и подкатегории
-													</tl.HeaderCell>
+													</tl.HeaderCell> */}
 													<tl.HeaderCell
 														className={s.HeaderCell}
 														style={{fontWeight: '400', fill: '#808080'}}>
@@ -481,11 +497,7 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 														style={{fontWeight: '400', fill: '#808080'}}>
 														Устройства
 													</tl.HeaderCell>
-													<tl.HeaderCell
-														className={s.HeaderCell}
-														style={{fontWeight: '400', fill: '#808080'}}>
-														Платежеспособность
-													</tl.HeaderCell>
+
 													<tl.HeaderCell
 														className={s.HeaderCell}
 														style={{fontWeight: '400', fill: '#808080'}}>
@@ -575,7 +587,7 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 														<tl.Cell className="bg-[#1A1A1A]">
 															<Row width="auto">
 																<Col width="auto">
-																	<label>{item.name}</label>
+																	<label>{item.ad_audience[0].name}</label>
 																	<Row width="auto" className={s.rowIdCheckbox}>
 																		{/* <svg
 																className="mr-2"
@@ -599,7 +611,10 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 																	strokeLinejoin="round"
 																/>
 															</svg> */}
-																		<Label isMini={true} text={`ID${index}`} />
+																		<Label
+																			isMini={true}
+																			text={`ID${item.ad_audience[0].id}`}
+																		/>
 																		{/* Make by ID from server */}
 																	</Row>
 																</Col>
@@ -651,63 +666,23 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 													</mui.Select>
 												</tl.Cell> */}
 														<tl.Cell>
-															<mui.Select
-																className={s.muiSelectClicks}
-																renderValue={(
-																	option: mui.SelectOption<number> | null,
-																) => {
-																	if (option == null || option.value === null) {
-																		return (
-																			<>
-																				<div className={s.audiotoriaNBanners}>
-																					<WhiteLabel text="3" />
-																					<WhiteLabel
-																						text={` и 23`}
-																						className="ml-1"
-																					/>
-																				</div>
-																			</>
-																		)
-																	}
-																	return (
-																		<>
-																			<div className={s.audiotoriaNBanners}>
-																				<WhiteLabel text="4" />
-																				<WhiteLabel
-																					text={` и 24`}
-																					className="ml-1"
-																				/>
-																			</div>
-																		</>
-																	)
-																}}>
-																<mui.Option
-																	value={1}
-																	className={`cursor-pointer z-10 mt-1`}>
-																	{/* <AuditorNBanners /> */}
-																</mui.Option>
-															</mui.Select>
+															<p>{item.name}</p>
 														</tl.Cell>
 														<tl.Cell>
-															<Col width="auto">
-																<Row width="auto" className="flex items-center">
-																	<img
-																		src={getFaviconUrl(item.site.domain)}
-																		alt={item.site.domain}
-																		className="mr-1 w-[16px] h-[16px]"
-																	/>
-																	<WhiteLabel
-																		text={getNameFromDomain(item.site.domain)}
-																	/>
-																</Row>
-																<a
-																	target="_blank"
-																	rel="noopener noreferrer"
-																	className={s.AdSiteUrl}
-																	href={`https://${item.site.domain}`}>
-																	{item.site.domain}
-																</a>
-															</Col>
+															<p
+																id={
+																	item.status_text === 'Активная'
+																		? 'green'
+																		: item.status_text === 'Отклонена'
+																		  ? 'red'
+																		  : item.status_text === 'Завершена'
+																		    ? 'gray'
+																		    : item.status_text === 'На модерации'
+																		      ? 'yellow'
+																		      : 'gray'
+																}>
+																{item.status_text}
+															</p>
 														</tl.Cell>
 														{/* <tl.Cell>
 													<mui.Select
@@ -755,52 +730,262 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 													</mui.Select>
 												</tl.Cell> */}
 														<tl.Cell>
-															<p
-																id={
-																	item.status_text === 'Активная'
-																		? 'green'
-																		: item.status_text === 'Отклонена'
-																		  ? 'red'
-																		  : item.status_text === 'Завершена'
-																		    ? 'gray'
-																		    : item.status_text === 'На модерации'
-																		      ? 'yellow'
-																		      : 'gray'
-																}>
-																{item.status_text}
-															</p>
+															<mui.Select
+																className={s.muiSelectDetails}
+																renderValue={(
+																	option: mui.SelectOption<number> | null,
+																) => {
+																	if (option == null || option.value === null) {
+																		return (
+																			<>
+																				<p className={s.DetailsCell}>
+																					{item.ad_audience[0].geography.length}
+																				</p>
+																			</>
+																		)
+																	}
+																	// return `${option.label}`
+																	return (
+																		<>
+																			<p className={s.DetailsCell}>
+																				{item.ad_audience[0].geography.length}
+																			</p>
+																		</>
+																	)
+																}}>
+																<mui.Option
+																	value={1}
+																	className={`cursor-pointer z-10 mt-1`}>
+																	<CompaniesTablePopUp
+																		companies={item.ad_audience[0].geography}
+																		needCompanies={false}
+																	/>
+																</mui.Option>
+															</mui.Select>
+														</tl.Cell>
+														{/* <tl.Cell>
+															<mui.Select
+																className={s.muiSelectDetails}
+																renderValue={(
+																	option: mui.SelectOption<number> | null,
+																) => {
+																	if (option == null || option.value === null) {
+																		return (
+																			<>
+																				<p className={s.DetailsCell}>
+																					{item.ad_audience[0].category.length}
+																				</p>
+																			</>
+																		)
+																	}
+																	// return `${option.label}`
+																	return (
+																		<>
+																			<p className={s.DetailsCell}>
+																				{item.ad_audience[0].category.length}
+																			</p>
+																		</>
+																	)
+																}}>
+																<mui.Option
+																	value={1}
+																	className={`cursor-pointer z-10 mt-1`}>
+																	<CompaniesTablePopUp
+																		companies={item.ad_audience[0].category}
+																		needCompanies={false}
+																	/>
+																</mui.Option>
+															</mui.Select>
+														</tl.Cell> */}
+														<tl.Cell>
+															<mui.Select
+																className={s.muiSelectDetails}
+																renderValue={(
+																	option: mui.SelectOption<number> | null,
+																) => {
+																	if (option == null || option.value === null) {
+																		return (
+																			<>
+																				<p className={s.DetailsCell}>
+																					{item.ad_audience[0].interest.length}
+																				</p>
+																			</>
+																		)
+																	}
+																	// return `${option.label}`
+																	return (
+																		<>
+																			<p className={s.DetailsCell}>
+																				{item.ad_audience[0].interest.length}
+																			</p>
+																		</>
+																	)
+																}}>
+																<mui.Option
+																	value={1}
+																	className={`cursor-pointer z-10 mt-1`}>
+																	<CompaniesTablePopUp
+																		companies={item.ad_audience[0].interest}
+																		needCompanies={false}
+																	/>
+																</mui.Option>
+															</mui.Select>
 														</tl.Cell>
 														<tl.Cell>
-															<p>{item.views}</p>
+															{/* TO DO */}
+															<mui.Select
+																onClick={() =>
+																	console.log(item.ad_audience[0].gender_age[0])
+																}
+																className={s.muiSelectDetails}
+																renderValue={(
+																	option: mui.SelectOption<number> | null,
+																) => {
+																	if (option == null || option.value === null) {
+																		return (
+																			<>
+																				<p className={s.DetailsCell}>
+																					{
+																						item.ad_audience[0].gender_age
+																							.length
+																					}
+																				</p>
+																			</>
+																		)
+																	}
+																	// return `${option.label}`
+																	return (
+																		<>
+																			<p className={s.DetailsCell}>
+																				{item.ad_audience[0].gender_age.length}
+																			</p>
+																		</>
+																	)
+																}}>
+																<mui.Option
+																	value={1}
+																	className={`cursor-pointer z-10 mt-1`}>
+																	<CompaniesTablePopUp
+																		companies={item.ad_audience[0].gender_age.map(item => `${item.male}, ${item.from} - ${item.to}`)}
+																		needCompanies={false}
+																	/>
+																</mui.Option>
+															</mui.Select>
 														</tl.Cell>
 														<tl.Cell>
-															<p>6</p>
-														</tl.Cell>
-														<tl.Cell>
-															<p>7</p>
-														</tl.Cell>
-														<tl.Cell>
-															<p>8</p>
-														</tl.Cell>
-														<tl.Cell>
-															<p>9</p>
-														</tl.Cell>
-														<tl.Cell>
-															<p>10</p>
-														</tl.Cell>
-														<tl.Cell>
-															<p>11</p>
-														</tl.Cell>
-														<tl.Cell>
-															<p>12</p>
-														</tl.Cell>
-														<tl.Cell>
-															<p>13</p>
-														</tl.Cell>
-														<tl.Cell>
-															<p>14</p>
+															<mui.Select
+																className={s.muiSelectDetails}
+																renderValue={(
+																	option: mui.SelectOption<number> | null,
+																) => {
+																	if (option == null || option.value === null) {
+																		return (
+																			<>
+																				<p className={s.DetailsCell}>
+																					{item.ad_audience[0].device.length}
+																				</p>
+																			</>
+																		)
+																	}
+																	// return `${option.label}`
+																	return (
+																		<>
+																			<p className={s.DetailsCell}>
+																				{item.ad_audience[0].device.length}
+																			</p>
+																		</>
+																	)
+																}}>
+																<mui.Option
+																	value={1}
+																	className={`cursor-pointer z-10 mt-1`}>
+																	<CompaniesTablePopUp
+																		companies={item.ad_audience[0].device}
+																		needCompanies={false}
+																	/>
+																</mui.Option>
+															</mui.Select>
 														</tl.Cell>
 
+														<tl.Cell>
+															<mui.Select
+																className={s.muiSelectDetails}
+																renderValue={(
+																	option: mui.SelectOption<number> | null,
+																) => {
+																	if (option == null || option.value === null) {
+																		return (
+																			<>
+																				<p className={s.DetailsCell}>
+																					{item.phrase_plus.length}
+																				</p>
+																			</>
+																		)
+																	}
+																	// return `${option.label}`
+																	return (
+																		<>
+																			<p className={s.DetailsCell}>
+																				{item.phrase_plus.length}
+																			</p>
+																		</>
+																	)
+																}}>
+																<mui.Option
+																	value={1}
+																	className={`cursor-pointer z-10 mt-1`}>
+																	<CompaniesTablePopUp
+																		companies={item.phrase_plus}
+																		needCompanies={false}
+																	/>
+																</mui.Option>
+															</mui.Select>
+														</tl.Cell>
+														<tl.Cell>
+															<mui.Select
+																className={s.muiSelectDetails}
+																renderValue={(
+																	option: mui.SelectOption<number> | null,
+																) => {
+																	if (option == null || option.value === null) {
+																		return (
+																			<>
+																				<p className={s.DetailsCell}>
+																					{item.phrase_minus.length}
+																				</p>
+																			</>
+																		)
+																	}
+																	// return `${option.label}`
+																	return (
+																		<>
+																			<p className={s.DetailsCell}>
+																				{item.phrase_minus.length}
+																			</p>
+																		</>
+																	)
+																}}>
+																<mui.Option
+																	value={1}
+																	className={`cursor-pointer z-10 mt-1`}>
+																	<CompaniesTablePopUp
+																		companies={item.phrase_minus}
+																		needCompanies={false}
+																	/>
+																</mui.Option>
+															</mui.Select>
+														</tl.Cell>
+														<tl.Cell>
+															<p>{item.statistics.consumption}</p>
+														</tl.Cell>
+														<tl.Cell>
+															<p>
+																{item.statistics.consumption > 0
+																	? (item.statistics.consumption * 20) / 120
+																	: item.statistics.consumption}
+															</p>
+														</tl.Cell>
+														<tl.Cell>{item.statistics.cpc_sum}</tl.Cell>
 													</tl.Row>
 												))}
 											</tl.Body>

@@ -18,11 +18,13 @@ interface ICompany {
 interface ICompaniesTablePopUp {
 	className?: string // Added className prop
 	companies: ICompany[]
+	needCompanies?: boolean
 }
 
 const CompaniesTablePopUp: React.FC<ICompaniesTablePopUp> = ({
 	className,
 	companies,
+	needCompanies = true,
 }: ICompaniesTablePopUp) => {
 	useEffect(() => {
 		console.log(JSON.stringify(companies), 'companies')
@@ -37,8 +39,19 @@ const CompaniesTablePopUp: React.FC<ICompaniesTablePopUp> = ({
 								<div className={s.RowCourseWrapper}>
 									<div className={s.RowCourse}>
 										<Col width="200px" className=" whitespace-nowrap">
-											<NavLabel className={s.navLabel} text={company.name} />
-											<Label isMini={true} text={`ID${company.id}`} />
+											{needCompanies ? (
+												<>
+													<NavLabel
+														className={s.navLabel}
+														text={company.name}
+													/>
+													<Label isMini={true} text={`ID${company.id}`} />
+												</>
+											) : (
+												<>
+													<NavLabel className={s.navLabel} text={company} />
+												</>
+											)}
 										</Col>
 									</div>
 								</div>

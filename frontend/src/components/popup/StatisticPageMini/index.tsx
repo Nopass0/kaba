@@ -27,7 +27,7 @@ import moment from 'moment'
 import InputIcon from 'react-multi-date-picker/components/input_icon'
 import * as mui from '@mui/base'
 import Calendar from '../../Calendar/index'
-import {getStatisticsAPI} from '../../../api/data.api'
+import {getBloggerStatistics, getStatisticsAPI} from '../../../api/data.api'
 import {useSelector} from 'react-redux'
 
 ChartJS.register(
@@ -180,6 +180,7 @@ interface IStatisticPageMini {
 	link_company?: string
 	ooo_company?: string
 	see_link?:string
+	id_masked?: string
 }
 
 const StatisticPageMini: React.FC<IStatisticPageMini> = ({
@@ -190,6 +191,7 @@ const StatisticPageMini: React.FC<IStatisticPageMini> = ({
 	link_company,
 	ooo_company,
 	see_link,
+	id_masked
 }: IStatisticPageMini) => {
 	const weekDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
 	const months = [
@@ -218,10 +220,10 @@ const StatisticPageMini: React.FC<IStatisticPageMini> = ({
 	const [d_consumption, bool_consumption] = useState(true)
 
 	useEffect(() => {
-		console.log(id_company)
+		console.log(id_masked)
 
 		const getInfo = async () => {
-			const res = await getStatisticsAPI(token, [String(id_company)], step)
+			const res = await getBloggerStatistics(token, [String(id_masked)], step)
 			console.log(res)
 			setInfo(res)
 			console.log(info)
@@ -264,7 +266,7 @@ const StatisticPageMini: React.FC<IStatisticPageMini> = ({
 			},
 			{
 				hidden: d_consumption,
-				label: 'Расходы (Рубли знак валюты)',
+				label: 'Доходы (Рубли знак валюты)',
 				data: consumption,
 				borderWidth: 1,
 				backgroundColor: '#6049B4',
