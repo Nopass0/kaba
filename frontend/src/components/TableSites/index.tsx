@@ -27,10 +27,10 @@ import TableLineFooter from '../TableLineFooter'
 import StatusSitePopUp from '../popup/StatusSitePopUP/index'
 import CompaniesTablePopUp from '../popup/CompaniesTablePopUp/index'
 import {getSitesAPI} from '../../api/data.api'
-import NavLabel from '../NavLabel/index';
-import Label from '../Label/index';
-import { Link } from 'react-router-dom'
-import BlueButton from '../BlueButton/index';
+import NavLabel from '../NavLabel/index'
+import Label from '../Label/index'
+import {Link} from 'react-router-dom'
+import BlueButton from '../BlueButton/index'
 
 const list = [
 	{
@@ -114,7 +114,7 @@ const THEME = {
 	  z-index: 3;
     }
 
-	.th:first-child, .th:nth-child(2) {
+	.th:first-child,  {
 		padding-left: 8px;
 	}
 	.th:first-child {
@@ -263,7 +263,6 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 			return res.data
 		}
 		getSites(token)
-
 	}, [])
 
 	const select = useRowSelect(
@@ -323,7 +322,7 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 
 	return (
 		<>
-		{!(sites.length > 0) ? (
+			{!(sites.length > 0) ? (
 				<>
 					<Col width="360px" className={s.noCompany}>
 						<NavLabel className={s.noCompanyTitle} text="Нет кампаний" />
@@ -365,7 +364,7 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 								/>
 							</svg>
 						</label>
-						<div className={s.sortTableButtons}>
+						{/* <div className={s.sortTableButtons}>
 							<button className={s.sortTableButton}>
 								<div className={s.sortTableButtonWrapper}>
 									<p className={s.sortTableButtonTextGray}>Столбцы:</p>
@@ -386,7 +385,7 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 								</div>
 							</button>
 							<Button width="180px" text="Подключить счётчик" />
-						</div>
+						</div> */}
 					</div>
 
 					<tl.Table
@@ -405,13 +404,9 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 											className={`CheckBox` + ' ' + s.headerCellSelect}
 										/>
 										<tl.HeaderCell
-											className={s.headerCellSort_Sort}
+											className={s.HeaderCell}
 											style={{fontWeight: '400'}}>
-											<Row width="auto">
-												<Col width="auto">
-													<p>Название, ID</p>
-												</Col>
-											</Row>
+											<p>Название, ID</p>
 										</tl.HeaderCell>
 
 										{/* <tl.HeaderCell
@@ -669,7 +664,7 @@ const TableSites: React.FC<ITableSites> = ({}: ITableSites) => {
 											<tl.Cell className="bg-[#1A1A1A]">
 												<Row width="auto">
 													<Col width="auto">
-														<Row width="auto" className='flex items-center'>
+														<Row width="auto" className="flex items-center">
 															<img
 																src={getFaviconUrl(item.domain)}
 																alt=""

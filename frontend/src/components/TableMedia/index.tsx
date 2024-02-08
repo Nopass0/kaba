@@ -95,7 +95,7 @@ const THEME = {
       align-items: center;
     }
 
-	.th:first-child, .th:nth-child(2) {
+	.th:first-child,  {
 		padding-left:8px;
 	}
 	.th:first-child {
@@ -403,13 +403,9 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 										className={`CheckBox` + ' ' + s.headerCellSort}
 									/>
 									<tl.HeaderCell
-										className={s.headerCellSort_Sort}
+										className={s.HeaderCell}
 										style={{fontWeight: '400'}}>
-										<Row width="auto">
-											<Col width="auto">
-												<p>Баннер</p>
-											</Col>
-										</Row>
+										<p>Баннер</p>
 									</tl.HeaderCell>
 
 									<tl.HeaderCell

@@ -383,3 +383,14 @@
 		margin-bottom: 16px;
 	}
 }
+
+.HeaderCell div:first-child {
+	padding: 3px 8px;
+
+	border-radius: 6px;
+	&:hover {
+		transition: all 0.2s;
+		color: #f2f2f2;
+		background-color: #474747;
+	}
+}

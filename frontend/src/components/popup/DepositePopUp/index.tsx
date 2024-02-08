@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import s from './index.module.scss'
 import Col from '../../Col'
 import Row from '../../Row'
@@ -32,6 +32,8 @@ const Deposite: React.FC<IDeposite> = ({
 
 	const [disabledBtn, setDisabledBtn] = React.useState(true)
 
+	let root = document.getElementsByTagName('body')[0]
+
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const newValue = event.target.value.replace(/[^0-9]/g, '') // remove non-digit characters
 		setValue(hormalizeValue(newValue))
@@ -54,6 +56,9 @@ const Deposite: React.FC<IDeposite> = ({
 		window.open(req.data.url, '_blank')
 
 		//close popup popup
+		console.log(root, 'ROOOOTT')
+
+		root.classList.remove('stop-scrolling')
 		onExit()
 
 		console.log(req)
@@ -64,7 +69,11 @@ const Deposite: React.FC<IDeposite> = ({
 			<Col width="248px" className={s.DepositeCol}>
 				<Row width="248px" className={s.DepositeHeader}>
 					<NavLabel className={s.NavLabel} text="Пополнение" />
-					<button onClick={onExit}>
+					<button
+						onClick={() => {
+							root.classList.remove('stop-scrolling')
+							onExit()
+						}}>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							width="24"

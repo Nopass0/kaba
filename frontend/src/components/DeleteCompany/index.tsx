@@ -21,10 +21,11 @@ const DeleteCompany: React.FC<IDeleteCompany> = ({
 	CreateCompany, // className,
 	saveFunc, // text_course_table,
 	resetFunc, // text_id_table,
-} // text_id_table,
-: IDeleteCompany) => {
+	// text_id_table,
+}: IDeleteCompany) => {
 	// const DeleteCompanyClassName = `DeleteCompany ${className}`; // Combine className with "DeleteCompany" class using s[className]
 
+	let root = document.getElementsByTagName('body')[0]
 	return (
 		<div
 			style={{height: CreateCompany ? '140px' : '	218px'}}
@@ -34,7 +35,12 @@ const DeleteCompany: React.FC<IDeleteCompany> = ({
 					<p className={s.deleteText}>
 						Вы действительно хотите удалить выбранную компанию?
 					</p>
-					<div onClick={onExit} className={s.exitButton}>
+					<div
+						onClick={() => {
+							root.classList.remove('stop-scrolling')
+							onExit()
+						}}
+						className={s.exitButton}>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							width="24"

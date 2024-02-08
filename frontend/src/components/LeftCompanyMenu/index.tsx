@@ -401,7 +401,7 @@ const LeftCompanyMenu: React.FC = () => {
 								}}>
 								<mui.Option
 									value={1}
-									className="relative top-[-30px] left-[180px]">
+									className="relative top-[-35px] left-[185px]">
 									<ExtraDropDownPopUp />
 								</mui.Option>
 							</mui.Select>

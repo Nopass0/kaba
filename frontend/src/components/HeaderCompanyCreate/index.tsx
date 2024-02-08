@@ -21,7 +21,7 @@ const HeaderCompanyCreate: React.FC<IHeaderCompanyCreate> = ({
 
 	const onExit = () => {
 		// Exit logic here
-
+		
 		setCurrentPopup(CurrentPopup.None)
 	}
 	const navigate = useNavigate()

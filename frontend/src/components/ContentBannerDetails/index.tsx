@@ -22,7 +22,7 @@ export interface IContentBannerDetails {
 	course_id?: string
 	course_ooo?: string
 	course_link?: string
-	see_link?:string
+	see_link?: string
 
 	// Statistics
 	stat_toEnd?: string
@@ -111,13 +111,17 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 
 	onExit,
 }: IContentBannerDetails) => {
+	let root = document.getElementsByTagName('body')[0]
 	return (
 		<div className={s.wrapper}>
 			<Col className={s.contentBanner} width="528px">
 				<Row className={s.headerBanner} width="528px">
 					<NavLabel className={s.navLabel} text="Контент баннера" />
 					<svg
-						onClick={onExit}
+						onClick={() => {
+							root.classList.remove('stop-scrolling')
+							onExit()
+						}}
 						className="cursor-pointer"
 						xmlns="http://www.w3.org/2000/svg"
 						width="24"

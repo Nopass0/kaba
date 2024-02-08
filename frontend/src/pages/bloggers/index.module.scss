@@ -25,6 +25,14 @@
 	flex-direction: column;
 }
 
+@media screen and (max-width: 1440px) {
+	.rightMenu {
+		margin-left: 180px;
+		width: 1164px;	
+	}
+	
+}
+
 .headerCellSort_Sort div:first-child {
 	width: 100%;
 	overflow: scroll;
