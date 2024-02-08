@@ -53,6 +53,9 @@ urlpatterns = [
     path('getStatistics', CompanyStatisticsAPI.as_view()),
     #BloggerStatisticsAPI
     path('getBloggerStatistics', BloggerStatisticsAPI.as_view()),
+    
+    path('deleteCompany', deleteCompany.as_view()),
+
     # # Пути для взаимодействия с БД. GET - получение записей, POST - добавление новой записи  
     # path('accountModel', accountModellListCreateView.as_view()),
     # path('actionModel', actionModellListCreateView.as_view()),

@@ -953,6 +953,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 						</Col>
 						{downMenu ? (
 							<TableLineFooter
+								
 								companies={`${String(company)}`}
 								className={s.TableLineFooter}
 							/>

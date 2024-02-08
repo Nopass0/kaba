@@ -231,3 +231,19 @@ export const getBloggerStatistics = async (
 		return {status: 'error', message: error.message}
 	}
 }
+
+// deleteCompany(token,company id)
+// Function to delete company
+export const deleteCompany = async (token: string, company_id: number) => {
+	const formData = new FormData()
+	formData.append('token', token)
+	formData.append('company_id', company_id.toString()) 
+
+	try {
+		const response = await axios.post(getApiUrl('deleteCompany'), formData)
+		return response
+	} catch (error) {
+		console.error('Error during deleteCompany:', error)
+		return {status: 'error'}
+	}
+}

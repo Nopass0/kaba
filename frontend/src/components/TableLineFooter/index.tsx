@@ -9,12 +9,14 @@ interface ITableLineFooter {
 	className: string
 	companies?: string
 	blogger?: boolean
+	company_id?:number
 }
 
 const TableLineFooter: React.FC<ITableLineFooter> = ({
 	className,
 	companies,
 	blogger = false,
+	company_id,
 }: ITableLineFooter) => {
 	return (
 		<div className={s.wrapper + ' ' + className}>
