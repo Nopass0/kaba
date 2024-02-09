@@ -64,3 +64,4 @@ class jumpsToMaskedLink(models.Model):
 
     def __str__(self):
         return str(self.pk) + ', ' + str(self.isJump)
+    

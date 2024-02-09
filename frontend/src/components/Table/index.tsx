@@ -696,7 +696,10 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 																	strokeLinejoin="round"
 																/>
 															</svg> */}
-																		<Label isMini={true} text={`ID${index}`} />
+																		<Label
+																			isMini={true}
+																			text={`ID${item.id}`}
+																		/>
 																		{/* Make by ID from server */}
 																	</Row>
 																</Col>
@@ -863,7 +866,8 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 																id={
 																	item.status_text === 'Активная'
 																		? 'green'
-																		: item.status_text === 'Отклонена'
+																		: item.status_text === 'Отклонена' ||
+																		    item.status_text === 'Остановлена'
 																		  ? 'red'
 																		  : item.status_text === 'Завершена'
 																		    ? 'gray'
@@ -919,7 +923,9 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 																		return (
 																			<>
 																				<p className={s.DetailsCell}>
-																					{item.ban_show.length}
+																					{item.ban_show
+																						? item.ban_show.length
+																						: 0}
 																				</p>
 																			</>
 																		)
@@ -928,7 +934,9 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 																	return (
 																		<>
 																			<p className={s.DetailsCell}>
-																				{item.ban_show.length}
+																				{item.ban_show
+																					? item.ban_show.length
+																					: 0}
 																			</p>
 																		</>
 																	)
@@ -937,7 +945,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 																	value={1}
 																	className={`cursor-pointer z-10 mt-1`}>
 																	<CompaniesTablePopUp
-																		companies={item.ban_show}
+																		companies={item.ban_show || []}
 																		needCompanies={false}
 																	/>
 																</mui.Option>
@@ -953,7 +961,6 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 						</Col>
 						{downMenu ? (
 							<TableLineFooter
-								
 								companies={`${String(company)}`}
 								className={s.TableLineFooter}
 							/>

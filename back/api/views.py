@@ -1529,20 +1529,85 @@ class deleteCompany(APIView):
         except tokenModel.DoesNotExist:
             return Response({'error': 'Invalid token.'}, status=status.HTTP_404_NOT_FOUND)
 
-        company_id = request.data.get('company_id', '')
+        #get companies ids array
+        company_id = request.data.get('companies_ids', [])
+        #from string ("[3,4]") to array ([3, 4])
+        company_id = json.loads(company_id)
+        print("---------------------------------------------------------------------------\n",type(company_id), company_id,"\n------------------\n")
+        
         if not company_id:
             return Response({'error': 'company_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            company = ad_companyModel.objects.get(id=company_id)
+            #get array of companies from their ids
+            company = ad_companyModel.objects.filter(id__in=company_id)
         except ad_companyModel.DoesNotExist:
             return Response({'error': 'Company not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-        if company.account != user:
+        #if all companies are not associated with the user
+        if not company.filter(account=user).exists():
             return Response({'error': 'The company is not associated with the user.'}, status=status.HTTP_403_FORBIDDEN)
 
+        #delete companies
         company.delete()
+
         return Response({'status': 'ok'}, status=status.HTTP_200_OK)
+    
+class continueCompaniesAPI(APIView):
+    def post(self, request):
+        token = request.data.get('token', '')
+        if not token:
+            return Response({'error': 'token is required.'}, status=400)
+
+        try:
+            user = tokenModel.objects.get(token=token).account
+        except tokenModel.DoesNotExist:
+            return Response({'error': 'Invalid token.'}, status=404)
+
+        #get companies ids array
+        company_id = request.data.get('companies_ids', [])
+        company_id = json.loads(company_id)
+
+        companies = ad_companyModel.objects.filter(account=user, id__in=company_id)
+        
+        #if all companies are not associated with the user
+        if not companies.exists():
+            return Response({'error': 'The company is not associated with the user.'}, status=403)
+        
+        for company in companies:
+            if company.status_text == "Остановлена":
+                company.status_text = "Активная"
+                company.save()
+        
+        return Response({'status': 'ok'})
+
+class pauseCompaniesAPI(APIView):
+    def post(self, request):
+        token = request.data.get('token', '')
+        if not token:
+            return Response({'error': 'token is required.'}, status=400)
+
+        try:
+            user = tokenModel.objects.get(token=token).account
+        except tokenModel.DoesNotExist:
+            return Response({'error': 'Invalid token.'}, status=404)
+
+        #get companies ids array
+        company_id = request.data.get('companies_ids', [])
+        company_id = json.loads(company_id)
+
+        companies = ad_companyModel.objects.filter(account=user, id__in=company_id)
+        
+        #if all companies are not associated with the user
+        if not companies.exists():
+            return Response({'error': 'The company is not associated with the user.'}, status=403)
+        
+        for company in companies:
+            if company.status_text == "Активная":
+                company.status_text = "Остановлена"
+                company.save()
+                
+        return Response({'status': 'ok'})
     
     
 import datetime
