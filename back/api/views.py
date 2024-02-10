@@ -2,6 +2,7 @@ import base64
 import json
 import string
 import uuid
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
@@ -1196,7 +1197,7 @@ class AddCompanyToBlogger(APIView):
             site = company.site  # Предполагаем, что у компании уже есть связанный сайт
 
             # Создаем запись в модели jumpToADPage
-            jumpToADPage.objects.create(account=user, site=site, masked_url=masked_domain)
+            jumpToADPage.objects.create(account=user, site=site, masked_url=masked_domain, company=company)
 
             return Response({
                 'status': 'ok',
@@ -1329,65 +1330,118 @@ class generateMaskedURL(APIView):
         domain = request.data.get('domain', '')
         if not domain:
             return Response({'error': 'domain is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        company_id = request.data.get('company_id', '')
 
         #generate random string (64 chars) unique and create jumpToADPage model
         masked_domain = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(64))
-        jumpToADPage.objects.create(account=user, site=siteModel.objects.get(domain=domain), masked_url=masked_domain)
+        jumpToADPage.objects.create(account=user, site=siteModel.objects.get(domain=domain), masked_url=masked_domain, company=ad_companyModel.objects.get(id=company_id))
 
         return Response({'masked_domain': masked_domain}, status=status.HTTP_200_OK)
     
     
+from django.db.models import F
 from django.utils import timezone
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
 class checkTransition(APIView):
     def post(self, request):
         masked_domain = request.data.get('masked_domain', '')
-        print(masked_domain)
         if not masked_domain:
             return Response({'error': 'masked_domain is required.'}, status=status.HTTP_400_BAD_REQUEST)
         
-        jump = jumpToADPage.objects.filter(masked_url=masked_domain).first()
+        jump = jumpToADPage.objects.select_related('site', 'account').filter(masked_url=masked_domain).first()
         if not jump:
-            return Response({'error': 'jump not found.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Jump not found.'}, status=status.HTTP_404_NOT_FOUND)
         
-        # Добавляем к показам jumpToADPage +1
+        current_time = timezone.now()
+        company = jump.site.ad_companyModel_siteModel.first()  # Assuming direct relation for simplicity
+
+        # Checks if action should be taken based on campaign period and status
+        if not (company.date_start <= current_time <= company.date_finish) or company.status_text != "Активная":
+            return Response({'message': 'No action taken due to company status or campaign period.'}, status=status.HTTP_200_OK)
+        
+        # Increment jump shows
         jump.shows += 1
         jump.save()
 
-        # Создаем запись в jumpsToMaskedLink
+        # Create jumpsToMaskedLink record
         jumpsToMaskedLink.objects.create(jump=jump)
         
-        # Обновляем статистику для компании
-        self.update_statistics(jump.masked_url, timezone.now())
+        # Update company statistics
+        self.update_statistics(jump.masked_url, current_time, company)
         
-        normal_url = jump.site.domain
-        
-        # Возвращаем обычный URL
-        return Response({'normal_url': normal_url}, status=status.HTTP_200_OK)
+        return Response({'normal_url': jump.site.domain}, status=status.HTTP_200_OK)
 
-    def update_statistics(self, masked_url, click_time):
-        # Получаем или создаем объект статистики для компании
+    def update_statistics(self, masked_url, click_time, company):
         stats, created = statisticModel.objects.get_or_create(
             masked_url=masked_url,
-            defaults={
-                'clicks_sum': 0,
-                'clicks': [],
-                'first_click': click_time,
-                'last_click': click_time
-            }
+            defaults={'clicks_sum': 1, 'clicks': [click_time], 'first_click': click_time, 'last_click': click_time}
         )
         
-        # Обновляем данные статистики
-        stats.clicks_sum += 1
-        stats.last_click = click_time
-        if created or not stats.first_click:
-            stats.first_click = click_time
+        if not created:
+            stats.clicks_sum += 1
+            stats.clicks.append(click_time)
+            stats.last_click = click_time
+            stats.save()
 
-        # Обновляем массив кликов
-        stats.clicks.append(click_time)
+        if stats.last_click >= company.date_finish:
+            company.status_text = "Завершена"
+            company.save()
         
-        # Сохраняем обновленные данные
-        stats.save()
-    
+        self.calculate_current_cpc(company)
+        self.paymentToBlogger(masked_url, stats.first_click, stats.last_click, stats.clicks_sum, company)
+
+        # Assuming payment processing is called here or elsewhere as needed
+
+    def calculate_current_cpc(self, company):
+        # Placeholder for CPC calculation logic. Adjust as needed.
+        # This could involve complex logic based on total clicks, budget, and campaign performance.
+        company.current_cpc = min(company.price_target, company.current_cpc)  # Simplified example
+        company.save()
+        
+    def paymentToBlogger(self, masked_url, first_click, last_click, click_sum, company):
+        # Check company status before proceeding
+        if company.status_text != "Активная":
+            return
+
+        # Get the company's wallet to check the balance
+        company_wallet = get_object_or_404(walletModel, account=company.account)
+
+        # If the company's wallet balance is <= 0, update status and return
+        if company_wallet.balance <= 0:
+            company.status_text = "Остановлена"
+            company.save(update_fields=['status_text'])
+            return
+
+        jump_page = jumpToADPage.objects.get(masked_url=masked_url)
+        blogger = jump_page.account
+
+        # Calculate total consumption with respect to company's price_target
+        cpc = min(company.current_cpc, company.price_target)
+        total_consumption = cpc * click_sum
+        
+        # Check if payment exceeds the company's remaining balance
+        if total_consumption > company_wallet.balance:
+            # Optional: Handle scenario where partial payment could be considered or simply stop payment
+            company.status_text = "Остановлена"
+            company.save(update_fields=['status_text'])
+            return
+
+        # Proceed with payment if conditions are met
+        blogger_wallet, _ = walletModel.objects.get_or_create(account=blogger, defaults={'balance': 0})
+        blogger_wallet.balance = F('balance') + total_consumption
+        blogger_wallet.save(update_fields=['balance'])
+        
+        walletOperationsModel.objects.create(
+            wallet=blogger_wallet,
+            operation=f"Payment for company '{company.name}' (ID {company.id})",
+            balance=total_consumption,
+            operationType="+",
+            isConfirm=True
+        )
     
 from django.db.models import Sum, Avg
 from collections import defaultdict
@@ -1563,6 +1617,12 @@ class continueCompaniesAPI(APIView):
             user = tokenModel.objects.get(token=token).account
         except tokenModel.DoesNotExist:
             return Response({'error': 'Invalid token.'}, status=404)
+
+        #get wallet of user
+        wallet = walletModel.objects.filter(account=user.id).first()
+        #check if balance is <= 0 then return status: "no money"
+        if wallet.balance <= 0:
+            return Response({'status': 'no money'})
 
         #get companies ids array
         company_id = request.data.get('companies_ids', [])
@@ -1751,12 +1811,6 @@ class CompanyStatisticsAPI(APIView):
             'statistics': response_data
         }
         return response
-
-
-
-
-
-
 
     def generate_mock_data(self, companies_ids, step):
         # Generate mock data

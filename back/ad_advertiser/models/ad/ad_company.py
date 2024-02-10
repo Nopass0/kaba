@@ -14,7 +14,10 @@ class ad_companyModel(models.Model):
     price_target = models.PositiveIntegerField('Цена перехода', blank=True, null = True, default=0)
     date_start = models.DateTimeField('Дата начала', blank=True)
     date_finish = models.DateTimeField('Дата завершения', blank=True)
+    #while beta test budget_week is used like budget_day
     budget_week = models.PositiveIntegerField('Недельный бюджет', default=0)
+    current_cpc = models.PositiveIntegerField('Текущий CPC', default=0)
+    budget_day = models.PositiveIntegerField('Днейный бюджет', default=0)
     
     channel_taboo = ArrayField(models.CharField(max_length=255), blank=True, size=500)
     phrase_plus = ArrayField(models.CharField(max_length=60), blank=True, size=500)
@@ -50,6 +53,7 @@ class jumpToADPage(models.Model):
     site = models.ForeignKey(siteModel, on_delete=models.CASCADE, null=True, blank=True)
     # company = models.ForeignKey(ad_companyModel, on_delete=models.CASCADE)
     account = models.ForeignKey(accountModel, on_delete=models.CASCADE, null=True, blank=True)
+    company = models.ForeignKey(ad_companyModel, on_delete=models.CASCADE, null=True, blank=True)
     
     shows = models.IntegerField('Показы', default=0)
     
