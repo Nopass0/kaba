@@ -1567,6 +1567,7 @@ class continueCompaniesAPI(APIView):
         #get companies ids array
         company_id = request.data.get('companies_ids', [])
         company_id = json.loads(company_id)
+        
 
         companies = ad_companyModel.objects.filter(account=user, id__in=company_id)
         

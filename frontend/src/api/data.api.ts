@@ -234,16 +234,49 @@ export const getBloggerStatistics = async (
 
 // deleteCompany(token,company id)
 // Function to delete company
-export const deleteCompany = async (token: string, company_id: number) => {
+export const deleteCompany = async (token: string, company_ids: number[]) => {
 	const formData = new FormData()
 	formData.append('token', token)
-	formData.append('company_id', company_id.toString()) 
+	formData.append('companies_ids', `[${company_ids.toString()}]`) 
 
 	try {
 		const response = await axios.post(getApiUrl('deleteCompany'), formData)
 		return response
 	} catch (error) {
 		console.error('Error during deleteCompany:', error)
+		return {status: 'error'}
+	}
+}
+
+
+// continueCompany(token,company id array)
+// Function to continue company
+export const continueCompany = async (token: string, company_ids: number[]) => {
+	const formData = new FormData()
+	formData.append('token', token)
+	formData.append('companies_ids', `[${company_ids.toString()}]`)
+
+	try {
+		const response = await axios.post(getApiUrl('continueCompanies'), formData)
+		return response
+	} catch (error) {
+		console.error('Error during continueCompany:', error)
+		return {status: 'error'}
+	}
+}
+
+//pauseCompany(token,company ids array)
+// Function to pause company
+export const pauseCompany = async (token: string, company_ids: number[]) => {
+	const formData = new FormData()
+	formData.append('token', token)
+	formData.append('companies_ids', `[${company_ids.toString()}]`)
+
+	try {
+		const response = await axios.post(getApiUrl('pauseCompanies'), formData)
+		return response
+	} catch (error) {
+		console.error('Error during pauseCompany:', error)
 		return {status: 'error'}
 	}
 }

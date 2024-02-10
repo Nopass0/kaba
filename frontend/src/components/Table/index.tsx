@@ -215,7 +215,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 	}
 	// const sort = useSort(data);
 	const [audNBan, setAudNBan] = useState<boolean>(false)
-	const [company, setCompany] = useState<number>(0)
+	const [company, setCompany] = useState<number[]>([])
 	const [currentPopup, setCurrentPopup] = useState(CurrentPopup.None)
 	const [downMenu, setDownMenu] = useState(false)
 	const [tableList, setTableList] = useState()
@@ -225,6 +225,9 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 	const token = user.token
 	const [companies, setCompanies] = useState([])
 	const [statistic, setStatistic] = useState([])
+	
+	const [activeCompany, setActiveCompany] = useState<boolean>(true)
+
 
 	const data = {nodes: companies}
 
@@ -298,7 +301,9 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 	function onSelectChange(action: any, state: any) {
 		console.log(action, state)
 
-		setCompany(Number(state.ids.length))
+		console.log(state.ids, "STATE");
+		setCompany(state.ids)
+		
 		let isOpen = 0
 		if (Number(state.ids.length) > 0 && isOpen === 0) {
 			setDownMenu(true)
@@ -308,6 +313,8 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 			isOpen = 0
 		}
 	}
+
+
 
 	return (
 		<>
@@ -897,7 +904,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 																onClick={() => {
 																	console.log(item, 'COMPANIES')
 																}}>
-																123
+																{item.budget_week}
 															</p>
 														</tl.Cell>
 														<tl.Cell>
@@ -961,7 +968,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 						</Col>
 						{downMenu ? (
 							<TableLineFooter
-								companies={`${String(company)}`}
+								companies={company}
 								className={s.TableLineFooter}
 							/>
 						) : null}

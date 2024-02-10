@@ -653,7 +653,8 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 																id={
 																	item.status_text === 'Активная'
 																		? 'green'
-																		: item.status_text === 'Отклонена'
+																		: item.status_text === 'Отклонена' ||
+																		    item.status_text === 'Остановлена'
 																		  ? 'red'
 																		  : item.status_text === 'Завершена'
 																		    ? 'gray'

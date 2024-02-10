@@ -669,11 +669,12 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 															<p>{item.name}</p>
 														</tl.Cell>
 														<tl.Cell>
-															<p
+														<p
 																id={
 																	item.status_text === 'Активная'
 																		? 'green'
-																		: item.status_text === 'Отклонена'
+																		: item.status_text === 'Отклонена' ||
+																		    item.status_text === 'Остановлена'
 																		  ? 'red'
 																		  : item.status_text === 'Завершена'
 																		    ? 'gray'

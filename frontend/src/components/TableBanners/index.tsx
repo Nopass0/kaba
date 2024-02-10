@@ -220,7 +220,11 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 				// Fetch statistics for each company and add it to the company object
 				const companiesWithStatistics = await Promise.all(
 					res.data.companies.map(async (company: any) => {
-						const stata = await getBloggerStatistics(String(token), String(company.site.masked_domain), 'hour')
+						const stata = await getBloggerStatistics(
+							String(token),
+							String(company.site.masked_domain),
+							'hour',
+						)
 						console.log(stata, `Statistics for company ${company.id}`)
 
 						// Assuming stata is an array with a single statistic object for the company
@@ -894,7 +898,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 											<tl.Cell>
 												<p>{item.budget_week}₽</p>
 											</tl.Cell>
-												{/* TO DO */}
+											{/* TO DO */}
 											<tl.Cell>
 												<p>{item.statistics.cpc_sum}₽</p>
 											</tl.Cell>
@@ -947,7 +951,9 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 						see_link={currentObject.site.domain}
 						// bloger_id={bannerContent.bloger_id}
 						// bloger_ooo={bannerContent.bloger_ooo}
-						bloger_link={currentObject.site.masked_domain} // MASKED LINK
+						bloger_link={`${
+							String(window.location).split('/')[2]
+						}/go?masked_url=${currentObject.site.masked_domain}`} // MASKED LINK
 						arrayVariantDesc={currentObject.banners[0].description_option}
 						arrayVariantTitle={currentObject.banners[0].title_option}
 						arrayVariatImg={currentObject.banners[0].images}
