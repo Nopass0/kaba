@@ -297,10 +297,10 @@ const PageBase = [
 	// 	path: '/register',
 	// 	element: getWHeader(<Register />, false),
 	// },
-	{
-		path: '/test',
-		element: getWHeader(<Test />, false),
-	},
+	// {
+	// 	path: '/test',
+	// 	element: getWHeader(<Test />, false),
+	// },
 	// {
 	// 	path: '/welcome',
 	// 	element: getWHeader(<Welcome />, true),

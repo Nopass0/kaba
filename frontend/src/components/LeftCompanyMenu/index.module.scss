@@ -1,4 +1,3 @@
-
 .backgroundWrapper {
 	position: fixed;
 	width: 100%;
@@ -10,7 +9,7 @@
 	position: fixed;
 	max-width: 180px;
 	// height: 90%;
-	
+
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
@@ -21,13 +20,15 @@
 		margin-bottom: 30px;
 	}
 
-	.logo, .logoMini {
+	.logo,
+	.logoMini {
 		display: flex;
 		flex-direction: row;
 		margin-bottom: 32px;
 	}
 
-	.logo img:first-child, .logoMini img:first-child {
+	.logo img:first-child,
+	.logoMini img:first-child {
 		margin-right: 9px;
 	}
 
@@ -74,11 +75,21 @@
 	.NavLabelBalance {
 		font-size: 16px !important;
 	}
-	
+
 	.buttonBalance {
 		width: 180px;
 		margin-top: 17px;
 		margin-bottom: 16px;
+		border: 1px solid #262626;
+		border-radius: 10px;
+		width: 180px;
+		height: 36px;
+		background: none;
+
+		&:hover {
+			transition: all .2s;
+			background-color: #262626;
+		}
 	}
 
 	.buttonCreateComp {
@@ -175,7 +186,6 @@
 	}
 }
 
-
 .statisticDropDown {
 	position: absolute;
 	top: 260px;
@@ -188,5 +198,4 @@
 	top: 400px;
 	margin: auto;
 	left: 185px;
-
 }

@@ -870,7 +870,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 															return (
 																<>
 																	<p className={s.DetailsCell}>
-																		{item.audiences[0].category.length}
+																		{item.audiences[0].interest.length}
 																	</p>
 																</>
 															)
@@ -879,7 +879,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 														return (
 															<>
 																<p className={s.DetailsCell}>
-																	{item.audiences[0].category.length}
+																	{item.audiences[0].interest.length}
 																</p>
 															</>
 														)
@@ -948,7 +948,9 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 						bloger={true}
 						bloger_svg={getFaviconUrl36(currentObject.site.domain)}
 						bloger_title={bannerContent.bloger_title}
-						see_link={currentObject.site.domain}
+						see_link={`${String(window.location).split('/')[2]}/go?masked_url=${
+							currentObject.site.masked_domain
+						}`}
 						// bloger_id={bannerContent.bloger_id}
 						// bloger_ooo={bannerContent.bloger_ooo}
 						bloger_link={`${
@@ -983,7 +985,9 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 						course_title={currentObject.name}
 						course_id={currentObject.id}
 						// course_ooo={bannerContentDetails.course_ooo} //To DO
-						see_link={currentObject.site.domain}
+						see_link={`${String(window.location).split('/')[2]}/go?masked_url=${
+							currentObject.site.masked_domain
+						}`}
 						course_link={`${
 							String(window.location).split('/')[2]
 						}/go?masked_url=${currentObject.site.masked_domain}`}
@@ -1042,7 +1046,9 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 							String(window.location).split('/')[2]
 						}/go?masked_url=${currentObject.site.masked_domain}`}
 						svg={getFaviconUrl36(currentObject.site.domain)}
-						see_link={currentObject.site.domain}
+						see_link={`${String(window.location).split('/')[2]}/go?masked_url=${
+							currentObject.site.masked_domain
+						}`}
 						id_masked={currentObject.site.masked_domain}
 					/>
 				</PopUpWrapper>

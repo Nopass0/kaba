@@ -24,10 +24,12 @@ import CompanyIcon from '../../assets/company.svg'
 import SitesIcon from '../../assets/sites.svg'
 import logoLeftMenu from '../../assets/logo_w_leftMenu.svg'
 import {getBalanceAPI} from '../../api/data.api'
+import WithdrawPopUp from '../popup/WithdrawPopUp/index';
 
 enum PagePopup {
 	Deposite,
 	CreateBanner,
+	Withdraw,
 	None,
 }
 
@@ -210,7 +212,7 @@ const LeftCompanyMenu: React.FC = () => {
 								text={`${balance}${currency}`}
 							/>
 							{isBlogger ? (
-								<Button className={s.buttonBalance} text="Вывести" />
+								<Button onClick={() => setPagePopup(PagePopup.Withdraw)} className={s.buttonBalance} text="Вывести" />
 							) : (
 								<Button
 									onClick={() => setPagePopup(PagePopup.Deposite)}
@@ -495,6 +497,11 @@ const LeftCompanyMenu: React.FC = () => {
 					{pagePopup === PagePopup.Deposite && (
 						<PopUpWrapper onExit={() => setPagePopup(PagePopup.None)}>
 							<Deposite onExit={() => setPagePopup(PagePopup.None)} />
+						</PopUpWrapper>
+					)}
+					{pagePopup === PagePopup.Withdraw && (
+						<PopUpWrapper onExit={() => setPagePopup(PagePopup.None)}>
+							<WithdrawPopUp onExit={() => setPagePopup(PagePopup.None)} />
 						</PopUpWrapper>
 					)}
 					{/* {statisticDropDown && (

@@ -1109,6 +1109,8 @@ class GetBloggerCompanies(APIView):
                 'clicks': model_clicks.clicks_sum if model_clicks else 0,
                 'id': company.id,
                 'name': company.name,
+                'tin': company.account.tin,
+                'formOrganization': company.account.formOrganization,
                 'date_start': company.date_start,
                 'date_finish': company.date_finish,
                 'status_text': company.status_text,
@@ -1986,3 +1988,27 @@ class BloggerStatisticsAPI(APIView):
                 start_date += timedelta(days=365)
 
         return mock_data
+
+
+class GeneralSettingsAPI(APIView):
+    def post(self,request):
+        tin = request.data.get('tin')
+        formOrganization = request.data.get('formOrganization')
+        token = request.data.get('token')  # User token
+
+        if not tin or not formOrganization: 
+            return Response({'error': 'tin ro formOrganization is not found.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not token:
+            return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = tokenModel.objects.get(token=token).account
+        except tokenModel.DoesNotExist:
+            return Response({'error': 'Invalid token.'}, status=status.HTTP_404_NOT_FOUND)
+
+        user.tin = tin
+        user.formOrganization = formOrganization
+        user.save()
+
+        return Response({'200': 'ok.'}, status=status.HTTP_200_OK) 

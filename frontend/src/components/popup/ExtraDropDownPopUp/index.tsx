@@ -47,7 +47,7 @@ const ExtraDropDownPopUp: React.FC<IExtraDropDownPopUp> = ({
 					</svg>
 					<WhiteLabel className={s.WhiteLabel} text="Финансы" />
 				</Link>
-				{/* <Line width="157px" className={s.Line} />
+				<Line width="157px" className={s.Line} />
 				<Link
 					onClick={() => setCurrentUrl('/settings')}
 					to={'/settings'}
@@ -66,7 +66,7 @@ const ExtraDropDownPopUp: React.FC<IExtraDropDownPopUp> = ({
 						/>
 					</svg>
 					<WhiteLabel className={s.WhiteLabel} text="Настройка" />
-				</Link> */}
+				</Link>
 			</Col>
 		</div>
 	)

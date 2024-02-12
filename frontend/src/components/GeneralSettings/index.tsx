@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import s from './index.module.scss'
 import Col from '../Col'
 import Row from '../Row'
@@ -9,6 +9,8 @@ import Label from '../Label/index'
 import ToolTip from '../ToolTip/index'
 import Input from '../Input'
 import Select from '../Select'
+import { useSelector } from 'react-redux'
+import { generalSettings } from '../../api/data.api'
 
 interface IGeneralSettings {
 	className?: string // Added className prop
@@ -23,16 +25,27 @@ const handleChangeOrganization = (e: React.ChangeEvent<HTMLInputElement>) => {
 
 const data = ['Рубль, ₽', 'Евро, €', 'Доллар США, $', 'Йена, ¥', 'Tенге, ₸']
 
-const dataOrganization = ['Организационная форма']
+const dataOrganization = ['Общество с ограниченной ответственностью (ООО)', 'Акционерное общество (АО)', 'Самозанятый', 'Индивидуальный предприниматель (ИП)', 'Некоммерческая организация (НКО)']
 
 const GeneralSettings: React.FC<IGeneralSettings> = ({
 	className,
 }: IGeneralSettings) => {
+	const user = useSelector((state: any) => state.user)
+	const token = user?.token
+	
+	const [formOrg, setFormOrg] = useState<string>('FORRMM')
+	const [tin, setTin] = useState<string>('TIN')
+
+	async function sendData() {
+		let response = await generalSettings(token,tin, formOrg)
+		console.log(response);
+		
+	}
 	return (
 		<div className={s.wrapper + ' ' + className}>
 			<Col width="528px" className={s.GeneralSettings}>
 				<NavLabel text="Юридические данные" className={s.navLabel} />
-				<Row className={s.tooltiprow} width="144px">
+				{/* <Row className={s.tooltiprow} width="144px">
 					<Label text="Страна и валюта" />
 					<ToolTip className={s.tooltip} text="info" top="20px">
 						<svg
@@ -49,8 +62,8 @@ const GeneralSettings: React.FC<IGeneralSettings> = ({
 							/>
 						</svg>
 					</ToolTip>
-				</Row>
-				<Input
+				</Row> */}
+				{/* <Input
 					width="528px"
 					minWidth="528px"
 					conteinerWidth="528px"
@@ -63,7 +76,7 @@ const GeneralSettings: React.FC<IGeneralSettings> = ({
 					className={s.SelectMoney}
 					placeholder="Выберите валюту"
 					data={data}
-				/>
+				/> */}
 
 				<Row className={s.tooltiprow} width="auto">
 					<Label text="Данные рекломодателя" />
@@ -111,7 +124,7 @@ const GeneralSettings: React.FC<IGeneralSettings> = ({
 						nalog.gov.ru
 					</a>
 				</Row>
-				<BlueButton width="120px" text="Сохранить" />
+				<BlueButton width="120px" text="Сохранить" onClick={sendData}/>
 			</Col>
 		</div>
 	)

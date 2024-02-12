@@ -237,7 +237,7 @@ export const getBloggerStatistics = async (
 export const deleteCompany = async (token: string, company_ids: number[]) => {
 	const formData = new FormData()
 	formData.append('token', token)
-	formData.append('companies_ids', `[${company_ids.toString()}]`) 
+	formData.append('companies_ids', `[${company_ids.toString()}]`)
 
 	try {
 		const response = await axios.post(getApiUrl('deleteCompany'), formData)
@@ -247,7 +247,6 @@ export const deleteCompany = async (token: string, company_ids: number[]) => {
 		return {status: 'error'}
 	}
 }
-
 
 // continueCompany(token,company id array)
 // Function to continue company
@@ -277,6 +276,26 @@ export const pauseCompany = async (token: string, company_ids: number[]) => {
 		return response
 	} catch (error) {
 		console.error('Error during pauseCompany:', error)
+		return {status: 'error'}
+	}
+}
+
+// Function to generalSettings(token,tin:string, formOrganization: string)
+export const generalSettings = async (
+	token: string,
+	tin: string,
+	formOrganization: string,
+) => {
+	const formData = new FormData()
+	formData.append('token', token)
+	formData.append('tin', tin)
+	formData.append('formOrganization', formOrganization)
+
+	try {
+		const response = await axios.post(getApiUrl('generalSettings'), formData)
+		return response
+	} catch (error) {
+		console.error('Error during generalSettings:', error)
 		return {status: 'error'}
 	}
 }
