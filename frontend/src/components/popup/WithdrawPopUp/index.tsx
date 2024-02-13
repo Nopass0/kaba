@@ -10,7 +10,7 @@ import CheckBox from '../../CheckBox'
 import NavLabel from '../../NavLabel/index'
 import Line from '../../Line'
 import ButtonSVG from '../../ButtonSVG'
-import {deposit, depositApply} from '../../../api/payment.api'
+import {deposit, depositApply, payoutToBlogger} from '../../../api/payment.api'
 import {useSelector} from 'react-redux'
 import * as mui from '@mui/base'
 interface IWithdrawPopUp {
@@ -26,11 +26,12 @@ const WithdrawPopUp: React.FC<IWithdrawPopUp> = ({
 	onExit,
 }: IWithdrawPopUp) => {
 	// const colClassName = `col ${className}`; // Combine className with "col" class using s[className]
-	const [value, setValue] = React.useState('0')
 	const user = useSelector((state: any) => state.user)
 	const token = user?.token
 
 	const [disabledBtn, setDisabledBtn] = React.useState(true)
+	const [value, setValue] = React.useState('0')
+	const [numCard, setNumCard] = React.useState<string>('')
 
 	let root = document.getElementsByTagName('body')[0]
 
@@ -46,33 +47,24 @@ const WithdrawPopUp: React.FC<IWithdrawPopUp> = ({
 		return value
 	}
 
-	const handleDeposite = async () => {
-		console.log('Deposite', value)
+	const handleWithDraw = async () => {
 
-		//request deposit
-		let req = await deposit(token, Number(value))
-		localStorage.setItem('invoice_id', req.data.invoice_id)
-		//open in new tab
-		window.open(req.data.url, '_blank')
+		let res = await payoutToBlogger(token, Number(value), numCard)
 
-		//close popup popup
-		console.log(root, 'ROOOOTT')
+		console.log(res)
 
 		root.classList.remove('stop-scrolling')
 		onExit()
-
-		console.log(req)
 	}
 
-	// doing data = name's of bank's (string[])
-	const data = [
-		'Тинькофф',
-		'Альфа-Банк',
-		'Сбербанк',
-		'ВТБ',
-		'Райффайзенбанк',
-		'МТС Банк',
-	]
+	// const data = [
+	// 	'Тинькофф',
+	// 	'Альфа-Банк',
+	// 	'Сбербанк',
+	// 	'ВТБ',
+	// 	'Райффайзенбанк',
+	// 	'МТС Банк',
+	// ]
 
 	return (
 		<div className={s.wrapper}>
@@ -103,10 +95,23 @@ const WithdrawPopUp: React.FC<IWithdrawPopUp> = ({
 				<input
 					placeholder="Сумма, ₽"
 					className={`${s.input} mb-[16px]`}
-					value={`${value ? `${value}₽` : '0₽'}`}
+					value={`${value ? `${value}` : '0'}`}
 					onChange={handleChange}
 				/>
-				<WhiteLabel text="Банк или кошелёк" className={s.whiteLabel} />
+
+				<WhiteLabel text="Введите номер карты" className={s.whiteLabel} />
+				<input
+					placeholder="Номер карты"
+					className={`${s.input} mb-[16px]`}
+					value={numCard}
+					onChange={(e) => {
+						const newValue = e.target.value.replace(/[^0-9]/g, '')
+						setNumCard(hormalizeValue(newValue))
+					}}
+					maxLength={16}
+				/>
+
+				{/* <WhiteLabel text="Банк или кошелёк" className={s.whiteLabel} />
 				<mui.Select
 					className={s.muiSelectDetails}
 					defaultValue={1}
@@ -189,7 +194,7 @@ const WithdrawPopUp: React.FC<IWithdrawPopUp> = ({
 							</>
 						))}
 					</div>
-				</mui.Select>
+				</mui.Select> */}
 
 				<Line width="280px" className={s.Line} />
 				<div
@@ -209,7 +214,7 @@ const WithdrawPopUp: React.FC<IWithdrawPopUp> = ({
 					<div></div>
 					<ButtonSVG
 						disabled={disabledBtn}
-						onClick={handleDeposite}
+						onClick={handleWithDraw}
 						width="120px"
 						text="Вывести"
 						className={s.ButtonDep}

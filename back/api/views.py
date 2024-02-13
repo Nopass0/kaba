@@ -1989,7 +1989,6 @@ class BloggerStatisticsAPI(APIView):
 
         return mock_data
 
-<<<<<<< HEAD
 from yookassa import Payout
 from yookassa.domain.models.currency import Currency
 from yookassa import SbpBanks
@@ -2002,7 +2001,7 @@ class PayoutToBloggerAPIView(APIView):
         try:
             token = request.data.get('token')
             cardnumber = request.data.get('cardnumber')
-            
+            amount = int(request.data.get('amount')) 
             #sbp_bank_list = SbpBanks.list()
             #print(sbp_bank_list)
             
@@ -2025,10 +2024,13 @@ class PayoutToBloggerAPIView(APIView):
             
             if wallet.balance <= 0:
                 return Response({'error': 'Insufficient balance.'}, status=status.HTTP_400_BAD_REQUEST)
-            
+
+            if amount > wallet.balance:
+                return Response({'error': 'Amount exceeds balance.'}, status=status.HTTP_400_BAD_REQUEST)
+
             res = Payout.create({
                 'amount': {
-                    'value': f"{wallet.balance - (wallet.balance * 0.2)}",
+                    'value': f"{amount - (amount * 0.2)}",
                     'currency': Currency.RUB,
                 },
                 'payout_destination_data': {
@@ -2052,7 +2054,7 @@ class PayoutToBloggerAPIView(APIView):
                 operation="Выплата блогеру",
             ).save()
             
-            wallet.balance = 0
+            wallet.balance -= amount 
             wallet.save()
             
             return Response({'response': res}, status=status.HTTP_200_OK)
@@ -2061,7 +2063,7 @@ class PayoutToBloggerAPIView(APIView):
         except Exception as e:
             print(e)
             return Response({'error': 'Something went wrong.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-=======
+
 
 class GeneralSettingsAPI(APIView):
     def post(self,request):
@@ -2085,4 +2087,3 @@ class GeneralSettingsAPI(APIView):
         user.save()
 
         return Response({'200': 'ok.'}, status=status.HTTP_200_OK) 
->>>>>>> 35a32d9258b90abfb8d709b0de0382b9d20127e6

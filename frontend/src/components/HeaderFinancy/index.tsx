@@ -12,6 +12,7 @@ import TableCol from '../popup/TableColsPopUp'
 import Deposite from '../popup/DepositePopUp'
 import {useSelector} from 'react-redux'
 import {getBalanceAPI} from '../../api/data.api'
+import WithdrawPopUp from '../popup/WithdrawPopUp/index'
 
 interface IHeaderFinancy {
 	children?: ReactNode[] | ReactNode
@@ -23,6 +24,7 @@ interface IHeaderFinancy {
 enum CurrentPopup {
 	None,
 	Deposite,
+	WithDraw,
 }
 
 const HeaderFinancy: React.FC<IHeaderFinancy> = ({
@@ -32,8 +34,8 @@ const HeaderFinancy: React.FC<IHeaderFinancy> = ({
 	const [currentPopup, setCurrentPopup] = React.useState(CurrentPopup.None)
 	const user = useSelector((state: any) => state.user)
 	const token = user?.token
+	const isBlogger = useSelector((state: any) => state.isBlogger)
 	const [balance, setBalance] = React.useState(0)
-
 	useEffect(() => {
 		const getBalance = async () => {
 			let res = await getBalanceAPI(token)
@@ -92,16 +94,30 @@ const HeaderFinancy: React.FC<IHeaderFinancy> = ({
 								/>
 							</svg>
 						</div>
-						<BlueButton
-							onClick={() => {
-								setCurrentPopup(CurrentPopup.Deposite)
-							}}
-							width="120px"
-							text="Пополнить"
-						/>
+						{isBlogger ? (
+							<>
+								<BlueButton
+									onClick={() => {
+										setCurrentPopup(CurrentPopup.WithDraw)
+									}}
+									width="120px"
+									text="Вывести"
+								/>
+							</>
+						) : (
+							<>
+								<BlueButton
+									onClick={() => {
+										setCurrentPopup(CurrentPopup.Deposite)
+									}}
+									width="120px"
+									text="Пополнить"
+								/>
+							</>
+						)}
 					</Row>
 					<NavLabel className={s.NavLabel} text={`${balance}₽`} />
-					<Label isMini={true} text={`${Number(balance) * 1.2}₽ с НДС`} />
+					<Label isMini={true} text={`${Number(balance) * 0.8}₽ с НДС`} />
 				</div>
 				{/* <div className={s.blockRight}>
 					<Row width="auto" className={s.blockHeader}>
@@ -154,17 +170,30 @@ const HeaderFinancy: React.FC<IHeaderFinancy> = ({
 					</svg>
 				</ToolTip>
 			</Row>
-			{currentPopup === CurrentPopup.Deposite ? (
-				<PopUpWrapper onExit={() => {
-					setCurrentPopup(CurrentPopup.None)
-				}}>
+			{currentPopup === CurrentPopup.Deposite && (
+				<PopUpWrapper
+					onExit={() => {
+						setCurrentPopup(CurrentPopup.None)
+					}}>
 					<Deposite
 						onExit={() => {
 							setCurrentPopup(CurrentPopup.None)
 						}}
 					/>
 				</PopUpWrapper>
-			) : null}
+			)}
+			{currentPopup === CurrentPopup.WithDraw && (
+				<PopUpWrapper
+					onExit={() => {
+						setCurrentPopup(CurrentPopup.None)
+					}}>
+					<WithdrawPopUp
+						onExit={() => {
+							setCurrentPopup(CurrentPopup.None)
+						}}
+					/>
+				</PopUpWrapper>
+			)}
 		</div>
 	)
 }

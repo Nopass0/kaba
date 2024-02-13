@@ -44,9 +44,10 @@ export const getUserWalletOperationsAPI = async (token: string) => {
 }
 
 //payoutToBlogger
-export const payoutToBlogger = async (token: string, cardnumber: string) => {
+export const payoutToBlogger = async (token: string, amount: number, cardnumber: string) => {
 	const formData = new FormData()
 	formData.append('token', token)
+	formData.append('amount', amount.toString())
 	formData.append('cardnumber', cardnumber)
 
 	try {

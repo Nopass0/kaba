@@ -278,6 +278,10 @@ const PageAdvertiser = [
 		path: '/statistics',
 		element: getWHeader(<Statistic />, true),
 	},
+	{
+		path: '/settings',
+		element: getWHeader(<Settings />, true),
+	},
 ]
 
 const PageBase = [
@@ -305,10 +309,7 @@ const PageBase = [
 	// 	path: '/welcome',
 	// 	element: getWHeader(<Welcome />, true),
 	// },
-	{
-		path: '/settings',
-		element: getWHeader(<Settings />, true),
-	},
+
 	{
 		path: '/finance',
 		element: getWHeader(<Finance />, true),
