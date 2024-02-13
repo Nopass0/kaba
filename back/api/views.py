@@ -1109,6 +1109,8 @@ class GetBloggerCompanies(APIView):
                 'clicks': model_clicks.clicks_sum if model_clicks else 0,
                 'id': company.id,
                 'name': company.name,
+                'tin': company.account.tin,
+                'formOrganization': company.account.formOrganization,
                 'date_start': company.date_start,
                 'date_finish': company.date_finish,
                 'status_text': company.status_text,
@@ -1987,6 +1989,7 @@ class BloggerStatisticsAPI(APIView):
 
         return mock_data
 
+<<<<<<< HEAD
 from yookassa import Payout
 from yookassa.domain.models.currency import Currency
 from yookassa import SbpBanks
@@ -2058,3 +2061,28 @@ class PayoutToBloggerAPIView(APIView):
         except Exception as e:
             print(e)
             return Response({'error': 'Something went wrong.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+=======
+
+class GeneralSettingsAPI(APIView):
+    def post(self,request):
+        tin = request.data.get('tin')
+        formOrganization = request.data.get('formOrganization')
+        token = request.data.get('token')  # User token
+
+        if not tin or not formOrganization: 
+            return Response({'error': 'tin ro formOrganization is not found.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not token:
+            return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = tokenModel.objects.get(token=token).account
+        except tokenModel.DoesNotExist:
+            return Response({'error': 'Invalid token.'}, status=status.HTTP_404_NOT_FOUND)
+
+        user.tin = tin
+        user.formOrganization = formOrganization
+        user.save()
+
+        return Response({'200': 'ok.'}, status=status.HTTP_200_OK) 
+>>>>>>> 35a32d9258b90abfb8d709b0de0382b9d20127e6

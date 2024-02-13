@@ -62,6 +62,10 @@ urlpatterns = [
     #PayoutToBloggerAPIView
     path('payoutToBlogger', PayoutToBloggerAPIView.as_view()),
 
+    #GeneralSettings doing link
+    path('generalSettings', GeneralSettingsAPI.as_view()),
+
+
     # # Пути для взаимодействия с БД. GET - получение записей, POST - добавление новой записи  
     # path('accountModel', accountModellListCreateView.as_view()),
     # path('actionModel', actionModellListCreateView.as_view()),

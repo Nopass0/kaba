@@ -38,6 +38,9 @@ class accountModel(models.Model):
     name_last = models.CharField('Фамилия', max_length=100, blank=True)
     phone_number = models.CharField('Номер телефона', max_length=20, blank=False, default='+7999999999')
     isBlogger = models.BooleanField('Блогер', default=False)
+    tin = models.CharField("ИНН", max_length=12, blank=True, null=True)
+    choicesForm = (('ООО', 'Общество с ограниченной ответственностью'), ('АО', 'Акционерное общество'), ('ИП', 'Индивидуальный предприниматель'), ('НКО', 'Некоммерческая организация'), ('СЗ', 'Самозанятый'))
+    formOrganization = models.CharField("Форма Организации", choices=choicesForm, blank=True, null=True)
 
     def __str__(self):
         return str(self.pk) + ', ' + str(self.login) + ', ' + str(self.name_first) + ', ' + str(self.name_last)

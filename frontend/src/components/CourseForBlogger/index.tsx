@@ -74,7 +74,8 @@ const CourseForBlogger: React.FC<ICourseForBlogger> = ({
 						</button>
 					</Row> */}
 				</Row>
-				<a href={link} className={s.blueLink}>{see_link.length > 32 ? `${see_link.substring(0, 32)}...` : see_link}</a>
+				{/* <a href={link} className={s.blueLink}>{see_link.length > 32 ? `${see_link.substring(0, 32)}...` : see_link}</a> */}
+				<a href={link} className={s.blueLink}>{see_link}</a>
 			</Col>
 		</div>
 	)

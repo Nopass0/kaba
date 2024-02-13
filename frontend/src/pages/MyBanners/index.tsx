@@ -6,6 +6,7 @@ import Table from '../../components/Table/index'
 import TableLineFooter from '../../components/TableLineFooter'
 import TableBanners from '../../components/TableBanners/index';
 import TableFinancy from '../../components/TableFinancy/index';
+import WithdrawPopUp from '../../components/popup/WithdrawPopUp/index';
 
 const MyBanners: React.FC = () => {
 	return (
