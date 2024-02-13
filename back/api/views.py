@@ -645,7 +645,7 @@ class AddCompany(APIView):
                 channel_taboo=company_data.get('cSettingsLink', []) if company_data.get('cSettingsLink', []) else [],
                 phrase_plus=company_data.get('cKeyWord', []) if company_data.get('cKeyWord', []) else [],
                 phrase_minus=company_data.get('cKeyWordDel', []) if company_data.get('cKeyWordDel', []) else [],
-                status_text='На модерации',
+                status_text='Остановлена',
                 views=0,
                 account=account,
             )
