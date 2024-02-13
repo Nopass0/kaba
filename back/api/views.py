@@ -1986,3 +1986,75 @@ class BloggerStatisticsAPI(APIView):
                 start_date += timedelta(days=365)
 
         return mock_data
+
+from yookassa import Payout
+from yookassa.domain.models.currency import Currency
+from yookassa import SbpBanks
+import var_dump as var_dump
+Configuration.account_id = "505371" #<Идентификатор магазина>
+Configuration.secret_key = "test_*gF9ZX8OmDGvEo10Y76UlTzP5-N12S_GRFu5HK4M4APDs" #<Секретный ключ>
+
+class PayoutToBloggerAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        try:
+            token = request.data.get('token')
+            cardnumber = request.data.get('cardnumber')
+            
+            #sbp_bank_list = SbpBanks.list()
+            #print(sbp_bank_list)
+            
+            if not token:
+                return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            if not cardnumber:
+                return Response({'error': 'cardnumber is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                user = tokenModel.objects.get(token=token).account
+            except tokenModel.DoesNotExist:
+                return Response({'error': 'Invalid token.'}, status=status.HTTP_404_NOT_FOUND)
+        
+            #get user wallet
+            wallet = walletModel.objects.filter(account=user).first()
+            
+            if not wallet:
+                return Response({'error': 'Wallet not found.'}, status=status.HTTP_404_NOT_FOUND)
+            
+            if wallet.balance <= 0:
+                return Response({'error': 'Insufficient balance.'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            res = Payout.create({
+                'amount': {
+                    'value': f"{wallet.balance - (wallet.balance * 0.2)}",
+                    'currency': Currency.RUB,
+                },
+                'payout_destination_data': {
+                    "type": "bank_card",
+                    "card": {
+                        "number": cardnumber
+                    }
+                },
+                'description': 'Выплата блогеру c комиссией 20%',
+
+                "test": "test"
+            })
+            
+            #serialize res
+
+            #create wallet operation
+            walletOperationsModel.objects.create(
+                wallet=wallet,
+                balance=wallet.balance,
+                operationType='-',
+                operation="Выплата блогеру",
+            ).save()
+            
+            wallet.balance = 0
+            wallet.save()
+            
+            return Response({'response': res}, status=status.HTTP_200_OK)
+
+        
+        except Exception as e:
+            print(e)
+            return Response({'error': 'Something went wrong.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

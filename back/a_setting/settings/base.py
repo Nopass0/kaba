@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-
+from yookassa import Configuration
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -123,6 +123,15 @@ YANDEX_REDIRECT = "http://localhost:5001/login/"
 PAYKEEPER_LOGIN = "demo"
 PAYKEEPER_PASSWORD = "demo"
 PAYKEEPER_URL = "https://demo.paykeeper.ru"
+
+#Qiwi
+QIWI_TOKEN = "969cb317-ef77-4a4d-8977-0d30c5d89e3d"
+QIWI_BASE_URL = "https://api-test.qiwi.com/" # for production https://api.qiwi.com/
+
+#yookassa 
+Configuration.account_id = "505371" #<Идентификатор магазина>
+Configuration.secret_key = "test_*gF9ZX8OmDGvEo10Y76UlTzP5-N12S_GRFu5HK4M4APDs" #<Секретный ключ>
+
 
 # статистика
 STATIC_URL = '/static/'

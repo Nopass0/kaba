@@ -59,6 +59,8 @@ urlpatterns = [
     path('continueCompanies', continueCompaniesAPI.as_view()),
     #pauseCompaniesAPI
     path('pauseCompanies', pauseCompaniesAPI.as_view()),
+    #PayoutToBloggerAPIView
+    path('payoutToBlogger', PayoutToBloggerAPIView.as_view()),
 
     # # Пути для взаимодействия с БД. GET - получение записей, POST - добавление новой записи  
     # path('accountModel', accountModellListCreateView.as_view()),
