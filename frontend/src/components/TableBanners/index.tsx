@@ -942,6 +942,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 						setCurrentPopup(CurrentPopup.None)
 					}}>
 					<ContentBanner
+						cut_link={true}
 						className={bannerContent.className}
 						text_course_table={currentObject.name}
 						text_id_table={currentObject.id}
@@ -952,7 +953,8 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 							currentObject.site.masked_domain
 						}`}
 						// bloger_id={bannerContent.bloger_id}
-						// bloger_ooo={bannerContent.bloger_ooo}
+						tin={currentObject.tin}
+						bloger_ooo={currentObject.formOrganization}
 						bloger_link={`${
 							String(window.location).split('/')[2]
 						}/go?masked_url=${currentObject.site.masked_domain}`} // MASKED LINK
@@ -980,11 +982,13 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 			{currentPopup === CurrentPopup.Content && (
 				<PopUpWrapper onExit={bannerContentDetails.onExit}>
 					<ContentBannerDetails
+					cut_link={true}
 						className={bannerContentDetails.className}
 						course_svg={getFaviconUrl36(currentObject.site.domain)} // TO DO
 						course_title={currentObject.name}
 						course_id={currentObject.id}
-						// course_ooo={bannerContentDetails.course_ooo} //To DO
+						course_ooo={currentObject.formOrganization}
+						tin={currentObject.tin}
 						see_link={`${String(window.location).split('/')[2]}/go?masked_url=${
 							currentObject.site.masked_domain
 						}`}
@@ -1050,6 +1054,8 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 							currentObject.site.masked_domain
 						}`}
 						id_masked={currentObject.site.masked_domain}
+						ooo_company={currentObject.formOrganization}
+						tin={currentObject.tin}
 					/>
 				</PopUpWrapper>
 			)}

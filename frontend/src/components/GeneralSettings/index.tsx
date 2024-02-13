@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import s from './index.module.scss'
 import Col from '../Col'
 import Row from '../Row'
@@ -9,9 +9,9 @@ import Label from '../Label/index'
 import ToolTip from '../ToolTip/index'
 import Input from '../Input'
 import Select from '../Select'
-import { useSelector } from 'react-redux'
-import { generalSettings } from '../../api/data.api'
-
+import {useSelector} from 'react-redux'
+import {generalSettings} from '../../api/data.api'
+import * as mui from '@mui/base'
 interface IGeneralSettings {
 	className?: string // Added className prop
 	text_id_table?: string
@@ -25,21 +25,34 @@ const handleChangeOrganization = (e: React.ChangeEvent<HTMLInputElement>) => {
 
 const data = ['Рубль, ₽', 'Евро, €', 'Доллар США, $', 'Йена, ¥', 'Tенге, ₸']
 
-const dataOrganization = ['Общество с ограниченной ответственностью (ООО)', 'Акционерное общество (АО)', 'Самозанятый', 'Индивидуальный предприниматель (ИП)', 'Некоммерческая организация (НКО)']
+const dataOrganization = [
+	'(ООО) Общество с ограниченной ответственностью',
+	'(АО) Акционерное общество',
+	'(СЗ) Самозанятый',
+	'(ИП) Индивидуальный предприниматель',
+	'(НКО) Некоммерческая организация',
+]
+
+// const dataOrganization = [{
+// 	'СЗ': 'Самозанятый',
+// 	'АО': 'Акционерное общество',
+// 	'ООО': 'Общество с ограниченной ответственностью',
+// 	'ИП': 'Индивидуальный предприниматель',
+	
+// }]
 
 const GeneralSettings: React.FC<IGeneralSettings> = ({
 	className,
 }: IGeneralSettings) => {
 	const user = useSelector((state: any) => state.user)
 	const token = user?.token
-	
-	const [formOrg, setFormOrg] = useState<string>('FORRMM')
-	const [tin, setTin] = useState<string>('TIN')
+
+	const [formOrg, setFormOrg] = useState<string>('')
+	const [tin, setTin] = useState<string>('')
 
 	async function sendData() {
-		let response = await generalSettings(token,tin, formOrg)
-		console.log(response);
-		
+		let response = await generalSettings(token, tin, formOrg)
+		console.log(response)
 	}
 	return (
 		<div className={s.wrapper + ' ' + className}>
@@ -96,23 +109,53 @@ const GeneralSettings: React.FC<IGeneralSettings> = ({
 						</svg>
 					</ToolTip>
 				</Row>
-				<Select
+				{/* <Select
 					maxSelectWidth="528px"
 					width="100%"
 					placeholder="Выберите организационную форму"
 					data={dataOrganization}
 					className={s.SelectMarketing}
 					defaultValue={'Организационная форма'}
-				/>
+				/> */}
+
+				<mui.Select
+					className={`${s.inputText} ${s.addIcon}`}
+					// style={style}
+
+					renderValue={(option: mui.SelectOption<number> | null) => {
+						if (option == null || option.value === null) {
+							return 'Выберите организационную форму'
+						}
+						return `${option.label}`
+					}}>
+					<Col width="528px" className={s.showList}>
+						{dataOrganization?.map((item, index) => (
+							<mui.Option
+								onClick={() => {
+									setFormOrg(item)
+								}}
+								className={s.itemText}
+								key={index}
+								value={index}>
+								{item}
+							</mui.Option>
+						))}
+					</Col>
+				</mui.Select>
 				<Input
 					className={s.InputForm}
 					maximumLength={12}
-					onChange={handleChangeOrganization}
+					// onChange={handleChangeOrganization}
+					onChange={(e) => {
+						setTin(e.target.value)
+						console.log(e.target.value)
+					}}
 					width="528px"
 					minWidth="528px"
 					conteinerWidth="528px"
 					placeholder="ИНН"
 					isDigits={true}
+					value={tin}
 				/>
 				<Row width="auto" className={s.blueLinkRow}>
 					<Label
@@ -120,11 +163,11 @@ const GeneralSettings: React.FC<IGeneralSettings> = ({
 						text="Узнать свой ИНН можно на сайте "
 						isMini={true}
 					/>
-					<a href="#" className={s.blueLink}>
+					<a href="https://nalog.gov.ru" className={s.blueLink}>
 						nalog.gov.ru
 					</a>
 				</Row>
-				<BlueButton width="120px" text="Сохранить" onClick={sendData}/>
+				<BlueButton width="120px" text="Сохранить" onClick={sendData} />
 			</Col>
 		</div>
 	)

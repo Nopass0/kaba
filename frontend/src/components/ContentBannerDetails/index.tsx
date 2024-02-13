@@ -23,6 +23,8 @@ export interface IContentBannerDetails {
 	course_ooo?: string
 	course_link?: string
 	see_link?: string
+	cut_link?:boolean
+	tin?:string
 
 	// Statistics
 	stat_toEnd?: string
@@ -64,6 +66,8 @@ export interface IContentBannerDetails {
 	arrayVariantDesc?: string[]
 	arrayVariantTitle?: string[]
 	arrayVariatImg?: string[]
+
+
 
 	//exit
 	onExit?: () => void
@@ -108,6 +112,8 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 	sg_income_all,
 	arrayVariatImg,
 	see_link,
+	cut_link,
+	tin,
 
 	onExit,
 }: IContentBannerDetails) => {
@@ -135,6 +141,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 					</svg>
 				</Row>
 				<CourseForBlogger
+				cut_link={cut_link}
 					NeedClicks={false}
 					svg={course_svg}
 					title={course_title}
@@ -142,6 +149,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 					ooo={course_ooo}
 					link={course_link}
 					see_link={see_link}
+					tin={tin}
 				/>
 
 				{/* Statistic */}

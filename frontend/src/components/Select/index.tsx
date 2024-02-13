@@ -11,6 +11,7 @@ interface ISelect {
 	data?: string[] //['name', 'name2', 'name3', ...],
 	bgColor?: string,
 	style?: React.CSSProperties,
+	valueForm?: string
 }
 
 const Select: React.FC<ISelect> = ({
@@ -19,14 +20,14 @@ const Select: React.FC<ISelect> = ({
 	width,
 	className,
 	data,
-	style
+	style,
+	valueForm
 }: ISelect) => {
 	return (
 		<div className={`${s.inputContainer} ${className}`} style={{width: width}}>
 			<mui.Select
 				className={`${s.inputText} ${s.addIcon}`}
 				style={style}
-				defaultValue={10}
 				renderValue={(option: mui.SelectOption<number> | null) => {
 					if (option == null || option.value === null) {
 						return placeholder

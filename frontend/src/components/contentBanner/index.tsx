@@ -24,6 +24,8 @@ export interface IContentBanner {
 	arrayVariantTitle?: string[]
 	arrayVariatImg?: string[]
 	see_link?: string
+	tin?:string
+	cut_link?:boolean
 }
 
 const ContentBanner: React.FC<IContentBanner> = ({
@@ -38,6 +40,9 @@ const ContentBanner: React.FC<IContentBanner> = ({
 	arrayVariantTitle,
 	arrayVariatImg,
 	see_link,
+	bloger_ooo,
+	tin,
+	cut_link,
 }: IContentBanner) => {
 	return (
 		<div className={s.wrapper}>
@@ -60,13 +65,15 @@ const ContentBanner: React.FC<IContentBanner> = ({
 				</Row>
 				{bloger ? (
 					<CourseForBlogger
+						cut_link={cut_link}
 						NeedClicks={false}
 						svg={bloger_svg}
 						title={text_course_table}
 						id={text_id_table}
-						// ooo="ООО “Название компании…”"
+						ooo={bloger_ooo}
 						link={bloger_link}
 						see_link={see_link}
+						tin={tin}
 					/>
 				) : (
 					<div className={s.TableContainer}>

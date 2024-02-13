@@ -21,7 +21,9 @@ interface ICourseForBlogger {
 	id?: string
 	ooo?: string
 	link?: string
-	see_link?:string
+	see_link?: string
+	tin?: string
+	cut_link?:boolean
 }
 
 const CourseForBlogger: React.FC<ICourseForBlogger> = ({
@@ -35,6 +37,8 @@ const CourseForBlogger: React.FC<ICourseForBlogger> = ({
 	ooo,
 	link,
 	see_link,
+	tin,
+	cut_link,
 }: ICourseForBlogger) => {
 	return (
 		<div className={s.wrapper + ' ' + className}>
@@ -44,15 +48,18 @@ const CourseForBlogger: React.FC<ICourseForBlogger> = ({
 				<Row
 					width={`${width_block ? width_block : '528px'}`}
 					className={s.BlogerHeaderUp}>
-					<img src={svg} alt={svg} className='w-[36px] h-[36px] mr-[16px]' />
+					<img src={svg} alt={svg} className="w-[36px] h-[36px] mr-[16px]" />
 					<Col width={`${width_text ? width_text : '316px'}`} className="mr-4">
 						<WhiteLabel text={title} size="14px" />
-						<Row width="316px">
+						<Row width="316px" className="whitespace-nowrap">
 							<Label className="mr-2" text={`ID ${id}`} />
 							{NeedClicks ? (
 								<Clicks className={s.Clicks} count={245} />
 							) : (
-								<Label text={ooo} />
+								<>
+									<Label text={ooo} className="mr-2" />
+									<Label text={`ИНН ${tin}`} />
+								</>
 							)}
 						</Row>
 					</Col>
@@ -74,8 +81,21 @@ const CourseForBlogger: React.FC<ICourseForBlogger> = ({
 						</button>
 					</Row> */}
 				</Row>
-				{/* <a href={link} className={s.blueLink}>{see_link.length > 32 ? `${see_link.substring(0, 32)}...` : see_link}</a> */}
-				<a href={link} className={s.blueLink}>{see_link}</a>
+				{cut_link ? (
+					<>
+						<a href={link} className={s.blueLink}>
+							{see_link.length > 70
+								? `${see_link.substring(0, 70)}...`
+								: see_link}
+						</a>
+					</>
+				) : (
+					<>
+						<a href={link} className={s.blueLink}>
+							{see_link}
+						</a>
+					</>
+				)}
 			</Col>
 		</div>
 	)

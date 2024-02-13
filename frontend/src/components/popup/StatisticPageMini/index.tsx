@@ -40,7 +40,6 @@ ChartJS.register(
 )
 ChartJS.defaults.borderColor = '#333333'
 
-
 // //generate array of dates from start date to end date like ["1 January", "2 January", "3 January",..., "1 December","2 December", ..., "31 December"]
 
 //End line chart
@@ -179,8 +178,10 @@ interface IStatisticPageMini {
 	id_company?: string
 	link_company?: string
 	ooo_company?: string
-	see_link?:string
+	see_link?: string
 	id_masked?: string
+	cut_link?: boolean
+	tin?:string
 }
 
 const StatisticPageMini: React.FC<IStatisticPageMini> = ({
@@ -191,7 +192,9 @@ const StatisticPageMini: React.FC<IStatisticPageMini> = ({
 	link_company,
 	ooo_company,
 	see_link,
-	id_masked
+	id_masked,
+	cut_link,
+	tin,
 }: IStatisticPageMini) => {
 	const weekDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
 	const months = [
@@ -241,7 +244,6 @@ const StatisticPageMini: React.FC<IStatisticPageMini> = ({
 	let cpc_sum = info.cpc_sum
 	let consumption_sum = info.consumption
 	console.log(info.datalabels)
-
 
 	const data = {
 		labels: info.datalabels,
@@ -295,6 +297,7 @@ const StatisticPageMini: React.FC<IStatisticPageMini> = ({
 					</button>
 				</Row>
 				<CourseForBlogger
+					cut_link={cut_link}
 					NeedClicks={false}
 					svg={svg}
 					link={link_company}
@@ -302,6 +305,7 @@ const StatisticPageMini: React.FC<IStatisticPageMini> = ({
 					ooo={ooo_company}
 					title={name_company}
 					see_link={see_link}
+					tin={tin}
 					width_block="1164px"
 					width_text="1164px"
 				/>
@@ -310,7 +314,7 @@ const StatisticPageMini: React.FC<IStatisticPageMini> = ({
 				<HeaderSubTitle textHeader="Ключевые показатели" />
 				<div className={s.extendedBlock}>
 					<div className={s.extendedLink}>
-					<Button
+						<Button
 							onClick={() => setStep('hour')}
 							width="84px"
 							className={`${s.extendedButton} ${step === 'hour' && s.active}`}
