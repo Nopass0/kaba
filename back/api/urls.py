@@ -59,6 +59,8 @@ urlpatterns = [
     path('continueCompanies', continueCompaniesAPI.as_view()),
     #pauseCompaniesAPI
     path('pauseCompanies', pauseCompaniesAPI.as_view()),
+    #PayoutToBloggerAPIView
+    path('payoutToBlogger', PayoutToBloggerAPIView.as_view()),
 
     #GeneralSettings doing link
     path('generalSettings', GeneralSettingsAPI.as_view()),

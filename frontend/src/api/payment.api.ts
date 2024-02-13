@@ -42,3 +42,18 @@ export const getUserWalletOperationsAPI = async (token: string) => {
 		return {status: 'error', message: error}
 	}
 }
+
+//payoutToBlogger
+export const payoutToBlogger = async (token: string, cardnumber: string) => {
+	const formData = new FormData()
+	formData.append('token', token)
+	formData.append('cardnumber', cardnumber)
+
+	try {
+		const response = await axios.post(getApiUrl('payoutToBlogger'), formData)
+		return response
+	} catch (error) {
+		console.error('Error during payoutToBlogger:', error)
+		return {status: 'error'}
+	}
+}
