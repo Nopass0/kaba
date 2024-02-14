@@ -302,11 +302,17 @@ export const generalSettings = async (
 
 //rate
 // Function to rate
-export const rate = async (token: string, comment: string, rate: number) => {
+export const rate = async (
+	token: string,
+	comment: string,
+	rate: number,
+	site: string,
+) => {
 	const formData = new FormData()
 	formData.append('token', token)
 	formData.append('comment', comment)
 	formData.append('rate', rate.toString())
+	formData.append('site', site)
 
 	try {
 		const response = await axios.post(getApiUrl('rate'), formData)

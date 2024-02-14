@@ -10,6 +10,7 @@ class RateModel(models.Model):
     date_creation = models.DateTimeField('Дата и время создания', auto_now_add=True)
     rate = models.PositiveIntegerField('Рейтинг', default=0)
     comment = models.CharField('Комментарий', max_length=255, blank=True)
+    site = models.CharField('Сайт', max_length=255, blank=True)
 
 class ad_companyModel(models.Model):
     account = models.ForeignKey(accountModel, related_name='ad_companyModel_profileModel', blank=True, null=True, on_delete=models.CASCADE)

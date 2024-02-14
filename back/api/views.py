@@ -2096,6 +2096,7 @@ class RateAPIView(APIView):
         token = request.data.get('token') # string
         comment = request.data.get('comment') # string
         rate = request.data.get('rate') # int by 0 to 5
+        site = request.data.get('site') # int
         
         if not token:
             return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -2106,11 +2107,14 @@ class RateAPIView(APIView):
         if not rate:
             return Response({'error': 'rate is required.'}, status=status.HTTP_400_BAD_REQUEST)
         
+        if not site:
+            return Response({'error': 'site is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
         try:
             user = tokenModel.objects.get(token=token).account
         except tokenModel.DoesNotExist:
             return Response({'error': 'Invalid token.'}, status=status.HTTP_404_NOT_FOUND)
         
-        c = RateModel.objects.create(account=user, comment=comment, rate=rate).save()
+        c = RateModel.objects.create(account=user, comment=comment, rate=rate, site=site).save()
         
         return Response({'rate': c}, status=status.HTTP_200_OK)
