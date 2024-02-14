@@ -2095,7 +2095,7 @@ class RateAPIView(APIView):
     def post(self, request, *args, **kwargs):
         token = request.data.get('token') # string
         comment = request.data.get('comment') # string
-        rate = request.data.get('rate') # int by 0 to 5
+        rate = int(request.data.get('rate')) # int by 0 to 5
         site = request.data.get('site') # int
         
         if not token:

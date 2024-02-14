@@ -7,6 +7,8 @@ import Rating from '@mui/material/Rating'
 import {styled} from '@mui/material/styles'
 import ButtonSVG from '../../ButtonSVG/index'
 import BlueButton from '../../BlueButton/index'
+import { useSelector } from 'react-redux'
+import { rate } from '../../../api/data.api'
 
 const StyledRating = styled(Rating)({
 	'& .MuiRating-iconFilled': {
@@ -22,7 +24,24 @@ interface IRatePopUp {
 }
 
 const RatePopUp: React.FC = ({onExit}: IRatePopUp) => {
-	const [value, setValue] = React.useState<number | null>(0)
+	const user = useSelector((state: any) => state.user)
+	const token = user?.token
+	const isBlogger = useSelector((state: any) => state.isBlogger)
+	const [value, setValue] = React.useState<number>(0)
+	const [rateInput, setRateInput] = React.useState<string>('')
+	async function sendDataRate() {
+		let locationPath = window.location.pathname
+		if (locationPath === '/' && !isBlogger) {
+			locationPath = window.location.pathname + 'company'
+		} else if (locationPath === '/' && isBlogger) {
+			locationPath = window.location.pathname + 'mybanners'
+		}
+
+		let res = await rate(token, rateInput, value, locationPath)
+		setValue(0)
+		setRateInput('')
+		onExit()
+	}
 	return (
 		<div className={s.wrapper}>
 			<Col width="248px" className={s.containerRate}>
@@ -82,10 +101,16 @@ const RatePopUp: React.FC = ({onExit}: IRatePopUp) => {
 					name="About"
 					id="About"
 					placeholder="Расскажите, что мы можем улучшить"
+					value={rateInput}
+					onChange={(e) => setRateInput(e.target.value)}
 					className={s.textareaRate}></textarea>
 				<Row className={s.buttonWrapper} width="248px">
 					<div></div>
-					<BlueButton width="120px" text="Отправить" />
+					<BlueButton
+						onClick={() => sendDataRate()}
+						width="120px"
+						text="Отправить"
+					/>
 				</Row>
 			</Col>
 		</div>
