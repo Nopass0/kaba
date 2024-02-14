@@ -4,6 +4,12 @@ from django.contrib.postgres.fields import ArrayField
 from ad_advertiser.models.site.site import siteModel
 from account.models.account import accountModel
 
+class RateModel(models.Model):
+    account = models.ForeignKey(accountModel, related_name='ad_rateModel_accountModel', blank=True, null=True, on_delete=models.CASCADE)
+    # site = models.ForeignKey(siteModel, related_name='ad_rateModel_siteModel', blank=True, on_delete=models.CASCADE)
+    date_creation = models.DateTimeField('Дата и время создания', auto_now_add=True)
+    rate = models.PositiveIntegerField('Рейтинг', default=0)
+    comment = models.CharField('Комментарий', max_length=255, blank=True)
 
 class ad_companyModel(models.Model):
     account = models.ForeignKey(accountModel, related_name='ad_companyModel_profileModel', blank=True, null=True, on_delete=models.CASCADE)

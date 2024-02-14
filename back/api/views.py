@@ -33,7 +33,7 @@ from account.models.account import accountModel, walletModel, walletOperationsMo
 from account.models.social_network import social_networkModel
 from account.models.verification import verificationModel
 from account.models.social_network import social_networkModel
-from ad_advertiser.models.ad.ad_company import BloggerCompany, ad_bloggerCompanyModel, ad_companyModel, ad_statusModel, statisticModel, jumpToADPage, jumpsToMaskedLink
+from ad_advertiser.models.ad.ad_company import BloggerCompany, RateModel, ad_bloggerCompanyModel, ad_companyModel, ad_statusModel, statisticModel, jumpToADPage, jumpsToMaskedLink
 from ad_advertiser.models.ad.ad_banner import BannderImage
 from .models import tokenModel
 
@@ -2087,3 +2087,30 @@ class GeneralSettingsAPI(APIView):
         user.save()
 
         return Response({'200': 'ok.'}, status=status.HTTP_200_OK) 
+    
+class RateAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        return Response({'rate': RateModel.objects.all()}, status=status.HTTP_200_OK)
+    
+    def post(self, request, *args, **kwargs):
+        token = request.data.get('token') # string
+        comment = request.data.get('comment') # string
+        rate = request.data.get('rate') # int by 0 to 5
+        
+        if not token:
+            return Response({'error': 'token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not comment:
+            return Response({'error': 'comment is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not rate:
+            return Response({'error': 'rate is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            user = tokenModel.objects.get(token=token).account
+        except tokenModel.DoesNotExist:
+            return Response({'error': 'Invalid token.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        c = RateModel.objects.create(account=user, comment=comment, rate=rate).save()
+        
+        return Response({'rate': c}, status=status.HTTP_200_OK)

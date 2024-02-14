@@ -64,6 +64,8 @@ urlpatterns = [
 
     #GeneralSettings doing link
     path('generalSettings', GeneralSettingsAPI.as_view()),
+    #RateAPIView
+    path('rate', RateAPIView.as_view()),
 
 
     # # Пути для взаимодействия с БД. GET - получение записей, POST - добавление новой записи  

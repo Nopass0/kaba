@@ -299,3 +299,32 @@ export const generalSettings = async (
 		return {status: 'error'}
 	}
 }
+
+//rate
+// Function to rate
+export const rate = async (token: string, comment: string, rate: number) => {
+	const formData = new FormData()
+	formData.append('token', token)
+	formData.append('comment', comment)
+	formData.append('rate', rate.toString())
+
+	try {
+		const response = await axios.post(getApiUrl('rate'), formData)
+		return response
+	} catch (error) {
+		console.error('Error during rate:', error)
+		return {status: 'error'}
+	}
+}
+
+//rate (get)
+// Function to get rate
+export const getRate = async () => {
+	try {
+		const response = await axios.get(getApiUrl('rate'))
+		return response
+	} catch (error) {
+		console.error('Error during getRate:', error)
+		return {status: 'error'}
+	}
+}
