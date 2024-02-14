@@ -7,7 +7,7 @@ import Col from '../../components/Col'
 import BlueButton from '../../components/BlueButton/index'
 import Button from '../../components/Button/index'
 import SocialButtons from '../../components/SocialButtons'
-import {useNavigate} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import {loginAPI, vkLoginAPI, yandexLoginAPI} from '../../api/auth.api'
 import {useDispatch, useSelector} from 'react-redux'
 import Row from '../../components/Row/index'
@@ -165,15 +165,16 @@ const MainPage: React.FC = () => {
 
 				<p className={s.CreateAccText}>
 					Создавая учетную запись, я соглашаюсь с{' '}
-					<a href="#!" className={s.BlueLink}>
-						Условиями использования
-					</a>{' '}
+					<Link to="/UserSuccess" className={s.BlueLink}>
+						Пользовательским соглашением
+					</Link>{' '}
 					и{' '}
-					<a href="#!" className={s.BlueLink}>
+					<Link to="/PrivacyPolicy" className={s.BlueLink}>
 						Политикой конфиденциальности
-					</a>
+					</Link>
 					.
 				</p>
+			
 
 				{/* Old Login In Account */}
 				{/* <div className={s.input_container}>

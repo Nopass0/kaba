@@ -28,6 +28,8 @@ import ErrorPage from './pages/ErrorPage'
 import {Navigate} from 'react-router-dom'
 import {depositApply} from './api/payment.api'
 import TransitPage from './pages/TransitPage'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import UserSuccess from './pages/UserSuccess'
 
 let defaultState = {
 	// user: {
@@ -314,7 +316,14 @@ const PageBase = [
 		path: '/finance',
 		element: getWHeader(<Finance />, true),
 	},
-
+	{
+		path: '/UserSuccess',
+		element: getWHeader(<UserSuccess/>, true),
+	},
+	{
+		path: '/PrivacyPolicy',
+		element: getWHeader(<PrivacyPolicy/>, true),
+	},
 	// {
 	// 	path: '/acceptCode',
 	// 	element: getWHeader(<AcceptCode />, false),

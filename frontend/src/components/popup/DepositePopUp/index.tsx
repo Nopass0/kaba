@@ -12,6 +12,7 @@ import Line from '../../Line'
 import ButtonSVG from '../../ButtonSVG'
 import {deposit, depositApply} from '../../../api/payment.api'
 import {useSelector} from 'react-redux'
+import { Link } from 'react-router-dom'
 
 interface IDeposite {
 	// className?: string // Added className prop
@@ -111,8 +112,14 @@ const Deposite: React.FC<IDeposite> = ({
 					<CheckBox id="checkbox_reg_1" />
 					<label htmlFor="checkbox_reg_1">
 						Создавая учетную запись, я соглашаюсь с{' '}
-						<a className={s.blueLink}>Условиями использования</a> и{' '}
-						<a className={s.blueLink}>Политой конфиденциальности</a>.
+						<Link to="/UserSuccess" className={s.blueLink}>
+							Пользовательским соглашением
+						</Link>{' '}
+						и{' '}
+						<Link to='/PrivacyPolicy' className={s.blueLink}>
+							Политикой конфиденциальности
+						</Link>
+						.
 					</label>
 				</div>
 				<div className={s.ButtonWrapper}>

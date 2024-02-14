@@ -13,6 +13,7 @@ import ButtonSVG from '../../ButtonSVG'
 import {deposit, depositApply, payoutToBlogger} from '../../../api/payment.api'
 import {useSelector} from 'react-redux'
 import * as mui from '@mui/base'
+import {Link} from 'react-router-dom'
 interface IWithdrawPopUp {
 	// className?: string // Added className prop
 	// style?: React.CSSProperties
@@ -48,7 +49,6 @@ const WithdrawPopUp: React.FC<IWithdrawPopUp> = ({
 	}
 
 	const handleWithDraw = async () => {
-
 		let res = await payoutToBlogger(token, Number(value), numCard)
 
 		console.log(res)
@@ -206,8 +206,14 @@ const WithdrawPopUp: React.FC<IWithdrawPopUp> = ({
 					<CheckBox id="checkbox_reg_1" />
 					<label htmlFor="checkbox_reg_1">
 						Создавая учетную запись, я соглашаюсь с{' '}
-						<a className={s.blueLink}>Условиями использования</a> и{' '}
-						<a className={s.blueLink}>Политой конфиденциальности</a>.
+						<Link to="/UserSuccess" className={s.blueLink}>
+							Пользовательским соглашением
+						</Link>{' '}
+						и{' '}
+						<Link to="/PrivacyPolicy" className={s.blueLink}>
+							Политикой конфиденциальности
+						</Link>
+						.
 					</label>
 				</div>
 				<div className={s.ButtonWrapper}>
