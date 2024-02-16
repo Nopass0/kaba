@@ -5,7 +5,8 @@
 	height: 100%;
 	position: relative;
 
-	overflow: hidden;
+	overflow-y: hidden;
+	overflow-x: scroll;
 }
 
 .clickCounter {

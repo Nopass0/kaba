@@ -5,6 +5,7 @@
 	display: flex;
 	flex-direction: row-reverse;
 	color: white;
+	overflow: scroll;
 }
 
 .leftMenu {
@@ -20,6 +21,9 @@
 	flex-direction: column;
 }
 @media screen and (max-width: 1440px) {
+	.wrapper {
+		padding: 0;
+	}
 	.rightMenu {
 		margin-left: 180px;
 		width: 1440px;
