@@ -1521,30 +1521,37 @@ const CompanyCreate: React.FC = () => {
 		{
 			title: 'Название компании*',
 			isDone: false,
+			isError: false,
 		},
 		{
 			title: 'Ссылка на рекламируемую страницу*',
 			isDone: false,
+			isError: false,
 		},
 		{
 			title: 'Начало и окончание компании*',
 			isDone: false,
+			isError: false,
 		},
 		{
 			title: 'Цель*',
 			isDone: false,
+			isError: false,
 		},
 		{
 			title: 'Дневной бюджет',
 			isDone: false,
+			isError: false,
 		},
 		{
 			title: 'Тематические слова',
 			isDone: false,
+			isError: false,
 		},
 		{
 			title: 'Запрет показов',
 			isDone: false,
+			isError: false,
 		},
 	])
 
@@ -1552,26 +1559,32 @@ const CompanyCreate: React.FC = () => {
 		{
 			title: 'Название аудитории*',
 			isDone: false,
+			isError: false,
 		},
 		{
 			title: 'География показов',
 			isDone: false,
+			isError: false,
 		},
 		{
 			title: 'Категория',
 			isDone: false,
+			isError: false,
 		},
 		{
 			title: 'Интересы',
 			isDone: false,
+			isError: false,
 		},
 		{
 			title: 'Устройства',
 			isDone: false,
+			isError: false,
 		},
 		{
 			title: 'Пол и возраст',
 			isDone: false,
+			isError: false,
 		},
 	])
 
@@ -1604,6 +1617,15 @@ const CompanyCreate: React.FC = () => {
 				return stepBanner
 		}
 	}
+
+	// ERROR MESSAGE
+	const [cNameError, setCNameError] = useState<string>('')
+	const [cLinkError, setCLinkError] = useState<string>('')
+	const [cTargetError, setCTargetError] = useState<string>('')
+
+	const [aNameError, setANameError] = useState<string>('')
+
+	const [bNameError, setBNameError] = useState<string>('')
 
 	const getFaviconUrl = (url: string) => {
 		try {
@@ -1816,6 +1838,7 @@ const CompanyCreate: React.FC = () => {
 						<Input
 							onChange={(e) => {
 								setCName(e.target.value)
+								setCNameError('')
 								if (e.target.value.length > 0) {
 									setStepCompany((prevStepCompany) =>
 										prevStepCompany.map((step) =>
@@ -1838,6 +1861,7 @@ const CompanyCreate: React.FC = () => {
 							width="100%"
 							placeholder="Введите название..."
 							className={`${s.inputText}`}
+							errorMsg={cNameError}
 						/>
 
 						<Line width="528px" className={s.Line} />
@@ -1849,6 +1873,7 @@ const CompanyCreate: React.FC = () => {
 							<Input
 								onChange={(e) => {
 									setCLink(e.target.value)
+									setCLinkError('')
 									if (e.target.value.length > 0) {
 										setStepCompany((prevStepCompany) =>
 											prevStepCompany.map((step) =>
@@ -1858,6 +1883,7 @@ const CompanyCreate: React.FC = () => {
 											),
 										)
 									} else {
+										setCLinkError('')
 										setStepCompany((prevStepCompany) =>
 											prevStepCompany.map((step) =>
 												step.title === 'Ссылка на рекламируемую страницу*'
@@ -1872,6 +1898,7 @@ const CompanyCreate: React.FC = () => {
 								width="528px"
 								placeholder="Введите ссылку..."
 								className={`${s.inputText} ${s.linkTargetInput}`}
+								errorMsg={cLinkError}
 							/>
 							<div
 								onClick={() => {
@@ -2766,9 +2793,59 @@ const CompanyCreate: React.FC = () => {
 									}
 								/>
 								<BlueButton
-									onClick={() =>
-										dispatch({type: 'setSwitchCreatePage', SwitchCreatePage: 2})
-									}
+									onClick={() => {
+										if (cName && cLink && cDateStart && cDateEnd && cTarget) {
+											dispatch({
+												type: 'setSwitchCreatePage',
+												SwitchCreatePage: 2,
+											})
+										}
+										switch (true) {
+											case !cName:
+												setStepCompany((prevStepCompany) =>
+													prevStepCompany.map((step) =>
+														step.title === 'Название компании*'
+															? {...step, isError: true}
+															: step,
+													),
+												)
+												setCNameError('Введите название компании')
+
+											case !cLink:
+												setStepCompany((prevStepCompany) =>
+													prevStepCompany.map((step) =>
+														step.title === 'Ссылка на рекламируемую страницу*'
+															? {...step, isError: true}
+															: step,
+													),
+												)
+												setCLinkError(
+													'Введите ссылку на рекламируемую страницу',
+												)
+
+											case !cDateStart:
+											case !cDateEnd:
+												setStepCompany((prevStepCompany) =>
+													prevStepCompany.map((step) =>
+														step.title === 'Начало и окончание компании*'
+															? {...step, isError: true}
+															: step,
+													),
+												)
+
+											case !cTarget:
+												setStepCompany((prevStepCompany) =>
+													prevStepCompany.map((step) =>
+														step.title === 'Цель*'
+															? {...step, isError: true}
+															: step,
+													),
+												)
+												break
+											default:
+											// Handle default case
+										}
+									}}
 									width="120px"
 									className={`float-right h-[36px] w-[120px]`}
 									text="Далее"
@@ -2789,6 +2866,7 @@ const CompanyCreate: React.FC = () => {
 						<Input
 							onChange={(e) => {
 								setAName(e.target.value)
+								setANameError('')
 								if (e.target.value.length > 0) {
 									setStepAudi((prevStepAudi) =>
 										prevStepAudi.map((step) =>
@@ -2811,6 +2889,7 @@ const CompanyCreate: React.FC = () => {
 							width="100%"
 							placeholder="Введите название..."
 							className={`${s.inputText}`}
+							errorMsg={aNameError}
 						/>
 						<Line width="528px" className={s.Line} />
 						<Col width="528px" className={`w-[528px]`}>
@@ -3416,12 +3495,26 @@ const CompanyCreate: React.FC = () => {
 									width="120px"
 									className={`float-right h-[36px] w-[120px]`}
 									text="Далее"
-									onClick={() =>
-										dispatch({
-											type: 'setSwitchCreatePage',
-											SwitchCreatePage: 3,
-										})
-									}
+									onClick={() => {
+										if (aName) {
+											dispatch({
+												type: 'setSwitchCreatePage',
+												SwitchCreatePage: 3,
+											})
+										}
+										switch (true) {
+											case !aName:
+												setStepAudi((prevStepAudi) =>
+													prevStepAudi.map((step) =>
+														step.title === 'Название аудитории*'
+															? {...step, isError: true}
+															: step,
+													),
+												)
+												setANameError('Введите название аудитории')
+												break
+										}
+									}}
 								/>
 							</Row>
 						</div>
@@ -3440,6 +3533,7 @@ const CompanyCreate: React.FC = () => {
 						<Input
 							onChange={(e) => {
 								setBName(e.target.value)
+								setBNameError('')
 								if (e.target.value.length > 0) {
 									setStepBanner((prevStepBanner) =>
 										prevStepBanner.map((step) =>
@@ -3462,6 +3556,7 @@ const CompanyCreate: React.FC = () => {
 							width="100%"
 							placeholder="Введите название..."
 							className={`${s.inputText}`}
+							errorMsg={bNameError}
 						/>
 						{/* <Line width={'528px'} className={s.Line} />
 
@@ -3939,7 +4034,82 @@ const CompanyCreate: React.FC = () => {
 									// 	bImg,
 									// 	bUnvirfied,
 									// })}
-									onClick={() => sendData()}
+									// onClick={() => sendData()}
+									onClick={() => {
+										if (
+											cName &&
+											cLink &&
+											cDateStart &&
+											cDateEnd &&
+											cTarget &&
+											aName &&
+											bName
+										) {
+											sendData()
+										}
+										switch (true) {
+											case !cName:
+												setStepCompany((prevStepCompany) =>
+													prevStepCompany.map((step) =>
+														step.title === 'Название компании*'
+															? {...step, isError: true}
+															: step,
+													),
+												)
+												setCNameError('Введите название компании')
+
+											case !cLink:
+												setStepCompany((prevStepCompany) =>
+													prevStepCompany.map((step) =>
+														step.title === 'Ссылка на рекламируемую страницу*'
+															? {...step, isError: true}
+															: step,
+													),
+												)
+												setCLinkError(
+													'Введите ссылку на рекламируемую страницу',
+												)
+
+											case !cDateStart:
+											case !cDateEnd:
+												setStepCompany((prevStepCompany) =>
+													prevStepCompany.map((step) =>
+														step.title === 'Начало и окончание компании*'
+															? {...step, isError: true}
+															: step,
+													),
+												)
+
+											case !cTarget:
+												setStepCompany((prevStepCompany) =>
+													prevStepCompany.map((step) =>
+														step.title === 'Цель*'
+															? {...step, isError: true}
+															: step,
+													),
+												)
+											case !aName:
+												setStepAudi((prevStepAudi) =>
+													prevStepAudi.map((step) =>
+														step.title === 'Название аудитории*'
+															? {...step, isError: true}
+															: step,
+													),
+												)
+												setANameError('Введите название аудитории')
+
+											case !bName:
+												setStepBanner((prevStepBanner) =>
+													prevStepBanner.map((step) =>
+														step.title === 'Название баннера*'
+															? {...step, isError: true}
+															: step,
+													),
+												)
+												setBNameError('Введите название баннера')
+												break
+										}
+									}}
 								/>
 								{/* <BlueButton
 									width="120px"

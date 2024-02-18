@@ -69,6 +69,7 @@ const HeaderCompanyCreate: React.FC<IHeaderCompanyCreate> = ({
 							window.localStorage.removeItem('create_temp')
 							navigate('/create')
 						}}
+						tableDelete={false}
 					/>
 				</PopUpWrapper>
 			)}

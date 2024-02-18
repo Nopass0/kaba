@@ -318,11 +318,11 @@ const PageBase = [
 	},
 	{
 		path: '/UserSuccess',
-		element: getWHeader(<UserSuccess/>, true),
+		element: getWHeader(<UserSuccess/>, false),
 	},
 	{
 		path: '/PrivacyPolicy',
-		element: getWHeader(<PrivacyPolicy/>, true),
+		element: getWHeader(<PrivacyPolicy/>, false),
 	},
 	// {
 	// 	path: '/acceptCode',

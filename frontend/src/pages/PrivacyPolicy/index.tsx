@@ -3,7 +3,7 @@ import React from 'react'
 const PrivacyPolicy: React.FC = () => {
 	return (
 		<>
-			<p className='text-[#f2f2f2]'>
+			{/* <p className='text-[#f2f2f2]'>
 				Политика конфиденциальности персональных данных Настоящая Политика
 				конфиденциальности персональных данных (далее – Политика
 				конфиденциальности) действует в отношении всей информации, которую сайт
@@ -197,7 +197,10 @@ const PrivacyPolicy: React.FC = () => {
 				"КАБА", если иное не предусмотрено новой редакцией Политики
 				конфиденциальности. Обновлено: 14 Февраля 2024 года г. , ООО "КАБА",
 				ОГРН 1237800073917
-			</p>
+			</p> */}
+
+			{/* <iframe src={'../../assets/PrivacyPolice.pdf'} width="100%" height="100vh"></iframe> */}
+			<embed src={'../src/assets/PrivacyPolice.pdf'} type="application/pdf" width="100%" height="100%" className='h-[100vh]' />
 		</>
 	)
 }

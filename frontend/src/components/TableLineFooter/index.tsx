@@ -5,7 +5,7 @@ import Row from '../Row'
 import Button from '../Button'
 import ButtonSVG from '../ButtonSVG'
 import DeleteCompany from '../DeleteCompany/index'
-import { continueCompany, pauseCompany, deleteCompany } from '../../api/data.api';
+import {continueCompany, pauseCompany, deleteCompany} from '../../api/data.api'
 import {useSelector} from 'react-redux'
 import PopUpWrapper from '../PopUpWrapper/index'
 
@@ -188,7 +188,9 @@ const TableLineFooter: React.FC<ITableLineFooter> = ({
 					<PopUpWrapper onExit={() => setCurrentPopup(CurrentPopup.None)}>
 						<DeleteCompany
 							CreateCompany
-							onExit={() => setCurrentPopup(CurrentPopup.None)} saveFunc={() => deleteCompanyFunc(token,companies)}
+							onExit={() => setCurrentPopup(CurrentPopup.None)}
+							saveFunc={() => setCurrentPopup(CurrentPopup.None)}
+							resetFunc={() => deleteCompanyFunc(token, companies)}
 						/>
 					</PopUpWrapper>
 				</>
