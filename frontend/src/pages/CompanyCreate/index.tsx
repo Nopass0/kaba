@@ -133,7 +133,7 @@ const CompanyCreate: React.FC = () => {
 			setStepCompany((prevStepCompany) =>
 				prevStepCompany.map((step) =>
 					step.title === 'Начало и окончание компании*'
-						? {...step, isDone: true}
+						? {...step, isDone: true, isError: false}
 						: step,
 				),
 			)
@@ -1501,11 +1501,28 @@ const CompanyCreate: React.FC = () => {
 
 	const onClose = (id: string) => {
 		setImages(images.filter((image) => image.id !== id))
+		if (images.length - 1 === 0){
+			setStepBanner((prevStepBanner) =>
+				prevStepBanner.map((step) =>
+					step.title === 'Варианты изображение'
+						? {...step, isDone: false}
+						: step,
+				),
+			)
+		}
+		
 	}
 
 	const handleAddImage = (file: File) => {
 		//add path to image
 		if (file) setImages([...images, {id: generateUniqueId(), file: file}])
+		setStepBanner((prevStepBanner) =>
+			prevStepBanner.map((step) =>
+				step.title === 'Варианты изображение'
+					? {...step, isDone: true}
+					: step,
+			),
+		)
 		console.log(file)
 	}
 
@@ -1622,6 +1639,7 @@ const CompanyCreate: React.FC = () => {
 	const [cNameError, setCNameError] = useState<string>('')
 	const [cLinkError, setCLinkError] = useState<string>('')
 	const [cTargetError, setCTargetError] = useState<string>('')
+	const [cWeekBudError, setCWeekBudError] = useState<string>('')
 
 	const [aNameError, setANameError] = useState<string>('')
 
@@ -1843,7 +1861,7 @@ const CompanyCreate: React.FC = () => {
 									setStepCompany((prevStepCompany) =>
 										prevStepCompany.map((step) =>
 											step.title === 'Название компании*'
-												? {...step, isDone: true}
+												? {...step, isDone: true, isError: false}
 												: step,
 										),
 									)
@@ -1878,7 +1896,7 @@ const CompanyCreate: React.FC = () => {
 										setStepCompany((prevStepCompany) =>
 											prevStepCompany.map((step) =>
 												step.title === 'Ссылка на рекламируемую страницу*'
-													? {...step, isDone: true}
+													? {...step, isDone: true, isError: false}
 													: step,
 											),
 										)
@@ -2188,7 +2206,7 @@ const CompanyCreate: React.FC = () => {
 															setStepCompany((prevStepCompany) =>
 																prevStepCompany.map((step) =>
 																	step.title === 'Цель*'
-																		? {...step, isDone: true}
+																		? {...step, isDone: true, isError: false}
 																		: step,
 																),
 															)
@@ -2295,6 +2313,7 @@ const CompanyCreate: React.FC = () => {
 									onChange={(e) => {
 										if (/^\d+$/.test(e.target.value)) {
 											setCWeekBudget(e.target.value)
+											setCWeekBudError('')
 										}
 										if (
 											e.target.value.length > 0 &&
@@ -2303,7 +2322,7 @@ const CompanyCreate: React.FC = () => {
 											setStepCompany((prevStepCompany) =>
 												prevStepCompany.map((step) =>
 													step.title === 'Дневной бюджет'
-														? {...step, isDone: true}
+														? {...step, isDone: true, isError: false}
 														: step,
 												),
 											)
@@ -2324,6 +2343,7 @@ const CompanyCreate: React.FC = () => {
 									width="100%"
 									placeholder=""
 									className={`${s.inputText} `}
+									errorMsg={cWeekBudError}
 								/>
 								<div className={`right-[30px] top-[6px] relative`}>
 									<p>₽</p>
@@ -2715,45 +2735,103 @@ const CompanyCreate: React.FC = () => {
 									text="Сохранить и выйти"
 									onClick={
 										() => {
-											window.localStorage.setItem(
-												'create_temp',
-												JSON.stringify([
-													{
-														cName: cName,
-														cLink: cLink,
-														cSettingsLink: cSettingsLink,
-														cDateStart: cDateStart,
-														cDateEnd: cDateEnd,
-														cTarget: cTarget,
-														cWeekBudget: cWeekBudget,
-														cKeyWord: cKeyWord,
-														cKeyWordDel: cKeyWordDel,
-														banShowArray: banShowArray,
-													},
-													{
-														aName: aName,
-														aGeography: aGeography,
-														// aFavor: aFavor,
-														aDevice: aDevice,
-														GenderNAgeObject: GenderNAgeObject,
-													},
-													{
-														bName: bName,
-														bLink: bLink,
-														// bOptionDescription: bOptionDescription,
-														titleArray: titleArray,
-														descrArray: descrArray,
-														bVideo: bVideo,
-														bAudio: bAudio,
-														bImg: images,
-														bUnvirfied: bUnvirfied,
-													},
-													{
-														images: images,
-													},
-												]),
-											)
-											navigate('/')
+											
+											
+											if (cName && cLink && cDateStart && cDateEnd && cTarget && cWeekBudget) {
+												window.localStorage.setItem(
+													'create_temp',
+													JSON.stringify([
+														{
+															cName: cName,
+															cLink: cLink,
+															cSettingsLink: cSettingsLink,
+															cDateStart: cDateStart,
+															cDateEnd: cDateEnd,
+															cTarget: cTarget,
+															cWeekBudget: cWeekBudget,
+															cKeyWord: cKeyWord,
+															cKeyWordDel: cKeyWordDel,
+															banShowArray: banShowArray,
+														},
+														{
+															aName: aName,
+															aGeography: aGeography,
+															// aFavor: aFavor,
+															aDevice: aDevice,
+															GenderNAgeObject: GenderNAgeObject,
+														},
+														{
+															bName: bName,
+															bLink: bLink,
+															// bOptionDescription: bOptionDescription,
+															titleArray: titleArray,
+															descrArray: descrArray,
+															bVideo: bVideo,
+															bAudio: bAudio,
+															bImg: images,
+															bUnvirfied: bUnvirfied,
+														},
+														{
+															images: images,
+														},
+													]),
+												)
+												navigate('/')
+											}
+											switch (true) {
+												case !cName:
+													setStepCompany((prevStepCompany) =>
+														prevStepCompany.map((step) =>
+															step.title === 'Название компании*'
+																? {...step, isError: true}
+																: step,
+														),
+													)
+													setCNameError('Введите название компании')
+	
+												case !cLink:
+													setStepCompany((prevStepCompany) =>
+														prevStepCompany.map((step) =>
+															step.title === 'Ссылка на рекламируемую страницу*'
+																? {...step, isError: true}
+																: step,
+														),
+													)
+													setCLinkError(
+														'Введите ссылку на рекламируемую страницу',
+													)
+	
+												case !cDateStart:
+												case !cDateEnd:
+													setStepCompany((prevStepCompany) =>
+														prevStepCompany.map((step) =>
+															step.title === 'Начало и окончание компании*'
+																? {...step, isError: true}
+																: step,
+														),
+													)
+												
+												case !cWeekBudget:
+													setStepCompany((prevStepCompany) =>
+														prevStepCompany.map((step) =>
+															step.title === 'Дневной бюджет'
+																? {...step, isError: true}
+																: step,
+														),
+													)
+													setCWeekBudError('Введите дневной бюджет')
+												case !cTarget:
+													setStepCompany((prevStepCompany) =>
+														prevStepCompany.map((step) =>
+															step.title === 'Цель*'
+																? {...step, isError: true}
+																: step,
+														),
+													)
+													break
+												default:
+												// Handle default case
+											}
 										}
 										// 	setGlobalState({
 										// Company: {
@@ -2794,7 +2872,7 @@ const CompanyCreate: React.FC = () => {
 								/>
 								<BlueButton
 									onClick={() => {
-										if (cName && cLink && cDateStart && cDateEnd && cTarget) {
+										if (cName && cLink && cDateStart && cDateEnd && cTarget && cWeekBudget) {
 											dispatch({
 												type: 'setSwitchCreatePage',
 												SwitchCreatePage: 2,
@@ -2832,7 +2910,16 @@ const CompanyCreate: React.FC = () => {
 															: step,
 													),
 												)
-
+											
+											case !cWeekBudget:
+												setStepCompany((prevStepCompany) =>
+													prevStepCompany.map((step) =>
+														step.title === 'Дневной бюджет'
+															? {...step, isError: true}
+															: step,
+													),
+												)
+												setCWeekBudError('Введите дневной бюджет')
 											case !cTarget:
 												setStepCompany((prevStepCompany) =>
 													prevStepCompany.map((step) =>
@@ -2871,7 +2958,7 @@ const CompanyCreate: React.FC = () => {
 									setStepAudi((prevStepAudi) =>
 										prevStepAudi.map((step) =>
 											step.title === 'Название аудитории*'
-												? {...step, isDone: true}
+												? {...step, isDone: true, isError: false}
 												: step,
 										),
 									)
@@ -3038,7 +3125,27 @@ const CompanyCreate: React.FC = () => {
 							</svg>
 						</Row>
 						{/* Ex Categories , Now Interes */}
-						<TreeSelectCustom setValueFunction={setCategories} options={op} />
+						<TreeSelectCustom setValueFunction={(newCheckedValues) => {
+							setCategories(newCheckedValues)
+							setStepAudi((prevStepAudi) =>
+								prevStepAudi.map((step) =>
+									step.title === 'Интересы'
+										? {...step, isDone: true}
+										: step,
+								),
+							)
+							if (Object.values(newCheckedValues).every(value => value === false)) {
+								setStepAudi((prevStepAudi) =>
+								prevStepAudi.map((step) =>
+									step.title === 'Интересы'
+										? {...step, isDone: false}
+										: step,
+								),
+							)
+							}
+							
+							
+						}} options={op} />
 
 						<Line width="528px" className={s.Line} />
 
@@ -3450,45 +3557,60 @@ const CompanyCreate: React.FC = () => {
 									onClick={() => {
 										console.log('oADJGSKDFBJKSFBKSFHMskf')
 
-										window.localStorage.setItem(
-											'create_temp',
-											JSON.stringify([
-												{
-													cName: cName,
-													cLink: cLink,
-													cSettingsLink: cSettingsLink,
-													cDateStart: cDateStart,
-													cDateEnd: cDateEnd,
-													cTarget: cTarget,
-													cWeekBudget: cWeekBudget,
-													cKeyWord: cKeyWord,
-													cKeyWordDel: cKeyWordDel,
-													banShowArray: banShowArray,
-												},
-												{
-													aName: aName,
-													aGeography: aGeography,
-													// aFavor: aFavor,
-													aDevice: aDevice,
-													GenderNAgeObject: GenderNAgeObject,
-												},
-												{
-													bName: bName,
-													bLink: bLink,
-													// bOptionDescription: bOptionDescription,
-													titleArray: titleArray,
-													descrArray: descrArray,
-													bVideo: bVideo,
-													bAudio: bAudio,
-													bImg: images,
-													bUnvirfied: bUnvirfied,
-												},
-												{
-													images: images,
-												},
-											]),
-										)
-										navigate('/')
+										
+										if (aName) {
+											window.localStorage.setItem(
+												'create_temp',
+												JSON.stringify([
+													{
+														cName: cName,
+														cLink: cLink,
+														cSettingsLink: cSettingsLink,
+														cDateStart: cDateStart,
+														cDateEnd: cDateEnd,
+														cTarget: cTarget,
+														cWeekBudget: cWeekBudget,
+														cKeyWord: cKeyWord,
+														cKeyWordDel: cKeyWordDel,
+														banShowArray: banShowArray,
+													},
+													{
+														aName: aName,
+														aGeography: aGeography,
+														// aFavor: aFavor,
+														aDevice: aDevice,
+														GenderNAgeObject: GenderNAgeObject,
+													},
+													{
+														bName: bName,
+														bLink: bLink,
+														// bOptionDescription: bOptionDescription,
+														titleArray: titleArray,
+														descrArray: descrArray,
+														bVideo: bVideo,
+														bAudio: bAudio,
+														bImg: images,
+														bUnvirfied: bUnvirfied,
+													},
+													{
+														images: images,
+													},
+												]),
+											)
+											navigate('/')
+										}
+										switch (true) {
+											case !aName:
+												setStepAudi((prevStepAudi) =>
+													prevStepAudi.map((step) =>
+														step.title === 'Название аудитории*'
+															? {...step, isError: true}
+															: step,
+													),
+												)
+												setANameError('Введите название аудитории')
+												break
+										}
 									}}
 								/>
 								<BlueButton
@@ -3538,7 +3660,7 @@ const CompanyCreate: React.FC = () => {
 									setStepBanner((prevStepBanner) =>
 										prevStepBanner.map((step) =>
 											step.title === 'Название баннера*'
-												? {...step, isDone: true}
+												? {...step, isDone: true, isError: false}
 												: step,
 										),
 									)
