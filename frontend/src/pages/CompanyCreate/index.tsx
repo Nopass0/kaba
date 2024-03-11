@@ -1799,8 +1799,9 @@ const CompanyCreate: React.FC = () => {
 			</div>
 			<div className={` ${s.rightMenu}`}>
 				<HeaderCompanyCreate
+				CreateComp={true}
 					exitFunc={() => {
-						;() => {
+						// ;() => {
 							window.localStorage.setItem(
 								'create_temp',
 								JSON.stringify([
@@ -1820,6 +1821,7 @@ const CompanyCreate: React.FC = () => {
 										aName: aName,
 										aGeography: aGeography,
 										// aFavor: aFavor,
+										aFavor: Object.keys(categories),
 										aDevice: aDevice,
 										GenderNAgeObject: GenderNAgeObject,
 									},
@@ -1839,8 +1841,9 @@ const CompanyCreate: React.FC = () => {
 									},
 								]),
 							)
-							navigate('/')
-						}
+							
+							// navigate('/')
+						// }
 					}}
 				/>
 
@@ -2311,9 +2314,9 @@ const CompanyCreate: React.FC = () => {
 								className="mt-[17px] w-[528px] flex justify-between">
 								<Input
 									onChange={(e) => {
+										setCWeekBudError('')
 										if (/^\d+$/.test(e.target.value)) {
 											setCWeekBudget(e.target.value)
-											setCWeekBudError('')
 										}
 										if (
 											e.target.value.length > 0 &&
@@ -2878,59 +2881,58 @@ const CompanyCreate: React.FC = () => {
 												SwitchCreatePage: 2,
 											})
 										}
-										switch (true) {
-											case !cName:
-												setStepCompany((prevStepCompany) =>
-													prevStepCompany.map((step) =>
-														step.title === 'Название компании*'
-															? {...step, isError: true}
-															: step,
-													),
-												)
-												setCNameError('Введите название компании')
-
-											case !cLink:
-												setStepCompany((prevStepCompany) =>
-													prevStepCompany.map((step) =>
-														step.title === 'Ссылка на рекламируемую страницу*'
-															? {...step, isError: true}
-															: step,
-													),
-												)
-												setCLinkError(
-													'Введите ссылку на рекламируемую страницу',
-												)
-
-											case !cDateStart:
-											case !cDateEnd:
-												setStepCompany((prevStepCompany) =>
-													prevStepCompany.map((step) =>
-														step.title === 'Начало и окончание компании*'
-															? {...step, isError: true}
-															: step,
-													),
-												)
-											
-											case !cWeekBudget:
-												setStepCompany((prevStepCompany) =>
-													prevStepCompany.map((step) =>
-														step.title === 'Дневной бюджет'
-															? {...step, isError: true}
-															: step,
-													),
-												)
-												setCWeekBudError('Введите дневной бюджет')
-											case !cTarget:
-												setStepCompany((prevStepCompany) =>
-													prevStepCompany.map((step) =>
-														step.title === 'Цель*'
-															? {...step, isError: true}
-															: step,
-													),
-												)
-												break
-											default:
-											// Handle default case
+										if (!cName) {
+											setStepCompany((prevStepCompany) =>
+												prevStepCompany.map((step) =>
+													step.title === 'Название компании*'
+														? {...step, isError: true}
+														: step,
+												),
+											)
+											setCNameError('Введите название компании')
+										}
+										
+										if (!cLink) {
+											setStepCompany((prevStepCompany) =>
+												prevStepCompany.map((step) =>
+													step.title === 'Ссылка на рекламируемую страницу*'
+														? {...step, isError: true}
+														: step,
+												),
+											)
+											setCLinkError('Введите ссылку на рекламируемую страницу')
+										}
+										
+										if (!cDateStart || !cDateEnd) {
+											setStepCompany((prevStepCompany) =>
+												prevStepCompany.map((step) =>
+													step.title === 'Начало и окончание компании*'
+														? {...step, isError: true}
+														: step,
+												),
+											)
+										}
+										
+										if (!cTarget) {
+											setStepCompany((prevStepCompany) =>
+												prevStepCompany.map((step) =>
+													step.title === 'Цель*'
+														? {...step, isError: true}
+														: step,
+												),
+											)
+											console.log('target', cWeekBudget);
+										}
+										
+										if (!cWeekBudget) {
+											setStepCompany((prevStepCompany) =>
+												prevStepCompany.map((step) =>
+													step.title === 'Дневной бюджет'
+														? {...step, isError: true}
+														: step,
+												),
+											)
+											setCWeekBudError('Введите дневной бюджет')
 										}
 									}}
 									width="120px"
@@ -3624,17 +3626,15 @@ const CompanyCreate: React.FC = () => {
 												SwitchCreatePage: 3,
 											})
 										}
-										switch (true) {
-											case !aName:
-												setStepAudi((prevStepAudi) =>
-													prevStepAudi.map((step) =>
-														step.title === 'Название аудитории*'
-															? {...step, isError: true}
-															: step,
-													),
-												)
-												setANameError('Введите название аудитории')
-												break
+										if (!aName) {
+											setStepAudi((prevStepAudi) =>
+												prevStepAudi.map((step) =>
+													step.title === 'Название аудитории*'
+														? {...step, isError: true}
+														: step,
+												),
+											)
+											setANameError('Введите название аудитории')
 										}
 									}}
 								/>
@@ -4165,71 +4165,84 @@ const CompanyCreate: React.FC = () => {
 											cDateEnd &&
 											cTarget &&
 											aName &&
-											bName
+											bName &&
+											cWeekBudget
 										) {
 											sendData()
 										}
-										switch (true) {
-											case !cName:
-												setStepCompany((prevStepCompany) =>
-													prevStepCompany.map((step) =>
-														step.title === 'Название компании*'
-															? {...step, isError: true}
-															: step,
-													),
-												)
-												setCNameError('Введите название компании')
+										if (!cName) {
+											setStepCompany((prevStepCompany) =>
+												prevStepCompany.map((step) =>
+													step.title === 'Название компании*'
+														? {...step, isError: true}
+														: step,
+												),
+											)
+											setCNameError('Введите название компании')
+										}
+										
+										if (!cLink) {
+											setStepCompany((prevStepCompany) =>
+												prevStepCompany.map((step) =>
+													step.title === 'Ссылка на рекламируемую страницу*'
+														? {...step, isError: true}
+														: step,
+												),
+											)
+											setCLinkError('Введите ссылку на рекламируемую страницу')
+										}
+										
+										if (!cDateStart || !cDateEnd) {
+											setStepCompany((prevStepCompany) =>
+												prevStepCompany.map((step) =>
+													step.title === 'Начало и окончание компании*'
+														? {...step, isError: true}
+														: step,
+												),
+											)
+										}
+										
+										if (!cTarget) {
+											setStepCompany((prevStepCompany) =>
+												prevStepCompany.map((step) =>
+													step.title === 'Цель*'
+														? {...step, isError: true}
+														: step,
+												),
+											)
+										}
+										
+										if (!aName) {
+											setStepAudi((prevStepAudi) =>
+												prevStepAudi.map((step) =>
+													step.title === 'Название аудитории*'
+														? {...step, isError: true}
+														: step,
+												),
+											)
+											setANameError('Введите название аудитории')
+										}
+										
+										if (!bName) {
+											setStepBanner((prevStepBanner) =>
+												prevStepBanner.map((step) =>
+													step.title === 'Название баннера*'
+														? {...step, isError: true}
+														: step,
+												),
+											)
+											setBNameError('Введите название баннера')
+										}
 
-											case !cLink:
-												setStepCompany((prevStepCompany) =>
-													prevStepCompany.map((step) =>
-														step.title === 'Ссылка на рекламируемую страницу*'
-															? {...step, isError: true}
-															: step,
-													),
-												)
-												setCLinkError(
-													'Введите ссылку на рекламируемую страницу',
-												)
-
-											case !cDateStart:
-											case !cDateEnd:
-												setStepCompany((prevStepCompany) =>
-													prevStepCompany.map((step) =>
-														step.title === 'Начало и окончание компании*'
-															? {...step, isError: true}
-															: step,
-													),
-												)
-
-											case !cTarget:
-												setStepCompany((prevStepCompany) =>
-													prevStepCompany.map((step) =>
-														step.title === 'Цель*'
-															? {...step, isError: true}
-															: step,
-													),
-												)
-											case !aName:
-												setStepAudi((prevStepAudi) =>
-													prevStepAudi.map((step) =>
-														step.title === 'Название аудитории*'
-															? {...step, isError: true}
-															: step,
-													),
-												)
-												setANameError('Введите название аудитории')
-
-											case !bName:
-												setStepBanner((prevStepBanner) =>
-													prevStepBanner.map((step) =>
-														step.title === 'Название баннера*'
-															? {...step, isError: true}
-															: step,
-													),
-												)
-												setBNameError('Введите название баннера')
-												break
+										if (!cWeekBudget) {
+											setStepCompany((prevStepCompany) =>
+												prevStepCompany.map((step) =>
+													step.title === 'Дневной бюджет'
+														? {...step, isError: true}
+														: step,
+												),
+											)
+											setCWeekBudError('Введите дневной бюджет')
 										}
 									}}
 								/>

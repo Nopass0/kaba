@@ -7,6 +7,7 @@ import {useNavigate} from 'react-router-dom'
 
 interface IHeaderCompanyCreate {
 	exitFunc?: () => void
+	CreateComp?: boolean
 }
 
 enum CurrentPopup {
@@ -16,12 +17,13 @@ enum CurrentPopup {
 
 const HeaderCompanyCreate: React.FC<IHeaderCompanyCreate> = ({
 	exitFunc,
+	CreateComp = false,
 }: IHeaderCompanyCreate) => {
 	const [currentPopup, setCurrentPopup] = React.useState(CurrentPopup.None)
 
 	const onExit = () => {
 		// Exit logic here
-		
+
 		setCurrentPopup(CurrentPopup.None)
 	}
 	const navigate = useNavigate()
@@ -64,12 +66,23 @@ const HeaderCompanyCreate: React.FC<IHeaderCompanyCreate> = ({
 					<DeleteCompany
 						onExit={onExit}
 						CreateCompany={true}
-						saveFunc={exitFunc}
+						// saveFunc={exitFunc}
+						saveFunc={() => {
+							exitFunc()
+							if (CreateComp) {
+								let root = document.getElementsByTagName('body')[0]
+								root.classList.remove('stop-scrolling')
+								onExit()
+							}
+						}}
 						resetFunc={() => {
 							window.localStorage.removeItem('create_temp')
-							navigate('/create')
+							let root = document.getElementsByTagName('body')[0]
+							root.classList.remove('stop-scrolling')
+							onExit()
+							navigate('/')
 						}}
-						tableDelete={false}
+						tableDelete={true}
 					/>
 				</PopUpWrapper>
 			)}

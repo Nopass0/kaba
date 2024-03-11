@@ -30,6 +30,8 @@ import {depositApply} from './api/payment.api'
 import TransitPage from './pages/TransitPage'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import UserSuccess from './pages/UserSuccess'
+import UserSuccessPrivate from './pages/UserSuccessPrivate'
+import PrivacyPolicyPrivate from './pages/PrivacyPolicyPrivate'
 
 let defaultState = {
 	// user: {
@@ -323,6 +325,14 @@ const PageBase = [
 	{
 		path: '/PrivacyPolicy',
 		element: getWHeader(<PrivacyPolicy/>, false),
+	},
+	{
+		path: '/UserSuccessPrivate',
+		element: getWHeader(<UserSuccessPrivate/>, true),
+	},
+	{
+		path: '/PrivacyPolicyPrivate',
+		element: getWHeader(<PrivacyPolicyPrivate/>, true),
 	},
 	// {
 	// 	path: '/acceptCode',

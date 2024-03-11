@@ -206,11 +206,11 @@ const WithdrawPopUp: React.FC<IWithdrawPopUp> = ({
 					<CheckBox id="checkbox_reg_1" />
 					<label htmlFor="checkbox_reg_1">
 						Создавая учетную запись, я соглашаюсь с{' '}
-						<Link to="/UserSuccess" className={s.blueLink}>
+						<Link to="/UserSuccessPrivate" className={s.blueLink}>
 							Пользовательским соглашением
 						</Link>{' '}
 						и{' '}
-						<Link to="/PrivacyPolicy" className={s.blueLink}>
+						<Link to="/PrivacyPolicyPrivate" className={s.blueLink}>
 							Политикой конфиденциальности
 						</Link>
 						.
