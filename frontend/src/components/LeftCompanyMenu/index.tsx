@@ -244,7 +244,7 @@ const LeftCompanyMenu: React.FC = () => {
 						)}
 						<div className={s.companyListPages}>
 							{isBlogger ? (
-								<Link to="/ " onClick={() => setCurrentUrl('mybanners')}>
+								<Link to="/" onClick={() => setCurrentUrl('mybanners')}>
 									<div
 										className={`${s.companies} ${s.companyPage} ${
 											location.pathname === '/' ? s.active : ''
