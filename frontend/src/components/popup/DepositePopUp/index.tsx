@@ -99,9 +99,9 @@ const Deposite: React.FC<IDeposite> = ({
 				<Line width="280px" className={s.Line} />
 				<NavLabel
 					className={`${s.NavLabel} ${s.NavLabelSum}`}
-					text={`Итого: ${value}₽`}
+					text={`Итого: ${(Number(value) * 1.20).toFixed(2)}₽`}
 				/>
-				<Label isMini={true} text="Укажите сумму" />
+				<Label isMini={true} text={`${value ? value : 0} + ${(Number(value) * 0.2).toFixed(2)} ₽`} />
 				<Line width="280px" className={s.Line} />
 				<div
 					onClick={() => {
