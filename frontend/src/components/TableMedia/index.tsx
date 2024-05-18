@@ -315,7 +315,7 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 		<>
 			<Col width="100%" className={s.Table}>
 				<div className={s.headerTable}>
-					<label htmlFor="search" className={s.LabelSearch}>
+					{/* <label htmlFor="search" className={s.LabelSearch}>
 						<input
 							className={s.InputSearch}
 							id="search"
@@ -338,7 +338,7 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 								fill="#808080"
 							/>
 						</svg>
-					</label>
+					</label> */}
 					<div className={s.sortTableButtons}>
 						{/* <button
 							onClick={() => {

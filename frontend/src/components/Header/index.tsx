@@ -31,6 +31,12 @@ const Header: React.FC = () => {
 
 	let switchPageSelector = useSelector((state: any) => state.SwitchCreatePage)
 
+	const switchCreate_comp = useSelector((state: any) => state.SwitchCreate_comp)
+	const switchCreate_audi = useSelector((state: any) => state.SwitchCreate_audi)
+	const switchCreate_banner = useSelector(
+		(state: any) => state.SwitchCreate_banner,
+	)
+
 	const RateOpenRef = useRef()
 	const RateOpenButtonRef = useRef()
 
@@ -127,12 +133,20 @@ const Header: React.FC = () => {
 								</div>
 								<div className={s.down}>
 									<button
-										onClick={() =>
-											dispatch({
-												type: 'setSwitchCreatePage',
-												SwitchCreatePage: 1,
-											})
-										}
+										onClick={() => {
+											if (switchCreate_comp === 3) {
+												dispatch({
+													type: 'setSwitchCreatePage',
+													SwitchCreatePage: 1,
+												})
+											} else {
+												console.log('switchCreate_comp', switchCreate_comp)
+												dispatch({
+													type: 'setSwitchCreate_comp',
+													SwitchCreate_comp: 2,
+												})
+											}
+										}}
 										className={`${s.companiesMenu} ${
 											switchPage === 1 ? s.companiesMenuActive : ''
 										}`}>
@@ -140,12 +154,23 @@ const Header: React.FC = () => {
 										{/* <span className={s.companiesNum}>0</span> */}
 									</button>
 									<button
-										onClick={() =>
-											dispatch({
-												type: 'setSwitchCreatePage',
-												SwitchCreatePage: 2,
-											})
-										}
+										onClick={() => {
+											if (switchCreate_comp === 3 || switchCreate_audi === 3) {
+												dispatch({
+													type: 'setSwitchCreatePage',
+													SwitchCreatePage: 2,
+												})
+											} else {
+												dispatch({
+													type: 'setSwitchCreate_audi',
+													SwitchCreate_audi: 2,
+												})
+												dispatch({
+													type: 'setSwitchCreate_comp',
+													SwitchCreate_comp: 2,
+												})
+											}
+										}}
 										className={`${s.companiesMenu} ${
 											switchPage === 2 ? s.companiesMenuActive : ''
 										}`}>
@@ -153,12 +178,26 @@ const Header: React.FC = () => {
 										{/* <span className={s.companiesNum}>0</span> */}
 									</button>
 									<button
-										onClick={() =>
-											dispatch({
-												type: 'setSwitchCreatePage',
-												SwitchCreatePage: 3,
-											})
-										}
+										onClick={() => {
+											if (
+												switchCreate_banner === 3 ||
+												switchCreate_audi === 3
+											) {
+												dispatch({
+													type: 'setSwitchCreatePage',
+													SwitchCreatePage: 3,
+												})
+											} else {
+												dispatch({
+													type: 'setSwitchCreate_banner',
+													SwitchCreate_banner: 2,
+												})
+												dispatch({
+													type: 'setSwitchCreate_audi',
+													SwitchCreate_audi: 2,
+												})
+											}
+										}}
 										className={`${s.companiesMenu} ${
 											switchPage === 3 ? s.companiesMenuActive : ''
 										}`}>

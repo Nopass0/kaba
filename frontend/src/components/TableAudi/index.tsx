@@ -330,7 +330,7 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 					<div className={s.wrapper}>
 						<Col width="100%" className={s.Table}>
 							<div className={s.headerTable}>
-								<label htmlFor="search" className={s.LabelSearch}>
+								{/* <label htmlFor="search" className={s.LabelSearch}>
 									<input
 										className={s.InputSearch}
 										id="search"
@@ -354,7 +354,7 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 											fill="#808080"
 										/>
 									</svg>
-								</label>
+								</label> */}
 								<div className={s.sortTableButtons}>
 									{/* <button
 										onClick={() => {
@@ -731,7 +731,7 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 													</mui.Select>
 												</tl.Cell> */}
 														<tl.Cell>
-															<mui.Select
+															<mui.Select multiple
 																className={s.muiSelectDetails}
 																renderValue={(
 																	option: mui.SelectOption<number> | null,
@@ -799,7 +799,7 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 															</mui.Select>
 														</tl.Cell> */}
 														<tl.Cell>
-															<mui.Select
+															<mui.Select multiple
 																className={s.muiSelectDetails}
 																renderValue={(
 																	option: mui.SelectOption<number> | null,
@@ -834,7 +834,7 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 														</tl.Cell>
 														<tl.Cell>
 															{/* TO DO */}
-															<mui.Select
+															<mui.Select multiple
 																onClick={() =>
 																	console.log(item.ad_audience[0].gender_age[0])
 																}
@@ -874,7 +874,7 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 															</mui.Select>
 														</tl.Cell>
 														<tl.Cell>
-															<mui.Select
+															<mui.Select multiple
 																className={s.muiSelectDetails}
 																renderValue={(
 																	option: mui.SelectOption<number> | null,
@@ -909,7 +909,7 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 														</tl.Cell>
 
 														<tl.Cell>
-															<mui.Select
+															<mui.Select multiple
 																className={s.muiSelectDetails}
 																renderValue={(
 																	option: mui.SelectOption<number> | null,
@@ -943,7 +943,7 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 															</mui.Select>
 														</tl.Cell>
 														<tl.Cell>
-															<mui.Select
+															<mui.Select multiple
 																className={s.muiSelectDetails}
 																renderValue={(
 																	option: mui.SelectOption<number> | null,

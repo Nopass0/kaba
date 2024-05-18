@@ -8,6 +8,8 @@ import DeleteCompany from '../DeleteCompany/index'
 import {continueCompany, pauseCompany, deleteCompany} from '../../api/data.api'
 import {useSelector} from 'react-redux'
 import PopUpWrapper from '../PopUpWrapper/index'
+import Label from '../Label'
+import WhiteLabel from '../WhiteLabel'
 
 interface ITableLineFooter {
 	className: string
@@ -61,9 +63,13 @@ const TableLineFooter: React.FC<ITableLineFooter> = ({
 		<>
 			<div className={s.wrapper + ' ' + className}>
 				<Row width="100%" className={s.TableLineContainer}>
-					<CheckBox
+					{/* <CheckBox
 						id="TablieLine"
 						labelText={`${companies ? companies.length : '0'} компании`}
+						className={s.checkboxLine}
+					/> */}
+					<WhiteLabel
+						text={`${companies ? companies.length : '0'} компании`}
 						className={s.checkboxLine}
 					/>
 					{blogger ? (

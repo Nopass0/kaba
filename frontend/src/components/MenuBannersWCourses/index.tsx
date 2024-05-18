@@ -140,7 +140,7 @@ const MenuBannersWCourse: React.FC<IMenuBannersWCourse> = ({
 				<Col width="248px" className={s.ContainerMainBlock}>
 					<Row width="248px" className={s.TitleTooltip}>
 						<Label text="До завершения" className={s.LabelMainBlock} />
-						<ToolTip className={s.ToolTip} text="Info" top="15px">
+						{/* <ToolTip className={s.ToolTip} text="Info" top="15px">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="16"
@@ -154,7 +154,7 @@ const MenuBannersWCourse: React.FC<IMenuBannersWCourse> = ({
 									fill="CurrentColor"
 								/>
 							</svg>
-						</ToolTip>
+						</ToolTip> */}
 					</Row>
 					<Row width="248px">
 						<span className={s.Span}>{to_end} дней</span>
@@ -164,7 +164,7 @@ const MenuBannersWCourse: React.FC<IMenuBannersWCourse> = ({
 				<Col width="248px" className={s.ContainerMainBlock}>
 					<Row width="248px" className={s.TitleTooltip}>
 						<Label text="Бюджет на неделю" className={s.LabelMainBlock} />
-						<ToolTip className={s.ToolTip} text="Info" top="15px">
+						{/* <ToolTip className={s.ToolTip} text="Info" top="15px">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="16"
@@ -178,7 +178,7 @@ const MenuBannersWCourse: React.FC<IMenuBannersWCourse> = ({
 									fill="CurrentColor"
 								/>
 							</svg>
-						</ToolTip>
+						</ToolTip> */}
 					</Row>
 					<Row width="248px">
 						<span className={s.Span}>{budget}₽</span>
@@ -188,7 +188,7 @@ const MenuBannersWCourse: React.FC<IMenuBannersWCourse> = ({
 				<Col width="248px" className={`${s.ContainerMainBlock}`}>
 					<Row width="248px" className={s.TitleTooltip}>
 						<Label text="Доход с перехода" className={s.LabelMainBlock} />
-						<ToolTip className={s.ToolTip} text="Info" top="15px">
+						{/* <ToolTip className={s.ToolTip} text="Info" top="15px">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="16"
@@ -202,7 +202,7 @@ const MenuBannersWCourse: React.FC<IMenuBannersWCourse> = ({
 									fill="CurrentColor"
 								/>
 							</svg>
-						</ToolTip>
+						</ToolTip> */}
 					</Row>
 					<Row width="248px">
 						<span className={s.Span}>~ {income}₽</span>

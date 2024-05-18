@@ -371,7 +371,7 @@ const Test: React.FC = () => {
 			{/* <AuditorNBanners/> */}
 			{/* <Chips value={value} onChange={(e) => setValue(e.value)} /> */}
 			{/* <StatisticAddCompanyPopUp/> */}
-			<CompaniesTablePopUp/>
+			{/* <CompaniesTablePopUp/> */}
 			{/* <StatisticDropDownMenuGraphPopUp/> */}
 			{/* <BubbleGraph data={data}/> */}
 			{/* <Row width="auto">

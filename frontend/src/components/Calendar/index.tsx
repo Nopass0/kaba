@@ -13,9 +13,11 @@ import {min} from 'moment'
 
 interface ICalendar {
 	setDateOutside: (start: string, end: string) => void
+	cancelFunc?: () => void
+	applyFunc?: () => void
 }
 
-const Calendar: React.FC<ICalendar> = ({setDateOutside}: ICalendar) => {
+const Calendar: React.FC<ICalendar> = ({setDateOutside, cancelFunc, applyFunc}: ICalendar) => {
 	const [date, setDate] = useState()
 	const inputStart = useRef()
 	const inputEnd = useRef()
@@ -262,7 +264,7 @@ const Calendar: React.FC<ICalendar> = ({setDateOutside}: ICalendar) => {
 				<Row
 					className="mt-6 mb-4 ml-8 justify-between items-center"
 					width="456px">
-					<Label className="cursor-pointer" text="Отмена" />
+					<Label onClick={cancelFunc} className="cursor-pointer" text="Отмена" />
 					<div className="flex items-center flex-row">
 						<BlueLabel
 							className="mr-6 cursor-pointer"
@@ -277,7 +279,7 @@ const Calendar: React.FC<ICalendar> = ({setDateOutside}: ICalendar) => {
 							onClick={() => {
 								if (sDate !== 'Invalid date' && eDate !== 'Invalid date')
 									setDateOutside(sDate, eDate)
-								console.log('date append')
+									applyFunc && applyFunc()
 							}}
 						/>
 					</div>

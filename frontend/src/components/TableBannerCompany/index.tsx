@@ -334,7 +334,7 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 					<div className={s.wrapper}>
 						<Col width="100%" className={s.Table}>
 							<div className={s.headerTable}>
-								<label htmlFor="search" className={s.LabelSearch}>
+								{/* <label htmlFor="search" className={s.LabelSearch}>
 									<input
 										className={s.InputSearch}
 										id="search"
@@ -358,7 +358,7 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 											fill="#808080"
 										/>
 									</svg>
-								</label>
+								</label> */}
 								<div className={s.sortTableButtons}>
 									{/* <button
 										onClick={() => {

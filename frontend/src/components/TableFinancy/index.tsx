@@ -114,7 +114,7 @@ const list = [
 
 const THEME = {
 	Table: `
-  --data-table-library_grid-template-columns: 25% 25% 25% repeat(1, minmax(0, 1fr)) ;
+  --data-table-library_grid-template-columns: repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) ; //25% 25% 25% repeat(1, minmax(0, 1fr))
   width: 100%;
   max-height: 500px;
 
@@ -358,7 +358,7 @@ const TableFinancy: React.FC<ITableFinancy> = ({}: ITableFinancy) => {
 				<></>
 			) : (
 				<Col width="100%" className={s.Table}>
-					<div className={s.extendedBlock}>
+					{/* <div className={s.extendedBlock}>
 						<div className={s.extendedLink}>
 							<Button width="84px" className={s.extendedButton} text="Неделя" />
 							<Button width="78px" className={s.extendedButton} text="Месяц" />
@@ -438,10 +438,10 @@ const TableFinancy: React.FC<ITableFinancy> = ({}: ITableFinancy) => {
 								<Calendar setDateOutside={setDate} />
 							</mui.Select>
 						</div>
-					</div>
+					</div> */}
 
 					<div className={s.headerTable}>
-						<label htmlFor="search" className={s.LabelSearch}>
+						{/* <label htmlFor="search" className={s.LabelSearch}>
 							<input
 								className={s.InputSearch}
 								id="search"
@@ -464,7 +464,7 @@ const TableFinancy: React.FC<ITableFinancy> = ({}: ITableFinancy) => {
 									fill="#808080"
 								/>
 							</svg>
-						</label>
+						</label> */}
 						{/* <div className={s.sortTableButtons}>
 							<button className={s.sortTableButton}>
 								<div className={s.sortTableButtonWrapper}>
@@ -593,12 +593,12 @@ const TableFinancy: React.FC<ITableFinancy> = ({}: ITableFinancy) => {
 												</div>
 											</button>
 										</tl.HeaderCell>
-										<tl.HeaderCell
+										{/* <tl.HeaderCell
 											style={{fontWeight: '400', fill: '#808080'}}
 											className={s.HeaderCell}
 											sortKey="Status">
 											<p className={s.sortText}>Детали</p>
-										</tl.HeaderCell>
+										</tl.HeaderCell> */}
 									</tl.HeaderRow>
 								</tl.Header>
 
@@ -625,11 +625,11 @@ const TableFinancy: React.FC<ITableFinancy> = ({}: ITableFinancy) => {
 													{item.currency_sign}
 												</p>
 											</tl.Cell>
-											<tl.Cell>
+											{/* <tl.Cell>
 												<p className={s._DetailsCell}>
 													Инвойс №{item.invoice_id}
 												</p>
-											</tl.Cell>
+											</tl.Cell> */}
 										</tl.Row>
 									))}
 								</tl.Body>

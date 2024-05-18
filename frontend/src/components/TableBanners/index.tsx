@@ -61,7 +61,7 @@ for (let i = 2; i <= 50; i++) {
 
 const THEME = {
 	Table: `
-  --data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) ;
+  --data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) ;
   width: 100%;
   max-height: 810px;
 
@@ -210,7 +210,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 	// 	}
 	// 	getData()
 	// }, [])
-
+	
 	useEffect(() => {
 		async function getCompaniesAndStatistics(token: string) {
 			try {
@@ -435,7 +435,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 			<div className={s.wrapper}>
 				<Col width="100%" className={s.Table}>
 					<div className={s.headerTable}>
-						<label htmlFor="search" className={s.LabelSearch}>
+						{/* <label htmlFor="search" className={s.LabelSearch}>
 							<input
 								className={s.InputSearch}
 								id="search"
@@ -458,7 +458,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 									fill="#808080"
 								/>
 							</svg>
-						</label>
+						</label> */}
 						<div className={s.sortTableButtons}>
 							{/* <button
 								onClick={() => {
@@ -535,12 +535,12 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 											<p className={s.sortText}>До завершения</p>
 										</tl.HeaderCell>
 
-										<tl.HeaderCell
+										{/* <tl.HeaderCell
 											style={{fontWeight: '400', fill: '#808080'}}
 											className={s.HeaderCell}
 											sortKey="Status">
 											<p className={s.sortText}>Категории</p>
-										</tl.HeaderCell>
+										</tl.HeaderCell> */}
 
 										<tl.HeaderCell
 											style={{fontWeight: '400', fill: '#808080'}}
@@ -554,7 +554,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 														sortKey: 'Status',
 													})
 												}>
-												<p className={s.sortText}>Бюджет на неделю</p>
+												<p className={s.sortText}>Дневной бюджет</p>
 												<div>
 													<svg
 														id="svg-icon-chevron-single-up-down"
@@ -724,12 +724,12 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 											<tl.Cell className="bg-[#1A1A1A]">
 												<Row width="auto">
 													<Col width="auto">
-														<Row width="auto">
-															<img
-																// src={item.nameImg}
-																// alt={item.name}
-																className="mr-2"
-															/>
+														<Row width="auto" className='items-center'>
+														<img
+																		src={getFaviconUrl36(item.site.domain)}
+																		alt={item.site.domain}
+																		className="mr-1 w-[16px] h-[16px]"
+																	/>
 															<label htmlFor="checkbox_1">{item.name}</label>
 														</Row>
 														<Row width="auto" className={s.rowIdCheckbox}>
@@ -820,7 +820,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 																/>
 															</svg>
 														</button>
-														<button
+														{/* <button
 															className={s.ButtonSVG}
 															onClick={() => {
 																setCurrentObject(item)
@@ -848,7 +848,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 																	fill="#F2F2F2"
 																/>
 															</svg>
-														</button>
+														</button> */}
 													</Row>
 												</Row>
 											</tl.Cell>
@@ -860,7 +860,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 														: `${getEndDate(item.date_finish)} дней`}
 												</p>
 											</tl.Cell>
-											<tl.Cell>
+											{/* <tl.Cell>
 												<mui.Select
 													className={s.muiSelectDetails}
 													renderValue={(
@@ -893,7 +893,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 														/>
 													</mui.Option>
 												</mui.Select>
-											</tl.Cell>
+											</tl.Cell> */}
 
 											<tl.Cell>
 												<p>{item.budget_week}₽</p>

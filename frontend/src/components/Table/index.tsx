@@ -225,9 +225,8 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 	const token = user.token
 	const [companies, setCompanies] = useState([])
 	const [statistic, setStatistic] = useState([])
-	
-	const [activeCompany, setActiveCompany] = useState<boolean>(true)
 
+	const [activeCompany, setActiveCompany] = useState<boolean>(true)
 
 	const data = {nodes: companies}
 
@@ -301,9 +300,9 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 	function onSelectChange(action: any, state: any) {
 		console.log(action, state)
 
-		console.log(state.ids, "STATE");
+		console.log(state.ids, 'STATE')
 		setCompany(state.ids)
-		
+
 		let isOpen = 0
 		if (Number(state.ids.length) > 0 && isOpen === 0) {
 			setDownMenu(true)
@@ -313,8 +312,6 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 			isOpen = 0
 		}
 	}
-
-
 
 	return (
 		<>
@@ -338,7 +335,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 					<div className={s.wrapper}>
 						<Col width="100%" className={s.Table}>
 							<div className={s.headerTable}>
-								<label htmlFor="search" className={s.LabelSearch}>
+								{/* <label htmlFor="search" className={s.LabelSearch}>
 									<input
 										className={s.InputSearch}
 										id="search"
@@ -362,7 +359,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 											fill="#808080"
 										/>
 									</svg>
-								</label>
+								</label> */}
 								<div className={s.sortTableButtons}>
 									{/* <button
 										onClick={() => {
@@ -759,6 +756,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 												</tl.Cell> */}
 														<tl.Cell>
 															<mui.Select
+																multiple
 																className={s.muiSelectClicks}
 																renderValue={(
 																	option: mui.SelectOption<number> | null,
@@ -901,9 +899,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 														</tl.Cell>
 														<tl.Cell>
 															<p
-																onClick={() => {
-																	console.log(item, 'COMPANIES')
-																}}>
+																>
 																{item.budget_week}
 															</p>
 														</tl.Cell>
@@ -975,7 +971,6 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 					</div>
 				</>
 			)}
-
 			{currentPopup === CurrentPopup.Cols ? (
 				<PopUpWrapper
 					onExit={() => {

@@ -18,6 +18,7 @@ interface IInput {
 	value?: string
 	isDigits?: boolean
 	onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void
+	children?: React.ReactNode
 }
 
 const Input: React.FC<IInput> = ({
@@ -37,6 +38,7 @@ const Input: React.FC<IInput> = ({
 	value,
 	isDigits,
 	onKeyDown,
+	children,
 }: IInput) => {
 	const [lengthString, setLengthString] = React.useState<number>(
 		maximumLength || 0,
@@ -76,6 +78,7 @@ const Input: React.FC<IInput> = ({
 				) : (
 					''
 				)}
+				{children && children}
 			</div>
 			{errorMsg && <p className={s.errorLabel}>{errorMsg}</p>}
 		</div>

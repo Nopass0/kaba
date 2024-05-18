@@ -12,6 +12,8 @@ import Select from '../Select'
 import {useSelector} from 'react-redux'
 import {generalSettings} from '../../api/data.api'
 import * as mui from '@mui/base'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 interface IGeneralSettings {
 	className?: string // Added className prop
 	text_id_table?: string
@@ -38,7 +40,7 @@ const dataOrganization = [
 // 	'АО': 'Акционерное общество',
 // 	'ООО': 'Общество с ограниченной ответственностью',
 // 	'ИП': 'Индивидуальный предприниматель',
-	
+
 // }]
 
 const GeneralSettings: React.FC<IGeneralSettings> = ({
@@ -49,7 +51,7 @@ const GeneralSettings: React.FC<IGeneralSettings> = ({
 
 	const [formOrg, setFormOrg] = useState<string>('')
 	const [tin, setTin] = useState<string>('')
-
+	const [dataSelectOpened, setDataSelectOpened] = useState<boolean>(false)
 	async function sendData() {
 		let response = await generalSettings(token, tin, formOrg)
 		console.log(response)
@@ -93,7 +95,7 @@ const GeneralSettings: React.FC<IGeneralSettings> = ({
 
 				<Row className={s.tooltiprow} width="auto">
 					<Label text="Данные рекломодателя" />
-					<ToolTip className={s.tooltip} text="info" top="20px">
+					{/* <ToolTip className={s.tooltip} text="info" top="20px">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							width="16"
@@ -107,7 +109,7 @@ const GeneralSettings: React.FC<IGeneralSettings> = ({
 								fill="#808080"
 							/>
 						</svg>
-					</ToolTip>
+					</ToolTip> */}
 				</Row>
 				{/* <Select
 					maxSelectWidth="528px"
@@ -119,14 +121,38 @@ const GeneralSettings: React.FC<IGeneralSettings> = ({
 				/> */}
 
 				<mui.Select
-					className={`${s.inputText} ${s.addIcon}`}
+					className={`${s.inputText}`}
 					// style={style}
-
+					onListboxOpenChange={() => {
+						setDataSelectOpened(!dataSelectOpened)
+					}}
 					renderValue={(option: mui.SelectOption<number> | null) => {
 						if (option == null || option.value === null) {
-							return 'Выберите организационную форму'
+							return (
+								<>
+									<div className={s.OptionReturn}>
+										Выберите организационную форму
+										{dataSelectOpened ? (
+											<KeyboardArrowUpIcon />
+										) : (
+											<KeyboardArrowDownIcon />
+										)}
+									</div>
+								</>
+							)
 						}
-						return `${option.label}`
+						return (
+							<>
+								<div className={s.OptionReturn}>
+									{option.label}
+									{dataSelectOpened ? (
+										<KeyboardArrowUpIcon />
+									) : (
+										<KeyboardArrowDownIcon />
+									)}
+								</div>
+							</>
+						)
 					}}>
 					<Col width="528px" className={s.showList}>
 						{dataOrganization?.map((item, index) => (

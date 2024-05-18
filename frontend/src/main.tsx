@@ -112,6 +112,11 @@ let defaultState = {
 
 	SwitchCreatePage: 1,
 	SwitchTableCompany: 1,
+
+	// 1 - Default without data, 2 - Try switch Page with Error, 3 - Ok
+	SwitchCreate_comp: 1,
+	SwitchCreate_audi: 1,
+	SwitchCreate_banner: 1,
 }
 
 // let isLocalStorage:boolean = localStorage.length === 1
@@ -201,6 +206,12 @@ const reducer = (state = defaultState, action: any) => {
 			return {...state, SwitchCreatePage: action.SwitchCreatePage}
 		case 'setSwitchTableCompany':
 			return {...state, SwitchTableCompany: action.SwitchTableCompany}
+		case 'setSwitchCreate_comp': 
+			return {...state, SwitchCreate_comp: action.SwitchCreate_comp}
+		case 'setSwitchCreate_audi':
+			return {...state, SwitchCreate_audi: action.SwitchCreate_audi}
+		case 'setSwitchCreate_banner':
+			return {...state, SwitchCreate_banner: action.SwitchCreate_banner}
 		default:
 			return state
 	}

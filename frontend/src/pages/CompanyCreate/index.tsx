@@ -42,10 +42,16 @@ const CompanyCreate: React.FC = () => {
 	const dispatch = useDispatch()
 
 	let switchPage = useSelector((state: any) => state.SwitchCreatePage)
+	const switchCreate_comp = useSelector((state: any) => state.SwitchCreate_comp)
+	const switchCreate_audi = useSelector((state: any) => state.SwitchCreate_audi)
+	const switchCreate_banner = useSelector(
+		(state: any) => state.SwitchCreate_banner,
+	)
+	const [openCalendar, setOpenCalendar] = useState<boolean>(false)
 
-	const [checked, setChecked] = React.useState(false)
-	const [checked_1, setChecked_1] = React.useState(false)
-	const [checkedTitle, setCheckedTitle] = React.useState(false)
+	const [checked, setChecked] = useState<boolean>(false)
+	const [checked_1, setChecked_1] = useState<boolean>(true)
+	const [checkedTitle, setCheckedTitle] = useState<boolean>(true)
 
 	const [Gender, setGender] = useState<boolean>(true)
 	const [AgeTo, setAgeTo] = useState<number>()
@@ -55,7 +61,7 @@ const CompanyCreate: React.FC = () => {
 	const [textAreaValue, setTextAreaValue] = useState<string>('')
 	const [textAreaTitle, setTextAreaTitle] = useState<string>('')
 
-	const [open_settings, setOpen_settings] = React.useState(false)
+	const [open_settings, setOpen_settings] = useState<boolean>(false)
 
 	const [globalState, setGlobalState] = useState<object>()
 
@@ -137,6 +143,7 @@ const CompanyCreate: React.FC = () => {
 						: step,
 				),
 			)
+			setCDateError('')
 		} else {
 			setStepCompany((prevStepCompany) =>
 				prevStepCompany.map((step) =>
@@ -1501,7 +1508,7 @@ const CompanyCreate: React.FC = () => {
 
 	const onClose = (id: string) => {
 		setImages(images.filter((image) => image.id !== id))
-		if (images.length - 1 === 0){
+		if (images.length - 1 === 0) {
 			setStepBanner((prevStepBanner) =>
 				prevStepBanner.map((step) =>
 					step.title === 'Варианты изображение'
@@ -1510,7 +1517,6 @@ const CompanyCreate: React.FC = () => {
 				),
 			)
 		}
-		
 	}
 
 	const handleAddImage = (file: File) => {
@@ -1518,9 +1524,7 @@ const CompanyCreate: React.FC = () => {
 		if (file) setImages([...images, {id: generateUniqueId(), file: file}])
 		setStepBanner((prevStepBanner) =>
 			prevStepBanner.map((step) =>
-				step.title === 'Варианты изображение'
-					? {...step, isDone: true}
-					: step,
+				step.title === 'Варианты изображение' ? {...step, isDone: true} : step,
 			),
 		)
 		console.log(file)
@@ -1583,11 +1587,11 @@ const CompanyCreate: React.FC = () => {
 			isDone: false,
 			isError: false,
 		},
-		{
-			title: 'Категория',
-			isDone: false,
-			isError: false,
-		},
+		// {
+		// 	title: 'Категория',
+		// 	isDone: false,
+		// 	isError: false,
+		// },
 		{
 			title: 'Интересы',
 			isDone: false,
@@ -1640,6 +1644,7 @@ const CompanyCreate: React.FC = () => {
 	const [cLinkError, setCLinkError] = useState<string>('')
 	const [cTargetError, setCTargetError] = useState<string>('')
 	const [cWeekBudError, setCWeekBudError] = useState<string>('')
+	const [cDateError, setCDateError] = useState<string>('')
 
 	const [aNameError, setANameError] = useState<string>('')
 
@@ -1791,58 +1796,125 @@ const CompanyCreate: React.FC = () => {
 		window.localStorage.removeItem('create_temp')
 		navigate('/')
 	}
+	const errorCompany = () => {
+		if (!!!cName) {
+			setStepCompany((prevStepCompany) =>
+				prevStepCompany.map((step) =>
+					step.title === 'Название компании*' ? {...step, isError: true} : step,
+				),
+			)
+			setCNameError('Введите название компании')
+		}
+
+		if (!!!cLink) {
+			setStepCompany((prevStepCompany) =>
+				prevStepCompany.map((step) =>
+					step.title === 'Ссылка на рекламируемую страницу*'
+						? {...step, isError: true}
+						: step,
+				),
+			)
+			setCLinkError('Введите ссылку на рекламируемую страницу')
+		}
+		if (cDateEnd === 'Invalid Date' || cDateEnd === 'Указать' || !!!cDateEnd) {
+			setStepCompany((prevStepCompany) =>
+				prevStepCompany.map((step) =>
+					step.title === 'Начало и окончание компании*'
+						? {...step, isError: true}
+						: step,
+				),
+			)
+			setCDateError('Введите дату начала и окончания компании')
+		}
+
+		if (!!!cTarget) {
+			setStepCompany((prevStepCompany) =>
+				prevStepCompany.map((step) =>
+					step.title === 'Цель*' ? {...step, isError: true} : step,
+				),
+			)
+			setCTargetError('Введите цель')
+		}
+
+		if (!!!cWeekBudget) {
+			setStepCompany((prevStepCompany) =>
+				prevStepCompany.map((step) =>
+					step.title === 'Дневной бюджет' ? {...step, isError: true} : step,
+				),
+			)
+			setCWeekBudError('Введите дневной бюджет')
+		}
+	}
+
+	useEffect(() => {
+		if (cName && cLink && cDateStart && cDateEnd && cTarget && cWeekBudget) {
+			dispatch({type: 'setSwitchCreate_comp', SwitchCreate_comp: 3})
+		}
+		if (switchCreate_comp === 2) {
+			errorCompany()
+		}
+	}, [
+		cName,
+		cLink,
+		cDateStart,
+		cDateEnd,
+		cTarget,
+		cWeekBudget,
+		switchCreate_comp,
+	])
 
 	return (
 		<div className={s.wrapper}>
 			<div className={s.stepsMenu}>
 				<StepsInfo steps={StepSwitch()} />
 			</div>
-			<div className={` ${s.rightMenu}`}>
+			<div
+				onClick={() => console.log(switchCreate_comp, 'switchCreate_comp')}
+				className={` ${s.rightMenu}`}>
 				<HeaderCompanyCreate
-				CreateComp={true}
+					CreateComp={true}
 					exitFunc={() => {
 						// ;() => {
-							window.localStorage.setItem(
-								'create_temp',
-								JSON.stringify([
-									{
-										cName: cName,
-										cLink: cLink,
-										cSettingsLink: cSettingsLink,
-										cDateStart: cDateStart,
-										cDateEnd: cDateEnd,
-										cTarget: cTarget,
-										cWeekBudget: cWeekBudget,
-										cKeyWord: cKeyWord,
-										cKeyWordDel: cKeyWordDel,
-										banShowArray: banShowArray,
-									},
-									{
-										aName: aName,
-										aGeography: aGeography,
-										// aFavor: aFavor,
-										aFavor: Object.keys(categories),
-										aDevice: aDevice,
-										GenderNAgeObject: GenderNAgeObject,
-									},
-									{
-										bName: bName,
-										bLink: bLink,
-										// bOptionDescription: bOptionDescription,
-										titleArray: titleArray,
-										descrArray: descrArray,
-										bVideo: bVideo,
-										bAudio: bAudio,
-										bImg: images,
-										bUnvirfied: bUnvirfied,
-									},
-									{
-										images: images,
-									},
-								]),
-							)
-							
-							// navigate('/')
+						// window.localStorage.setItem(
+						// 	'create_temp',
+						// 	JSON.stringify([
+						// 		{
+						// 			cName: cName,
+						// 			cLink: cLink,
+						// 			cSettingsLink: cSettingsLink,
+						// 			cDateStart: cDateStart,
+						// 			cDateEnd: cDateEnd,
+						// 			cTarget: cTarget,
+						// 			cWeekBudget: cWeekBudget,
+						// 			cKeyWord: cKeyWord,
+						// 			cKeyWordDel: cKeyWordDel,
+						// 			banShowArray: banShowArray,
+						// 		},
+						// 		{
+						// 			aName: aName,
+						// 			aGeography: aGeography,
+						// 			// aFavor: aFavor,
+						// 			aFavor: Object.keys(categories),
+						// 			aDevice: aDevice,
+						// 			GenderNAgeObject: GenderNAgeObject,
+						// 		},
+						// 		{
+						// 			bName: bName,
+						// 			bLink: bLink,
+						// 			// bOptionDescription: bOptionDescription,
+						// 			titleArray: titleArray,
+						// 			descrArray: descrArray,
+						// 			bVideo: bVideo,
+						// 			bAudio: bAudio,
+						// 			bImg: images,
+						// 			bUnvirfied: bUnvirfied,
+						// 		},
+						// 		{
+						// 			images: images,
+						// 		},
+						// 	]),
+						// )
+						// navigate('/')
 						// }
 					}}
 				/>
@@ -2046,17 +2118,22 @@ const CompanyCreate: React.FC = () => {
 									</div> */}
 								</div>
 								<div
-									className={`border rounded-[10px] flex justify-between border-[#262626] h-[36px] w-[260px]`}>
+									className={`border rounded-[10px] flex justify-between border-[#262626] ${
+										!!cDateError && 'border-[#f3553e]'
+									} h-[36px] w-[260px]`}>
 									<Label className={`my-[5px] ml-[16px]`} text="Окончание:" />
 									<mui.Select
+										listboxOpen={openCalendar}
 										multiple={true}
 										className="cursor-pointer"
 										renderValue={(option: mui.SelectOption<number> | null) => {
 											if (option == null || option.value === null) {
 												return (
 													<>
-														<BlueLabel
-															className={`mr-[18px] my-[5px] font-[400px]`}
+														<BlueLabel onClick={() => {
+														setOpenCalendar(!openCalendar)
+													}}
+															className={`mr-[18px] my-[5px] font-[400px] cursor-pointer`}
 															text={
 																(cDateEnd !== 'Invalid Date'
 																	? cDateEnd
@@ -2068,8 +2145,10 @@ const CompanyCreate: React.FC = () => {
 											}
 											return (
 												<>
-													<BlueLabel
-														className={`mr-[18px] my-[5px] font-[400px]`}
+													<BlueLabel onClick={() => {
+														setOpenCalendar(!openCalendar)
+													}}
+														className={`mr-[18px] my-[5px] font-[400px] cursor-pointer`}
 														text={
 															(cDateEnd !== 'Invalid Date'
 																? cDateEnd
@@ -2081,18 +2160,20 @@ const CompanyCreate: React.FC = () => {
 										}}>
 										<mui.Option
 											value={1}
-											className={`cursor-pointer z-10 mt-1`}></mui.Option>
-										<Calendar setDateOutside={setDate} />
+											className={`cursor-pointer z-10 mt-1`}>
+												<Calendar cancelFunc={() => setOpenCalendar(false)} applyFunc={() => setOpenCalendar(false)} setDateOutside={setDate} />
+											</mui.Option>
 									</mui.Select>
 								</div>
 							</Row>
+							{!!cDateError && <p className={s.errorLabel}>{cDateError}</p>}
 						</Col>
 						<Line width="528px" className={s.Line} />
 
 						<Col width="528px" className={``}>
 							<Row className={`flex items-center`}>
 								<WhiteLabel className={`mr-[4px]`} text="Цель*" size="16px" />
-								<svg
+								{/* <svg
 									className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
 									width="20"
 									height="20"
@@ -2105,7 +2186,7 @@ const CompanyCreate: React.FC = () => {
 										d="M12.8934 16.9118C11.989 17.3039 11.0245 17.5 10 17.5C8.97549 17.5 8.01103 17.3039 7.10662 16.9118C6.20221 16.5196 5.40441 15.9779 4.71324 15.2868C4.02206 14.5956 3.48039 13.7978 3.08824 12.8934C2.69608 11.989 2.5 11.0245 2.5 10C2.5 8.97549 2.69608 8.01103 3.08824 7.10662C3.48039 6.20221 4.02083 5.40441 4.70956 4.71324C5.39828 4.02206 6.19485 3.48039 7.09926 3.08824C8.00368 2.69608 8.96814 2.5 9.99265 2.5C11.0172 2.5 11.9828 2.69608 12.8897 3.08824C13.7966 3.48039 14.5956 4.02206 15.2868 4.71324C15.9779 5.40441 16.5196 6.20221 16.9118 7.10662C17.3039 8.01103 17.5 8.97549 17.5 10C17.5 11.0245 17.3039 11.989 16.9118 12.8934C16.5196 13.7978 15.9779 14.5956 15.2868 15.2868C14.5956 15.9779 13.7978 16.5196 12.8934 16.9118ZM7.56618 15.7647C8.32108 16.0882 9.13235 16.25 10 16.25C10.8676 16.25 11.6801 16.0882 12.4375 15.7647C13.1949 15.4412 13.8591 14.9939 14.4301 14.4228C15.0012 13.8517 15.4473 13.1887 15.7684 12.4338C16.0895 11.6789 16.25 10.8676 16.25 10C16.25 9.13235 16.0882 8.32108 15.7647 7.56618C15.4412 6.81127 14.9926 6.14706 14.4191 5.57353C13.8456 5 13.1814 4.5527 12.4265 4.23162C11.6716 3.91054 10.8603 3.75 9.99265 3.75C9.125 3.75 8.31373 3.91054 7.55882 4.23162C6.80392 4.5527 6.14216 5 5.57353 5.57353C5.0049 6.14706 4.56005 6.81127 4.23897 7.56618C3.91789 8.32108 3.75735 9.13235 3.75735 10C3.75735 10.8676 3.91789 11.6789 4.23897 12.4338C4.56005 13.1887 5.00613 13.8517 5.57721 14.4228C6.14828 14.9939 6.81127 15.4412 7.56618 15.7647ZM8.71324 14.0368H11.7059C11.8578 14.0368 11.9853 13.9877 12.0882 13.8897C12.1912 13.7917 12.2426 13.6691 12.2426 13.5221C12.2426 13.375 12.1912 13.2525 12.0882 13.1544C11.9853 13.0564 11.8578 13.0074 11.7059 13.0074H10.7941V9.26471C10.7941 9.06373 10.7451 8.90319 10.6471 8.78309C10.549 8.66299 10.4069 8.60294 10.2206 8.60294H8.83824C8.68627 8.60294 8.55882 8.65196 8.45588 8.75C8.35294 8.84804 8.30147 8.97059 8.30147 9.11765C8.30147 9.26471 8.35294 9.38725 8.45588 9.48529C8.55882 9.58333 8.68627 9.63235 8.83824 9.63235H9.625V13.0074H8.71324C8.56127 13.0074 8.43382 13.0564 8.33088 13.1544C8.22794 13.2525 8.17647 13.375 8.17647 13.5221C8.17647 13.6691 8.22794 13.7917 8.33088 13.8897C8.43382 13.9877 8.56127 14.0368 8.71324 14.0368ZM10.614 7.09559C10.4301 7.28186 10.2034 7.375 9.93382 7.375C9.66912 7.375 9.44363 7.28186 9.25735 7.09559C9.07108 6.90931 8.97794 6.68382 8.97794 6.41912C8.97794 6.14951 9.07108 5.92157 9.25735 5.73529C9.44363 5.54902 9.66912 5.45588 9.93382 5.45588C10.2034 5.45588 10.4301 5.54902 10.614 5.73529C10.7978 5.92157 10.8897 6.14951 10.8897 6.41912C10.8897 6.68382 10.7978 6.90931 10.614 7.09559Z"
 										fill="CurrentColor"
 									/>
-								</svg>
+								</svg> */}
 							</Row>
 
 							{/* <Row width="528px" className={``}>
@@ -2121,7 +2202,12 @@ const CompanyCreate: React.FC = () => {
 								</div>
 							</Row> */}
 							<div
-								className={`mt-[8px] border rounded-[10px] border-[#262626]  w-[528px]`}>
+								className={`mt-[8px] border rounded-[10px] border-[#262626] ${
+									!!cTargetError && 'border-[#f3553e]'
+								}  w-[528px]`}
+								onClick={() => {
+									console.log(cTargetError)
+								}}>
 								{/* <Col width="528px" className={`${s.list}`}>
 									<Row
 										width="528px"
@@ -2179,7 +2265,7 @@ const CompanyCreate: React.FC = () => {
 								<Col width="528px" className={`${s.list}`}>
 									<Row
 										width="528px"
-										className={`items-center justify-between h-[52px] w-[528px] ${s.list}`}>
+										className={`items-center justify-between h-[52px] w-[528px]  ${s.list}`}>
 										<WhiteLabel
 											className={`ml-[18px]`}
 											size="14px"
@@ -2201,6 +2287,7 @@ const CompanyCreate: React.FC = () => {
 													onChange={(e) => {
 														if (/^\d+$/.test(e.target.value)) {
 															setCTarget(e.target.value)
+															setCTargetError('')
 														}
 														if (
 															e.target.value.length > 0 &&
@@ -2269,6 +2356,7 @@ const CompanyCreate: React.FC = () => {
 									</Row>
 								</Col>
 							</div>
+							{!!cTargetError && <p className={s.errorLabel}>{cTargetError}</p>}
 						</Col>
 						<Line width="528px" className={s.Line} />
 
@@ -2277,7 +2365,7 @@ const CompanyCreate: React.FC = () => {
 								className={`items-center text-[#808080] hover:text-[#f2f2f2] transition-all`}
 								width="528px">
 								<WhiteLabel size="16px" text="Дневной бюджет" />
-								<svg
+								{/* <svg
 									className={`mx-[4px] cursor-pointer`}
 									width="20"
 									height="20"
@@ -2290,7 +2378,7 @@ const CompanyCreate: React.FC = () => {
 										d="M12.8934 16.9118C11.989 17.3039 11.0245 17.5 10 17.5C8.97549 17.5 8.01103 17.3039 7.10662 16.9118C6.20221 16.5196 5.40441 15.9779 4.71324 15.2868C4.02206 14.5956 3.48039 13.7978 3.08824 12.8934C2.69608 11.989 2.5 11.0245 2.5 10C2.5 8.97549 2.69608 8.01103 3.08824 7.10662C3.48039 6.20221 4.02083 5.40441 4.70956 4.71324C5.39828 4.02206 6.19485 3.48039 7.09926 3.08824C8.00368 2.69608 8.96814 2.5 9.99265 2.5C11.0172 2.5 11.9828 2.69608 12.8897 3.08824C13.7966 3.48039 14.5956 4.02206 15.2868 4.71324C15.9779 5.40441 16.5196 6.20221 16.9118 7.10662C17.3039 8.01103 17.5 8.97549 17.5 10C17.5 11.0245 17.3039 11.989 16.9118 12.8934C16.5196 13.7978 15.9779 14.5956 15.2868 15.2868C14.5956 15.9779 13.7978 16.5196 12.8934 16.9118ZM7.56618 15.7647C8.32108 16.0882 9.13235 16.25 10 16.25C10.8676 16.25 11.6801 16.0882 12.4375 15.7647C13.1949 15.4412 13.8591 14.9939 14.4301 14.4228C15.0012 13.8517 15.4473 13.1887 15.7684 12.4338C16.0895 11.6789 16.25 10.8676 16.25 10C16.25 9.13235 16.0882 8.32108 15.7647 7.56618C15.4412 6.81127 14.9926 6.14706 14.4191 5.57353C13.8456 5 13.1814 4.5527 12.4265 4.23162C11.6716 3.91054 10.8603 3.75 9.99265 3.75C9.125 3.75 8.31373 3.91054 7.55882 4.23162C6.80392 4.5527 6.14216 5 5.57353 5.57353C5.0049 6.14706 4.56005 6.81127 4.23897 7.56618C3.91789 8.32108 3.75735 9.13235 3.75735 10C3.75735 10.8676 3.91789 11.6789 4.23897 12.4338C4.56005 13.1887 5.00613 13.8517 5.57721 14.4228C6.14828 14.9939 6.81127 15.4412 7.56618 15.7647ZM8.71324 14.0368H11.7059C11.8578 14.0368 11.9853 13.9877 12.0882 13.8897C12.1912 13.7917 12.2426 13.6691 12.2426 13.5221C12.2426 13.375 12.1912 13.2525 12.0882 13.1544C11.9853 13.0564 11.8578 13.0074 11.7059 13.0074H10.7941V9.26471C10.7941 9.06373 10.7451 8.90319 10.6471 8.78309C10.549 8.66299 10.4069 8.60294 10.2206 8.60294H8.83824C8.68627 8.60294 8.55882 8.65196 8.45588 8.75C8.35294 8.84804 8.30147 8.97059 8.30147 9.11765C8.30147 9.26471 8.35294 9.38725 8.45588 9.48529C8.55882 9.58333 8.68627 9.63235 8.83824 9.63235H9.625V13.0074H8.71324C8.56127 13.0074 8.43382 13.0564 8.33088 13.1544C8.22794 13.2525 8.17647 13.375 8.17647 13.5221C8.17647 13.6691 8.22794 13.7917 8.33088 13.8897C8.43382 13.9877 8.56127 14.0368 8.71324 14.0368ZM10.614 7.09559C10.4301 7.28186 10.2034 7.375 9.93382 7.375C9.66912 7.375 9.44363 7.28186 9.25735 7.09559C9.07108 6.90931 8.97794 6.68382 8.97794 6.41912C8.97794 6.14951 9.07108 5.92157 9.25735 5.73529C9.44363 5.54902 9.66912 5.45588 9.93382 5.45588C10.2034 5.45588 10.4301 5.54902 10.614 5.73529C10.7978 5.92157 10.8897 6.14951 10.8897 6.41912C10.8897 6.68382 10.7978 6.90931 10.614 7.09559Z"
 										fill="CurrentColor"
 									/>
-								</svg>
+								</svg> */}
 								{/* <svg
 									width="20"
 									height="20"
@@ -2362,7 +2450,7 @@ const CompanyCreate: React.FC = () => {
 						<Row
 							className={`items-center mt-[17px] text-[#808080] hover:text-[#f2f2f2] transition-all`}>
 							<Label className={`mr-[4px]`} text="Ключевые фразы" />
-							<svg
+							{/* <svg
 								className="cursor-pointer"
 								width="16"
 								height="16"
@@ -2375,7 +2463,7 @@ const CompanyCreate: React.FC = () => {
 									d="M10.3147 13.5294C9.59118 13.8431 8.81961 14 8 14C7.18039 14 6.40882 13.8431 5.68529 13.5294C4.96176 13.2157 4.32353 12.7824 3.77059 12.2294C3.21765 11.6765 2.78431 11.0382 2.47059 10.3147C2.15686 9.59118 2 8.81961 2 8C2 7.18039 2.15686 6.40882 2.47059 5.68529C2.78431 4.96176 3.21667 4.32353 3.76765 3.77059C4.31863 3.21765 4.95588 2.78431 5.67941 2.47059C6.40294 2.15686 7.17451 2 7.99412 2C8.81373 2 9.58627 2.15686 10.3118 2.47059C11.0373 2.78431 11.6765 3.21765 12.2294 3.77059C12.7824 4.32353 13.2157 4.96176 13.5294 5.68529C13.8431 6.40882 14 7.18039 14 8C14 8.81961 13.8431 9.59118 13.5294 10.3147C13.2157 11.0382 12.7824 11.6765 12.2294 12.2294C11.6765 12.7824 11.0382 13.2157 10.3147 13.5294ZM6.05294 12.6118C6.65686 12.8706 7.30588 13 8 13C8.69412 13 9.34412 12.8706 9.95 12.6118C10.5559 12.3529 11.0873 11.9951 11.5441 11.5382C12.001 11.0814 12.3578 10.551 12.6147 9.94706C12.8716 9.34314 13 8.69412 13 8C13 7.30588 12.8706 6.65686 12.6118 6.05294C12.3529 5.44902 11.9941 4.91765 11.5353 4.45882C11.0765 4 10.5451 3.64216 9.94118 3.38529C9.33726 3.12843 8.68824 3 7.99412 3C7.3 3 6.65098 3.12843 6.04706 3.38529C5.44314 3.64216 4.91373 4 4.45882 4.45882C4.00392 4.91765 3.64804 5.44902 3.39118 6.05294C3.13431 6.65686 3.00588 7.30588 3.00588 8C3.00588 8.69412 3.13431 9.34314 3.39118 9.94706C3.64804 10.551 4.0049 11.0814 4.46176 11.5382C4.91863 11.9951 5.44902 12.3529 6.05294 12.6118ZM6.97059 11.2294H9.36471C9.48627 11.2294 9.58823 11.1902 9.67059 11.1118C9.75294 11.0333 9.79412 10.9353 9.79412 10.8176C9.79412 10.7 9.75294 10.602 9.67059 10.5235C9.58823 10.4451 9.48627 10.4059 9.36471 10.4059H8.63529V7.41176C8.63529 7.25098 8.59608 7.12255 8.51765 7.02647C8.43922 6.93039 8.32549 6.88235 8.17647 6.88235H7.07059C6.94902 6.88235 6.84706 6.92157 6.76471 7C6.68235 7.07843 6.64118 7.17647 6.64118 7.29412C6.64118 7.41176 6.68235 7.5098 6.76471 7.58824C6.84706 7.66667 6.94902 7.70588 7.07059 7.70588H7.7V10.4059H6.97059C6.84902 10.4059 6.74706 10.4451 6.66471 10.5235C6.58235 10.602 6.54118 10.7 6.54118 10.8176C6.54118 10.9353 6.58235 11.0333 6.66471 11.1118C6.74706 11.1902 6.84902 11.2294 6.97059 11.2294ZM8.49118 5.67647C8.34412 5.82549 8.16274 5.9 7.94706 5.9C7.73529 5.9 7.5549 5.82549 7.40588 5.67647C7.25686 5.52745 7.18235 5.34706 7.18235 5.13529C7.18235 4.91961 7.25686 4.73725 7.40588 4.58824C7.5549 4.43922 7.73529 4.36471 7.94706 4.36471C8.16274 4.36471 8.34412 4.43922 8.49118 4.58824C8.63824 4.73725 8.71176 4.91961 8.71176 5.13529C8.71176 5.34706 8.63824 5.52745 8.49118 5.67647Z"
 									fill="CurrentColor"
 								/>
-							</svg>
+							</svg> */}
 						</Row>
 
 						<Row
@@ -2491,7 +2579,7 @@ const CompanyCreate: React.FC = () => {
 						<Row
 							className={`items-center mt-[17px] text-[#808080] hover:text-[#f2f2f2] transition-all`}>
 							<Label className={`mr-[4px]`} text="Минус фразы" />
-							<svg
+							{/* <svg
 								className="cursor-pointer"
 								width="16"
 								height="16"
@@ -2504,7 +2592,7 @@ const CompanyCreate: React.FC = () => {
 									d="M10.3147 13.5294C9.59118 13.8431 8.81961 14 8 14C7.18039 14 6.40882 13.8431 5.68529 13.5294C4.96176 13.2157 4.32353 12.7824 3.77059 12.2294C3.21765 11.6765 2.78431 11.0382 2.47059 10.3147C2.15686 9.59118 2 8.81961 2 8C2 7.18039 2.15686 6.40882 2.47059 5.68529C2.78431 4.96176 3.21667 4.32353 3.76765 3.77059C4.31863 3.21765 4.95588 2.78431 5.67941 2.47059C6.40294 2.15686 7.17451 2 7.99412 2C8.81373 2 9.58627 2.15686 10.3118 2.47059C11.0373 2.78431 11.6765 3.21765 12.2294 3.77059C12.7824 4.32353 13.2157 4.96176 13.5294 5.68529C13.8431 6.40882 14 7.18039 14 8C14 8.81961 13.8431 9.59118 13.5294 10.3147C13.2157 11.0382 12.7824 11.6765 12.2294 12.2294C11.6765 12.7824 11.0382 13.2157 10.3147 13.5294ZM6.05294 12.6118C6.65686 12.8706 7.30588 13 8 13C8.69412 13 9.34412 12.8706 9.95 12.6118C10.5559 12.3529 11.0873 11.9951 11.5441 11.5382C12.001 11.0814 12.3578 10.551 12.6147 9.94706C12.8716 9.34314 13 8.69412 13 8C13 7.30588 12.8706 6.65686 12.6118 6.05294C12.3529 5.44902 11.9941 4.91765 11.5353 4.45882C11.0765 4 10.5451 3.64216 9.94118 3.38529C9.33726 3.12843 8.68824 3 7.99412 3C7.3 3 6.65098 3.12843 6.04706 3.38529C5.44314 3.64216 4.91373 4 4.45882 4.45882C4.00392 4.91765 3.64804 5.44902 3.39118 6.05294C3.13431 6.65686 3.00588 7.30588 3.00588 8C3.00588 8.69412 3.13431 9.34314 3.39118 9.94706C3.64804 10.551 4.0049 11.0814 4.46176 11.5382C4.91863 11.9951 5.44902 12.3529 6.05294 12.6118ZM6.97059 11.2294H9.36471C9.48627 11.2294 9.58823 11.1902 9.67059 11.1118C9.75294 11.0333 9.79412 10.9353 9.79412 10.8176C9.79412 10.7 9.75294 10.602 9.67059 10.5235C9.58823 10.4451 9.48627 10.4059 9.36471 10.4059H8.63529V7.41176C8.63529 7.25098 8.59608 7.12255 8.51765 7.02647C8.43922 6.93039 8.32549 6.88235 8.17647 6.88235H7.07059C6.94902 6.88235 6.84706 6.92157 6.76471 7C6.68235 7.07843 6.64118 7.17647 6.64118 7.29412C6.64118 7.41176 6.68235 7.5098 6.76471 7.58824C6.84706 7.66667 6.94902 7.70588 7.07059 7.70588H7.7V10.4059H6.97059C6.84902 10.4059 6.74706 10.4451 6.66471 10.5235C6.58235 10.602 6.54118 10.7 6.54118 10.8176C6.54118 10.9353 6.58235 11.0333 6.66471 11.1118C6.74706 11.1902 6.84902 11.2294 6.97059 11.2294ZM8.49118 5.67647C8.34412 5.82549 8.16274 5.9 7.94706 5.9C7.73529 5.9 7.5549 5.82549 7.40588 5.67647C7.25686 5.52745 7.18235 5.34706 7.18235 5.13529C7.18235 4.91961 7.25686 4.73725 7.40588 4.58824C7.5549 4.43922 7.73529 4.36471 7.94706 4.36471C8.16274 4.36471 8.34412 4.43922 8.49118 4.58824C8.63824 4.73725 8.71176 4.91961 8.71176 5.13529C8.71176 5.34706 8.63824 5.52745 8.49118 5.67647Z"
 									fill="CurrentColor"
 								/>
-							</svg>
+							</svg> */}
 						</Row>
 						<Row
 							width="528px"
@@ -2734,107 +2822,68 @@ const CompanyCreate: React.FC = () => {
 						<div className={`mb-[32px] w-[528px] float-right `}>
 							<Row width="auto" className={`items-center float-right`}>
 								<BlueLabel
+									style={{
+										color: `${
+											switchCreate_comp === 3 &&
+											switchCreate_audi === 3 &&
+											switchCreate_banner === 3 ? '' :
+											'#808080'
+										}`,
+									}}
 									className={`float-right mr-[24px] cursor-pointer`}
 									text="Сохранить и выйти"
 									onClick={
 										() => {
-											
-											
-											if (cName && cLink && cDateStart && cDateEnd && cTarget && cWeekBudget) {
-												window.localStorage.setItem(
-													'create_temp',
-													JSON.stringify([
-														{
-															cName: cName,
-															cLink: cLink,
-															cSettingsLink: cSettingsLink,
-															cDateStart: cDateStart,
-															cDateEnd: cDateEnd,
-															cTarget: cTarget,
-															cWeekBudget: cWeekBudget,
-															cKeyWord: cKeyWord,
-															cKeyWordDel: cKeyWordDel,
-															banShowArray: banShowArray,
-														},
-														{
-															aName: aName,
-															aGeography: aGeography,
-															// aFavor: aFavor,
-															aDevice: aDevice,
-															GenderNAgeObject: GenderNAgeObject,
-														},
-														{
-															bName: bName,
-															bLink: bLink,
-															// bOptionDescription: bOptionDescription,
-															titleArray: titleArray,
-															descrArray: descrArray,
-															bVideo: bVideo,
-															bAudio: bAudio,
-															bImg: images,
-															bUnvirfied: bUnvirfied,
-														},
-														{
-															images: images,
-														},
-													]),
-												)
+											if (
+												switchCreate_comp === 3 &&
+										switchCreate_audi === 3 &&
+										switchCreate_banner === 3
+											) {
+												
+												// window.localStorage.setItem(
+												// 	'create_temp',
+												// 	JSON.stringify([
+												// 		{
+												// 			cName: cName,
+												// 			cLink: cLink,
+												// 			cSettingsLink: cSettingsLink,
+												// 			cDateStart: cDateStart,
+												// 			cDateEnd: cDateEnd,
+												// 			cTarget: cTarget,
+												// 			cWeekBudget: cWeekBudget,
+												// 			cKeyWord: cKeyWord,
+												// 			cKeyWordDel: cKeyWordDel,
+												// 			banShowArray: banShowArray,
+												// 		},
+												// 		{
+												// 			aName: aName,
+												// 			aGeography: aGeography,
+												// 			// aFavor: aFavor,
+												// 			aDevice: aDevice,
+												// 			GenderNAgeObject: GenderNAgeObject,
+												// 		},
+												// 		{
+												// 			bName: bName,
+												// 			bLink: bLink,
+												// 			// bOptionDescription: bOptionDescription,
+												// 			titleArray: titleArray,
+												// 			descrArray: descrArray,
+												// 			bVideo: bVideo,
+												// 			bAudio: bAudio,
+												// 			bImg: images,
+												// 			bUnvirfied: bUnvirfied,
+												// 		},
+												// 		{
+												// 			images: images,
+												// 		},
+												// 	]),
+												// )
+												sendData()
+												window.location.reload()
 												navigate('/')
 											}
-											switch (true) {
-												case !cName:
-													setStepCompany((prevStepCompany) =>
-														prevStepCompany.map((step) =>
-															step.title === 'Название компании*'
-																? {...step, isError: true}
-																: step,
-														),
-													)
-													setCNameError('Введите название компании')
-	
-												case !cLink:
-													setStepCompany((prevStepCompany) =>
-														prevStepCompany.map((step) =>
-															step.title === 'Ссылка на рекламируемую страницу*'
-																? {...step, isError: true}
-																: step,
-														),
-													)
-													setCLinkError(
-														'Введите ссылку на рекламируемую страницу',
-													)
-	
-												case !cDateStart:
-												case !cDateEnd:
-													setStepCompany((prevStepCompany) =>
-														prevStepCompany.map((step) =>
-															step.title === 'Начало и окончание компании*'
-																? {...step, isError: true}
-																: step,
-														),
-													)
-												
-												case !cWeekBudget:
-													setStepCompany((prevStepCompany) =>
-														prevStepCompany.map((step) =>
-															step.title === 'Дневной бюджет'
-																? {...step, isError: true}
-																: step,
-														),
-													)
-													setCWeekBudError('Введите дневной бюджет')
-												case !cTarget:
-													setStepCompany((prevStepCompany) =>
-														prevStepCompany.map((step) =>
-															step.title === 'Цель*'
-																? {...step, isError: true}
-																: step,
-														),
-													)
-													break
-												default:
-												// Handle default case
-											}
+
+											errorCompany()
 										}
 										// 	setGlobalState({
 										// Company: {
@@ -2875,13 +2924,21 @@ const CompanyCreate: React.FC = () => {
 								/>
 								<BlueButton
 									onClick={() => {
-										if (cName && cLink && cDateStart && cDateEnd && cTarget && cWeekBudget) {
+										if (
+											cName &&
+											cLink &&
+											cDateStart &&
+											cDateEnd &&
+											cTarget &&
+											cWeekBudget
+										) {
 											dispatch({
 												type: 'setSwitchCreatePage',
 												SwitchCreatePage: 2,
 											})
 										}
-										if (!cName) {
+
+										if (!!!cName) {
 											setStepCompany((prevStepCompany) =>
 												prevStepCompany.map((step) =>
 													step.title === 'Название компании*'
@@ -2891,8 +2948,8 @@ const CompanyCreate: React.FC = () => {
 											)
 											setCNameError('Введите название компании')
 										}
-										
-										if (!cLink) {
+
+										if (!!!cLink) {
 											setStepCompany((prevStepCompany) =>
 												prevStepCompany.map((step) =>
 													step.title === 'Ссылка на рекламируемую страницу*'
@@ -2902,8 +2959,12 @@ const CompanyCreate: React.FC = () => {
 											)
 											setCLinkError('Введите ссылку на рекламируемую страницу')
 										}
-										
-										if (!cDateStart || !cDateEnd) {
+
+										if (
+											cDateEnd === 'Invalid Date' ||
+											cDateEnd === 'Указать' ||
+											!!!cDateEnd
+										) {
 											setStepCompany((prevStepCompany) =>
 												prevStepCompany.map((step) =>
 													step.title === 'Начало и окончание компании*'
@@ -2911,9 +2972,10 @@ const CompanyCreate: React.FC = () => {
 														: step,
 												),
 											)
+											setCDateError('Введите дату начала и окончания компании')
 										}
-										
-										if (!cTarget) {
+
+										if (!!!cTarget) {
 											setStepCompany((prevStepCompany) =>
 												prevStepCompany.map((step) =>
 													step.title === 'Цель*'
@@ -2921,10 +2983,10 @@ const CompanyCreate: React.FC = () => {
 														: step,
 												),
 											)
-											console.log('target', cWeekBudget);
+											setCTargetError('Введите цель')
 										}
-										
-										if (!cWeekBudget) {
+
+										if (!!!cWeekBudget) {
 											setStepCompany((prevStepCompany) =>
 												prevStepCompany.map((step) =>
 													step.title === 'Дневной бюджет'
@@ -2964,6 +3026,7 @@ const CompanyCreate: React.FC = () => {
 												: step,
 										),
 									)
+									dispatch({type: 'setSwitchCreate_audi', SwitchCreate_audi: 3})
 								} else {
 									setStepAudi((prevStepAudi) =>
 										prevStepAudi.map((step) =>
@@ -2988,7 +3051,7 @@ const CompanyCreate: React.FC = () => {
 									text="География показов"
 									size="16px"
 								/>
-								<svg
+								{/* <svg
 									className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
 									xmlns="http://www.w3.org/2000/svg"
 									width="20"
@@ -3001,7 +3064,7 @@ const CompanyCreate: React.FC = () => {
 										d="M12.8934 16.9118C11.989 17.3039 11.0245 17.5 10 17.5C8.97549 17.5 8.01103 17.3039 7.10662 16.9118C6.20221 16.5196 5.40441 15.9779 4.71324 15.2868C4.02206 14.5956 3.48039 13.7978 3.08824 12.8934C2.69608 11.989 2.5 11.0245 2.5 10C2.5 8.97549 2.69608 8.01103 3.08824 7.10662C3.48039 6.20221 4.02083 5.40441 4.70956 4.71324C5.39828 4.02206 6.19485 3.48039 7.09926 3.08824C8.00368 2.69608 8.96814 2.5 9.99265 2.5C11.0172 2.5 11.9828 2.69608 12.8897 3.08824C13.7966 3.48039 14.5956 4.02206 15.2868 4.71324C15.9779 5.40441 16.5196 6.20221 16.9118 7.10662C17.3039 8.01103 17.5 8.97549 17.5 10C17.5 11.0245 17.3039 11.989 16.9118 12.8934C16.5196 13.7978 15.9779 14.5956 15.2868 15.2868C14.5956 15.9779 13.7978 16.5196 12.8934 16.9118ZM7.56618 15.7647C8.32108 16.0882 9.13235 16.25 10 16.25C10.8676 16.25 11.6801 16.0882 12.4375 15.7647C13.1949 15.4412 13.8591 14.9939 14.4301 14.4228C15.0012 13.8517 15.4473 13.1887 15.7684 12.4338C16.0895 11.6789 16.25 10.8676 16.25 10C16.25 9.13235 16.0882 8.32108 15.7647 7.56618C15.4412 6.81127 14.9926 6.14706 14.4191 5.57353C13.8456 5 13.1814 4.5527 12.4265 4.23162C11.6716 3.91054 10.8603 3.75 9.99265 3.75C9.125 3.75 8.31373 3.91054 7.55882 4.23162C6.80392 4.5527 6.14216 5 5.57353 5.57353C5.0049 6.14706 4.56005 6.81127 4.23897 7.56618C3.91789 8.32108 3.75735 9.13235 3.75735 10C3.75735 10.8676 3.91789 11.6789 4.23897 12.4338C4.56005 13.1887 5.00613 13.8517 5.57721 14.4228C6.14828 14.9939 6.81127 15.4412 7.56618 15.7647ZM8.71324 14.0368H11.7059C11.8578 14.0368 11.9853 13.9877 12.0882 13.8897C12.1912 13.7917 12.2426 13.6691 12.2426 13.5221C12.2426 13.375 12.1912 13.2525 12.0882 13.1544C11.9853 13.0564 11.8578 13.0074 11.7059 13.0074H10.7941V9.26471C10.7941 9.06373 10.7451 8.90319 10.6471 8.78309C10.549 8.66299 10.4069 8.60294 10.2206 8.60294H8.83824C8.68627 8.60294 8.55882 8.65196 8.45588 8.75C8.35294 8.84804 8.30147 8.97059 8.30147 9.11765C8.30147 9.26471 8.35294 9.38725 8.45588 9.48529C8.55882 9.58333 8.68627 9.63235 8.83824 9.63235H9.625V13.0074H8.71324C8.56127 13.0074 8.43382 13.0564 8.33088 13.1544C8.22794 13.2525 8.17647 13.375 8.17647 13.5221C8.17647 13.6691 8.22794 13.7917 8.33088 13.8897C8.43382 13.9877 8.56127 14.0368 8.71324 14.0368ZM10.614 7.09559C10.4301 7.28186 10.2034 7.375 9.93382 7.375C9.66912 7.375 9.44363 7.28186 9.25735 7.09559C9.07108 6.90931 8.97794 6.68382 8.97794 6.41912C8.97794 6.14951 9.07108 5.92157 9.25735 5.73529C9.44363 5.54902 9.66912 5.45588 9.93382 5.45588C10.2034 5.45588 10.4301 5.54902 10.614 5.73529C10.7978 5.92157 10.8897 6.14951 10.8897 6.41912C10.8897 6.68382 10.7978 6.90931 10.614 7.09559Z"
 										fill="CurrentColor"
 									/>
-								</svg>
+								</svg> */}
 							</Row>
 							<Row width="528px" className="w-[528px] flex justify-between">
 								<Chips
@@ -3111,7 +3174,7 @@ const CompanyCreate: React.FC = () => {
 						{/* DO IT */}
 						<Row width="528px" className={s.RowTitle}>
 							<WhiteLabel className={'mr-1'} text="Интересы" size="16px" />
-							<svg
+							{/* <svg
 								className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
 								xmlns="http://www.w3.org/2000/svg"
 								width="20"
@@ -3124,30 +3187,33 @@ const CompanyCreate: React.FC = () => {
 									d="M12.8934 16.9118C11.989 17.3039 11.0245 17.5 10 17.5C8.97549 17.5 8.01103 17.3039 7.10662 16.9118C6.20221 16.5196 5.40441 15.9779 4.71324 15.2868C4.02206 14.5956 3.48039 13.7978 3.08824 12.8934C2.69608 11.989 2.5 11.0245 2.5 10C2.5 8.97549 2.69608 8.01103 3.08824 7.10662C3.48039 6.20221 4.02083 5.40441 4.70956 4.71324C5.39828 4.02206 6.19485 3.48039 7.09926 3.08824C8.00368 2.69608 8.96814 2.5 9.99265 2.5C11.0172 2.5 11.9828 2.69608 12.8897 3.08824C13.7966 3.48039 14.5956 4.02206 15.2868 4.71324C15.9779 5.40441 16.5196 6.20221 16.9118 7.10662C17.3039 8.01103 17.5 8.97549 17.5 10C17.5 11.0245 17.3039 11.989 16.9118 12.8934C16.5196 13.7978 15.9779 14.5956 15.2868 15.2868C14.5956 15.9779 13.7978 16.5196 12.8934 16.9118ZM7.56618 15.7647C8.32108 16.0882 9.13235 16.25 10 16.25C10.8676 16.25 11.6801 16.0882 12.4375 15.7647C13.1949 15.4412 13.8591 14.9939 14.4301 14.4228C15.0012 13.8517 15.4473 13.1887 15.7684 12.4338C16.0895 11.6789 16.25 10.8676 16.25 10C16.25 9.13235 16.0882 8.32108 15.7647 7.56618C15.4412 6.81127 14.9926 6.14706 14.4191 5.57353C13.8456 5 13.1814 4.5527 12.4265 4.23162C11.6716 3.91054 10.8603 3.75 9.99265 3.75C9.125 3.75 8.31373 3.91054 7.55882 4.23162C6.80392 4.5527 6.14216 5 5.57353 5.57353C5.0049 6.14706 4.56005 6.81127 4.23897 7.56618C3.91789 8.32108 3.75735 9.13235 3.75735 10C3.75735 10.8676 3.91789 11.6789 4.23897 12.4338C4.56005 13.1887 5.00613 13.8517 5.57721 14.4228C6.14828 14.9939 6.81127 15.4412 7.56618 15.7647ZM8.71324 14.0368H11.7059C11.8578 14.0368 11.9853 13.9877 12.0882 13.8897C12.1912 13.7917 12.2426 13.6691 12.2426 13.5221C12.2426 13.375 12.1912 13.2525 12.0882 13.1544C11.9853 13.0564 11.8578 13.0074 11.7059 13.0074H10.7941V9.26471C10.7941 9.06373 10.7451 8.90319 10.6471 8.78309C10.549 8.66299 10.4069 8.60294 10.2206 8.60294H8.83824C8.68627 8.60294 8.55882 8.65196 8.45588 8.75C8.35294 8.84804 8.30147 8.97059 8.30147 9.11765C8.30147 9.26471 8.35294 9.38725 8.45588 9.48529C8.55882 9.58333 8.68627 9.63235 8.83824 9.63235H9.625V13.0074H8.71324C8.56127 13.0074 8.43382 13.0564 8.33088 13.1544C8.22794 13.2525 8.17647 13.375 8.17647 13.5221C8.17647 13.6691 8.22794 13.7917 8.33088 13.8897C8.43382 13.9877 8.56127 14.0368 8.71324 14.0368ZM10.614 7.09559C10.4301 7.28186 10.2034 7.375 9.93382 7.375C9.66912 7.375 9.44363 7.28186 9.25735 7.09559C9.07108 6.90931 8.97794 6.68382 8.97794 6.41912C8.97794 6.14951 9.07108 5.92157 9.25735 5.73529C9.44363 5.54902 9.66912 5.45588 9.93382 5.45588C10.2034 5.45588 10.4301 5.54902 10.614 5.73529C10.7978 5.92157 10.8897 6.14951 10.8897 6.41912C10.8897 6.68382 10.7978 6.90931 10.614 7.09559Z"
 									fill="CurrentColor"
 								/>
-							</svg>
+							</svg> */}
 						</Row>
 						{/* Ex Categories , Now Interes */}
-						<TreeSelectCustom setValueFunction={(newCheckedValues) => {
-							setCategories(newCheckedValues)
-							setStepAudi((prevStepAudi) =>
-								prevStepAudi.map((step) =>
-									step.title === 'Интересы'
-										? {...step, isDone: true}
-										: step,
-								),
-							)
-							if (Object.values(newCheckedValues).every(value => value === false)) {
+						<TreeSelectCustom
+							setValueFunction={(newCheckedValues) => {
+								setCategories(newCheckedValues)
 								setStepAudi((prevStepAudi) =>
-								prevStepAudi.map((step) =>
-									step.title === 'Интересы'
-										? {...step, isDone: false}
-										: step,
-								),
-							)
-							}
-							
-							
-						}} options={op} />
+									prevStepAudi.map((step) =>
+										step.title === 'Интересы' ? {...step, isDone: true} : step,
+									),
+								)
+								if (
+									Object.values(newCheckedValues).every(
+										(value) => value === false,
+									)
+								) {
+									setStepAudi((prevStepAudi) =>
+										prevStepAudi.map((step) =>
+											step.title === 'Интересы'
+												? {...step, isDone: false}
+												: step,
+										),
+									)
+								}
+							}}
+							options={op}
+						/>
 
 						<Line width="528px" className={s.Line} />
 
@@ -3274,7 +3340,7 @@ const CompanyCreate: React.FC = () => {
 
 						<Row width="528px" className={s.RowTitle}>
 							<WhiteLabel className={'mr-1'} text="Устройства" size="16px" />
-							<svg
+							{/* <svg
 								className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
 								xmlns="http://www.w3.org/2000/svg"
 								width="20"
@@ -3287,7 +3353,7 @@ const CompanyCreate: React.FC = () => {
 									d="M12.8934 16.9118C11.989 17.3039 11.0245 17.5 10 17.5C8.97549 17.5 8.01103 17.3039 7.10662 16.9118C6.20221 16.5196 5.40441 15.9779 4.71324 15.2868C4.02206 14.5956 3.48039 13.7978 3.08824 12.8934C2.69608 11.989 2.5 11.0245 2.5 10C2.5 8.97549 2.69608 8.01103 3.08824 7.10662C3.48039 6.20221 4.02083 5.40441 4.70956 4.71324C5.39828 4.02206 6.19485 3.48039 7.09926 3.08824C8.00368 2.69608 8.96814 2.5 9.99265 2.5C11.0172 2.5 11.9828 2.69608 12.8897 3.08824C13.7966 3.48039 14.5956 4.02206 15.2868 4.71324C15.9779 5.40441 16.5196 6.20221 16.9118 7.10662C17.3039 8.01103 17.5 8.97549 17.5 10C17.5 11.0245 17.3039 11.989 16.9118 12.8934C16.5196 13.7978 15.9779 14.5956 15.2868 15.2868C14.5956 15.9779 13.7978 16.5196 12.8934 16.9118ZM7.56618 15.7647C8.32108 16.0882 9.13235 16.25 10 16.25C10.8676 16.25 11.6801 16.0882 12.4375 15.7647C13.1949 15.4412 13.8591 14.9939 14.4301 14.4228C15.0012 13.8517 15.4473 13.1887 15.7684 12.4338C16.0895 11.6789 16.25 10.8676 16.25 10C16.25 9.13235 16.0882 8.32108 15.7647 7.56618C15.4412 6.81127 14.9926 6.14706 14.4191 5.57353C13.8456 5 13.1814 4.5527 12.4265 4.23162C11.6716 3.91054 10.8603 3.75 9.99265 3.75C9.125 3.75 8.31373 3.91054 7.55882 4.23162C6.80392 4.5527 6.14216 5 5.57353 5.57353C5.0049 6.14706 4.56005 6.81127 4.23897 7.56618C3.91789 8.32108 3.75735 9.13235 3.75735 10C3.75735 10.8676 3.91789 11.6789 4.23897 12.4338C4.56005 13.1887 5.00613 13.8517 5.57721 14.4228C6.14828 14.9939 6.81127 15.4412 7.56618 15.7647ZM8.71324 14.0368H11.7059C11.8578 14.0368 11.9853 13.9877 12.0882 13.8897C12.1912 13.7917 12.2426 13.6691 12.2426 13.5221C12.2426 13.375 12.1912 13.2525 12.0882 13.1544C11.9853 13.0564 11.8578 13.0074 11.7059 13.0074H10.7941V9.26471C10.7941 9.06373 10.7451 8.90319 10.6471 8.78309C10.549 8.66299 10.4069 8.60294 10.2206 8.60294H8.83824C8.68627 8.60294 8.55882 8.65196 8.45588 8.75C8.35294 8.84804 8.30147 8.97059 8.30147 9.11765C8.30147 9.26471 8.35294 9.38725 8.45588 9.48529C8.55882 9.58333 8.68627 9.63235 8.83824 9.63235H9.625V13.0074H8.71324C8.56127 13.0074 8.43382 13.0564 8.33088 13.1544C8.22794 13.2525 8.17647 13.375 8.17647 13.5221C8.17647 13.6691 8.22794 13.7917 8.33088 13.8897C8.43382 13.9877 8.56127 14.0368 8.71324 14.0368ZM10.614 7.09559C10.4301 7.28186 10.2034 7.375 9.93382 7.375C9.66912 7.375 9.44363 7.28186 9.25735 7.09559C9.07108 6.90931 8.97794 6.68382 8.97794 6.41912C8.97794 6.14951 9.07108 5.92157 9.25735 5.73529C9.44363 5.54902 9.66912 5.45588 9.93382 5.45588C10.2034 5.45588 10.4301 5.54902 10.614 5.73529C10.7978 5.92157 10.8897 6.14951 10.8897 6.41912C10.8897 6.68382 10.7978 6.90931 10.614 7.09559Z"
 									fill="CurrentColor"
 								/>
-							</svg>
+							</svg> */}
 						</Row>
 						<Row width="528px" className="w-[528px] flex justify-between">
 							<Chips
@@ -3395,7 +3461,7 @@ const CompanyCreate: React.FC = () => {
 
 						<Row width="528px" className={s.RowTitle}>
 							<WhiteLabel className={'mr-1'} text="Пол и возраст" size="16px" />
-							<svg
+							{/* <svg
 								className="cursor-pointer text-[#808080] hover:text-[#f2f2f2] transition-all"
 								xmlns="http://www.w3.org/2000/svg"
 								width="20"
@@ -3408,7 +3474,7 @@ const CompanyCreate: React.FC = () => {
 									d="M12.8934 16.9118C11.989 17.3039 11.0245 17.5 10 17.5C8.97549 17.5 8.01103 17.3039 7.10662 16.9118C6.20221 16.5196 5.40441 15.9779 4.71324 15.2868C4.02206 14.5956 3.48039 13.7978 3.08824 12.8934C2.69608 11.989 2.5 11.0245 2.5 10C2.5 8.97549 2.69608 8.01103 3.08824 7.10662C3.48039 6.20221 4.02083 5.40441 4.70956 4.71324C5.39828 4.02206 6.19485 3.48039 7.09926 3.08824C8.00368 2.69608 8.96814 2.5 9.99265 2.5C11.0172 2.5 11.9828 2.69608 12.8897 3.08824C13.7966 3.48039 14.5956 4.02206 15.2868 4.71324C15.9779 5.40441 16.5196 6.20221 16.9118 7.10662C17.3039 8.01103 17.5 8.97549 17.5 10C17.5 11.0245 17.3039 11.989 16.9118 12.8934C16.5196 13.7978 15.9779 14.5956 15.2868 15.2868C14.5956 15.9779 13.7978 16.5196 12.8934 16.9118ZM7.56618 15.7647C8.32108 16.0882 9.13235 16.25 10 16.25C10.8676 16.25 11.6801 16.0882 12.4375 15.7647C13.1949 15.4412 13.8591 14.9939 14.4301 14.4228C15.0012 13.8517 15.4473 13.1887 15.7684 12.4338C16.0895 11.6789 16.25 10.8676 16.25 10C16.25 9.13235 16.0882 8.32108 15.7647 7.56618C15.4412 6.81127 14.9926 6.14706 14.4191 5.57353C13.8456 5 13.1814 4.5527 12.4265 4.23162C11.6716 3.91054 10.8603 3.75 9.99265 3.75C9.125 3.75 8.31373 3.91054 7.55882 4.23162C6.80392 4.5527 6.14216 5 5.57353 5.57353C5.0049 6.14706 4.56005 6.81127 4.23897 7.56618C3.91789 8.32108 3.75735 9.13235 3.75735 10C3.75735 10.8676 3.91789 11.6789 4.23897 12.4338C4.56005 13.1887 5.00613 13.8517 5.57721 14.4228C6.14828 14.9939 6.81127 15.4412 7.56618 15.7647ZM8.71324 14.0368H11.7059C11.8578 14.0368 11.9853 13.9877 12.0882 13.8897C12.1912 13.7917 12.2426 13.6691 12.2426 13.5221C12.2426 13.375 12.1912 13.2525 12.0882 13.1544C11.9853 13.0564 11.8578 13.0074 11.7059 13.0074H10.7941V9.26471C10.7941 9.06373 10.7451 8.90319 10.6471 8.78309C10.549 8.66299 10.4069 8.60294 10.2206 8.60294H8.83824C8.68627 8.60294 8.55882 8.65196 8.45588 8.75C8.35294 8.84804 8.30147 8.97059 8.30147 9.11765C8.30147 9.26471 8.35294 9.38725 8.45588 9.48529C8.55882 9.58333 8.68627 9.63235 8.83824 9.63235H9.625V13.0074H8.71324C8.56127 13.0074 8.43382 13.0564 8.33088 13.1544C8.22794 13.2525 8.17647 13.375 8.17647 13.5221C8.17647 13.6691 8.22794 13.7917 8.33088 13.8897C8.43382 13.9877 8.56127 14.0368 8.71324 14.0368ZM10.614 7.09559C10.4301 7.28186 10.2034 7.375 9.93382 7.375C9.66912 7.375 9.44363 7.28186 9.25735 7.09559C9.07108 6.90931 8.97794 6.68382 8.97794 6.41912C8.97794 6.14951 9.07108 5.92157 9.25735 5.73529C9.44363 5.54902 9.66912 5.45588 9.93382 5.45588C10.2034 5.45588 10.4301 5.54902 10.614 5.73529C10.7978 5.92157 10.8897 6.14951 10.8897 6.41912C10.8897 6.68382 10.7978 6.90931 10.614 7.09559Z"
 									fill="CurrentColor"
 								/>
-							</svg>
+							</svg> */}
 						</Row>
 
 						<Row width="528px" className={`mt-0 justify-between`}>
@@ -3477,17 +3543,26 @@ const CompanyCreate: React.FC = () => {
 									</Row>
 									<div
 										className="h-[36px] ml-[8px] bg-[#4169E1] rounded-[10px] w-[36px] flex justify-center items-center cursor-pointer"
-										onClick={() =>
-											setGenderNAgeObject((prevArray) => [
-												...prevArray,
-												{
-													id: `GenderAge-${generateUniqueId()}`,
-													male: Gender ? 'Мужской' : 'Женский',
-													from: AgeFrom,
-													to: AgeTo,
-												},
-											])
-										}>
+										onClick={() => {
+											if (Number(AgeFrom) < Number(AgeTo)) {
+												setGenderNAgeObject((prevArray) => [
+													...prevArray,
+													{
+														id: `GenderAge-${generateUniqueId()}`,
+														male: Gender ? 'Мужской' : 'Женский',
+														from: AgeFrom,
+														to: AgeTo,
+													},
+												])
+												setStepAudi((prevStepAudi) =>
+													prevStepAudi.map((step) =>
+														step.title === 'Пол и возраст'
+															? {...step, isDone: true}
+															: step,
+													),
+										)
+											}
+										}}>
 										<svg
 											width="24"
 											height="24"
@@ -3534,6 +3609,14 @@ const CompanyCreate: React.FC = () => {
 												setGenderNAgeObject(
 													GenderNAgeObject.filter((obj) => obj.id !== file.id),
 												)
+												if (GenderNAgeObject.length === 1) {
+													setStepAudi((prevStepAudi) =>
+													prevStepAudi.map((step) =>
+														step.title === 'Пол и возраст'
+															? {...step, isDone: false}
+															: step,
+													),)
+												}
 											}}
 											width="16"
 											height="16"
@@ -3554,51 +3637,61 @@ const CompanyCreate: React.FC = () => {
 						<div className={`mb-[32px] w-[528px] float-right `}>
 							<Row width="auto" className={`items-center float-right`}>
 								<BlueLabel
+								style={{
+									color: `${
+										switchCreate_comp === 3 &&
+										switchCreate_audi === 3 &&
+										switchCreate_banner === 3 ? '' :
+										'#808080'
+									}`,
+								}}
 									className={`float-right mr-[24px] cursor-pointer`}
 									text="Сохранить и выйти"
 									onClick={() => {
-										console.log('oADJGSKDFBJKSFBKSFHMskf')
 
-										
-										if (aName) {
-											window.localStorage.setItem(
-												'create_temp',
-												JSON.stringify([
-													{
-														cName: cName,
-														cLink: cLink,
-														cSettingsLink: cSettingsLink,
-														cDateStart: cDateStart,
-														cDateEnd: cDateEnd,
-														cTarget: cTarget,
-														cWeekBudget: cWeekBudget,
-														cKeyWord: cKeyWord,
-														cKeyWordDel: cKeyWordDel,
-														banShowArray: banShowArray,
-													},
-													{
-														aName: aName,
-														aGeography: aGeography,
-														// aFavor: aFavor,
-														aDevice: aDevice,
-														GenderNAgeObject: GenderNAgeObject,
-													},
-													{
-														bName: bName,
-														bLink: bLink,
-														// bOptionDescription: bOptionDescription,
-														titleArray: titleArray,
-														descrArray: descrArray,
-														bVideo: bVideo,
-														bAudio: bAudio,
-														bImg: images,
-														bUnvirfied: bUnvirfied,
-													},
-													{
-														images: images,
-													},
-												]),
-											)
+										if (switchCreate_comp === 3 &&
+											switchCreate_audi === 3 &&
+											switchCreate_banner === 3) {
+											// window.localStorage.setItem(
+											// 	'create_temp',
+											// 	JSON.stringify([
+											// 		{
+											// 			cName: cName,
+											// 			cLink: cLink,
+											// 			cSettingsLink: cSettingsLink,
+											// 			cDateStart: cDateStart,
+											// 			cDateEnd: cDateEnd,
+											// 			cTarget: cTarget,
+											// 			cWeekBudget: cWeekBudget,
+											// 			cKeyWord: cKeyWord,
+											// 			cKeyWordDel: cKeyWordDel,
+											// 			banShowArray: banShowArray,
+											// 		},
+											// 		{
+											// 			aName: aName,
+											// 			aGeography: aGeography,
+											// 			// aFavor: aFavor,
+											// 			aDevice: aDevice,
+											// 			GenderNAgeObject: GenderNAgeObject,
+											// 		},
+											// 		{
+											// 			bName: bName,
+											// 			bLink: bLink,
+											// 			// bOptionDescription: bOptionDescription,
+											// 			titleArray: titleArray,
+											// 			descrArray: descrArray,
+											// 			bVideo: bVideo,
+											// 			bAudio: bAudio,
+											// 			bImg: images,
+											// 			bUnvirfied: bUnvirfied,
+											// 		},
+											// 		{
+											// 			images: images,
+											// 		},
+											// 	]),
+											// )
+											sendData()
+											window.location.reload()
 											navigate('/')
 										}
 										switch (true) {
@@ -3664,6 +3757,8 @@ const CompanyCreate: React.FC = () => {
 												: step,
 										),
 									)
+									dispatch({type: 'setSwitchCreate_banner', SwitchCreate_banner: 3})
+									
 								} else {
 									setStepBanner((prevStepBanner) =>
 										prevStepBanner.map((step) =>
@@ -3772,7 +3867,25 @@ const CompanyCreate: React.FC = () => {
 							</Row>
 							<Switch
 								checked={checkedTitle}
-								onChange={() => setCheckedTitle(!checkedTitle)}
+								onChange={() => {setCheckedTitle(!checkedTitle)
+									if (checkedTitle) {
+										setStepBanner((prevStepBanner) =>
+											prevStepBanner.map((step) =>
+												step.title === 'Варианты заголовка'
+													? {...step, isDone: false}
+													: step,
+											),
+										)
+									} else if (titleArray.length > 0) {
+										setStepBanner((prevStepBanner) =>
+											prevStepBanner.map((step) =>
+												step.title === 'Варианты заголовка'
+													? {...step, isDone: true}
+													: step,
+											),
+										)
+									}
+								}}
 								className={s.SwitchButton}
 							/>
 						</Row>
@@ -3782,23 +3895,23 @@ const CompanyCreate: React.FC = () => {
 							<textarea
 								onChange={(e) => {
 									setTextAreaTitle(e.target.value)
-									if (e.target.value.length > 0) {
-										setStepBanner((prevStepBanner) =>
-											prevStepBanner.map((step) =>
-												step.title === 'Варианты заголовка'
-													? {...step, isDone: true}
-													: step,
-											),
-										)
-									} else {
-										setStepBanner((prevStepBanner) =>
-											prevStepBanner.map((step) =>
-												step.title === 'Варианты заголовка'
-													? {...step, isDone: false}
-													: step,
-											),
-										)
-									}
+									// if (e.target.value.length > 0) {
+									// 	setStepBanner((prevStepBanner) =>
+									// 		prevStepBanner.map((step) =>
+									// 			step.title === 'Варианты заголовка'
+									// 				? {...step, isDone: true}
+									// 				: step,
+									// 		),
+									// 	)
+									// } else {
+									// 	setStepBanner((prevStepBanner) =>
+									// 		prevStepBanner.map((step) =>
+									// 			step.title === 'Варианты заголовка'
+									// 				? {...step, isDone: false}
+									// 				: step,
+									// 		),
+									// 	)
+									// }
 								}}
 								onKeyDown={(e) => {
 									if (
@@ -3815,10 +3928,15 @@ const CompanyCreate: React.FC = () => {
 												text: e.target.value,
 											},
 										])
-										console.log(e.target.value, 'AFTER')
+										setStepBanner((prevStepBanner) =>
+											prevStepBanner.map((step) =>
+												step.title === 'Варианты заголовка'
+													? {...step, isDone: true}
+													: step,
+											),
+										)
 										e.target.value = ''
 										setTextAreaTitle('')
-										console.log(e.target.value, 'DO')
 									}
 								}}
 								value={textAreaTitle}
@@ -3881,7 +3999,26 @@ const CompanyCreate: React.FC = () => {
 							</Row>
 							<Switch
 								checked={checked_1}
-								onChange={() => setChecked_1(!checked_1)}
+								onChange={() => {
+									setChecked_1(!checked_1)
+									if (checked_1) {
+										setStepBanner((prevStepBanner) =>
+											prevStepBanner.map((step) =>
+												step.title === 'Варианты описаний'
+													? {...step, isDone: false}
+													: step,
+											),
+										)
+									} else if (descrArray.length > 0) {
+										setStepBanner((prevStepBanner) =>
+											prevStepBanner.map((step) =>
+												step.title === 'Варианты описаний'
+													? {...step, isDone: true}
+													: step,
+											),
+										)
+									}
+								}}
 								className={s.SwitchButton}
 							/>
 						</Row>
@@ -3891,23 +4028,23 @@ const CompanyCreate: React.FC = () => {
 							<textarea
 								onChange={(e) => {
 									setTextAreaValue(e.target.value)
-									if (e.target.value.length > 0) {
-										setStepBanner((prevStepBanner) =>
-											prevStepBanner.map((step) =>
-												step.title === 'Варианты описаний'
-													? {...step, isDone: true}
-													: step,
-											),
-										)
-									} else {
-										setStepBanner((prevStepBanner) =>
-											prevStepBanner.map((step) =>
-												step.title === 'Варианты описаний'
-													? {...step, isDone: false}
-													: step,
-											),
-										)
-									}
+									// if (e.target.value.length > 0) {
+									// 	setStepBanner((prevStepBanner) =>
+									// 		prevStepBanner.map((step) =>
+									// 			step.title === 'Варианты описаний'
+									// 				? {...step, isDone: true}
+									// 				: step,
+									// 		),
+									// 	)
+									// } else {
+									// 	setStepBanner((prevStepBanner) =>
+									// 		prevStepBanner.map((step) =>
+									// 			step.title === 'Варианты описаний'
+									// 				? {...step, isDone: false}
+									// 				: step,
+									// 		),
+									// 	)
+									// }
 								}}
 								onKeyDown={(e) => {
 									if (
@@ -3924,10 +4061,15 @@ const CompanyCreate: React.FC = () => {
 												text: e.target.value,
 											},
 										])
-										console.log(e.target.value, 'AFTER')
+										setStepBanner((prevStepBanner) =>
+											prevStepBanner.map((step) =>
+												step.title === 'Варианты описаний'
+													? {...step, isDone: true}
+													: step,
+											),
+										)
 										e.target.value = ''
 										setTextAreaValue('')
-										console.log(e.target.value, 'DO')
 									}
 								}}
 								value={textAreaValue}
@@ -4128,7 +4270,15 @@ const CompanyCreate: React.FC = () => {
 						<div className={`w-[528px] float-right mb-16 `}>
 							<Row width="auto" className={`items-center float-right`}>
 								<BlueLabel
-									className={`float-right mr-[24px] cursor-pointer`}
+								style={{
+									color: `${
+										switchCreate_comp === 3 &&
+										switchCreate_audi === 3 &&
+										switchCreate_banner === 3 ? '' :
+										'#808080'
+									}`,
+								}}
+									className={`float-right mr-[24px] cursor-pointer `}
 									text="Сохранить и выйти"
 									// onClick={setGlobalState({
 									// 	cName,
@@ -4169,6 +4319,7 @@ const CompanyCreate: React.FC = () => {
 											cWeekBudget
 										) {
 											sendData()
+											window.location.reload()
 										}
 										if (!cName) {
 											setStepCompany((prevStepCompany) =>
@@ -4180,7 +4331,7 @@ const CompanyCreate: React.FC = () => {
 											)
 											setCNameError('Введите название компании')
 										}
-										
+
 										if (!cLink) {
 											setStepCompany((prevStepCompany) =>
 												prevStepCompany.map((step) =>
@@ -4191,7 +4342,7 @@ const CompanyCreate: React.FC = () => {
 											)
 											setCLinkError('Введите ссылку на рекламируемую страницу')
 										}
-										
+
 										if (!cDateStart || !cDateEnd) {
 											setStepCompany((prevStepCompany) =>
 												prevStepCompany.map((step) =>
@@ -4201,7 +4352,7 @@ const CompanyCreate: React.FC = () => {
 												),
 											)
 										}
-										
+
 										if (!cTarget) {
 											setStepCompany((prevStepCompany) =>
 												prevStepCompany.map((step) =>
@@ -4211,7 +4362,7 @@ const CompanyCreate: React.FC = () => {
 												),
 											)
 										}
-										
+
 										if (!aName) {
 											setStepAudi((prevStepAudi) =>
 												prevStepAudi.map((step) =>
@@ -4222,7 +4373,7 @@ const CompanyCreate: React.FC = () => {
 											)
 											setANameError('Введите название аудитории')
 										}
-										
+
 										if (!bName) {
 											setStepBanner((prevStepBanner) =>
 												prevStepBanner.map((step) =>
