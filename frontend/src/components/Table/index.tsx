@@ -309,7 +309,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 				console.error('Error fetching companies and statistics:', error)
 			}
 		}
-
+		getCompaniesAndStatistics(token)
 		console.log(companies, 'companies')
 	}, [token, data]) // Added token as a dependency
 	return (
