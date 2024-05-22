@@ -15,6 +15,7 @@ import ContentBannerDetails, {
 import moment from 'moment'
 import FiltersBanners from '../../components/FiltersBanners/index'
 import {useSelector} from 'react-redux'
+import { createPortal } from 'react-dom'
 
 enum CurrentPopup {
 	None,
@@ -324,59 +325,61 @@ const Bloggers: React.FC = () => {
 					<span className={s.SpanLoadMore}>Загрузить ещё</span>
 				</Row> */}
 			</div>
-			{currentPopup === CurrentPopup.Content && (
-				<PopUpWrapper onExit={bannerContent.onExit}>
-					<ContentBannerDetails
-						className={bannerContent.className}
-						course_svg={getFaviconUrl36(currentItem.site.domain)} // TO DO
-						course_title={currentItem.name}
-						course_id={currentItem.id}
-						// course_ooo={bannerContent.course_ooo} //To DO
-						see_link={currentItem.site.domain}
-						course_link={`${
-							String(window.location).split('/')[2]
-						}/go?masked_url=${currentItem.site.masked_domain}`}
-						stat_toEnd={
-							getEndDate(currentItem.date_finish) <= 0
-								? 'Завершена'
-								: `${getEndDate(currentItem.date_finish)}`
-						}
-						stat_budget={currentItem.budget_week}
-						stat_income={currentItem.price_target}
-						stat_maxPrice={currentItem.price_target}
-						// stat_targetAct={bannerContent.stat_targetAct} // TO DO
-
-						// stat_maxPrice={bannerContent.stat_maxPrice} // TO DO
-						// stat_Price={bannerContent.stat_Price} // TO DO
-
-						// stat_incomeUndo={bannerContent.stat_incomeUndo} // TO DO
-						// stat_AbPay={bannerContent.stat_AbPay} // TO DO
-						// target_1_title={bannerContent.target_1_title} // TO DO
-						// target_1_value={bannerContent.target_1_value} // TO DO
-						// target_1_id={bannerContent.target_1_id} // TO DO
-						// target_2_title={bannerContent.target_2_title} // TO DO
-						// target_2_value={bannerContent.target_2_value} // TO DO
-						// target_2_id={bannerContent.target_2_id} // TO DO
-						// forBidden_1={bannerContent.forBidden_1} // TO DO
-						// forBidden_2={bannerContent.forBidden_2} // TO DO
-						// forBidden_3={bannerContent.forBidden_3} // TO DO
-						sg_clicks={currentItem.statistics.click_sum} // TO DO
-						sg_conversion={bannerContent.sg_conversion}
-						sg_expenses={bannerContent.sg_expenses}
-						sg_ads={bannerContent.sg_ads}
-						sg_income_all={bannerContent.sg_income_all}
-						arrayForBidden={currentItem.ban_show}
-						arrayCategory={currentItem.audiences[0].category}
-						arrayGeo={currentItem.audiences[0].geography}
-						arrayGender={currentItem.audiences[0].gender_age}
-						arrayDevice={currentItem.audiences[0].device}
-						arrayInteres={currentItem.audiences[0].interest}
-						arrayVariantDesc={currentItem.banners[0].description_option}
-						arrayVariantTitle={currentItem.banners[0].title_option}
-						arrayVariatImg={currentItem.banners[0].images}
-						onExit={bannerContent.onExit}
-					/>
-				</PopUpWrapper>
+			{createPortal(
+				currentPopup === CurrentPopup.Content && (
+					<PopUpWrapper onExit={bannerContent.onExit}>
+						<ContentBannerDetails
+							className={bannerContent.className}
+							course_svg={getFaviconUrl36(currentItem.site.domain)} // TO DO
+							course_title={currentItem.name}
+							course_id={currentItem.id}
+							// course_ooo={bannerContent.course_ooo} //To DO
+							see_link={currentItem.site.domain}
+							course_link={`${
+								String(window.location).split('/')[2]
+							}/go?masked_url=${currentItem.site.masked_domain}`}
+							stat_toEnd={
+								getEndDate(currentItem.date_finish) <= 0
+									? 'Завершена'
+									: `${getEndDate(currentItem.date_finish)}`
+							}
+							stat_budget={currentItem.budget_week}
+							stat_income={currentItem.price_target}
+							stat_maxPrice={currentItem.price_target}
+							// stat_targetAct={bannerContent.stat_targetAct} // TO DO
+	
+							// stat_maxPrice={bannerContent.stat_maxPrice} // TO DO
+							// stat_Price={bannerContent.stat_Price} // TO DO
+	
+							// stat_incomeUndo={bannerContent.stat_incomeUndo} // TO DO
+							// stat_AbPay={bannerContent.stat_AbPay} // TO DO
+							// target_1_title={bannerContent.target_1_title} // TO DO
+							// target_1_value={bannerContent.target_1_value} // TO DO
+							// target_1_id={bannerContent.target_1_id} // TO DO
+							// target_2_title={bannerContent.target_2_title} // TO DO
+							// target_2_value={bannerContent.target_2_value} // TO DO
+							// target_2_id={bannerContent.target_2_id} // TO DO
+							// forBidden_1={bannerContent.forBidden_1} // TO DO
+							// forBidden_2={bannerContent.forBidden_2} // TO DO
+							// forBidden_3={bannerContent.forBidden_3} // TO DO
+							sg_clicks={currentItem.statistics.click_sum} // TO DO
+							sg_conversion={bannerContent.sg_conversion}
+							sg_expenses={bannerContent.sg_expenses}
+							sg_ads={bannerContent.sg_ads}
+							sg_income_all={bannerContent.sg_income_all}
+							arrayForBidden={currentItem.ban_show}
+							arrayCategory={currentItem.audiences[0].category}
+							arrayGeo={currentItem.audiences[0].geography}
+							arrayGender={currentItem.audiences[0].gender_age}
+							arrayDevice={currentItem.audiences[0].device}
+							arrayInteres={currentItem.audiences[0].interest}
+							arrayVariantDesc={currentItem.banners[0].description_option}
+							arrayVariantTitle={currentItem.banners[0].title_option}
+							arrayVariatImg={currentItem.banners[0].images}
+							onExit={bannerContent.onExit}
+						/>
+					</PopUpWrapper>
+				), document.body
 			)}
 			{currentPopup === CurrentPopup.Filter && (
 				<PopUpWrapper onExit={bannerContent.onExit}>

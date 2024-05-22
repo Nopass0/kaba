@@ -211,36 +211,7 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 	// 	getCompanies()
 	// }, [])
 
-	useEffect(() => {
-		async function getCompaniesAndStatistics(token: string) {
-			try {
-				const res = await getCompanyBloggersAPI(token)
-				console.log(res.data.companies, 'List of companies')
 
-				// Fetch statistics for each company and add it to the company object
-				const companiesWithStatistics = await Promise.all(
-					res.data.companies.map(async (company: any) => {
-						const stata = await getBloggerStatistics(
-							String(token),
-							String(company.site.masked_domain),
-							'hour',
-						)
-						console.log(stata, `Statistics for company ${company.id}`)
-
-						// Assuming stata is an array with a single statistic object for the company
-						return {...company, statistics: stata}
-					}),
-				)
-
-				setCompanies(companiesWithStatistics)
-			} catch (error) {
-				console.error('Error fetching companies and statistics:', error)
-			}
-		}
-
-		console.log(companies, 'companies123454566')
-		getCompaniesAndStatistics(token)
-	}, [token]) // Added token as a dependency
 
 	const data = {nodes: companies}
 
@@ -310,7 +281,36 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 			isOpen = 0
 		}
 	}
+	useEffect(() => {
+		async function getCompaniesAndStatistics(token: string) {
+			try {
+				const res = await getCompanyBloggersAPI(token)
+				console.log(res.data.companies, 'List of companies')
 
+				// Fetch statistics for each company and add it to the company object
+				const companiesWithStatistics = await Promise.all(
+					res.data.companies.map(async (company: any) => {
+						const stata = await getBloggerStatistics(
+							String(token),
+							String(company.site.masked_domain),
+							'hour',
+						)
+						console.log(stata, `Statistics for company ${company.id}`)
+
+						// Assuming stata is an array with a single statistic object for the company
+						return {...company, statistics: stata}
+					}),
+				)
+
+				setCompanies(companiesWithStatistics)
+			} catch (error) {
+				console.error('Error fetching companies and statistics:', error)
+			}
+		}
+
+		console.log(companies, 'companies123454566')
+		getCompaniesAndStatistics(token)
+	}, [token, data]) // Added token as a dependency
 	return (
 		<>
 			<Col width="100%" className={s.Table}>
@@ -581,17 +581,17 @@ const TableMedia: React.FC<ITableMedia> = ({}: ITableMedia) => {
 								{tableList.map((item: any, index: number) => (
 									<tl.Row className="CheckBox" key={index} item={item}>
 										<CellSelect item={item} />
-										<tl.Cell className="bg-[#1A1A1A]">
-											<Row width="auto">
-												<Col width="auto">
-													<Row width="auto" className="flex items-center">
+										<tl.Cell className={`w-full bg-[#1A1A1A] text-ellipsis ${s.tlCell}`}>
+											<Row width="inherit" className="text-ellipsis">
+												<Col width="inherit" className="text-ellipsis">
+													<Row width="inherit" className="flex items-center" text-ellipsis>
 														<img
 															// src={getFaviconUrl(item.companysite.domain)}
 															src={getFaviconUrl('google.com')}
 															alt={item.name}
 															className="mr-2 w-[16px] h-[16px]"
 														/>
-														<label htmlFor="checkbox_1">{item.name}</label>
+														<label className="block whitespace-nowrap overflow-hidden text-ellipsis" htmlFor="checkbox_1">{item.name}</label>
 													</Row>
 													<Row width="auto" className={s.rowIdCheckbox}>
 														{/* <svg

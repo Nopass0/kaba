@@ -46,7 +46,8 @@
 }
 
 .HeaderCell div:first-child {
-	padding: 3px 8px;
+	padding: 3px 0 3px 8px;
+	text-overflow: ellipsis;
 
 	border-radius: 6px;
 	&:hover {
@@ -56,7 +57,7 @@
 	}
 }
 
-.headerCellSort div:first-child{
+.headerCellSort div:first-child {
 	margin-bottom: 2px;
 }
 
@@ -77,6 +78,16 @@
 
 		border-radius: 6px;
 		padding: 3px 8px;
+
+		p {
+			display: block;
+			white-space: nowrap;
+			overflow: hidden;
+			text-align: start;
+			width: 100%;
+			max-width: 216px;
+			text-overflow: ellipsis;
+		}
 	}
 
 	button:hover {
@@ -95,7 +106,6 @@
 	flex-direction: row;
 	align-items: center;
 }
-
 
 .headerCellSort_SVG svg:first-child {
 	margin-right: 4px;
@@ -189,7 +199,6 @@
 		width: 16px;
 		height: 16px;
 	}
-
 }
 
 .headerCellSort_Sort,
@@ -275,7 +284,6 @@
 		background-color: #333;
 		transition: all 0.2s;
 	}
-
 }
 .muiSelectClicks {
 	border-radius: 12px;
@@ -306,12 +314,15 @@
 	}
 }
 
-
 .blueLink {
-
 	color: #4169e1;
 	font-size: 14px;
 	font-weight: 400;
 	line-height: 16px;
 	cursor: pointer;
+}
+.tlCell {
+	div:first-child {
+		width: 100%;
+	}
 }

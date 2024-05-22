@@ -231,32 +231,6 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 
 	const data = {nodes: companies}
 
-	useEffect(() => {
-		async function getCompaniesAndStatistics(token: string) {
-			try {
-				const res = await getCompaniesAPI(token)
-				console.log(res.data, 'List of companies')
-
-				// Fetch statistics for each company and add it to the company object
-				const companiesWithStatistics = await Promise.all(
-					res.data.map(async (company: any) => {
-						const stata = await getStatisticsAPI(token, [company.id], 'hour')
-						console.log(stata, `Statistics for company ${company.id}`)
-
-						// Assuming stata is an array with a single statistic object for the company
-						return {...company, statistics: stata}
-					}),
-				)
-
-				setCompanies(companiesWithStatistics)
-			} catch (error) {
-				console.error('Error fetching companies and statistics:', error)
-			}
-		}
-
-		console.log(companies, 'companies')
-		getCompaniesAndStatistics(token)
-	}, [token]) // Added token as a dependency
 
 	const select = useRowSelect(
 		data,
@@ -312,6 +286,32 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 		}
 	}
 
+	useEffect(() => {
+		async function getCompaniesAndStatistics(token: string) {
+			try {
+				const res = await getCompaniesAPI(token)
+				console.log(res.data, 'List of companies')
+
+				// Fetch statistics for each company and add it to the company object
+				const companiesWithStatistics = await Promise.all(
+					res.data.map(async (company: any) => {
+						const stata = await getStatisticsAPI(token, [company.id], 'hour')
+						console.log(stata, `Statistics for company ${company.id}`)
+
+						// Assuming stata is an array with a single statistic object for the company
+						return {...company, statistics: stata}
+					}),
+				)
+
+				setCompanies(companiesWithStatistics)
+			} catch (error) {
+				console.error('Error fetching companies and statistics:', error)
+			}
+		}
+
+		console.log(companies, 'companies')
+		getCompaniesAndStatistics(token)
+	}, [token,data]) // Added token as a dependency
 	return (
 		<>
 			{!(companies.length > 0) ? (
@@ -564,10 +564,10 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 												{tableList.map((item: any, index: number) => (
 													<tl.Row className="CheckBox" key={index} item={item}>
 														<CellSelect item={item} />
-														<tl.Cell className="bg-[#1A1A1A]">
-															<Row width="auto">
-																<Col width="auto">
-																	<label>{item.ad_banner[0].name}</label>
+														<tl.Cell className={`w-full bg-[#1A1A1A] text-ellipsis ${s.tlCell}`}>
+															<Row  width="inherit" className="text-ellipsis">
+																<Col  width="inherit" className="text-ellipsis">
+																	<p className="block whitespace-nowrap overflow-hidden text-ellipsis">{item.ad_banner[0].name}</p>
 																	<Row width="auto" className={s.rowIdCheckbox}>
 																		{/* <svg
 																className="mr-2"
@@ -645,8 +645,8 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 														</mui.Option>
 													</mui.Select>
 												</tl.Cell> */}
-														<tl.Cell>
-															<p>{item.name}</p>
+														<tl.Cell className={`w-full bg-[#1A1A1A] text-ellipsis ${s.tlCell}`}>
+															<p className="block whitespace-nowrap overflow-hidden text-ellipsis">{item.name}</p>
 														</tl.Cell>
 														<tl.Cell>
 															<p
@@ -665,8 +665,8 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 																{item.status_text}
 															</p>
 														</tl.Cell>
-														<tl.Cell>
-															<p>{item.ad_audience[0].name}</p>
+														<tl.Cell className={`w-full bg-[#1A1A1A] text-ellipsis ${s.tlCell}`}>
+															<p className="block whitespace-nowrap overflow-hidden text-ellipsis">{item.ad_audience[0].name}</p>
 														</tl.Cell>
 														{/* <tl.Cell>
 													<mui.Select
@@ -714,11 +714,11 @@ const TableBannerCompany: React.FC<ITableBannerCompany> = ({
 													</mui.Select>
 												</tl.Cell> */}
 
-														<tl.Cell>
+														<tl.Cell  className={`w-full bg-[#1A1A1A] text-ellipsis ${s.tlCell}`}>
 															<a
 																target="_blank"
 																rel="noopener noreferrer"
-																className={s.blueLink}
+																className={`block whitespace-nowrap overflow-hidden text-ellipsis ${s.blueLink}`}
 																href={`${item.site.domain}`}>
 																{item.site.domain}
 															</a>

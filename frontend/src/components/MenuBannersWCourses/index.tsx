@@ -73,7 +73,7 @@ const MenuBannersWCourse: React.FC<IMenuBannersWCourse> = ({
 					<Row width="248px" className={s.BlogerHeaderUp}>
 						<img src={svg} alt={svg} className="w-[36px] h-[36px] mr-[16px]" />
 						<Col width="180px" className="">
-							<WhiteLabel text={title} size="14px" />
+							<WhiteLabel className="text-ellipsis block overflow-hidden" text={title} size="14px" />
 							<Row width="180px">
 								<Label className="mr-2" text={`ID ${id}`} />
 								<Row width="auto" className="items-center">
@@ -163,7 +163,7 @@ const MenuBannersWCourse: React.FC<IMenuBannersWCourse> = ({
 
 				<Col width="248px" className={s.ContainerMainBlock}>
 					<Row width="248px" className={s.TitleTooltip}>
-						<Label text="Бюджет на неделю" className={s.LabelMainBlock} />
+						<Label text="Дневной бюджет" className={s.LabelMainBlock} />
 						{/* <ToolTip className={s.ToolTip} text="Info" top="15px">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"

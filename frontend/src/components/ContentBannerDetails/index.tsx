@@ -23,8 +23,8 @@ export interface IContentBannerDetails {
 	course_ooo?: string
 	course_link?: string
 	see_link?: string
-	cut_link?:boolean
-	tin?:string
+	cut_link?: boolean
+	tin?: string
 
 	// Statistics
 	stat_toEnd?: string
@@ -66,8 +66,6 @@ export interface IContentBannerDetails {
 	arrayVariantDesc?: string[]
 	arrayVariantTitle?: string[]
 	arrayVariatImg?: string[]
-
-
 
 	//exit
 	onExit?: () => void
@@ -141,7 +139,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 					</svg>
 				</Row>
 				<CourseForBlogger
-				cut_link={cut_link}
+					cut_link={cut_link}
 					NeedClicks={false}
 					svg={course_svg}
 					title={course_title}
@@ -178,7 +176,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 
 					<Col width="auto">
 						<Row className={s.StatRowTitle} width="auto">
-							<Label text="Бюджет на неделю" />
+							<Label text="Дневной бюджет" />
 							{/* <ToolTip text="info" top="15px">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -261,7 +259,7 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 								</svg>
 							</ToolTip> */}
 						</Row>
-						<WhiteLabel text={`До ${stat_maxPrice}₽`} />
+						<WhiteLabel text={`До ${stat_maxPrice || ''}₽`} />
 					</Col>
 
 					{/* <Col width="auto">
@@ -374,11 +372,15 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 				</Col> */}
 
 				{/* Forbidden */}
-
-				<Col width="528px" className={s.ForBidden}>
-					<Row className={s.RowTitle} width="auto">
-						<Label text="Размещение запрещено" />
-						{/* <ToolTip text="info" top="15px">
+				{arrayForBidden?.length !== 0 && arrayForBidden !== undefined && (
+					<>
+						<Col
+							onClick={() => console.log(arrayForBidden, 'arrayForBidden')}
+							width="528px"
+							className={s.ForBidden}>
+							<Row className={s.RowTitle} width="auto">
+								<Label text="Размещение запрещено" />
+								{/* <ToolTip text="info" top="15px">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="16"
@@ -393,27 +395,32 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 								/>
 							</svg>
 						</ToolTip> */}
-					</Row>
-					<Col width="528px" className={s.ForBiddenWrapper}>
-						{arrayForBidden && (
-							<>
-								{arrayForBidden.map((item, index) => (
-									<>
-										<Col width="528px" key={index} className={s.ForBiddenBlock}>
-											<WhiteLabel text={item} />
-										</Col>
-										{index === arrayForBidden.length - 1 ? (
-											<></>
-										) : (
-											<Line width="528px" className={s.LineInside} />
-										)}
-									</>
-								))}
-							</>
-						)}
-					</Col>
-				</Col>
-
+							</Row>
+							<Col width="528px" className={s.ForBiddenWrapper}>
+								<>
+									{arrayForBidden.map((item, index) => (
+										<>
+											<Col
+												width="528px"
+												key={index}
+												className={s.ForBiddenBlock}>
+												<WhiteLabel
+													className="text-ellipsis block overflow-hidden"
+													text={item}
+												/>
+											</Col>
+											{index === arrayForBidden.length - 1 ? (
+												<></>
+											) : (
+												<Line width="528px" className={s.LineInside} />
+											)}
+										</>
+									))}
+								</>
+							</Col>
+						</Col>
+					</>
+				)}
 				<Line width="560px" className={s.Line} />
 
 				<Row width="auto" className={s.MainDataHeader}>
@@ -471,71 +478,67 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 						))}
 				</Row> */}
 
-				<Row className={s.RowTitle} width="auto">
-					<Label text="География" />
-				</Row>
-				<Row width="495px" className={s.Chips}>
-					{arrayGeo &&
-						arrayGeo.map((item, index) => (
-							<ChipForBanners text={item} key={index} className={s.Chip} />
-						))}
-				</Row>
+				{arrayGeo !== undefined && arrayGeo.length !== 0 && (
+					<>
+						<Row className={s.RowTitle} width="auto">
+							<Label text="География" />
+						</Row>
+						<Row width="495px" className={s.Chips}>
+							{arrayGeo.map((item, index) => (
+								<ChipForBanners text={item} key={index} className={s.Chip} />
+							))}
+						</Row>
+					</>
+				)}
 
-				<Row className={s.RowTitle} width="auto">
-					<Label text="Пол и возраст" />
-				</Row>
+				{arrayGender?.length !== 0 && arrayGender !== undefined && (
+					<>
+						<Row className={s.RowTitle} width="auto">
+							<Label text="Пол и возраст" />
+						</Row>
 
-				<Col width="528px" className={s.GenderNAge}>
-					{arrayGender.map((item, index) => (
-						<>
-							<Row className={s.RowGenderNAge} width="auto" key={index}>
-								<WhiteLabel
-									text={`${item?.male}, ${item?.from} - ${item?.to}`}
-								/>
-							</Row>
-							{index === arrayGender.length - 1 ? (
-								<></>
-							) : (
-								<Line width="528px" className={s.LineInside} />
-							)}
-						</>
-					))}
-				</Col>
-
-				<Row className={s.RowTitle} width="auto">
-					<Label text="Устройства" />
-					<ToolTip text="info" top="15px">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="16"
-							height="16"
-							viewBox="0 0 16 16"
-							fill="none">
-							<path
-								fillRule="evenodd"
-								clipRule="evenodd"
-								d="M10.3147 13.5294C9.59118 13.8431 8.81961 14 8 14C7.18039 14 6.40882 13.8431 5.68529 13.5294C4.96176 13.2157 4.32353 12.7824 3.77059 12.2294C3.21765 11.6765 2.78431 11.0382 2.47059 10.3147C2.15686 9.59118 2 8.81961 2 8C2 7.18039 2.15686 6.40882 2.47059 5.68529C2.78431 4.96176 3.21667 4.32353 3.76765 3.77059C4.31863 3.21765 4.95588 2.78431 5.67941 2.47059C6.40294 2.15686 7.17451 2 7.99412 2C8.81373 2 9.58627 2.15686 10.3118 2.47059C11.0373 2.78431 11.6765 3.21765 12.2294 3.77059C12.7824 4.32353 13.2157 4.96176 13.5294 5.68529C13.8431 6.40882 14 7.18039 14 8C14 8.81961 13.8431 9.59118 13.5294 10.3147C13.2157 11.0382 12.7824 11.6765 12.2294 12.2294C11.6765 12.7824 11.0382 13.2157 10.3147 13.5294ZM6.05294 12.6118C6.65686 12.8706 7.30588 13 8 13C8.69412 13 9.34412 12.8706 9.95 12.6118C10.5559 12.3529 11.0873 11.9951 11.5441 11.5382C12.001 11.0814 12.3578 10.551 12.6147 9.94706C12.8716 9.34314 13 8.69412 13 8C13 7.30588 12.8706 6.65686 12.6118 6.05294C12.3529 5.44902 11.9941 4.91765 11.5353 4.45882C11.0765 4 10.5451 3.64216 9.94118 3.38529C9.33726 3.12843 8.68824 3 7.99412 3C7.3 3 6.65098 3.12843 6.04706 3.38529C5.44314 3.64216 4.91373 4 4.45882 4.45882C4.00392 4.91765 3.64804 5.44902 3.39118 6.05294C3.13431 6.65686 3.00588 7.30588 3.00588 8C3.00588 8.69412 3.13431 9.34314 3.39118 9.94706C3.64804 10.551 4.0049 11.0814 4.46176 11.5382C4.91863 11.9951 5.44902 12.3529 6.05294 12.6118ZM6.97059 11.2294H9.36471C9.48627 11.2294 9.58823 11.1902 9.67059 11.1118C9.75294 11.0333 9.79412 10.9353 9.79412 10.8176C9.79412 10.7 9.75294 10.602 9.67059 10.5235C9.58823 10.4451 9.48627 10.4059 9.36471 10.4059H8.63529V7.41176C8.63529 7.25098 8.59608 7.12255 8.51765 7.02647C8.43922 6.93039 8.32549 6.88235 8.17647 6.88235H7.07059C6.94902 6.88235 6.84706 6.92157 6.76471 7C6.68235 7.07843 6.64118 7.17647 6.64118 7.29412C6.64118 7.41176 6.68235 7.5098 6.76471 7.58824C6.84706 7.66667 6.94902 7.70588 7.07059 7.70588H7.7V10.4059H6.97059C6.84902 10.4059 6.74706 10.4451 6.66471 10.5235C6.58235 10.602 6.54118 10.7 6.54118 10.8176C6.54118 10.9353 6.58235 11.0333 6.66471 11.1118C6.74706 11.1902 6.84902 11.2294 6.97059 11.2294ZM8.49118 5.67647C8.34412 5.82549 8.16274 5.9 7.94706 5.9C7.73529 5.9 7.5549 5.82549 7.40588 5.67647C7.25686 5.52745 7.18235 5.34706 7.18235 5.13529C7.18235 4.91961 7.25686 4.73725 7.40588 4.58824C7.5549 4.43922 7.73529 4.36471 7.94706 4.36471C8.16274 4.36471 8.34412 4.43922 8.49118 4.58824C8.63824 4.73725 8.71176 4.91961 8.71176 5.13529C8.71176 5.34706 8.63824 5.52745 8.49118 5.67647Z"
-								fill="#808080"
-							/>
-						</svg>
-					</ToolTip>
-				</Row>
-				<Row width="495px" className={s.Chips}>
-					{arrayDevice &&
-						arrayDevice.map((item, index) => (
-							<ChipForBanners text={item} key={index} className={s.Chip} />
-						))}
-				</Row>
-
-				<Row className={s.RowTitle} width="auto">
-					<Label text="Интересы" />
-				</Row>
-				<Row width="495px" className={s.Chips}>
-					{arrayInteres &&
-						arrayInteres.map((item, index) => (
-							<ChipForBanners text={item} key={index} className={s.Chip} />
-						))}
-				</Row>
+						<Col width="528px" className={s.GenderNAge}>
+							{arrayGender.map((item, index) => (
+								<>
+									<Row className={s.RowGenderNAge} width="auto" key={index}>
+										<WhiteLabel
+											text={`${item?.male}, ${item?.from} - ${item?.to}`}
+										/>
+									</Row>
+									{index === arrayGender.length - 1 ? (
+										<></>
+									) : (
+										<Line width="528px" className={s.LineInside} />
+									)}
+								</>
+							))}
+						</Col>
+					</>
+				)}
+				{arrayDevice?.length !== 0 && arrayDevice !== undefined && (
+					<>
+						<Row className={s.RowTitle} width="auto">
+							<Label text="Устройства" />
+						</Row>
+						<Row width="495px" className={s.Chips}>
+							{arrayDevice.map((item, index) => (
+								<ChipForBanners text={item} key={index} className={s.Chip} />
+							))}
+						</Row>
+					</>
+				)}
+				{arrayInteres?.length !== 0 && arrayInteres !== undefined && (
+					<>
+						<Row className={s.RowTitle} width="auto">
+							<Label text="Интересы" />
+						</Row>
+						<Row width="495px" className={s.Chips}>
+							{arrayInteres.map((item, index) => (
+								<ChipForBanners text={item} key={index} className={s.Chip} />
+							))}
+						</Row>
+					</>
+				)}
 
 				{/* Main Data Second Grid */}
 
@@ -608,120 +611,144 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 					</svg> */}
 				</Row>
 
-				<Col className={s.variantTextCol} width="528px">
-					<Label text="Варианты текста" className={s.Label} />
-					<Row width="528px">
-						<div className={s.variantTextWrapperLeft}>
-							{arrayVariantDesc &&
-								arrayVariantDesc.map((item, index) => (
-									<div key={index} className={s.variantTextBlock}>
-										<Row width="auto" className={s.TitleHeaderInsideBlock}>
-											<Label isMini={true} text="Описание" />
-											<svg
-												onClick={() =>
-													navigator.clipboard.writeText(
-														item
+				{(arrayVariantDesc?.length !== 0 && arrayVariantDesc !== undefined) ||
+					(arrayVariantTitle?.length !== 0 &&
+						arrayVariantTitle !== undefined && (
+							<>
+								<Col className={s.variantTextCol} width="528px">
+									<Label text="Варианты текста" className={s.Label} />
+									<Row width="528px">
+										<div className={s.variantTextWrapperLeft}>
+											{arrayVariantDesc.map((item, index) => (
+												<div key={index} className={s.variantTextBlock}>
+													<Row
+														width="auto"
+														className={s.TitleHeaderInsideBlock}>
+														<Label isMini={true} text="Описание" />
+														<svg
+															onClick={() =>
+																navigator.clipboard.writeText(
+																	item
+																		.slice(
+																			item.indexOf("'text':"),
+																			item.length - 1,
+																		)
+																		.replace("'text': ", '')
+																		.replace("'", '')
+																		.replace("'", '')
+																		.replace('"', '')
+																		.replace('"', ''),
+																)
+															}
+															className="cursor-pointer"
+															xmlns="http://www.w3.org/2000/svg"
+															width="24"
+															height="24"
+															viewBox="0 0 24 24"
+															fill="none">
+															<rect
+																width="24"
+																height="24"
+																rx="7"
+																fill="#262626"
+															/>
+															<rect
+																x="10.2002"
+																y="10.2031"
+																width="7.8"
+																height="7.8"
+																rx="1.2"
+																stroke="#F2F2F2"
+																strokeLinecap="round"
+																strokeLinejoin="round"
+															/>
+															<path
+																d="M7.8 13.8H7.2C6.53726 13.8 6 13.2627 6 12.6V7.2C6 6.53726 6.53726 6 7.2 6H12.6C13.2627 6 13.8 6.53726 13.8 7.2V7.8"
+																stroke="#F2F2F2"
+																strokeLinecap="round"
+																strokeLinejoin="round"
+															/>
+														</svg>
+													</Row>
+													<span className={s.variantTextSpan}>
+														{item
 															.slice(item.indexOf("'text':"), item.length - 1)
 															.replace("'text': ", '')
 															.replace("'", '')
 															.replace("'", '')
 															.replace('"', '')
-															.replace('"', ''),
-													)
-												}
-												className="cursor-pointer"
-												xmlns="http://www.w3.org/2000/svg"
-												width="24"
-												height="24"
-												viewBox="0 0 24 24"
-												fill="none">
-												<rect width="24" height="24" rx="7" fill="#262626" />
-												<rect
-													x="10.2002"
-													y="10.2031"
-													width="7.8"
-													height="7.8"
-													rx="1.2"
-													stroke="#F2F2F2"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												/>
-												<path
-													d="M7.8 13.8H7.2C6.53726 13.8 6 13.2627 6 12.6V7.2C6 6.53726 6.53726 6 7.2 6H12.6C13.2627 6 13.8 6.53726 13.8 7.2V7.8"
-													stroke="#F2F2F2"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												/>
-											</svg>
-										</Row>
-										<span className={s.variantTextSpan}>
-											{item
-												.slice(item.indexOf("'text':"), item.length - 1)
-												.replace("'text': ", '')
-												.replace("'", '')
-												.replace("'", '')
-												.replace('"', '')
-												.replace('"', '')}
-										</span>
-									</div>
-								))}
+															.replace('"', '')}
+													</span>
+												</div>
+											))}
 
-							{arrayVariantTitle &&
-								arrayVariantTitle.map((item, index) => (
-									<div key={index} className={s.variantTextBlock}>
-										<Row width="auto" className={s.TitleHeaderInsideBlock}>
-											<Label isMini={true} text="Заголовок" />
-											<svg
-												onClick={() =>
-													navigator.clipboard.writeText(
-														item
+											{arrayVariantTitle.map((item, index) => (
+												<div key={index} className={s.variantTextBlock}>
+													<Row
+														width="auto"
+														className={s.TitleHeaderInsideBlock}>
+														<Label isMini={true} text="Заголовок" />
+														<svg
+															onClick={() =>
+																navigator.clipboard.writeText(
+																	item
+																		.slice(
+																			item.indexOf("'text':"),
+																			item.length - 1,
+																		)
+																		.replace("'text': ", '')
+																		.replace("'", '')
+																		.replace("'", '')
+																		.replace('"', '')
+																		.replace('"', ''),
+																)
+															}
+															className="cursor-pointer"
+															xmlns="http://www.w3.org/2000/svg"
+															width="24"
+															height="24"
+															viewBox="0 0 24 24"
+															fill="none">
+															<rect
+																width="24"
+																height="24"
+																rx="7"
+																fill="#262626"
+															/>
+															<rect
+																x="10.2002"
+																y="10.2031"
+																width="7.8"
+																height="7.8"
+																rx="1.2"
+																stroke="#F2F2F2"
+																strokeLinecap="round"
+																strokeLinejoin="round"
+															/>
+															<path
+																d="M7.8 13.8H7.2C6.53726 13.8 6 13.2627 6 12.6V7.2C6 6.53726 6.53726 6 7.2 6H12.6C13.2627 6 13.8 6.53726 13.8 7.2V7.8"
+																stroke="#F2F2F2"
+																strokeLinecap="round"
+																strokeLinejoin="round"
+															/>
+														</svg>
+													</Row>
+													<span className={s.variantTextSpan}>
+														{item
 															.slice(item.indexOf("'text':"), item.length - 1)
 															.replace("'text': ", '')
 															.replace("'", '')
 															.replace("'", '')
 															.replace('"', '')
-															.replace('"', ''),
-													)
-												}
-												className="cursor-pointer"
-												xmlns="http://www.w3.org/2000/svg"
-												width="24"
-												height="24"
-												viewBox="0 0 24 24"
-												fill="none">
-												<rect width="24" height="24" rx="7" fill="#262626" />
-												<rect
-													x="10.2002"
-													y="10.2031"
-													width="7.8"
-													height="7.8"
-													rx="1.2"
-													stroke="#F2F2F2"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												/>
-												<path
-													d="M7.8 13.8H7.2C6.53726 13.8 6 13.2627 6 12.6V7.2C6 6.53726 6.53726 6 7.2 6H12.6C13.2627 6 13.8 6.53726 13.8 7.2V7.8"
-													stroke="#F2F2F2"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												/>
-											</svg>
-										</Row>
-										<span className={s.variantTextSpan}>
-											{item
-												.slice(item.indexOf("'text':"), item.length - 1)
-												.replace("'text': ", '')
-												.replace("'", '')
-												.replace("'", '')
-												.replace('"', '')
-												.replace('"', '')}
-										</span>
-									</div>
-								))}
-						</div>
-					</Row>
-				</Col>
+															.replace('"', '')}
+													</span>
+												</div>
+											))}
+										</div>
+									</Row>
+								</Col>
+							</>
+						))}
 				{/* <Col width="528px" className={s.variantVideo}>
 					<Label text="Варианты видео" className={s.Label} />
 					<Row width="528px">
@@ -743,20 +770,23 @@ const ContentBannerDetails: React.FC<IContentBannerDetails> = ({
 							className={s.videoPlayers}></iframe>
 					</Row>
 				</Col> */}
-				<Col width="528px" className={s.variantImg}>
-					<Label text="Варианты изображений" className={s.Label} />
-					<Row className={s.variantImgWrapper} width="528px">
-						{arrayVariatImg &&
-							arrayVariatImg.map((item, index) => (
-								<img
-									key={index}
-									src={`http://localhost:5000${item}`}
-									alt={item}
-									className={s.imgPlayers}
-								/>
-							))}
-					</Row>
-				</Col>
+				{arrayVariatImg?.length !== 0 && arrayVariatImg !== undefined && (
+					<>
+						<Col width="528px" className={s.variantImg}>
+							<Label text="Варианты изображений" className={s.Label} />
+							<Row className={s.variantImgWrapper} width="528px">
+								{arrayVariatImg.map((item, index) => (
+									<img
+										key={index}
+										src={`http://localhost:5000${item}`}
+										alt={item}
+										className={s.imgPlayers}
+									/>
+								))}
+							</Row>
+						</Col>
+					</>
+				)}
 				{/* <Col width="528px" className={s.variantAudio}>
 					<Label text="Варианты аудио" className={s.Label} />
 				</Col> */}

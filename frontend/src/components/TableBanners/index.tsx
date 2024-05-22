@@ -210,37 +210,8 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 	// 	}
 	// 	getData()
 	// }, [])
-	
-	useEffect(() => {
-		async function getCompaniesAndStatistics(token: string) {
-			try {
-				const res = await getCompanyBloggersAPI(token)
-				console.log(res.data.companies, 'List of companies')
 
-				// Fetch statistics for each company and add it to the company object
-				const companiesWithStatistics = await Promise.all(
-					res.data.companies.map(async (company: any) => {
-						const stata = await getBloggerStatistics(
-							String(token),
-							String(company.site.masked_domain),
-							'hour',
-						)
-						console.log(stata, `Statistics for company ${company.id}`)
 
-						// Assuming stata is an array with a single statistic object for the company
-						return {...company, statistics: stata}
-					}),
-				)
-
-				setDataTable(companiesWithStatistics)
-			} catch (error) {
-				console.error('Error fetching companies and statistics:', error)
-			}
-		}
-
-		console.log(dataTable, 'companies123454566')
-		getCompaniesAndStatistics(token)
-	}, [token]) // Added token as a dependency
 	// console.log(dataTable, 'DATA TABLE');
 
 	const data = {nodes: dataTable}
@@ -430,6 +401,36 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 			return ''
 		}
 	}
+	useEffect(() => {
+		async function getCompaniesAndStatistics(token: string) {
+			try {
+				const res = await getCompanyBloggersAPI(token)
+				console.log(res.data.companies, 'List of companies')
+
+				// Fetch statistics for each company and add it to the company object
+				const companiesWithStatistics = await Promise.all(
+					res.data.companies.map(async (company: any) => {
+						const stata = await getBloggerStatistics(
+							String(token),
+							String(company.site.masked_domain),
+							'hour',
+						)
+						console.log(stata, `Statistics for company ${company.id}`)
+
+						// Assuming stata is an array with a single statistic object for the company
+						return {...company, statistics: stata}
+					}),
+				)
+
+				setDataTable(companiesWithStatistics)
+			} catch (error) {
+				console.error('Error fetching companies and statistics:', error)
+			}
+		}
+
+		console.log(dataTable, 'companies123454566')
+		getCompaniesAndStatistics(token)
+	}, [token, dataTable]) // Added token as a dependency
 	return (
 		<>
 			<div className={s.wrapper}>
@@ -721,18 +722,25 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 									{tableList.map((item: any, index: number) => (
 										<tl.Row className="CheckBox" key={index} item={item}>
 											<CellSelect item={item} />
-											<tl.Cell className="bg-[#1A1A1A]">
-												<Row width="auto">
-													<Col width="auto">
-														<Row width="auto" className='items-center'>
-														<img
-																		src={getFaviconUrl36(item.site.domain)}
-																		alt={item.site.domain}
-																		className="mr-1 w-[16px] h-[16px]"
-																	/>
-															<label htmlFor="checkbox_1">{item.name}</label>
+											<tl.Cell
+												className={`w-full bg-[#1A1A1A] text-ellipsis ${s.tlCell}`}>
+												<Row width="inherit" className="text-ellipsis justify-between">
+													<Col width="inherit" className="text-ellipsis">
+														<Row
+															width="inherit"
+															className=" text-ellipsis items-center">
+															<img
+																src={getFaviconUrl36(item.site.domain)}
+																alt={item.site.domain}
+																className="mr-1 w-[16px] h-[16px]"
+															/>
+															<label
+																className="block whitespace-nowrap max-w-[100px] overflow-hidden text-ellipsis"
+																htmlFor="checkbox_1">
+																{item.name}
+															</label>
 														</Row>
-														<Row width="auto" className={s.rowIdCheckbox}>
+														<Row width="inherit" className={s.rowIdCheckbox}>
 															{/* <svg
 																className="mr-2 cursor-pointer"
 																xmlns="http://www.w3.org/2000/svg"
@@ -763,7 +771,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 														</Row>
 													</Col>
 
-													<Row width="auto" className={s.ButtonsSVG}>
+													<Row width="60px" className={s.ButtonsSVG}>
 														<button
 															onClick={() => {
 																setCurrentObject(item)
@@ -982,7 +990,7 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 			{currentPopup === CurrentPopup.Content && (
 				<PopUpWrapper onExit={bannerContentDetails.onExit}>
 					<ContentBannerDetails
-					cut_link={true}
+						cut_link={true}
 						className={bannerContentDetails.className}
 						course_svg={getFaviconUrl36(currentObject.site.domain)} // TO DO
 						course_title={currentObject.name}

@@ -43,21 +43,21 @@ const CourseForBlogger: React.FC<ICourseForBlogger> = ({
 	return (
 		<div className={s.wrapper + ' ' + className}>
 			<Col
-				width={`${width_block ? width_block : '528px'}`}
-				className={s.BlogerHeader}>
+				width={`${width_block ? width_block : '100%'}`}
+				className={`${s.BlogerHeader} max-w-[528px]`}>
 				<Row
-					width={`${width_block ? width_block : '528px'}`}
-					className={s.BlogerHeaderUp}>
+					width={`${width_block ? width_block : '100%'}`}
+					className={`${s.BlogerHeaderUp} max-w-[528px]` }>
 					<img src={svg} alt={svg} className="w-[36px] h-[36px] mr-[16px]" />
-					<Col width={`${width_text ? width_text : '316px'}`} className="mr-4">
-						<WhiteLabel text={title} size="14px" />
+					<Col width={`${width_text ? width_text : '316px'}`} className="max-w-[316px] mr-4">
+						<WhiteLabel text={title} size="14px" className={`text-ellipsis overflow-hidden block whitespace-nowrap width-[${width_text ? `${width_text}px` : '316px'}]`} />
 						<Row width="316px" className="whitespace-nowrap">
-							<Label className="mr-2" text={`ID ${id}`} />
+							<Label className="mr-2 "  text={`ID ${id}`} />
 							{NeedClicks ? (
 								<Clicks className={s.Clicks} count={245} />
 							) : (
 								<>
-									<Label text={ooo} className="mr-2" />
+									<Label text={ooo} className="mr-2 text-ellipsis" />
 									<Label text={`ИНН ${tin}`} />
 								</>
 							)}
@@ -83,9 +83,9 @@ const CourseForBlogger: React.FC<ICourseForBlogger> = ({
 				</Row>
 				{cut_link ? (
 					<>
-						<a href={link} className={s.blueLink}>
-							{see_link.length > 70
-								? `${see_link.substring(0, 70)}...`
+						<a href={link} className={`${s.blueLink} max-w-[528px]`}>
+							{see_link.length > 65
+								? `${see_link.substring(0, 65)}...`
 								: see_link}
 						</a>
 					</>

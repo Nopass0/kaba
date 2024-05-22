@@ -5,9 +5,9 @@ import WhiteLabel from '../../WhiteLabel'
 import Col from '../../Col'
 import CheckBox from '../../CheckBox/index'
 import {ReactSortable} from 'react-sortablejs'
-import ButtonSVG from '../../ButtonSVG/index';
-import BlueButton from '../../BlueButton/index';
-import Button from '../../Button/index';
+import ButtonSVG from '../../ButtonSVG/index'
+import BlueButton from '../../BlueButton/index'
+import Button from '../../Button/index'
 
 interface ITableCol {
 	onExit?: () => void
@@ -162,12 +162,16 @@ const TableCol: React.FC<ITableCol> = ({onExit}: ITableCol) => {
 				<Col
 					width="279px"
 					className="border-r border-[#333333] h-[648px] overflow-y-hidden overflow-x-hidden justify-between">
-					<Col className='max-h-[650px] overflow-y-scroll' width="279px">
+					<Col className="max-h-[650px] overflow-y-scroll" width="279px">
 						{mapColumns}
 					</Col>
-					<Row className='p-[16px]' width="279px">
-						<Button className='border-[#333] border-[1px] rounded-[8px] mr-2' width='120px' text='Сбросить' />
-						<BlueButton width='120px' text='Сохранить'/>
+					<Row className="p-[16px]" width="279px">
+						<Button
+							className="border-[#333] border-[1px] rounded-[8px] mr-2"
+							width="120px"
+							text="Сбросить"
+						/>
+						<BlueButton width="120px" text="Сохранить" />
 					</Row>
 				</Col>
 				<Col className="overflow-y-auto overflow-x-hidden">

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import s from './index.module.scss'
 
 import {useTheme} from '@table-library/react-table-library/theme'
@@ -229,33 +229,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 	const [activeCompany, setActiveCompany] = useState<boolean>(true)
 
 	const data = {nodes: companies}
-
-	useEffect(() => {
-		async function getCompaniesAndStatistics(token: string) {
-			try {
-				const res = await getCompaniesAPI(token)
-				console.log(res.data, 'List of companies')
-
-				// Fetch statistics for each company and add it to the company object
-				const companiesWithStatistics = await Promise.all(
-					res.data.map(async (company: any) => {
-						const stata = await getStatisticsAPI(token, [company.id], 'hour')
-						console.log(stata, `Statistics for company ${company.id}`)
-
-						// Assuming stata is an array with a single statistic object for the company
-						return {...company, statistics: stata}
-					}),
-				)
-
-				setCompanies(companiesWithStatistics)
-			} catch (error) {
-				console.error('Error fetching companies and statistics:', error)
-			}
-		}
-
-		console.log(companies, 'companies')
-		getCompaniesAndStatistics(token)
-	}, [token]) // Added token as a dependency
+	// const [data, setData] = useState({nodes: companies})
 
 	const select = useRowSelect(
 		data,
@@ -313,6 +287,31 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 		}
 	}
 
+	useEffect(() => {
+		async function getCompaniesAndStatistics(token: string) {
+			try {
+				const res = await getCompaniesAPI(token)
+				console.log(res.data, 'List of companies')
+
+				// Fetch statistics for each company and add it to the company object
+				const companiesWithStatistics = await Promise.all(
+					res.data.map(async (company: any) => {
+						const stata = await getStatisticsAPI(token, [company.id], 'hour')
+						console.log(stata, `Statistics for company ${company.id}`)
+
+						// Assuming stata is an array with a single statistic object for the company
+						return {...company, statistics: stata}
+					}),
+				)
+
+				setCompanies(companiesWithStatistics)
+			} catch (error) {
+				console.error('Error fetching companies and statistics:', error)
+			}
+		}
+
+		console.log(companies, 'companies')
+	}, [token, data]) // Added token as a dependency
 	return (
 		<>
 			{!(companies.length > 0) ? (
@@ -673,10 +672,13 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 												{tableList.map((item: any, index: number) => (
 													<tl.Row className="CheckBox" key={index} item={item}>
 														<CellSelect item={item} />
-														<tl.Cell className="bg-[#1A1A1A]">
-															<Row width="auto">
-																<Col width="auto">
-																	<label>{item.name}</label>
+														<tl.Cell
+															className={`w-full bg-[#1A1A1A] text-ellipsis ${s.tlCell}`}>
+															<Row width="inherit" className="text-ellipsis">
+																<Col width="inherit" className="text-ellipsis">
+																	<p className="block whitespace-nowrap overflow-hidden text-ellipsis">
+																		{item.name}
+																	</p>
 																	<Row width="auto" className={s.rowIdCheckbox}>
 																		{/* <svg
 																className="mr-2"
@@ -800,15 +802,19 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 																</mui.Option>
 															</mui.Select>
 														</tl.Cell>
-														<tl.Cell>
-															<Col width="auto">
-																<Row width="auto" className="flex items-center">
+														<tl.Cell
+															className={`w-full bg-[#1A1A1A] text-ellipsis ${s.tlCell}`}>
+															<Col width="inherit" className="text-ellipsis">
+																<Row
+																	width="inherit"
+																	className="items-center text-ellipsis">
 																	<img
 																		src={getFaviconUrl(item.site.domain)}
 																		alt={item.site.domain}
 																		className="mr-1 w-[16px] h-[16px]"
 																	/>
 																	<WhiteLabel
+																		className="block whitespace-nowrap overflow-hidden text-ellipsis"
 																		text={getNameFromDomain(item.site.domain)}
 																	/>
 																</Row>
@@ -898,10 +904,7 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 															</p>
 														</tl.Cell>
 														<tl.Cell>
-															<p
-																>
-																{item.budget_week}
-															</p>
+															<p>{item.budget_week}</p>
 														</tl.Cell>
 														<tl.Cell>
 															<p>{item.statistics.consumption}</p>

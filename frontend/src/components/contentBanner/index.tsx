@@ -8,6 +8,7 @@ import Label from '../Label/index'
 import Clicks from '../Clicks/index'
 
 import CourseForBlogger from '../CourseForBlogger/index'
+import BlueButton from '../BlueButton'
 
 export interface IContentBanner {
 	className?: string // Added className prop
@@ -24,8 +25,10 @@ export interface IContentBanner {
 	arrayVariantTitle?: string[]
 	arrayVariatImg?: string[]
 	see_link?: string
-	tin?:string
-	cut_link?:boolean
+	tin?: string
+	cut_link?: boolean
+	fav_active?: boolean
+	addDelete?: boolean
 }
 
 const ContentBanner: React.FC<IContentBanner> = ({
@@ -43,6 +46,8 @@ const ContentBanner: React.FC<IContentBanner> = ({
 	bloger_ooo,
 	tin,
 	cut_link,
+	fav_active,
+	addDelete,
 }: IContentBanner) => {
 	return (
 		<div className={s.wrapper}>
@@ -64,17 +69,61 @@ const ContentBanner: React.FC<IContentBanner> = ({
 					</svg>
 				</Row>
 				{bloger ? (
-					<CourseForBlogger
-						cut_link={cut_link}
-						NeedClicks={false}
-						svg={bloger_svg}
-						title={text_course_table}
-						id={text_id_table}
-						ooo={bloger_ooo}
-						link={bloger_link}
-						see_link={see_link}
-						tin={tin}
-					/>
+					<Row width="528px" className="justify-between">
+						<CourseForBlogger
+							cut_link={cut_link}
+							NeedClicks={false}
+							svg={bloger_svg}
+							title={text_course_table}
+							id={text_id_table}
+							ooo={bloger_ooo}
+							link={bloger_link}
+							see_link={see_link}
+							tin={tin}
+							// width_block="100%"
+							// width_text="100%"
+						/>
+						<Row width="100%" className="items-start justify-end">
+							{addDelete ? (
+								<BlueButton  text="Добавить" width="100px" />
+							) : (
+								<BlueButton  text="Добавить" width="100px" />
+							)}
+							{fav_active ? (
+								<button className='ml-1'>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="36"
+										height="36"
+										viewBox="0 0 36 36"
+										fill="none">
+										<rect width="36" height="36" rx="8" fill="#4169E1" />
+										<path
+											d="M12.9436 26C13.1573 26 13.3591 25.9391 13.549 25.8172C13.7389 25.6954 14.0356 25.4704 14.4392 25.1422L17.9199 22.2704C17.9733 22.2207 18.0267 22.2207 18.0801 22.2704L21.5608 25.1422C21.9644 25.4654 22.2596 25.6892 22.4466 25.8135C22.6335 25.9378 22.8368 26 23.0564 26C23.3531 26 23.5846 25.9204 23.7507 25.7613C23.9169 25.6022 24 25.3784 24 25.09V12.1408C24 11.4297 23.7893 10.8951 23.368 10.5371C22.9466 10.179 22.3175 10 21.4807 10H14.5193C13.6825 10 13.0534 10.179 12.632 10.5371C12.2107 10.8951 12 11.4297 12 12.1408V25.09C12 25.3784 12.0831 25.6022 12.2493 25.7613C12.4154 25.9204 12.6469 26 12.9436 26Z"
+											fill="#F2F2F2"
+										/>
+									</svg>
+								</button>
+							) : (
+								<button className='ml-1'>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="36"
+										height="36"
+										viewBox="0 0 36 36"
+										fill="none">
+										<rect width="36" height="36" rx="8" fill="#333333" />
+										<path
+											fillRule="evenodd"
+											clipRule="evenodd"
+											d="M13.549 25.8172C13.3591 25.9391 13.1573 26 12.9436 26C12.6469 26 12.4154 25.9204 12.2493 25.7613C12.0831 25.6022 12 25.3784 12 25.09V12.1408C12 11.4297 12.2107 10.8951 12.632 10.5371C13.0534 10.179 13.6825 10 14.5193 10H21.4807C22.3175 10 22.9466 10.179 23.368 10.5371C23.7893 10.8951 24 11.4297 24 12.1408V25.09C24 25.3784 23.9169 25.6022 23.7507 25.7613C23.5846 25.9204 23.3531 26 23.0564 26C22.8368 26 22.6335 25.9378 22.4466 25.8135C22.2596 25.6892 21.9644 25.4654 21.5608 25.1422L18.0801 22.2704C18.0267 22.2207 17.9733 22.2207 17.9199 22.2704L14.4392 25.1422C14.0356 25.4704 13.7389 25.6954 13.549 25.8172ZM13.4911 24.042C13.5475 24.0544 13.6083 24.0357 13.6736 23.986L17.5282 20.8531C17.6706 20.7388 17.8279 20.6816 18 20.6816C18.1721 20.6816 18.3294 20.7388 18.4718 20.8531L22.3264 23.986C22.3917 24.0357 22.4525 24.0544 22.5089 24.042C22.5653 24.0295 22.5935 23.986 22.5935 23.9114V12.1557C22.5935 11.8325 22.4941 11.5888 22.2953 11.4247C22.0964 11.2606 21.8042 11.1786 21.4184 11.1786H14.5905C14.1988 11.1786 13.9036 11.2606 13.7047 11.4247C13.5059 11.5888 13.4065 11.8325 13.4065 12.1557V23.9114C13.4065 23.986 13.4347 24.0295 13.4911 24.042Z"
+											fill="CurrentColor"
+										/>
+									</svg>
+								</button>
+							)}
+						</Row>
+					</Row>
 				) : (
 					<div className={s.TableContainer}>
 						<Row width="528px" className={s.TableMenu}>
@@ -86,120 +135,144 @@ const ContentBanner: React.FC<IContentBanner> = ({
 						</Row>
 					</div>
 				)}
-				<Col className={s.variantTextCol} width="528px">
-					<Label text="Варианты текста" className={s.Label} />
-					<Row width="528px">
-						<div className={s.variantTextWrapperLeft}>
-							{arrayVariantDesc &&
-								arrayVariantDesc.map((item, index) => (
-									<div key={index} className={s.variantTextBlock}>
-										<Row width="auto" className={s.TitleHeaderInsideBlock}>
-											<Label isMini={true} text="Описание" />
-											<svg
-												onClick={() =>
-													navigator.clipboard.writeText(
-														item
+				{(arrayVariantDesc?.length !== 0 && arrayVariantDesc !== undefined) ||
+					(arrayVariantTitle?.length !== 0 &&
+						arrayVariantTitle !== undefined && (
+							<>
+								<Col className={s.variantTextCol} width="528px">
+									<Label text="Варианты текста" className={s.Label} />
+									<Row width="528px">
+										<div className={s.variantTextWrapperLeft}>
+											{arrayVariantDesc.map((item, index) => (
+												<div key={index} className={s.variantTextBlock}>
+													<Row
+														width="auto"
+														className={s.TitleHeaderInsideBlock}>
+														<Label isMini={true} text="Описание" />
+														<svg
+															onClick={() =>
+																navigator.clipboard.writeText(
+																	item
+																		.slice(
+																			item.indexOf("'text':"),
+																			item.length - 1,
+																		)
+																		.replace("'text': ", '')
+																		.replace("'", '')
+																		.replace("'", '')
+																		.replace('"', '')
+																		.replace('"', ''),
+																)
+															}
+															className="cursor-pointer"
+															xmlns="http://www.w3.org/2000/svg"
+															width="24"
+															height="24"
+															viewBox="0 0 24 24"
+															fill="none">
+															<rect
+																width="24"
+																height="24"
+																rx="7"
+																fill="#262626"
+															/>
+															<rect
+																x="10.2002"
+																y="10.2031"
+																width="7.8"
+																height="7.8"
+																rx="1.2"
+																stroke="#F2F2F2"
+																strokeLinecap="round"
+																strokeLinejoin="round"
+															/>
+															<path
+																d="M7.8 13.8H7.2C6.53726 13.8 6 13.2627 6 12.6V7.2C6 6.53726 6.53726 6 7.2 6H12.6C13.2627 6 13.8 6.53726 13.8 7.2V7.8"
+																stroke="#F2F2F2"
+																strokeLinecap="round"
+																strokeLinejoin="round"
+															/>
+														</svg>
+													</Row>
+													<span className={s.variantTextSpan}>
+														{item
 															.slice(item.indexOf("'text':"), item.length - 1)
 															.replace("'text': ", '')
 															.replace("'", '')
 															.replace("'", '')
 															.replace('"', '')
-															.replace('"', ''),
-													)
-												}
-												className="cursor-pointer"
-												xmlns="http://www.w3.org/2000/svg"
-												width="24"
-												height="24"
-												viewBox="0 0 24 24"
-												fill="none">
-												<rect width="24" height="24" rx="7" fill="#262626" />
-												<rect
-													x="10.2002"
-													y="10.2031"
-													width="7.8"
-													height="7.8"
-													rx="1.2"
-													stroke="#F2F2F2"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												/>
-												<path
-													d="M7.8 13.8H7.2C6.53726 13.8 6 13.2627 6 12.6V7.2C6 6.53726 6.53726 6 7.2 6H12.6C13.2627 6 13.8 6.53726 13.8 7.2V7.8"
-													stroke="#F2F2F2"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												/>
-											</svg>
-										</Row>
-										<span className={s.variantTextSpan}>
-											{item
-												.slice(item.indexOf("'text':"), item.length - 1)
-												.replace("'text': ", '')
-												.replace("'", '')
-												.replace("'", '')
-												.replace('"', '')
-												.replace('"', '')}
-										</span>
-									</div>
-								))}
+															.replace('"', '')}
+													</span>
+												</div>
+											))}
 
-							{arrayVariantTitle &&
-								arrayVariantTitle.map((item, index) => (
-									<div key={index} className={s.variantTextBlock}>
-										<Row width="auto" className={s.TitleHeaderInsideBlock}>
-											<Label isMini={true} text="Заголовок" />
-											<svg
-												onClick={() =>
-													navigator.clipboard.writeText(
-														item
+											{arrayVariantTitle.map((item, index) => (
+												<div key={index} className={s.variantTextBlock}>
+													<Row
+														width="auto"
+														className={s.TitleHeaderInsideBlock}>
+														<Label isMini={true} text="Заголовок" />
+														<svg
+															onClick={() =>
+																navigator.clipboard.writeText(
+																	item
+																		.slice(
+																			item.indexOf("'text':"),
+																			item.length - 1,
+																		)
+																		.replace("'text': ", '')
+																		.replace("'", '')
+																		.replace("'", '')
+																		.replace('"', '')
+																		.replace('"', ''),
+																)
+															}
+															className="cursor-pointer"
+															xmlns="http://www.w3.org/2000/svg"
+															width="24"
+															height="24"
+															viewBox="0 0 24 24"
+															fill="none">
+															<rect
+																width="24"
+																height="24"
+																rx="7"
+																fill="#262626"
+															/>
+															<rect
+																x="10.2002"
+																y="10.2031"
+																width="7.8"
+																height="7.8"
+																rx="1.2"
+																stroke="#F2F2F2"
+																strokeLinecap="round"
+																strokeLinejoin="round"
+															/>
+															<path
+																d="M7.8 13.8H7.2C6.53726 13.8 6 13.2627 6 12.6V7.2C6 6.53726 6.53726 6 7.2 6H12.6C13.2627 6 13.8 6.53726 13.8 7.2V7.8"
+																stroke="#F2F2F2"
+																strokeLinecap="round"
+																strokeLinejoin="round"
+															/>
+														</svg>
+													</Row>
+													<span className={s.variantTextSpan}>
+														{item
 															.slice(item.indexOf("'text':"), item.length - 1)
 															.replace("'text': ", '')
 															.replace("'", '')
 															.replace("'", '')
 															.replace('"', '')
-															.replace('"', ''),
-													)
-												}
-												className="cursor-pointer"
-												xmlns="http://www.w3.org/2000/svg"
-												width="24"
-												height="24"
-												viewBox="0 0 24 24"
-												fill="none">
-												<rect width="24" height="24" rx="7" fill="#262626" />
-												<rect
-													x="10.2002"
-													y="10.2031"
-													width="7.8"
-													height="7.8"
-													rx="1.2"
-													stroke="#F2F2F2"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												/>
-												<path
-													d="M7.8 13.8H7.2C6.53726 13.8 6 13.2627 6 12.6V7.2C6 6.53726 6.53726 6 7.2 6H12.6C13.2627 6 13.8 6.53726 13.8 7.2V7.8"
-													stroke="#F2F2F2"
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												/>
-											</svg>
-										</Row>
-										<span className={s.variantTextSpan}>
-											{item
-												.slice(item.indexOf("'text':"), item.length - 1)
-												.replace("'text': ", '')
-												.replace("'", '')
-												.replace("'", '')
-												.replace('"', '')
-												.replace('"', '')}
-										</span>
-									</div>
-								))}
-						</div>
-					</Row>
-				</Col>
+															.replace('"', '')}
+													</span>
+												</div>
+											))}
+										</div>
+									</Row>
+								</Col>
+							</>
+						))}
 				{/* <Col width="528px" className={s.variantVideo}>
 					<NavLabel text="Варианты видео" className={s.navLabel} />
 					<Row width="528px">
@@ -221,20 +294,23 @@ const ContentBanner: React.FC<IContentBanner> = ({
 							className={s.videoPlayers}></iframe>
 					</Row>
 				</Col> */}
-				<Col width="528px" className={s.variantImg}>
-					<Label text="Варианты изображений" className={s.Label} />
-					<Row className={s.variantImgWrapper} width="528px">
-						{arrayVariatImg &&
-							arrayVariatImg.map((item, index) => (
-								<img
-									key={index}
-									src={`http://localhost:5000${item}`}
-									alt={item}
-									className={s.imgPlayers}
-								/>
-							))}
-					</Row>
-				</Col>
+				{arrayVariatImg?.length !== 0 && arrayVariatImg !== undefined && (
+					<>
+						<Col width="528px" className={s.variantImg}>
+							<Label text="Варианты изображений" className={s.Label} />
+							<Row className={s.variantImgWrapper} width="528px">
+								{arrayVariatImg.map((item, index) => (
+									<img
+										key={index}
+										src={`http://localhost:5000${item}`}
+										alt={item}
+										className={s.imgPlayers}
+									/>
+								))}
+							</Row>
+						</Col>
+					</>
+				)}
 				{/* <Col width="528px" className={s.variantAudio}>
 					<NavLabel text="Варианты аудио" className={s.navLabel} />
 				</Col> */}
