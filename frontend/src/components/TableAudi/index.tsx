@@ -40,7 +40,7 @@ enum CurrentPopup {
 
 const THEME = {
 	Table: `
-	--data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1.2fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.2fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr));
+	--data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1.2fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.2fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr));
   width: 100%;
   min-width: 1164px;
   max-height: 810px;
@@ -433,6 +433,12 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 													</tl.HeaderCell>
 													<tl.HeaderCell
 														style={{fontWeight: '400', fill: '#808080'}}
+														className={s.HeaderCell}
+														sortKey="Status">
+														<p className={s.sortText}>Баннер</p>
+													</tl.HeaderCell>
+													<tl.HeaderCell
+														style={{fontWeight: '400', fill: '#808080'}}
 														className={s.headerCellSort_Sort}
 														sortKey="Status">
 														<button
@@ -522,6 +528,11 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 														className={s.HeaderCell}
 														style={{fontWeight: '400', fill: '#808080'}}>
 														Средняя цена клика
+													</tl.HeaderCell>
+													<tl.HeaderCell
+														className={s.HeaderCell}
+														style={{fontWeight: '400', fill: '#808080'}}>
+														Кол-во кликов
 													</tl.HeaderCell>
 													{/* <tl.HeaderCell
 												style={{fontWeight: '400', fill: '#808080'}}
@@ -667,6 +678,9 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 												</tl.Cell> */}
 														<tl.Cell className={`w-full bg-[#1A1A1A] text-ellipsis ${s.tlCell}`}>
 															<p className="block whitespace-nowrap overflow-hidden text-ellipsis"> {item.name}</p>
+														</tl.Cell>
+														<tl.Cell className={`w-full bg-[#1A1A1A] text-ellipsis ${s.tlCell}`}>
+															<p className="block whitespace-nowrap overflow-hidden text-ellipsis"> {item.ad_banner[0].name}</p>
 														</tl.Cell>
 														<tl.Cell>
 														<p
@@ -987,6 +1001,8 @@ const TableAudi: React.FC<ITableAudi> = ({}: ITableAudi) => {
 															</p>
 														</tl.Cell>
 														<tl.Cell>{item.statistics.cpc_sum}</tl.Cell>
+														
+														<tl.Cell>{item.statistics.click_sum}</tl.Cell>
 													</tl.Row>
 												))}
 											</tl.Body>

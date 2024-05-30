@@ -605,6 +605,12 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 											sortKey="Status">
 											<p className={s.sortText}>Всего кликов</p>
 										</tl.HeaderCell>
+										<tl.HeaderCell
+											style={{fontWeight: '400', fill: '#808080'}}
+											className={s.HeaderCell}
+											sortKey="Status">
+											<p className={s.sortText}>Кол-во кликов</p>
+										</tl.HeaderCell>
 
 										{/* <tl.HeaderCell
 											style={{fontWeight: '400', fill: '#808080'}}
@@ -916,7 +922,11 @@ const TableBanners: React.FC<ITableBanners> = ({}: ITableBanners) => {
 											</tl.Cell>
 
 											<tl.Cell>
-												<p>{item.clicks}</p>
+												<p >{item.clicks}</p>
+											</tl.Cell>
+
+											<tl.Cell>
+												<p>{item.statistics.click_sum}</p>
 											</tl.Cell>
 
 											{/* <tl.Cell>

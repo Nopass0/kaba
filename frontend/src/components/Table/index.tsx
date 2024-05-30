@@ -40,7 +40,7 @@ enum CurrentPopup {
 
 const THEME = {
 	Table: `
-	--data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.3fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) ;  // 30px 20% 15% 15% 15% 15% 10% repeat(1, minmax(0, 1fr));
+	--data-table-library_grid-template-columns:  30px repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1.3fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) repeat(1, minmax(0, 1fr)) ;  // 30px 20% 15% 15% 15% 15% 10% repeat(1, minmax(0, 1fr));
   width: 100%;
   min-width: 1164px;
   max-height: 810px;
@@ -635,11 +635,26 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 														style={{fontWeight: '400', fill: '#808080'}}>
 														Дата завершения
 													</tl.HeaderCell>
-
+													<tl.HeaderCell
+														className={s.HeaderCell}
+														style={{fontWeight: '400', fill: '#808080'}}>
+														Стоимость клика (цел)
+													</tl.HeaderCell>
 													<tl.HeaderCell
 														className={s.HeaderCell}
 														style={{fontWeight: '400', fill: '#808080'}}>
 														Недельный бюджет
+													</tl.HeaderCell>
+													<tl.HeaderCell
+														className={s.HeaderCell}
+														style={{fontWeight: '400', fill: '#808080'}}>
+														Ключевые фразы
+													</tl.HeaderCell>
+
+													<tl.HeaderCell
+														className={s.HeaderCell}
+														style={{fontWeight: '400', fill: '#808080'}}>
+														Минус фразы
 													</tl.HeaderCell>
 
 													<tl.HeaderCell
@@ -665,6 +680,12 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 														style={{fontWeight: '400', fill: '#808080'}}>
 														Запрещённые медиаресурсы
 													</tl.HeaderCell>
+
+													<tl.HeaderCell
+														className={s.HeaderCell}
+														style={{fontWeight: '400', fill: '#808080'}}>
+														Кол-во кликов
+													</tl.HeaderCell>
 												</tl.HeaderRow>
 											</tl.Header>
 
@@ -676,7 +697,14 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 															className={`w-full bg-[#1A1A1A] text-ellipsis ${s.tlCell}`}>
 															<Row width="inherit" className="text-ellipsis">
 																<Col width="inherit" className="text-ellipsis">
-																	<p className="block whitespace-nowrap overflow-hidden text-ellipsis">
+																	<p
+																		onClick={() =>
+																			console.log(
+																				item,
+																				'ITEM-------------------',
+																			)
+																		}
+																		className="block whitespace-nowrap overflow-hidden text-ellipsis">
 																		{item.name}
 																	</p>
 																	<Row width="auto" className={s.rowIdCheckbox}>
@@ -904,7 +932,86 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 															</p>
 														</tl.Cell>
 														<tl.Cell>
+															<p>{item.price_target}</p>
+														</tl.Cell>
+														<tl.Cell>
 															<p>{item.budget_week}</p>
+														</tl.Cell>
+														<tl.Cell>
+															<mui.Select
+																className={s.muiSelectDetails}
+																renderValue={(
+																	option: mui.SelectOption<number> | null,
+																) => {
+																	if (option == null || option.value === null) {
+																		return (
+																			<>
+																				<p className={s.DetailsCell}>
+																					{item.phrase_plus
+																						? item.phrase_plus.length
+																						: 0}
+																				</p>
+																			</>
+																		)
+																	}
+																	// return `${option.label}`
+																	return (
+																		<>
+																			<p className={s.DetailsCell}>
+																				{item.phrase_plus
+																					? item.phrase_plus.length
+																					: 0}
+																			</p>
+																		</>
+																	)
+																}}>
+																<mui.Option
+																	value={1}
+																	className={`cursor-pointer z-10 mt-1`}>
+																	<CompaniesTablePopUp
+																		companies={item.phrase_plus || []}
+																		needCompanies={false}
+																	/>
+																</mui.Option>
+															</mui.Select>
+														</tl.Cell>
+														<tl.Cell>
+															<mui.Select
+																className={s.muiSelectDetails}
+																renderValue={(
+																	option: mui.SelectOption<number> | null,
+																) => {
+																	if (option == null || option.value === null) {
+																		return (
+																			<>
+																				<p className={s.DetailsCell}>
+																					{item.phrase_minus
+																						? item.phrase_minus.length
+																						: 0}
+																				</p>
+																			</>
+																		)
+																	}
+																	// return `${option.label}`
+																	return (
+																		<>
+																			<p className={s.DetailsCell}>
+																				{item.phrase_minus
+																					? item.phrase_minus.length
+																					: 0}
+																			</p>
+																		</>
+																	)
+																}}>
+																<mui.Option
+																	value={1}
+																	className={`cursor-pointer z-10 mt-1`}>
+																	<CompaniesTablePopUp
+																		companies={item.phrase_minus || []}
+																		needCompanies={false}
+																	/>
+																</mui.Option>
+															</mui.Select>
 														</tl.Cell>
 														<tl.Cell>
 															<p>{item.statistics.consumption}</p>
@@ -956,6 +1063,9 @@ const Table: React.FC<ITable> = ({}: ITable) => {
 																	/>
 																</mui.Option>
 															</mui.Select>
+														</tl.Cell>
+														<tl.Cell>
+															<p>{item.statistics.click_sum}</p>
 														</tl.Cell>
 													</tl.Row>
 												))}
