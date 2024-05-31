@@ -1,7 +1,7 @@
 .wrapper {
-
 	width: 560px;
 	max-height: 900px;
+	
 	overflow-y: scroll;
 	overflow-x: hidden;
 
@@ -123,14 +123,12 @@
 
 	.variantImg {
 		margin-bottom: 28px;
-
 	}
 	.variantImgWrapper {
 		display: flex;
 		flex-wrap: wrap;
 		grid-column-gap: 14px;
 		grid-row-gap: 16px;
-
 	}
 
 	.imgPlayers {
@@ -141,8 +139,6 @@
 		border: 1px solid #333;
 		background: #333;
 	}
-
-	
 }
 
 // Blogger Header

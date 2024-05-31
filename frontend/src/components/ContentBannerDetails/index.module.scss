@@ -1,6 +1,8 @@
 .wrapper {
 	width: 560px;
 	max-height: 850px;
+	height: calc(100vh - 100px);
+	
 	overflow-y: scroll;
 
 	border-radius: 10px;
